@@ -1,16 +1,80 @@
-import { View, Text, SafeAreaView, Image, StyleSheet, TouchableOpacity, Button, TextComponent } from 'react-native'
+import { View, Text, SafeAreaView, Image, StyleSheet, TouchableOpacity, Button, TextComponent, useWindowDimensions } from 'react-native'
 import React from 'react'
 import TopBarMain from '../components/TopBarMain'
 import { ScrollView } from 'react-native-gesture-handler'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import { useNavigation } from "@react-navigation/native";
 
+
 import ProfileBg from '../../assets/images/ProfileBg.svg';
 import EditIcon from '../../assets/images/editIcon.svg';
 import ProfileDisplay from '../../assets/images/ProfileDisplay.svg';
 import BottomQuote from '../../assets/images/BottomQuote.svg';
 
+import { TabView, SceneMap, TabBar, TabBarItem } from 'react-native-tab-view';
+
+
+// ddkdld
+const FirstRoute = () => (
+  <View style={styles.scrollContainer} >
+    <Text>
+      jfksjfjskljfldjfkljlk
+    </Text>
+  </View>
+);
+
+const SecondRoute = () => (
+  <View style={styles.scrollContainer} >
+    <Text>
+    afkadfdjlkfjieurioe vnrj
+    </Text>
+  </View>
+);
+
+const renderScene = SceneMap({
+  first: FirstRoute,
+  second: SecondRoute,
+});
+// ---------
+
+
+const renderTabBar = (props) => (
+  <TabBar
+    {...props}
+    indicatorStyle={{ backgroundColor: '#f8f7fc' }}
+    style={{ backgroundColor: '#f8f7fc', elevation: 0, width: '100%', }}
+
+    renderLabel={({ route, focused, color }) => (
+      <View className="flex-row items-center " style={{
+        backgroundColor: focused ? '#eaf7fc' : '#f8f7fc',
+        width: wp(38),
+        height: hp(4.5),
+        borderRadius: wp(2),
+        borderWidth: focused ? wp(0.5) : 0,
+        // borderEndColor: '#01818c'
+        borderColor: "rgba(1, 129, 140, 0.5)"
+      }}>
+        <Text style={{ color: focused ? '#01818c' : '#455a64', width: '100%', textAlign: 'center', fontSize: wp(4) }}>
+          {route.title}
+        </Text>
+      </View>
+    )}
+  />
+);
+
+
+
 export default function ProfileScreen() {
+
+  const layout = useWindowDimensions();
+
+  const [index, setIndex] = React.useState(0);
+  const [routes] = React.useState([
+    { key: 'first', title: 'First' },
+    { key: 'second', title: 'Second' },
+  ]);
+
+
   return (
     <SafeAreaView>
       <TopBarMain />
@@ -47,14 +111,23 @@ export default function ProfileScreen() {
         </View>
 
 
-        <View className="flex-col items-center" style={[styles.cardContainer, { maxHeight: hp(46), marginTop: hp(3.5) }]}>
+        <View className="flex-col items-center" style={[styles.cardContainer, { height: hp(30), marginTop: hp(3.5) }]}>
           <View style={styles.sessions}>
-            <View style={{ width: '100%', height: hp(5) }}></View>
+            {/* <View style={{ width: '100%', height: hp(5) }}></View>
             <ScrollView style={styles.scrollContainer}>
               <Text style={{ width: '100%', textAlign: 'center', marginVertical: hp(3.6), color: '#455a64', fontSize: wp(4), fontFamily: 'Roboto', fontWeight: 'normal' }}>
                 Sorry! You have no sessions.
               </Text>
-            </ScrollView>
+            </ScrollView> */}
+            <TabView
+              navigationState={{ index, routes }}
+              renderScene={renderScene}
+              onIndexChange={setIndex}
+              initialLayout={{ width: layout.width }}
+              animationEnabled={false}
+              style={styles.sessions}
+              renderTabBar={renderTabBar}
+            ></TabView>
           </View>
         </View>
 
@@ -84,7 +157,7 @@ export default function ProfileScreen() {
         </View>
 
 
-        <View className="flex-row items-center" style={[styles.cardContainer, { height: hp(20), marginTop: hp(5), backgroundColor: '#EBEFF2CC'}]}>
+        <View className="flex-row items-center" style={[styles.cardContainer, { height: hp(20), marginTop: hp(5), backgroundColor: '#EBEFF2CC' }]}>
           <BottomQuote width={wp(71)} height={hp(15)} />
           {/* <View style={{width: wp(20) , height: hp(20) , backgroundColor: 'red'}} ></View> */}
         </View>
@@ -141,16 +214,19 @@ const styles = StyleSheet.create({
   sessions: {
     width: '100%',
     backgroundColor: '#f8f7fc',
+    // backgroundColor: 'green',
     borderRadius: wp(2.5),
+    height: '100%',
   },
 
   scrollContainer: {
     width: '100%',
+    height: '100%',
     backgroundColor: 'white',
     borderBottomLeftRadius: wp(2.5),
     borderBottomRightRadius: wp(2.5),
     borderStyle: "solid",
-    borderWidth: 1,
+    borderWidth: 2,
     borderColor: "rgba(69, 90, 100, 0.2)"
   },
 
