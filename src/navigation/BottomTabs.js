@@ -7,8 +7,6 @@ import { MegaphoneIcon, SpeakerWaveIcon, ChatBubbleBottomCenterIcon, PhoneIcon }
 
 
 
-
-
 // Screens
 import DiscoverScreen from "../screens/DiscoverScreen";
 import HomeScreen from "../screens/HomeScreen";

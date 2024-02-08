@@ -17,19 +17,164 @@ import { TabView, SceneMap, TabBar, TabBarItem } from 'react-native-tab-view';
 // ddkdld
 const FirstRoute = () => (
   <View style={styles.scrollContainer} >
-    <Text>
-      jfksjfjskljfldjfkljlk
-    </Text>
+    <ScrollView style={{width: '100%', paddingLeft: wp(3.5) }} >
+      <View style={{
+        width: wp(76), height: hp(13), backgroundColor: '#ffffff', marginTop: hp(2),
+        borderWidth: wp(0.5),
+        borderColor: '#32959d',
+        paddingHorizontal: wp(3.5),
+        paddingVertical: hp(1.1),
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between'
+      }}>
+        <View className="flex-row items-center justify-between" >
+          <Text style={{ fontSize: wp(4), fontWeight: 'bold', color: '#455a64' }} >
+            Individual Therapy
+          </Text>
+          <TouchableOpacity className="flex-row justify-center items-center" style={{ width: wp(17), height: hp(3.8), backgroundColor: '#32959d', borderRadius: wp(1.5) }} >
+            <Text style={{ fontSize: wp(4), fontWeight: 'bold', color: '#ffffff' }} >Join</Text>
+          </TouchableOpacity>
+        </View>
+        <View>
+          <View className="flex-row justify-between items-center " >
+            <Text style={{ fontSize: wp(3.8), color: '#455a64' }} >
+              16/04/2022
+            </Text>
+            <View style={{ height: hp(2.2), width: wp(0.5), backgroundColor: '#32959d' }} />
+            <Text style={{ fontSize: wp(3.8), color: '#455a64' }} >
+              10:30 am
+            </Text>
+            <View style={{ height: hp(2.2), width: wp(0.5), backgroundColor: '#32959d' }} />
+            <Text style={{ fontSize: wp(3.8), color: '#455a64' }}>
+              Online
+            </Text>
+          </View>
+          <Text style={{ fontSize: wp(3.8), color: '#455a64', marginTop: hp(0.4) }} >
+            ID :  <Text style={{ fontWeight: 'bold', color: '#455a64' }} >654821</Text>
+          </Text>
+        </View>
+      </View>
+      <View style={{
+        width: wp(76), height: hp(13), backgroundColor: '#ffffff', marginTop: hp(2),
+        borderWidth: wp(0.5),
+        borderColor: '#32959d',
+        paddingHorizontal: wp(3.5),
+        paddingVertical: hp(1.1),
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between'
+      }}>
+        <View className="flex-row items-center justify-between" >
+          <Text style={{ fontSize: wp(4), fontWeight: 'bold', color: '#455a64' }} >
+            Individual Therapy
+          </Text>
+          <TouchableOpacity className="flex-row justify-center items-center" style={{ width: wp(17), height: hp(3.8), backgroundColor: '#32959d', borderRadius: wp(1.5) }} >
+            <Text style={{ fontSize: wp(4), fontWeight: 'bold', color: '#ffffff' }} >Join</Text>
+          </TouchableOpacity>
+        </View>
+        <View>
+          <View className="flex-row justify-between items-center " >
+            <Text style={{ fontSize: wp(3.8), color: '#455a64' }} >
+              16/04/2022
+            </Text>
+            <View style={{ height: hp(2.2), width: wp(0.5), backgroundColor: '#32959d' }} />
+            <Text style={{ fontSize: wp(3.8), color: '#455a64' }} >
+              10:30 am
+            </Text>
+            <View style={{ height: hp(2.2), width: wp(0.5), backgroundColor: '#32959d' }} />
+            <Text style={{ fontSize: wp(3.8), color: '#455a64' }}>
+              Online
+            </Text>
+          </View>
+          <Text style={{ fontSize: wp(3.8), color: '#455a64', marginTop: hp(0.4) }} >
+            ID :  <Text style={{ fontWeight: 'bold', color: '#455a64' }} >654821</Text>
+          </Text>
+        </View>
+      </View>
+
+      <View style={{
+        width: wp(76), height: hp(13), backgroundColor: '#ffffff', marginTop: hp(2),
+        borderWidth: wp(0.5),
+        borderColor: '#32959d',
+        paddingHorizontal: wp(3.5),
+        paddingVertical: hp(1.1),
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'space-between'
+      }}>
+        <View className="flex-row items-center justify-between" >
+          <Text style={{ fontSize: wp(4), fontWeight: 'bold', color: '#455a64' }} >
+            Individual Therapy
+          </Text>
+          <TouchableOpacity className="flex-row justify-center items-center" style={{ width: wp(17), height: hp(3.8), backgroundColor: '#32959d', borderRadius: wp(1.5) }} >
+            <Text style={{ fontSize: wp(4), fontWeight: 'bold', color: '#ffffff' }} >Join</Text>
+          </TouchableOpacity>
+        </View>
+        <View>
+          <View className="flex-row justify-between items-center " >
+            <Text style={{ fontSize: wp(3.8), color: '#455a64' }} >
+              16/04/2022
+            </Text>
+            <View style={{ height: hp(2.2), width: wp(0.5), backgroundColor: '#32959d' }} />
+            <Text style={{ fontSize: wp(3.8), color: '#455a64' }} >
+              10:30 am
+            </Text>
+            <View style={{ height: hp(2.2), width: wp(0.5), backgroundColor: '#32959d' }} />
+            <Text style={{ fontSize: wp(3.8), color: '#455a64' }}>
+              Online
+            </Text>
+          </View>
+          <Text style={{ fontSize: wp(3.8), color: '#455a64', marginTop: hp(0.4) }} >
+            ID :  <Text style={{ fontWeight: 'bold', color: '#455a64' }} >654821</Text>
+          </Text>
+        </View>
+      </View>
+    </ScrollView>
   </View>
 );
 
-const SecondRoute = () => (
-  <View style={styles.scrollContainer} >
-    <Text>
-    afkadfdjlkfjieurioe vnrj
-    </Text>
-  </View>
-);
+const SecondRoute = () => (<View className="flex-col items-center " style={styles.scrollContainer} >
+  <ScrollView style={{width: '100%', paddingLeft: wp(3.5) }} >
+    <View style={{
+      width: wp(76), height: hp(13), backgroundColor: '#ffffff', marginTop: hp(2),
+      borderWidth: wp(0.5),
+      borderColor: '#32959d',
+      paddingHorizontal: wp(3.5),
+      paddingVertical: hp(1.1),
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'space-between'
+    }}>
+      <View className="flex-row items-center justify-between" >
+        <Text style={{ fontSize: wp(4), fontWeight: 'bold', color: '#455a64' }} >
+          Individual Therapy
+        </Text>
+        <TouchableOpacity className="flex-row justify-center items-center" style={{ width: wp(17), height: hp(3.8), backgroundColor: '#32959d', borderRadius: wp(1.5) }} >
+          <Text style={{ fontSize: wp(4), fontWeight: 'bold', color: '#ffffff' }} >Join</Text>
+        </TouchableOpacity>
+      </View>
+      <View>
+        <View className="flex-row justify-between items-center " >
+          <Text style={{ fontSize: wp(3.8), color: '#455a64' }} >
+            16/04/2022
+          </Text>
+          <View style={{ height: hp(2.2), width: wp(0.5), backgroundColor: '#32959d' }} />
+          <Text style={{ fontSize: wp(3.8), color: '#455a64' }} >
+            10:30 am
+          </Text>
+          <View style={{ height: hp(2.2), width: wp(0.5), backgroundColor: '#32959d' }} />
+          <Text style={{ fontSize: wp(3.8), color: '#455a64' }}>
+            Online
+          </Text>
+        </View>
+        <Text style={{ fontSize: wp(3.8), color: '#455a64', marginTop: hp(0.4) }} >
+          ID :  <Text style={{ fontWeight: 'bold', color: '#455a64' }} >654821</Text>
+        </Text>
+      </View>
+    </View>
+  </ScrollView>
+</View>);
 
 const renderScene = SceneMap({
   first: FirstRoute,
@@ -37,22 +182,21 @@ const renderScene = SceneMap({
 });
 // ---------
 
-
 const renderTabBar = (props) => (
   <TabBar
     {...props}
     indicatorStyle={{ backgroundColor: '#f8f7fc' }}
-    style={{ backgroundColor: '#f8f7fc', elevation: 0, width: '100%', }}
-
+    style={{ backgroundColor: '#f8f7fc', elevation: 0, padding: 0, width: '100%', }}
     renderLabel={({ route, focused, color }) => (
       <View className="flex-row items-center " style={{
-        backgroundColor: focused ? '#eaf7fc' : '#f8f7fc',
+        // backgroundColor: focused ? '#eaf7fc' : '#f8f7fc',
+        backgroundColor: focused ? 'rgba(1, 129, 140, 0.2)' : '#f8f7fc',
         width: wp(38),
         height: hp(4.5),
         borderRadius: wp(2),
         borderWidth: focused ? wp(0.5) : 0,
         // borderEndColor: '#01818c'
-        borderColor: "rgba(1, 129, 140, 0.5)"
+        borderColor: "rgba(1, 129, 140, 0.3)"
       }}>
         <Text style={{ color: focused ? '#01818c' : '#455a64', width: '100%', textAlign: 'center', fontSize: wp(4) }}>
           {route.title}
@@ -68,25 +212,22 @@ export default function ProfileScreen() {
 
   const layout = useWindowDimensions();
 
+  const [isSession, setSession] = React.useState(1)
+
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
-    { key: 'first', title: 'First' },
-    { key: 'second', title: 'Second' },
+    { key: 'first', title: 'Upcoming' },
+    { key: 'second', title: 'History' },
   ]);
-
 
   return (
     <SafeAreaView>
       <TopBarMain />
-
       <ScrollView style={{ backgroundColor: '#fff', height: hp(100) }}>
-
         <View style={{ marginTop: hp(9.5) }}>
           <ProfileBg width={wp(100)} height={hp(29)} />
-
           <View style={styles.banner}>
             <Text style={{ color: 'white', fontSize: wp(5.5), fontFamily: 'Roboto', fontWeight: '700', width: wp(84), textAlign: 'center', marginBottom: hp(1.5) }}>About Me</Text>
-
             <View className="flex-row justify-between items-center">
               <View>
                 <Text style={{ color: 'white', fontSize: wp(4), fontFamily: 'Roboto', fontWeight: 'bold', }}>
@@ -109,28 +250,22 @@ export default function ProfileScreen() {
             </View>
           </View>
         </View>
-
-
-        <View className="flex-col items-center" style={[styles.cardContainer, { height: hp(30), marginTop: hp(3.5) }]}>
-          <View style={styles.sessions}>
-            {/* <View style={{ width: '100%', height: hp(5) }}></View>
-            <ScrollView style={styles.scrollContainer}>
-              <Text style={{ width: '100%', textAlign: 'center', marginVertical: hp(3.6), color: '#455a64', fontSize: wp(4), fontFamily: 'Roboto', fontWeight: 'normal' }}>
-                Sorry! You have no sessions.
-              </Text>
-            </ScrollView> */}
-            <TabView
-              navigationState={{ index, routes }}
-              renderScene={renderScene}
-              onIndexChange={setIndex}
-              initialLayout={{ width: layout.width }}
-              animationEnabled={false}
-              style={styles.sessions}
-              renderTabBar={renderTabBar}
-            ></TabView>
-          </View>
+        <View style={[styles.cardContainer, { marginTop: hp(3) }]}>
+          <TabView
+            navigationState={{ index, routes }}
+            renderScene={renderScene}
+            onIndexChange={setIndex}
+            initialLayout={{ width: layout.width}}
+            animationEnabled={false}
+            style={{
+              width: '100%',
+              backgroundColor: '#f8f7fc',
+              borderRadius: wp(2.5),
+              height: isSession ? hp(40) : hp(20),
+            }}
+            renderTabBar={renderTabBar}
+          ></TabView>
         </View>
-
         <View className="flex-col items-center" style={[styles.cardContainer, { marginTop: hp(4) }]}>
           <TouchableOpacity activeOpacity={.8} style={styles.BookBtn2}>
             <Text style={styles.btnText2}>
@@ -138,8 +273,6 @@ export default function ProfileScreen() {
             </Text>
           </TouchableOpacity>
         </View>
-
-
         <View className="flex-col items-center" style={[styles.cardContainer, { marginTop: hp(3) }]}>
           <View className="flex-row items-center">
             <View style={styles.container3}></View>
@@ -147,7 +280,6 @@ export default function ProfileScreen() {
             <View style={styles.container3}></View>
           </View>
         </View>
-
         <View className="flex-col items-center" style={[styles.cardContainer, { marginTop: hp(3) }]}>
           <TouchableOpacity activeOpacity={.8} style={styles.BookBtn3}>
             <Text style={styles.btnText3}>
@@ -155,14 +287,10 @@ export default function ProfileScreen() {
             </Text>
           </TouchableOpacity>
         </View>
-
-
         <View className="flex-row items-center" style={[styles.cardContainer, { height: hp(20), marginTop: hp(5), backgroundColor: '#EBEFF2CC' }]}>
           <BottomQuote width={wp(71)} height={hp(15)} />
           {/* <View style={{width: wp(20) , height: hp(20) , backgroundColor: 'red'}} ></View> */}
         </View>
-
-
         <View style={{ width: wp(100), height: hp(6), marginTop: hp(3) }} />
       </ScrollView>
     </SafeAreaView>
@@ -201,22 +329,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginRight: wp(1)
   },
-
+// 84
   // Cards*******
   cardContainer: {
     width: wp(100),
     paddingHorizontal: wp(8),
-    // height: hp(15.8),
-    // marginTop: hp(4),
-    // backgroundColor: 'red'
   },
 
   sessions: {
     width: '100%',
     backgroundColor: '#f8f7fc',
-    // backgroundColor: 'green',
     borderRadius: wp(2.5),
-    height: '100%',
+    height: '100%'
   },
 
   scrollContainer: {
@@ -227,7 +351,7 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: wp(2.5),
     borderStyle: "solid",
     borderWidth: 2,
-    borderColor: "rgba(69, 90, 100, 0.2)"
+    borderColor: "rgba(69, 90, 100, 0.2)",
   },
 
   BookBtn2: {
