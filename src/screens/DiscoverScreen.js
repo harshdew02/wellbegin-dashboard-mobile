@@ -18,7 +18,7 @@ import BottomQuote from '../../assets/images/BottomQuote.svg';
 export default function DiscoverScreen() {
     return (
         <SafeAreaView>
-            <TopBarMain />
+            {/* <TopBarMain /> */}
             <ScrollView style={{ backgroundColor: '#fff', height: hp(100) }} >
                 <Text style={{ marginTop: hp(11.5), marginLeft: wp(8), color: '#043953', fontSize: wp(5), fontFamily: 'Roboto', fontWeight: '700' }} >
                     Discover Our Offerings Here 😍

@@ -26,7 +26,7 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView>
-      <TopBarMain />
+      {/* <TopBarMain /> */}
       <ScrollView style={{ backgroundColor: '#fff', height: hp(100) }}>
         {/* Banner */}
         <View style={{ marginTop: hp(9.5) }}>

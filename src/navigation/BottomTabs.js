@@ -16,10 +16,12 @@ import ProfileScreen from "../screens/ProfileScreen";
 // Navigator
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import ProfileNavigator from './ProfileNavigator.js';
 
 import SVGComponent from '../components/SVGcom';
 import HomeIcon from '../components/HomeIcon.js';
 import ProfileIcon from '../components/Profile.js';
+import TopBarMain from '../components/TopBarMain.js';
 
 const { width, height } = Dimensions.get("window")
 
@@ -69,6 +71,7 @@ export default function BottomTabs() {
             width,
             height,
         }}>
+            <TopBarMain/>
             <Tab.Navigator initialRouteName='Home_Tab' screenOptions={screenOptions}>
                 <Tab.Screen
                     name="Discover_Tab"
@@ -123,7 +126,7 @@ export default function BottomTabs() {
                 />
                 <Tab.Screen
                     name="Profile_Tab"
-                    component={ProfileScreen}
+                    component={ProfileNavigator}
                     options={{
                         tabBarIcon: ({ focused }) => {
                             return (
