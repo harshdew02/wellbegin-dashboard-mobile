@@ -15,6 +15,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoaderEffect from "../components/InitLoaderEffect";
 import Register from "../screens/Register";
 import ReminderScreen from "../screens/ReminderScreen";
+import AboutMe from "../screens/AboutMe";
+import ProfileNavigator from "./ProfileNavigator";
 
 const Stack = createNativeStackNavigator();
 
@@ -29,11 +31,13 @@ export default function AppNavigation() {
           },
           headerShown: false
         }}
-        // initialRouteName={'loader'}
-        initialRouteName={'main'}
-
+        initialRouteName={'loader'}
+        // initialRouteName={'main'}
+        // initialRouteName={'about'}
+        
       >
         <Stack.Screen name="loader" component={LoaderEffect} />
+        {/* <Stack.Screen name="about" component={ProfileNavigator} /> */}
         <Stack.Screen name="main" component={RightDrawer} />
         <Stack.Screen name="LoginPage" component={Login} />
         <Stack.Screen name="verifyPage" component={Verify} />

@@ -26,12 +26,12 @@ export default function TopBarMain() {
       <Animated.Image source={require('../../assets/logo.png')} style={{ width: wp(32), height: hp(16), marginLeft: wp(2) }} sharedTransitionTag="tag" />
 
 
-      <View className="flex-row justify-between" style={{ width: wp(20), marginRight: wp(4), marginBottom: wp(1) }}>
+      <View className=" flex-row justify-center items-center  " style={{ width: wp(20), marginBottom: wp(1) }}>
         {/* <TouchableOpacity onPress={() => navigation.openDrawer()}> */}
         <TouchableOpacity onPress={() => navigation.navigate('reminder')}>
           <TopBell active={true} />
         </TouchableOpacity>
-        <Dots />
+        {/* <Dots /> */}
       </View>
 
     </View >

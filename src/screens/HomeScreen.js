@@ -26,7 +26,7 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView>
-      <TopBarMain />
+      {/* <TopBarMain /> */}
       <ScrollView style={{ backgroundColor: '#fff', height: hp(100) }}>
         {/* Banner */}
         <View style={{ marginTop: hp(9.5) }}>
@@ -77,7 +77,7 @@ export default function HomeScreen() {
           </TouchableOpacity>
           <TouchableOpacity style={[styles.card, { backgroundColor: '#EAF7FC' }]}>
             <Text style={styles.cardText}>
-              My {'\n'}Tasks
+              What's {'\n'}New?
             </Text>
             <NewIcon width={wp(20)} height={hp(5)} />
           </TouchableOpacity>
