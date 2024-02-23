@@ -26,7 +26,7 @@ export default function AboutMe() {
               marginTop: hp(10)
             }}
           >
-            <TouchableOpacity onPress={() => navigation.goBack() } style={{ position: "absolute", left: 0 }} >
+            <TouchableOpacity onPress={() => navigation.goBack()} style={{ position: "absolute", left: 0 }} >
               <Back width={wp(8)} height={wp(8)} />
             </TouchableOpacity>
 
@@ -45,7 +45,7 @@ export default function AboutMe() {
               // onChangeText={onChangeNumber}
               // value={number}
               placeholder="Enter your Name"
-              keyboardType="text"
+              inputMode="text"
             />
 
             <TextInput
@@ -53,7 +53,7 @@ export default function AboutMe() {
               // onChangeText={onChangeNumber}
               // value={number}
               placeholder="+91-9480052103"
-              keyboardType="numeric"
+              inputMode="tel"
             />
 
             <TextInput
@@ -61,7 +61,7 @@ export default function AboutMe() {
               // onChangeText={onChangeNumber}
               // value={number}
               placeholder="abc@gmail.com"
-              keyboardType="text"
+              inputMode="email"
             />
 
             <TouchableOpacity activeOpacity={.8} style={[styles.BookBtn3, { marginTop: hp(1.5) }]}>

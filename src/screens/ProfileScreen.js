@@ -209,7 +209,7 @@ const renderTabBar = (props) => (
         width: wp(38),
         height: hp(4.5),
         borderRadius: wp(2),
-        borderWidth: focused ? wp(0.5) : 0,
+        // borderWidth: focused ? wp(0.5) : 0,
         // borderEndColor: '#01818c'
         borderColor: "rgba(1, 129, 140, 0.3)"
       }}>
