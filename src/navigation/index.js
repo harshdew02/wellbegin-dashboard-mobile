@@ -9,14 +9,10 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 // Type
 import RightDrawer from "./RightDrawer";
-import BottomTabs from "./BottomTabs";
 import Verify from "../screens/Verify";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import LoaderEffect from "../components/InitLoaderEffect";
-import Register from "../screens/Register";
-import ReminderScreen from "../screens/ReminderScreen";
 import AboutMe from "../screens/AboutMe";
-import ProfileNavigator from "./ProfileNavigator";
+import ReminderScreen from "../screens/ReminderScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -41,7 +37,7 @@ export default function AppNavigation() {
         <Stack.Screen name="main" component={RightDrawer} />
         <Stack.Screen name="LoginPage" component={Login} />
         <Stack.Screen name="verifyPage" component={Verify} />
-        <Stack.Screen name="register" component={Register} />
+        <Stack.Screen name="aboutMe" component={AboutMe}/>
         <Stack.Screen name="reminder" component={ReminderScreen}
 
           options={{

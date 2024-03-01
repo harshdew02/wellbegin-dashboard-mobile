@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import TopBar from "../components/TopBar";
+import SInfo from "react-native-encrypted-storage";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -23,38 +24,59 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useNavigation } from "@react-navigation/native";
 
-import {data,codes} from "../constants"
+import { data, codes } from "../constants";
+
+const encryptionKey = "qwertyuiopasdfghjklzxcvbnm";
 
 const requestOTP = async (code, number, navigation, [loading, setLoading]) => {
-  const apiUrl = "https://heartitout.in/welcome/wp-json/otp_signup_process/v2";
+  const apiUrl = "https://n8n.heartitout.in/webhook/api/auth";
 
+  let date = new Date();
+  let formattedDate = date.toISOString().split("T")[0];
+  if (date.getDate() > 15) {
+    date.setMonth(date.getMonth() + 1);
+    date.setDate(1);
+    formattedDate = date.toISOString().split("T")[0];
+  }
   try {
     const requestData = {
-      ch: "send_otp",
-      mob: code + number,
+      phone: number,
+      date: formattedDate,
+      code: code,
+      type: "send_otp",
     };
-    if((code+number).length < 10)
-      throw new Error('Mobile number is too short')
+    if ((code + number).length < 10)
+      throw new Error("Mobile number is too short");
 
     axios
       .post(apiUrl, requestData)
-      .then((res) => {
-        if (res.data.Status == "Success")
-          navigation.navigate("verifyPage", res.data);
-        else console.log("Error:" + res.data.Status);
+      .then(async (res) => {
+        const jsonData = {
+          token: res.data.token,
+          phone: res.data.phone,
+          code: res.data.code,
+          date: res.data.date,
+        };
+        const dataString = JSON.stringify(jsonData);
+        console.log(dataString);
+        await SInfo.setItem("token", dataString).then(()=>{
+          console.log('Data stored securely');
+        }).catch((error)=>{
+          console.log('Error: ', error);
+        });
+        navigation.navigate("verifyPage", res.data);
       })
       .catch((err) => {
         console.log(err);
-        setLoading(false)
+        setLoading(false);
       });
   } catch (error) {
     console.log("Error requesting OTP:", error.message);
-    setLoading(false)
+    setLoading(false);
   }
 };
 
-
-import Logo4 from '../../assets/images/myvec.svg';
+import Logo4 from "../../assets/images/myvec.svg";
 
 const Login = () => {
   const [value, setValue] = useState("IN");
@@ -64,7 +86,6 @@ const Login = () => {
   navigation.addListener("focus", (ref) => {
     setLoading(false);
   });
-  
 
   // const [isFocus, setIsFocus] = useState(false);
 
@@ -102,13 +123,13 @@ const Login = () => {
             style={{ width: wp(82), marginTop: hp(3) }}
           >
             <Dropdown
-              style={[styles.dropdown ]}
+              style={[styles.dropdown]}
               placeholderStyle={styles.placeholderStyle}
               selectedTextStyle={styles.selectedTextStyle}
               inputSearchStyle={styles.inputSearchStyle}
               containerStyle={styles.containerStyle}
               iconStyle={styles.iconStyle}
-              itemTextStyle={{fontSize: wp(4)}}
+              itemTextStyle={{ fontSize: wp(4) }}
               data={data}
               search
               maxHeight={200}
@@ -122,7 +143,7 @@ const Login = () => {
               value={value}
               onChange={(item) => {
                 setValue(item.code);
-                console.log(item)
+                console.log(item);
               }}
             />
 
@@ -141,7 +162,10 @@ const Login = () => {
             style={styles.button}
             onPress={() => {
               setLoading(true);
-              requestOTP(codes[value], number, navigation, [loading, setLoading]);
+              requestOTP(codes[value], number, navigation, [
+                loading,
+                setLoading,
+              ]);
             }}
           >
             <Text style={styles.textStyle}>Get OTP</Text>
@@ -258,7 +282,6 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto",
     fontWeight: "500",
     right: 0,
-
   },
   iconStyle: {
     width: wp(5),
@@ -270,7 +293,7 @@ const styles = StyleSheet.create({
     height: 40,
     fontSize: 16,
   },
-  containerStyle:{
+  containerStyle: {
     width: wp(40),
     // fontSize: wp(8)
     // marginBottom: 5,
@@ -303,10 +326,10 @@ const styles = StyleSheet.create({
   },
 
   textStyle: {
-    textAlign: 'center',
-    color: 'white',
+    textAlign: "center",
+    color: "white",
     fontSize: wp(5),
-    fontFamily: 'Roboto',
-    fontWeight: '500',
+    fontFamily: "Roboto",
+    fontWeight: "500",
   },
 });

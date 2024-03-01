@@ -6,36 +6,128 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import LottieView from "lottie-react-native";
 import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
-
+import SInfo from "react-native-encrypted-storage";
+import axios from "axios";
 
 export default function InitLoaderEffect() {
-
   const navigation = useNavigation();
 
-  navigation.addListener('focus',async (ref)=>{
+  navigation.addListener("focus", async (ref) => {
     try {
-      let token = await AsyncStorage.getItem('token');
-      if(token == null || token == undefined)
-        navigation.navigate('LoginPage');
-      else
-      {
-        // let byPass = await AsyncStorage.getItem('byPass');
-        // if(byPass == 'L')
-        //   navigation.navigate('main')
-        // else
-        //   navigation.navigate('register')
-        navigation.navigate('main');
+      let token = await SInfo.getItem("token");
+      if (token == null || token == undefined) navigation.navigate("LoginPage");
+      else {
+        const data = JSON.parse(token);
+        if (data.status !== "true") navigation.navigate("LoginPage");
+        else {
+          const userDetails = {
+            phone: data.phone,
+            code: data.code,
+            token: data.new_token,
+            otp: data.otp,
+            date: data.date,
+            usr_fullname : data.usr_fullname,
+            user_email : data.user_email,
+            insert_details: "false",
+          };
+
+          let finalDetails = {
+            phone: data.phone,
+            code: data.code,
+            token: data.new_token,
+            otp: data.otp,
+            date: data.date,
+            insert_details: "false",
+            get_details: "false",
+            has_appointment: "no",
+            app_det:{},
+            has_mood:"no",
+            usr_fullname : data.usr_fullname,
+            user_email : data.user_email,
+          }
+
+
+          //This the first call from the flowchart (and it is done)
+          const apiUrl =
+            "https://n8n.heartitout.in/webhook/api/fetch-user-details";
+          await axios
+            .post(apiUrl, userDetails)
+            .then(async (res) => {
+              // console.log("It is from first call",res.data)
+              if (res.data.success == 10) {
+                // await AsyncStorage.setItem("token", Token);
+                // console.log("It is sucess:" ,res.data.success);
+                finalDetails['get_details'] = "true";
+              } else {
+                finalDetails['usr_fullname'] = res.data.user_name;
+                finalDetails['user_email'] = res.data.user_email;
+                // navigation.navigate('main');
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+
+
+
+          //This is the second call from flowchart
+          const apiUrl2 =
+            "https://n8n.heartitout.in/webhook/api/fetch-session-details";
+          await axios
+            .post(apiUrl2, userDetails)
+            .then(async (res) => {
+              if (res.data.status === "0") {
+                // await AsyncStorage.setItem("token", Token);
+                console.log("User invalid");
+              } else if (res.data.status === "10") {
+                console.log("Show Book a Session");
+                finalDetails.has_appointment= "no";
+                // navigation.navigate('main');
+              }
+              else
+              {
+                console.log(res.data);
+                //If session is within 2 hours
+                //1. Book another session and Join your session
+
+                //If session is exists
+                 //1. Book another session and Continue your well-being journey
+                finalDetails.has_appointment = "yes"
+                finalDetails.app_det = res.data.app_det;
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+
+
+
+            //This is the third api call from flowchart
+            const apiUrl3 =
+            "https://n8n.heartitout.in/webhook/api/check_mood_tracker_logs";
+          await axios
+            .post(apiUrl3, userDetails)
+            .then(async (res) => {
+              if (res.data.status === "1") {
+                // await AsyncStorage.setItem("token", Token);
+                finalDetails.has_mood=res.data.has_mood;
+                console.log(res.data.has_mood);
+              } 
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+
+            navigation.navigate("main",finalDetails);
+        }
       }
     } catch (error) {
-      navigation.navigate('LoginPage');
+      navigation.navigate("LoginPage");
+      console.log(error)
     }
-  }
-  )
-  
+  });
+
   return (
     <SafeAreaView className="bg-white" style={{ height: hp(100) }}>
       <TopBar />
@@ -55,7 +147,6 @@ export default function InitLoaderEffect() {
           Relax while we setup your Personalised Wellbeing Dashboard
         </Text>
       </View>
-
     </SafeAreaView>
   );
 }

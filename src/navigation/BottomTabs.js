@@ -3,25 +3,22 @@ import { View, StyleSheet, Text, Dimensions } from 'react-native'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 // Icons
-import { MegaphoneIcon, SpeakerWaveIcon, ChatBubbleBottomCenterIcon, PhoneIcon } from "react-native-heroicons/solid";
 
 
 
 // Screens
 import DiscoverScreen from "../screens/DiscoverScreen";
 import HomeScreen from "../screens/HomeScreen";
-import ProfileScreen from "../screens/ProfileScreen";
 
 
 // Navigator
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import ProfileNavigator from './ProfileNavigator.js';
 
 import SVGComponent from '../components/SVGcom';
 import HomeIcon from '../components/HomeIcon.js';
 import ProfileIcon from '../components/Profile.js';
 import TopBarMain from '../components/TopBarMain.js';
+import ProfileNavigator from './ProfileNavigator.js';
 
 const { width, height } = Dimensions.get("window")
 
@@ -57,14 +54,14 @@ const screenOptions = {
     }
 }
 
-export default function BottomTabs() {
+export default function BottomTabs(props) {
 
 
     const [visible, setVisible] = React.useState(false);
 
+    const data = props.route.params;
 
     const Tab = createBottomTabNavigator();
-
 
     return (
         <View style={{
@@ -93,6 +90,7 @@ export default function BottomTabs() {
                             )
                         }
                     }}
+                    initialParams={{data}}
                 />
 
                 <Tab.Screen
@@ -123,6 +121,7 @@ export default function BottomTabs() {
                         // animation: 'slide_from_right'
 
                     }}
+                    initialParams={{data}}
                 />
                 <Tab.Screen
                     name="Profile_Tab"
@@ -143,10 +142,8 @@ export default function BottomTabs() {
                             )
                         }
                     }}
+                    initialParams={{data}}
                 />
-
-
-
             </Tab.Navigator>
         </View>
     )

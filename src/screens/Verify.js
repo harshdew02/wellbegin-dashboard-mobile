@@ -2,44 +2,58 @@ import {
   View,
   Text,
   SafeAreaView,
-  Image,
-  StatusBar,
   StyleSheet,
   TextInput,
   ActivityIndicator,
   TouchableOpacity,
   ScrollView,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import SInfo from 'react-native-encrypted-storage';
 import TopBar from "../components/TopBar";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { Dropdown } from "react-native-element-dropdown";
-import { MagnifyingGlassIcon } from "react-native-heroicons/outline";
 import axios from "axios";
-import LoaderEffect from "../components/InitLoaderEffect";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import Logo4 from "../../assets/images/verifyDisplay.svg";
+import Back from "../../assets/images/arrow.svg";
 
-import { useNavigation } from "@react-navigation/native";
 
-const verifyOTP = (mobile, Token, otp, navigation, [loading, setLoading], [error, setError]) => {
-  const apiUrl = "https://heartitout.in/welcome/wp-json/check_details/v1";
-
+const verifyOTP = async (code ,mobile, Token, otp,date, navigation, [loading, setLoading], [error, setError]) => {
+  const apiUrl = "https://n8n.heartitout.in/webhook/api/auth";
   try {
+    const session = await SInfo.getItem("token");
+    const data = JSON.parse(session);
+    // console.log("Parsed data",data);
     const requestData = {
-      mob: mobile,
-      token: Token,
+      phone: data.phone,
+      code:data.code,
+      token: data.token,
       otp: otp,
+      date:data.date,
+      type:"verfiy_otp"
     };
 
     axios
       .post(apiUrl, requestData)
       .then(async (res) => {
-        if (res.data.Status == "Get_Details" || res.data.Status == "Success") {
-          await AsyncStorage.setItem("token", Token);
-          navigation.navigate("main");
+        console.log(res.data);
+        
+        if (res.data.status == "true") {
+          // await AsyncStorage.setItem("token", Token);
+          await SInfo.setItem("token",JSON.stringify({
+            token:data.token,
+            new_token:res.data.token,
+            phone:res.data.phone,
+            code:res.data.code,
+            otp:res.data.otp,
+            date:res.data.date,
+            status:res.data.status,
+            usr_fullname:"",
+            user_email:"",
+          }))
+          navigation.navigate("loader");
         } else {
           console.log("wrong otp received");
           setError("You entered the wrong code. Please try again.");
@@ -59,22 +73,42 @@ const verifyOTP = (mobile, Token, otp, navigation, [loading, setLoading], [error
 };
 
 const requestOTP = async (mobile, [loading, setLoading]) => {
-  const apiUrl = "https://heartitout.in/welcome/wp-json/otp_signup_process/v2";
+  const apiUrl = "https://n8n.heartitout.in/webhook/api/auth";
 
+  let date = new Date();
+  let formattedDate = date.toISOString().split("T")[0];
+  if (date.getDate() > 15) {
+    date.setMonth(date.getMonth() + 1);
+    date.setDate(1);
+    formattedDate = date.toISOString().split("T")[0];
+  }
   try {
     const requestData = {
-      ch: "send_otp",
-      mob: mobile,
+      phone: number,
+      date: formattedDate,
+      code: code,
+      type: "send_otp",
     };
-    if (mobile.length < 10) throw new Error("Mobile number is too short");
+    if ((code + number).length < 10)
+      throw new Error("Mobile number is too short");
 
     axios
       .post(apiUrl, requestData)
-      .then((res) => {
-        if (res.data.Status == "Success") setLoading(false);
-        else {
-          console.log("Error:" + res.data.Status);
-        }
+      .then(async (res) => {
+        setLoading(false);
+        const jsonData = {
+          token: res.data.token,
+          phone: res.data.phone,
+          code: res.data.code,
+          date: res.data.date,
+        };
+        const dataString = JSON.stringify(jsonData);
+        console.log(dataString);
+        await SInfo.setItem("token", dataString).then(()=>{
+          console.log('Data stored securely');
+        }).catch((error)=>{
+          console.log('Error: ', error);
+        });
       })
       .catch((err) => {
         console.log(err);
@@ -86,32 +120,16 @@ const requestOTP = async (mobile, [loading, setLoading]) => {
   }
 };
 
-import Logo4 from "../../assets/images/verifyDisplay.svg";
-import Back from "../../assets/images/arrow.svg";
-
 export default function Verify({ navigation, route }) {
   const [value, setValue] = useState("91");
   const [otp, setOtp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState(null);
-
+  
   navigation.addListener("focus", (ref) => {
     setLoading(false);
     setOtp(false);
   });
-
-  // const handleButtonClick = (errorCode) => {
-  //   // Set different error messages based on the error code
-  //   if (errorCode === 1) {
-  //     setShowErrorMessage("Wrong OTP. Please try again.");
-  //   } else if (errorCode === 2) {
-  //     setShowErrorMessage("Something went wrong. Please try again later.");
-  //   } else {
-  //     // Handle other error codes if needed
-  //     setShowErrorMessage("Something went wrong. Please try again later.");
-  //   }
-  // };
-  // const navigation = useNavigation();
 
   const [number, onChangeNumber] = React.useState("");
 
@@ -139,7 +157,7 @@ export default function Verify({ navigation, route }) {
           </Text>
 
           {/* <Text style={styles.mob}>+{route.params.mobile}</Text> */}
-          <Text style={styles.mob}>+{route.params.mobile}</Text>
+          <Text style={styles.mob}>+{route.params.code}{route.params.phone}</Text>
 
           <TextInput
             className="rounded-lg"
@@ -160,12 +178,15 @@ export default function Verify({ navigation, route }) {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
+              
               setLoading(true);
               setShowErrorMessage(null);
               verifyOTP(
-                route.params.mobile,
-                route.params.Token,
+                route.params.code,
+                route.params.phone,
+                route.params.token,
                 number,
+                route.params.date,
                 navigation,
                 [loading, setLoading],
                 [showErrorMessage,setShowErrorMessage]
