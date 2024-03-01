@@ -1,5 +1,5 @@
 import { View, Text, SafeAreaView, Image, StyleSheet, TouchableOpacity, Button } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react';
 import TopBarMain from '../components/TopBarMain'
 import { ScrollView } from 'react-native-gesture-handler'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
@@ -22,9 +22,55 @@ import Home2 from '../../assets/images/home2.svg';
 
 // F:\HIO\Progress\hio_UI\hio\assets\images\
 
+const Btn = () => {
+  return (
+    <TouchableOpacity activeOpacity={.8} style={styles.BookBtn}>
+      <Text style={styles.btnText}>
+        Book a Session
+      </Text>
+    </TouchableOpacity>
+  )
+}
+const Bookbtn = () => {
+  return (
+    <View className="flex-row justify-between" >
+      <TouchableOpacity activeOpacity={.8} style={{
+        marginTop: hp(2),
+        width: wp(33),
+        height: hp(6),
+        borderRadius: wp(8),
+        justifyContent: 'center',
+        borderWidth: 1,
+        borderColor: '#ffffff',
+        alignItems: 'center',
+        flexDirection: 'row',
+      }}>
+        <Text style={[styles.btnText, { fontSize: wp(3.5), color: '#ffffff' }]}>
+          Book another Session
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity activeOpacity={.8} style={{
+        marginTop: hp(2),
+        width: wp(45),
+        height: hp(6),
+        backgroundColor: 'white',
+        borderRadius: wp(8),
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row',
+      }}>
+        <Text style={styles.btnText}>
+          Join Your Session
+        </Text>
+      </TouchableOpacity>
+    </View>
+  )
+}
+
 export default function HomeScreen() {
 
   const navigation = useNavigation();
+  const [isBooked, setBooked] = useState(true);
 
   return (
     <SafeAreaView>
@@ -51,14 +97,9 @@ export default function HomeScreen() {
                 style={{ height: wp(30), width: wp(30) }}
               />
             </View>
-            <TouchableOpacity activeOpacity={.8} style={styles.BookBtn}>
-              <Text style={styles.btnText}>
-                Book a Session
-              </Text>
-            </TouchableOpacity>
+            {(isBooked) ? <Bookbtn/> : <Btn/>}
           </View>
         </View>
-
 
         {/* Content */}
         <View className="flex-row justify-between" style={[styles.cardContiner, { height: hp(15.8) }]}>
