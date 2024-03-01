@@ -17,6 +17,8 @@ import Emoji4 from '../../assets/images/emoji4.svg';
 import Emoji5 from '../../assets/images/emoji5.svg';
 import Gift from '../../assets/images/Gift.svg';
 import BottomQuote from '../../assets/images/BottomQuote.svg';
+import Home1 from '../../assets/images/home1.svg';
+import Home2 from '../../assets/images/home2.svg';
 
 // F:\HIO\Progress\hio_UI\hio\assets\images\
 
@@ -83,40 +85,67 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
 
-        <View className="flex-col justify-between items-center" style={[styles.cardContiner, { height: hp(12.5), marginTop: hp(3) }]}>
-          <Text style={{ color: '#043953', fontSize: wp(4), fontFamily: 'Roboto', fontWeight: '700' }}>
-            How are you feeling today?
-          </Text>
-          <FeelBanner width={wp(85)} height={hp(9)} style={styles.feelBanner} />
-          <View className="flex-row justify-between items-center" style={[{ position: 'absolute', bottom: 8, zIndex: 1, width: wp(78) }]}>
-            <TouchableOpacity><Emoji1 width={wp(8)} height={wp(8)} /></TouchableOpacity>
-            <TouchableOpacity><Emoji2 width={wp(8)} height={wp(8)} /></TouchableOpacity>
-            <TouchableOpacity><Emoji3 style={{ marginHorizontal: wp(1.5) }} width={wp(10)} height={wp(10)} /></TouchableOpacity>
-            <TouchableOpacity><Emoji4 width={wp(8)} height={wp(8)} /></TouchableOpacity>
-            <TouchableOpacity><Emoji5 width={wp(8)} height={wp(8)} /></TouchableOpacity>
+        <View className="flex-col justify-between items-center" style={[styles.cardContiner, { marginTop: hp(3) }]}>
+          <Home2 width={'100%'} height={hp(13)} />
+          <View style={{
+            position: 'absolute',
+            // left: wp(43),
+            right: wp(11),
+            top: hp(2.4),
+            zIndex: 2,
+            display: 'flex',
+            alignItems: 'center',
+          }} >
+            <Text style={{ color: '#455a64', fontSize: wp(4), fontFamily: 'Roboto', fontWeight: '800', }}>
+              Understanding You
+            </Text>
+            <TouchableOpacity activeOpacity={.8} style={{
+              marginTop: hp(1.2),
+              width: wp(43),
+              height: hp(3.5),
+              backgroundColor: '#01818c',
+              borderRadius: wp(8),
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexDirection: 'row',
+            }}>
+              <Text style={{
+                textAlign: 'center',
+                color: '#ffffff',
+                fontSize: wp(4),
+                fontFamily: 'Roboto',
+                fontWeight: '600',
+              }}>
+                View Mood Insights
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
 
         {/* Package */}
         <View className="flex-col items-center" style={[styles.cardContiner, { height: hp(15.8), marginTop: hp(3) }]}>
-          <View style={[styles.packageCard, {}]}>
-            <View className="flex-col justify-between items-start " style={{ height: hp(9) }}>
-              <Text style={styles.cardText}>
-                Session Packages
+          <Home1 width={'100%'} height={hp(17)} />
+          <View style={{
+            position: 'absolute',
+            left: wp(13),
+            top: hp(4),
+            zIndex: 2,
+          }}>
+            <Text style={styles.cardText}>
+              Session Packages
+            </Text>
+            <TouchableOpacity activeOpacity={.5} style={[styles.Btn, { marginTop: hp(2) }]}>
+              <Text style={styles.btnText2}>
+                Book a Session
               </Text>
-              <TouchableOpacity activeOpacity={.5} style={styles.Btn}>
-                <Text style={styles.btnText2}>
-                  Book a Session
-                </Text>
-              </TouchableOpacity>
-            </View>
-            <Gift width={wp(25)} height={hp(9)} />
+            </TouchableOpacity>
           </View>
+          {/* <Gift width={wp(25)} height={hp(9)} /> */}
         </View>
 
 
 
-        <View className="flex-col items-center" style={[styles.cardContiner, { height: hp(15.8), marginTop: hp(2) }]}>
+        <View className="flex-col items-center" style={[styles.cardContiner, { height: hp(15.8), marginTop: hp(4) }]}>
           <View style={[styles.packageCard, { backgroundColor: '#EAF7FC' }]}>
             <View className="flex-col justify-between items-start " style={{ height: hp(9) }}>
               <Text style={styles.cardText}>
