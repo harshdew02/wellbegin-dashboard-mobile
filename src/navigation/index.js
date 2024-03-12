@@ -17,6 +17,8 @@ import Register from "../screens/Register";
 import ReminderScreen from "../screens/ReminderScreen";
 import AboutMe from "../screens/AboutMe";
 import ProfileNavigator from "./ProfileNavigator";
+import MoodTracker from "../screens/MoodTracker";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -39,6 +41,7 @@ export default function AppNavigation() {
         <Stack.Screen name="loader" component={LoaderEffect} />
         {/* <Stack.Screen name="about" component={ProfileNavigator} /> */}
         <Stack.Screen name="main" component={RightDrawer} />
+        <Stack.Screen name="mood" component={MoodTracker} />
         <Stack.Screen name="LoginPage" component={Login} />
         <Stack.Screen name="verifyPage" component={Verify} />
         <Stack.Screen name="register" component={Register} />

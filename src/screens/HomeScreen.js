@@ -102,7 +102,7 @@ export default function HomeScreen() {
         </View>
 
         {/* Content */}
-        <View className="flex-row justify-between" style={[styles.cardContiner, { height: hp(15.8) }]}>
+        <View className="flex-row justify-between" style={[styles.cardContainer, { height: hp(15.8) }]}>
           <TouchableOpacity style={[styles.card, { backgroundColor: '#FEF8C8' }]}>
             <Text style={styles.cardText}>
               My {'\n'}Tasks
@@ -126,7 +126,7 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
 
-        <View className="flex-col justify-between items-center" style={[styles.cardContiner, { marginTop: hp(3) }]}>
+        <View className="flex-col justify-between items-center" style={[styles.cardContainer, { marginTop: hp(3) }]}>
           <Home2 width={'100%'} height={hp(13)} />
           <View style={{
             position: 'absolute',
@@ -149,7 +149,7 @@ export default function HomeScreen() {
               justifyContent: 'center',
               alignItems: 'center',
               flexDirection: 'row',
-            }}>
+            }} onPress={()=>navigation.navigate("mood")} >
               <Text style={{
                 textAlign: 'center',
                 color: '#ffffff',
@@ -164,7 +164,7 @@ export default function HomeScreen() {
         </View>
 
         {/* Package */}
-        <View className="flex-col items-center" style={[styles.cardContiner, { height: hp(15.8), marginTop: hp(3) }]}>
+        <View className="flex-col items-center" style={[styles.cardContainer, { height: hp(15.8), marginTop: hp(3) }]}>
           <Home1 width={'100%'} height={hp(17)} />
           <View style={{
             position: 'absolute',
@@ -186,7 +186,7 @@ export default function HomeScreen() {
 
 
 
-        <View className="flex-col items-center" style={[styles.cardContiner, { height: hp(15.8), marginTop: hp(4) }]}>
+        <View className="flex-col items-center" style={[styles.cardContainer, { height: hp(15.8), marginTop: hp(4) }]}>
           <View style={[styles.packageCard, { backgroundColor: '#EAF7FC' }]}>
             <View className="flex-col justify-between items-start " style={{ height: hp(9) }}>
               <Text style={styles.cardText}>
@@ -205,7 +205,7 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        <View className="flex-row items-center" style={[styles.cardContiner, { height: hp(20), marginTop: hp(5), backgroundColor: '#EBEFF2CC' }]}>
+        <View className="flex-row items-center" style={[styles.cardContainer, { height: hp(20), marginTop: hp(5), backgroundColor: '#EBEFF2CC' }]}>
           <BottomQuote width={wp(71)} height={hp(15)} />
         </View>
 
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
   },
 
   // Cards
-  cardContiner: {
+  cardContainer: {
     width: wp(100),
     paddingHorizontal: wp(8),
     // height: hp(15.8),
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
 
-  cardContiner2: {
+  cardContainer2: {
     width: wp(100),
     paddingHorizontal: wp(8),
     // height: hp(15.8),
