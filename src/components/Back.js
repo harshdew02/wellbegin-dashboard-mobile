@@ -3,8 +3,8 @@ import Svg, { Path } from "react-native-svg";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 const Back = ({color}) => (
   <Svg
-    width={wp(8)}
-    height={wp(8)}
+    width={wp(6.4)}
+    height={wp(6.4)}
     viewBox="0 0 28 22"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"

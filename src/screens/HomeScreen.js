@@ -308,6 +308,7 @@ export default function HomeScreen(props) {
             style={[styles.card, { backgroundColor: "#FEF8C8" }]}
           >
             <Text style={styles.cardText}>My {"\n"}Tasks</Text>
+
             <TasksIcon width={wp(11)} height={hp(6)} />
           </TouchableOpacity>
           <TouchableOpacity
@@ -334,6 +335,7 @@ export default function HomeScreen(props) {
             <NewIcon width={wp(20)} height={hp(5)} />
           </TouchableOpacity>
         </View>
+
 
         <View
           className="flex-col justify-between items-center"
@@ -390,6 +392,7 @@ export default function HomeScreen(props) {
         </View>
 
         {/* Package */}
+
         <View
           className="flex-col items-center"
           style={[styles.cardContiner, { height: hp(15.8), marginTop: hp(3) }]}
@@ -482,7 +485,7 @@ const styles = StyleSheet.create({
   },
 
   // Cards
-  cardContiner: {
+  cardContainer: {
     width: wp(100),
     paddingHorizontal: wp(8),
     // height: hp(15.8),
@@ -558,7 +561,7 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 
-  cardContiner2: {
+  cardContainer2: {
     width: wp(100),
     paddingHorizontal: wp(8),
     // height: hp(15.8),

@@ -13,6 +13,9 @@ import Verify from "../screens/Verify";
 import LoaderEffect from "../components/InitLoaderEffect";
 import AboutMe from "../screens/AboutMe";
 import ReminderScreen from "../screens/ReminderScreen";
+import ProfileNavigator from "./ProfileNavigator";
+import MoodTracker from "../screens/MoodTracker";
+
 
 const Stack = createNativeStackNavigator();
 
@@ -28,13 +31,15 @@ export default function AppNavigation() {
           headerShown: false
         }}
         initialRouteName={'loader'}
+        // initialRouteName={'LoginPage'}
         // initialRouteName={'main'}
         // initialRouteName={'about'}
-        
+        // initialRouteName={'verifyPage'}
       >
         <Stack.Screen name="loader" component={LoaderEffect} />
         {/* <Stack.Screen name="about" component={ProfileNavigator} /> */}
         <Stack.Screen name="main" component={RightDrawer} />
+        <Stack.Screen name="mood" component={MoodTracker} />
         <Stack.Screen name="LoginPage" component={Login} />
         <Stack.Screen name="verifyPage" component={Verify} />
         <Stack.Screen name="aboutMe" component={AboutMe}/>

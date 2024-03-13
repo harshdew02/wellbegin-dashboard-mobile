@@ -75,9 +75,12 @@ const requestOTP = async (code, number, navigation, [loading, setLoading]) => {
   }
 };
 
-import Logo4 from "../../assets/images/myvec.svg";
+
+import Logo4 from '../../assets/images/myvec.svg';
+import Loginbg from "../components/Loginbg";
 
 const Login = () => {
+
   const [value, setValue] = useState("IN");
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
@@ -90,21 +93,17 @@ const Login = () => {
 
   return (
     <SafeAreaView>
-      <TopBar />
-      <ScrollView>
+      {/* <TopBar /> */}
+      <ScrollView  >
         <StatusBar
-          backgroundColor={"#fff"}
+          backgroundColor={"#eaf7fc"}
           barStyle={"dark-content"}
           hidden={false}
         />
 
-        {/* <View style={styles.box}> */}
-        {/* <View className="bg-[#EAF7FC]" style={styles.vect}>
-          </View> */}
-
-        <Logo4 width={wp(100)} height={wp(85)} style={styles.box} />
-        {/* <View style={{ height: hp(10) }}></View> */}
-        {/* </View> */}
+        <View style={{ width: wp(100), justifyContent: 'center', alignItems: 'center' }}>
+          <Loginbg />
+        </View>
 
         <View className="flex-col items-center" style={{ marginTop: hp(2.5) }}>
           <Text style={styles.well}>Your Wellbeing Comes First!</Text>
@@ -167,7 +166,7 @@ const Login = () => {
               ]);
             }}
           >
-            <Text style={styles.textStyle}>Get OTP</Text>
+            <Text style={styles.textStyle}>Verify OTP</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
