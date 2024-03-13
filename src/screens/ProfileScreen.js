@@ -21,15 +21,54 @@ import ProfileDisplay from "../../assets/images/ProfileDisplay.svg";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
 import BookIcon from "../../assets/images/bookIcon.svg";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
+import {InAppBrowser} from 'react-native-inappbrowser-reborn'
 import axios from "axios";
 
-const outLink = (link) => {
-  Linking.openURL(link)
-    .then((responsive) => {
-      console.log(responsive);
-    })
-    .catch((err) => console.log(err));
-};
+const outLink = async (link) => {
+  try {
+    const url = link
+    if (await InAppBrowser.isAvailable()) {
+      const result = await InAppBrowser.open(url, {
+        // // iOS Properties
+        // dismissButtonStyle: 'cancel',
+        // preferredBarTintColor: '#453AA4',
+        // preferredControlTintColor: 'white',
+        // readerMode: false,
+        // animated: true,
+        // modalPresentationStyle: 'fullScreen',
+        // modalTransitionStyle: 'coverVertical',
+        // modalEnabled: true,
+        // enableBarCollapsing: false,
+        // Android Properties
+        showTitle: true,
+        toolbarColor: '#01818C',
+        secondaryToolbarColor: 'red',
+        navigationBarColor: 'white',
+        navigationBarDividerColor: 'white',
+        enableUrlBarHiding: true,
+        enableDefaultShare: false,
+        forceCloseOnRedirection: false,
+        hasBackButton: true,
+        
+        // Specify full animation resource identifier(package:anim/name)
+        // or only resource name(in case of animation bundled with app).
+        animations: {
+          startEnter: 'slide_in_right',
+        },
+        headers: {
+          'my-custom-header': 'my custom header value'
+        }
+      })
+      console.log(result)
+    }
+    else Linking.openURL(url)
+  } catch (error) {
+    console.log(error)
+  }
+// Linking.canOpenURL(link).then((supported)=>{
+//   if(supported) Linking.openURL(link); else console.log('error')
+// });
+}
 
 const NoSessions = () => {
   return (
@@ -391,6 +430,7 @@ const Card = () => {
               backgroundColor: "#01818c",
               borderRadius: wp(1),
             }}
+            onPress={()=>{outLink('https://heartitout.in/products/doodle-notebooks/')}}
           >
             <Text style={{ color: "white", fontSize: wp(3.8) }}>
               Try doodling!
