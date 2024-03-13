@@ -8,7 +8,9 @@ import ProfileScreen from '../screens/ProfileScreen';
 import AboutMe from '../screens/AboutMe';
 
 
-export default function ProfileNavigator() {
+export default function ProfileNavigator(props) {
+    const data = props.route.params.data.route.params;
+    // console.log("It is from profile navigator: ",data)
     return (
         <ProfileStack.Navigator
             screenOptions={{
@@ -19,7 +21,7 @@ export default function ProfileNavigator() {
             }}
             initialRouteName={'profile'}
         >
-            <ProfileStack.Screen name="profile" component={ProfileScreen} />
+            <ProfileStack.Screen name="profile" component={ProfileScreen} initialParams={{data}} />
             <ProfileStack.Screen name="aboutMe" component={AboutMe} />
         </ProfileStack.Navigator>
     )
