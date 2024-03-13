@@ -3,79 +3,114 @@ import {
   Text,
   SafeAreaView,
   Image,
+  Linking,
   StyleSheet,
   TouchableOpacity,
-  Button,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import TopBarMain from "../components/TopBarMain";
+import React, { useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { useNavigation } from "@react-navigation/native";
+import { Link, useNavigation } from "@react-navigation/native";
 
 import Logo4 from "../../assets/images/homePageBanner.svg";
 import TasksIcon from "../../assets/images/TasksIcon.svg";
 import NewIcon from "../../assets/images/NewIcon.svg";
-import FeelBanner from "../../assets/images/FeelBanner.svg";
-import Emoji1 from "../../assets/images/emoji1.svg";
-import Emoji2 from "../../assets/images/emoji2.svg";
-import Emoji3 from "../../assets/images/emoji3.svg";
-import Emoji4 from "../../assets/images/emoji4.svg";
-import Emoji5 from "../../assets/images/emoji5.svg";
-import Gift from "../../assets/images/Gift.svg";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
 import Home1 from "../../assets/images/home1.svg";
 import Home2 from "../../assets/images/home2.svg";
+import SInfo from "react-native-encrypted-storage";
 
 // F:\HIO\Progress\hio_UI\hio\assets\images\
 
+const outLink = (link) => {
+  Linking.openURL(link)
+    .then((responsive) => {
+      console.log(responsive);
+    })
+    .catch((err) => console.log(err));
+};
+
 const Btn = (props) => {
   return (
-    <TouchableOpacity activeOpacity={0.8} style={styles.BookBtn}>
+    <TouchableOpacity
+      activeOpacity={0.8}
+      style={styles.BookBtn}
+      onPress={() => {
+        // Checking if the link is supported for links with custom URL scheme.
+        outLink("https://heartitout.in/therapists/");
+      }}
+    >
       <Text style={styles.btnText}>Book a Session</Text>
     </TouchableOpacity>
   );
 };
 const Bookbtn = (props) => {
-  console.log(props)
+  // console.log(props.props.is2hour)
+  const ishour = props.props.is2hour;
   return (
+    // <></>
     <View className="flex-row justify-between">
-      <TouchableOpacity
-        activeOpacity={0.8}
-        style={{
-          marginTop: hp(2),
-          width: wp(33),
-          height: hp(6),
-          borderRadius: wp(8),
-          justifyContent: "center",
-          borderWidth: 1,
-          borderColor: "#ffffff",
-          alignItems: "center",
-          flexDirection: "row",
-        }}
-      >
-        <Text style={[styles.btnText, { fontSize: wp(3.5), color: "#ffffff" }]}>
-          Book another Session
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        activeOpacity={0.8}
-        style={{
-          marginTop: hp(2),
-          width: wp(45),
-          height: hp(6),
-          backgroundColor: "white",
-          borderRadius: wp(8),
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "row",
-        }}
-      >
-        <Text style={styles.btnText}>{props.props ? `Join Your Session` : 'Continue your well-being journey'}</Text>
-      </TouchableOpacity>
+      {ishour ? (
+        <>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={{
+              marginTop: hp(2),
+              width: wp(33),
+              height: hp(6),
+              borderRadius: wp(8),
+              justifyContent: "center",
+              borderWidth: 1,
+              borderColor: "#ffffff",
+              alignItems: "center",
+              flexDirection: "row",
+            }}
+            onPress={() => {
+              // Checking if the link is supported for links with custom URL scheme.
+              outLink("https://heartitout.in/therapists/");
+            }}
+          >
+            <Text
+              style={[styles.btnText, { fontSize: wp(3.5), color: "#ffffff" }]}
+            >
+              Book another Session
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={{
+              marginTop: hp(2),
+              width: wp(45),
+              height: hp(6),
+              backgroundColor: "white",
+              borderRadius: wp(8),
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "row",
+            }}
+            onPress={() => {
+              // Checking if the link is supported for links with custom URL scheme.
+              outLink(props.props.link);
+            }}
+          >
+            <Text style={styles.btnText}>Join Your Session</Text>
+          </TouchableOpacity>
+        </>
+      ) : (
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={[styles.BookBtn]}
+          onPress={() => {
+            // Checking if the link is supported for links with custom URL scheme.
+            outLink("https://heartitout.in/therapists/");
+          }}
+        >
+          <Text style={[styles.btnText]}>Book another Session</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -84,21 +119,78 @@ export default function HomeScreen(props) {
   const navigation = useNavigation();
   const [isBooked, setBooked] = useState(false);
   const [is2hour, setIs2hour] = useState(false);
+  const [name, setName] = useState("User");
+  const [link, setLink] = useState("");
+  const [mood, setMood] = useState("Track Your Mood");
+  const [time, setTime] = useState("");
   const data = props.route.params.data.route.params;
-  React.useEffect(() => {
-    console.log("It is coming from home screen: ", data);
-    if (data.has_appointment === "no") setBooked(false);
-    else {
-      // Parse the provided JSON datetime string
-      const sessionDateTime = new Date(
-        data.app_det.app_session_date + " " + data.app_det.app_session_time
-      );
 
-      // Get the current time
-      const currentTime = new Date();
+  const appointment = {
+    appointment: data.app_det,
+    has_appointment: data.has_appointment,
+    // has_appointment: "yes",
+    // appointment: {
+    //   app_id: "53904",
+    //   app_cl_name: "Vaishnavi Kambadur",
+    //   app_cl_email: "vaishnavi5913@gmail.com",
+    //   app_staff: "2",
+    //   app_session_date:
+    //     "Fri Mar 13 2024 00:00:00 GMT+0000 (Coordinated Universal Time)",
+    //   app_session_time: "01:00:00",
+    //   app_session_link: "https://meet.google.com/pgx-mwxa-jdj",
+    // },
+  };
+  React.useEffect(() => {
+    setName(data.usr_fullname);
+    data.has_mood == "no"
+      ? setMood("Track Your Mood")
+      : setMood("View Mood Insights");
+    // console.log("It is coming from home screen: ", appointment);
+    if (appointment.has_appointment === "no") setBooked(false);
+    else {
+      const apiDate = appointment.appointment.app_session_date;
+      const apiTime = appointment.appointment.app_session_time;
+
+      // Extracting date components from api
+      let timestamp = new Date(apiDate);
+      let year = timestamp.getFullYear();
+      let month = String(timestamp.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
+      let date = String(timestamp.getDate()).padStart(2, "0");
+      let [part1, part2, part3] = apiTime.split(':');
+      let hours = part1;
+      let minutes = part2;
+      let seconds = part3;
+      let period = "AM";
+      if (hours >= 12) {
+        hours -= 12;
+        period = "PM";
+      }
+      if (hours === 0) {
+        hours = 12;
+      }
+      // let showTime = `${}/${}/${} at `
+      let showTime = `${date}/${month}/${year} at ${hours}:${minutes}:${seconds} ${period} IST`;
+      let finalAPITime = `${year}-${month}-${date}T${apiTime}Z`;
+
+      // Extracting date components from system
+      timestamp = new Date();
+      year = timestamp.getFullYear();
+      month = String(timestamp.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
+      date = String(timestamp.getDate()).padStart(2, "0");
+      hours = String(timestamp.getHours()).padStart(2, "0");
+      minutes = String(timestamp.getMinutes()).padStart(2, "0");
+      seconds = String(timestamp.getSeconds()).padStart(2, "0");
+      let finalSystemTime = `${year}-${month}-${date}T${hours}:${minutes}:${seconds}Z`;
+      setLink(appointment.appointment.app_session_link);
+
+      // Parse the API datetime string
+      const apiDateTime = new Date(finalAPITime);
+
+      // Parse the system datetime string
+      const systemDateTime = new Date(finalSystemTime);
 
       // Calculate the time difference in milliseconds
-      const timeDifference = sessionDateTime - currentTime;
+      const timeDifference = apiDateTime - systemDateTime;
 
       // Convert milliseconds to hours
       const timeDifferenceHours = Math.abs(timeDifference / (1000 * 60 * 60));
@@ -108,20 +200,17 @@ export default function HomeScreen(props) {
 
       // Compare the time difference with the threshold and whether it's negative
       if (timeDifference < 0) {
-        setBooked(false)
+        setBooked(false);
       } else if (timeDifferenceHours >= twoHours) {
         setBooked(true);
-        setIs2hour(false)
-        console.log("Above JSON time is more than 2 hours ahead of the current time.");
+        setIs2hour(false);
       } else if (timeDifferenceHours < twoHours) {
         setBooked(true);
-        setIs2hour(true)
-        console.log(
-          "Above JSON time is less than 2 hours ahead of the current time."
-        );
+        setIs2hour(true);
+        setTime(showTime);
       }
     }
-  }, []);
+  }, [name]);
 
   return (
     <SafeAreaView>
@@ -141,36 +230,72 @@ export default function HomeScreen(props) {
                     fontWeight: "400",
                   }}
                 >
-                  Welcome👋
+                  Welcome👋 {name}
                 </Text>
-                <Text
-                  style={{
-                    color: "white",
-                    fontSize: wp(4),
-                    fontFamily: "Roboto",
-                    fontWeight: "400",
-                    marginTop: wp(4),
-                  }}
-                >
-                  Take care of yourself with
-                </Text>
-                <Text
-                  style={{
-                    color: "white",
-                    fontSize: wp(4),
-                    fontFamily: "Roboto",
-                    fontWeight: "700",
-                  }}
-                >
-                  Psychological Counselling
-                </Text>
+                {isBooked ? (
+                  <>
+                    {is2hour ? (
+                      <>
+                        <Text
+                          style={{
+                            color: "white",
+                            fontSize: wp(4),
+                            fontFamily: "Roboto",
+                            fontWeight: "400",
+                            marginTop: wp(4),
+                          }}
+                        >
+                          Continue your well-begin journey. Your next Online
+                          session is on {time}
+                        </Text>
+                      </>
+                    ) : (
+                      <Text
+                        style={{
+                          color: "white",
+                          fontSize: wp(4),
+                          fontFamily: "Roboto",
+                          fontWeight: "400",
+                          marginTop: wp(4),
+                        }}
+                      >
+                        Continue your well-begin journey.
+                      </Text>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <Text
+                      style={{
+                        color: "white",
+                        fontSize: wp(4),
+                        fontFamily: "Roboto",
+                        fontWeight: "400",
+                        marginTop: wp(4),
+                      }}
+                    >
+                      Take care of yourself with
+                    </Text>
+
+                    <Text
+                      style={{
+                        color: "white",
+                        fontSize: wp(4),
+                        fontFamily: "Roboto",
+                        fontWeight: "700",
+                      }}
+                    >
+                      Psychological Counselling
+                    </Text>
+                  </>
+                )}
               </View>
               <Image
                 source={require("../../assets/images/homePageGIF.gif")}
                 style={{ height: wp(30), width: wp(30) }}
               />
             </View>
-            {isBooked ? <Bookbtn props={is2hour} /> : <Btn />}
+            {isBooked ? <Bookbtn props={{ is2hour, link }} /> : <Btn />}
           </View>
         </View>
 
@@ -258,7 +383,7 @@ export default function HomeScreen(props) {
                   fontWeight: "600",
                 }}
               >
-                View Mood Insights
+                {mood}
               </Text>
             </TouchableOpacity>
           </View>
@@ -299,7 +424,7 @@ export default function HomeScreen(props) {
               style={{ height: hp(9) }}
             >
               <Text style={styles.cardText}>Self-care Tools for you</Text>
-              <TouchableOpacity activeOpacity={0.5} style={styles.Btn}>
+              <TouchableOpacity onPress={()=>{outLink('https://heartitout.in/products/')}} activeOpacity={0.5} style={styles.Btn}>
                 <Text style={styles.btnText2}>Discover Now</Text>
               </TouchableOpacity>
             </View>

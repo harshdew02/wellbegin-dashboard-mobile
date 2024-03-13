@@ -77,17 +77,19 @@ export default function InitLoaderEffect() {
           await axios
             .post(apiUrl2, userDetails)
             .then(async (res) => {
+              //Needs to be enabled after
+              
               if (res.data.status === "0") {
                 // await AsyncStorage.setItem("token", Token);
                 console.log("User invalid");
               } else if (res.data.status === "10") {
-                console.log("Show Book a Session");
+                // console.log("Show Book a Session");
                 finalDetails.has_appointment= "no";
                 // navigation.navigate('main');
               }
               else
               {
-                console.log(res.data);
+                // console.log(res.data);
                 //If session is within 2 hours
                 //1. Book another session and Join your session
 
@@ -112,7 +114,6 @@ export default function InitLoaderEffect() {
               if (res.data.status === "1") {
                 // await AsyncStorage.setItem("token", Token);
                 finalDetails.has_mood=res.data.has_mood;
-                console.log(res.data.has_mood);
               } 
             })
             .catch((err) => {

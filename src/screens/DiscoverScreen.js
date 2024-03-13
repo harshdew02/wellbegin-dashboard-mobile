@@ -19,6 +19,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 // import LinearGradient from 'react-native-linear-gradient';
 // import { LinearGradient } from "expo-linear-gradient";
+import { InAppBrowser } from 'react-native-inappbrowser-reborn'
 
 import SeekIcon from "../../assets/images/SeekIcon.svg";
 import HappeningIcon from "../../assets/images/HappeningIcon.svg";
@@ -28,6 +29,52 @@ import Gradient from "../../assets/images/Gradient.svg";
 import ReferIcon from "../../assets/images/ReferIcon.svg";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
 
+const outLink = async (link) => {
+    try {
+      const url = link
+      if (await InAppBrowser.isAvailable()) {
+        const result = await InAppBrowser.open(url, {
+          // // iOS Properties
+          // dismissButtonStyle: 'cancel',
+          // preferredBarTintColor: '#453AA4',
+          // preferredControlTintColor: 'white',
+          // readerMode: false,
+          // animated: true,
+          // modalPresentationStyle: 'fullScreen',
+          // modalTransitionStyle: 'coverVertical',
+          // modalEnabled: true,
+          // enableBarCollapsing: false,
+          // Android Properties
+          showTitle: true,
+          toolbarColor: '#01818C',
+          secondaryToolbarColor: 'black',
+          navigationBarColor: 'black',
+          navigationBarDividerColor: 'white',
+          enableUrlBarHiding: false,
+          enableDefaultShare: false,
+          forceCloseOnRedirection: false,
+          // Specify full animation resource identifier(package:anim/name)
+          // or only resource name(in case of animation bundled with app).
+          animations: {
+            startEnter: 'slide_in_right',
+            startExit: 'slide_out_left',
+            endEnter: 'slide_in_left',
+            endExit: 'slide_out_right'
+          },
+          headers: {
+            'my-custom-header': 'my custom header value'
+          }
+        })
+        console.log(result)
+      }
+      else Linking.openURL(url)
+    } catch (error) {
+      console.log(error)
+    }
+  // Linking.canOpenURL(link).then((supported)=>{
+  //   if(supported) Linking.openURL(link); else console.log('error')
+  // });
+}
 
 export default function DiscoverScreen() {
   return (
@@ -55,9 +102,7 @@ export default function DiscoverScreen() {
             <TouchableOpacity
              onPress={() => {
                 // Checking if the link is supported for links with custom URL scheme.
-                Linking.canOpenURL('https://heartitout.in/therapists/').then((supported)=>{
-                    if(supported) Linking.openURL('https://heartitout.in/therapists/'); else console.log('error')
-                });
+                outLink('https://heartitout.in/therapists/')
               }}
               style={[
                 styles.packageCard,
@@ -77,9 +122,7 @@ export default function DiscoverScreen() {
               ]}
               onPress={() => {
                 // Checking if the link is supported for links with custom URL scheme.
-                Linking.canOpenURL('https://heartitout.in/events/').then((supported)=>{
-                    if(supported) Linking.openURL('https://heartitout.in/events/'); else console.log('error')
-                });
+                outLink('https://heartitout.in/events/')
               }}
             >
               <HappeningIcon width={wp(20)} height={hp(12)} />
@@ -111,9 +154,7 @@ export default function DiscoverScreen() {
               ]}
               onPress={() => {
                 // Checking if the link is supported for links with custom URL scheme.
-                Linking.canOpenURL('https://heartitout.in/products/').then((supported)=>{
-                    if(supported) Linking.openURL('https://heartitout.in/products/'); else console.log('error')
-                });
+                outLink('https://heartitout.in/products/')
               }}
             >
               <ProductsSvg width={wp(33)} height={hp(9)} />
@@ -132,9 +173,7 @@ export default function DiscoverScreen() {
         <TouchableOpacity style={[styles.cardContiner, { height: hp(16) }]}
         onPress={() => {
             // Checking if the link is supported for links with custom URL scheme.
-            Linking.canOpenURL('https://heartitout.in/nudge-a-friend/').then((supported)=>{
-                if(supported) Linking.openURL('https://heartitout.in/nudge-a-friend/'); else console.log('error')
-            });
+            outLink('https://heartitout.in/nudge-a-friend/')
           }}
         >
           <Gradient width={"100%"} height={"100%"} />
