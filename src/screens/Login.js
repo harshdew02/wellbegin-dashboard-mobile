@@ -23,7 +23,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useNavigation } from "@react-navigation/native";
 
-import {data,codes} from "../constants"
+import { data, codes } from "../constants"
 
 const requestOTP = async (code, number, navigation, [loading, setLoading]) => {
   const apiUrl = "https://heartitout.in/welcome/wp-json/otp_signup_process/v2";
@@ -33,7 +33,7 @@ const requestOTP = async (code, number, navigation, [loading, setLoading]) => {
       ch: "send_otp",
       mob: code + number,
     };
-    if((code+number).length < 10)
+    if ((code + number).length < 10)
       throw new Error('Mobile number is too short')
 
     axios
@@ -55,8 +55,10 @@ const requestOTP = async (code, number, navigation, [loading, setLoading]) => {
 
 
 import Logo4 from '../../assets/images/myvec.svg';
+import Loginbg from "../components/Loginbg";
 
 const Login = () => {
+
   const [value, setValue] = useState("IN");
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
@@ -64,27 +66,22 @@ const Login = () => {
   navigation.addListener("focus", (ref) => {
     setLoading(false);
   });
-  
 
   // const [isFocus, setIsFocus] = useState(false);
 
   return (
     <SafeAreaView>
-      <TopBar />
-      <ScrollView>
+      {/* <TopBar /> */}
+      <ScrollView  >
         <StatusBar
-          backgroundColor={"#fff"}
+          backgroundColor={"#eaf7fc"}
           barStyle={"dark-content"}
           hidden={false}
         />
 
-        {/* <View style={styles.box}> */}
-        {/* <View className="bg-[#EAF7FC]" style={styles.vect}>
-          </View> */}
-
-        <Logo4 width={wp(100)} height={wp(85)} style={styles.box} />
-        {/* <View style={{ height: hp(10) }}></View> */}
-        {/* </View> */}
+        <View style={{ width: wp(100), justifyContent: 'center', alignItems: 'center' }}>
+          <Loginbg />
+        </View>
 
         <View className="flex-col items-center" style={{ marginTop: hp(2.5) }}>
           <Text style={styles.well}>Your Wellbeing Comes First!</Text>
@@ -102,13 +99,13 @@ const Login = () => {
             style={{ width: wp(82), marginTop: hp(3) }}
           >
             <Dropdown
-              style={[styles.dropdown ]}
+              style={[styles.dropdown]}
               placeholderStyle={styles.placeholderStyle}
               selectedTextStyle={styles.selectedTextStyle}
               inputSearchStyle={styles.inputSearchStyle}
               containerStyle={styles.containerStyle}
               iconStyle={styles.iconStyle}
-              itemTextStyle={{fontSize: wp(4)}}
+              itemTextStyle={{ fontSize: wp(4) }}
               data={data}
               search
               maxHeight={200}
@@ -144,7 +141,7 @@ const Login = () => {
               requestOTP(codes[value], number, navigation, [loading, setLoading]);
             }}
           >
-            <Text style={styles.textStyle}>Get OTP</Text>
+            <Text style={styles.textStyle}>Verify OTP</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -270,7 +267,7 @@ const styles = StyleSheet.create({
     height: 40,
     fontSize: 16,
   },
-  containerStyle:{
+  containerStyle: {
     width: wp(40),
     // fontSize: wp(8)
     // marginBottom: 5,

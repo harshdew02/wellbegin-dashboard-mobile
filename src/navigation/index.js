@@ -34,9 +34,10 @@ export default function AppNavigation() {
           headerShown: false
         }}
         initialRouteName={'loader'}
+        // initialRouteName={'LoginPage'}
         // initialRouteName={'main'}
         // initialRouteName={'about'}
-        
+        // initialRouteName={'verifyPage'}
       >
         <Stack.Screen name="loader" component={LoaderEffect} />
         {/* <Stack.Screen name="about" component={ProfileNavigator} /> */}
