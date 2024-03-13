@@ -5,6 +5,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  ActivityIndicator,
+  ToastAndroid,
 } from "react-native";
 import React, { useState } from "react";
 import {
@@ -20,9 +22,13 @@ import { useNavigation } from "@react-navigation/native";
 import Back from "../../assets/images/arrow2.svg";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
 import axios from "axios";
-import SInfo from 'react-native-encrypted-storage';
+import SInfo from "react-native-encrypted-storage";
 
-const fillDetails = (details) => {
+const showToast = (message) => {
+  ToastAndroid.show(message,ToastAndroid.SHORT);
+}
+
+const fillDetails = (details,[loading, setLoading]) => {
   //This the first call from the flowchart
   const apiUrl = "https://n8n.heartitout.in/webhook/api/fetch-user-details";
   axios
@@ -35,16 +41,25 @@ const fillDetails = (details) => {
         data.usr_fullname = res.data.user_name;
         data.user_email = res.data.user_email;
         data.get_details = res.data.get_details;
-        await SInfo.setItem('token',JSON.stringify(data));
+        await SInfo.setItem("token", JSON.stringify(data));
         // await AsyncStorage.setItem("token", Token);
-        console.log("It is sucess from about me :",res.data,data);
+        setLoading(false);
+        //A message to be displayed as toast
+        showToast('User details updated, successfully')
+        // console.log("It is sucess from about me :", res.data, data);
       } else {
+        setLoading(false);
+        //A message to be displayed as toast
+        showToast("An error occurred and we can't update")
         // navigation.navigate('main');
         // console.log(res.data)
-        console.log("Failed to save the details")
+        console.log("Failed to save the details");
       }
     })
     .catch((err) => {
+      setLoading(false);
+      showToast("An error occurred and we can't update")
+      //A message to be displayed as toast
       console.log(err);
     });
 };
@@ -56,6 +71,7 @@ export default function AboutMe(props) {
   const [mail, setMail] = useState(data.user_email);
   const [code, setCode] = useState(data.code);
   const [phone, setPhone] = useState(data.phone);
+  const [loading, setLoading] = useState(false);
   return (
     <GestureHandlerRootView>
       <SafeAreaView>
@@ -114,6 +130,7 @@ export default function AboutMe(props) {
                 value={`+${code}-${phone}`}
                 // placeholder="+91-9480052103"
                 inputMode="tel"
+                editable={false}
               />
 
               <TextInput
@@ -126,15 +143,17 @@ export default function AboutMe(props) {
                 inputMode="email"
               />
 
+              <ActivityIndicator animating={loading} size="large" />
+
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={() => {
                   data.usr_fullname = name;
                   data.user_email = mail;
                   data.insert_details = "true";
-                  
+                  setLoading(true)
                   // console.log(data)
-                  fillDetails(data);
+                  fillDetails(data,[loading, setLoading],);
                 }}
                 style={[styles.BookBtn3, { marginTop: hp(1.5) }]}
               >

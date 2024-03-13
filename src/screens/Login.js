@@ -58,7 +58,6 @@ const requestOTP = async (code, number, navigation, [loading, setLoading]) => {
           date: res.data.date,
         };
         const dataString = JSON.stringify(jsonData);
-        console.log(dataString);
         await SInfo.setItem("token", dataString).then(()=>{
           console.log('Data stored securely');
         }).catch((error)=>{

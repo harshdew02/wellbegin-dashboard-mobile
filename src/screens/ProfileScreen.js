@@ -5,6 +5,8 @@ import {
   StyleSheet,
   TouchableOpacity,
   useWindowDimensions,
+  ActivityIndicator,
+  Linking,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { ScrollView } from "react-native-gesture-handler";
@@ -19,7 +21,15 @@ import ProfileDisplay from "../../assets/images/ProfileDisplay.svg";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
 import BookIcon from "../../assets/images/bookIcon.svg";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
-import SInfo from "react-native-encrypted-storage";
+import axios from "axios";
+
+const outLink = (link) => {
+  Linking.openURL(link)
+    .then((responsive) => {
+      console.log(responsive);
+    })
+    .catch((err) => console.log(err));
+};
 
 const NoSessions = () => {
   return (
@@ -39,271 +49,229 @@ const NoSessions = () => {
   );
 };
 
-// ddkdld
-const FirstRoute = () => (
-  <View style={styles.scrollContainer}>
-    <ScrollView style={{ width: "100%", paddingLeft: wp(3.5) }}>
-      <View
-        style={{
-          width: wp(76),
-          height: hp(13),
-          backgroundColor: "#ffffff",
-          marginTop: hp(2),
-          borderWidth: wp(0.5),
-          borderColor: "#32959d",
-          paddingHorizontal: wp(3.5),
-          paddingVertical: hp(1.1),
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-        }}
-      >
-        <View className="flex-row items-center justify-between">
-          <Text
-            style={{ fontSize: wp(4), fontWeight: "bold", color: "#455a64" }}
-          >
-            Individual Therapy
-          </Text>
-          <TouchableOpacity
-            className="flex-row justify-center items-center"
-            style={{
-              width: wp(17),
-              height: hp(3.8),
-              backgroundColor: "#32959d",
-              borderRadius: wp(1.5),
-            }}
-          >
-            <Text
-              style={{ fontSize: wp(4), fontWeight: "bold", color: "#ffffff" }}
-            >
-              Join
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View>
-          <View className="flex-row justify-between items-center ">
-            <Text style={{ fontSize: wp(3.8), color: "#455a64" }}>
-              16/04/2022
-            </Text>
-            <View
-              style={{
-                height: hp(2.2),
-                width: wp(0.5),
-                backgroundColor: "#32959d",
-              }}
-            />
-            <Text style={{ fontSize: wp(3.8), color: "#455a64" }}>
-              10:30 am
-            </Text>
-            <View
-              style={{
-                height: hp(2.2),
-                width: wp(0.5),
-                backgroundColor: "#32959d",
-              }}
-            />
-            <Text style={{ fontSize: wp(3.8), color: "#455a64" }}>Online</Text>
-          </View>
-          <Text
-            style={{ fontSize: wp(3.8), color: "#455a64", marginTop: hp(0.4) }}
-          >
-            ID :{" "}
-            <Text style={{ fontWeight: "bold", color: "#455a64" }}>654821</Text>
-          </Text>
-        </View>
-      </View>
-      <View
-        style={{
-          width: wp(76),
-          height: hp(13),
-          backgroundColor: "#ffffff",
-          marginTop: hp(2),
-          borderWidth: wp(0.5),
-          borderColor: "#32959d",
-          paddingHorizontal: wp(3.5),
-          paddingVertical: hp(1.1),
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-        }}
-      >
-        <View className="flex-row items-center justify-between">
-          <Text
-            style={{ fontSize: wp(4), fontWeight: "bold", color: "#455a64" }}
-          >
-            Individual Therapy
-          </Text>
-          <TouchableOpacity
-            className="flex-row justify-center items-center"
-            style={{
-              width: wp(17),
-              height: hp(3.8),
-              backgroundColor: "#32959d",
-              borderRadius: wp(1.5),
-            }}
-          >
-            <Text
-              style={{ fontSize: wp(4), fontWeight: "bold", color: "#ffffff" }}
-            >
-              Join
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View>
-          <View className="flex-row justify-between items-center ">
-            <Text style={{ fontSize: wp(3.8), color: "#455a64" }}>
-              16/04/2022
-            </Text>
-            <View
-              style={{
-                height: hp(2.2),
-                width: wp(0.5),
-                backgroundColor: "#32959d",
-              }}
-            />
-            <Text style={{ fontSize: wp(3.8), color: "#455a64" }}>
-              10:30 am
-            </Text>
-            <View
-              style={{
-                height: hp(2.2),
-                width: wp(0.5),
-                backgroundColor: "#32959d",
-              }}
-            />
-            <Text style={{ fontSize: wp(3.8), color: "#455a64" }}>Online</Text>
-          </View>
-          <Text
-            style={{ fontSize: wp(3.8), color: "#455a64", marginTop: hp(0.4) }}
-          >
-            ID :{" "}
-            <Text style={{ fontWeight: "bold", color: "#455a64" }}>654821</Text>
-          </Text>
-        </View>
-      </View>
+const DateTimeComponent = (rtime, rdate) => {
+  console.log(rtime, rdate);
+  const dateTimeString = rdate;
+  const dateTime = new Date(dateTimeString);
 
-      <View
-        style={{
-          width: wp(76),
-          height: hp(13),
-          backgroundColor: "#ffffff",
-          marginTop: hp(2),
-          borderWidth: wp(0.5),
-          borderColor: "#32959d",
-          paddingHorizontal: wp(3.5),
-          paddingVertical: hp(1.1),
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "space-between",
-        }}
-      >
-        <View className="flex-row items-center justify-between">
-          <Text
-            style={{ fontSize: wp(4), fontWeight: "bold", color: "#455a64" }}
-          >
-            Individual Therapy
-          </Text>
-          <TouchableOpacity
-            className="flex-row justify-center items-center"
-            style={{
-              width: wp(17),
-              height: hp(3.8),
-              backgroundColor: "#32959d",
-              borderRadius: wp(1.5),
-            }}
-          >
-            <Text
-              style={{ fontSize: wp(4), fontWeight: "bold", color: "#ffffff" }}
-            >
-              Join
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View>
-          <View className="flex-row justify-between items-center ">
-            <Text style={{ fontSize: wp(3.8), color: "#455a64" }}>
-              16/04/2022
-            </Text>
-            <View
-              style={{
-                height: hp(2.2),
-                width: wp(0.5),
-                backgroundColor: "#32959d",
-              }}
-            />
-            <Text style={{ fontSize: wp(3.8), color: "#455a64" }}>
-              10:30 am
-            </Text>
-            <View
-              style={{
-                height: hp(2.2),
-                width: wp(0.5),
-                backgroundColor: "#32959d",
-              }}
-            />
-            <Text style={{ fontSize: wp(3.8), color: "#455a64" }}>Online</Text>
-          </View>
-          <Text
-            style={{ fontSize: wp(3.8), color: "#455a64", marginTop: hp(0.4) }}
-          >
-            ID :{" "}
-            <Text style={{ fontWeight: "bold", color: "#455a64" }}>654821</Text>
-          </Text>
-        </View>
-      </View>
-    </ScrollView>
-  </View>
-);
+  // Extracting date in DD/MM/YYYY format
+  const formattedDate = `${dateTime.getDate()}/${
+    dateTime.getMonth() + 1
+  }/${dateTime.getFullYear()}`;
 
-const SecondRoute = () => (
-  <View className="flex-col items-center " style={styles.scrollContainer}>
-    <ScrollView style={{ width: "100%", paddingLeft: wp(3.5) }}>
-      <NoSessions />
-      {/* <View style={{
-      width: wp(76), height: hp(13), backgroundColor: '#ffffff', marginTop: hp(2),
-      borderWidth: wp(0.5),
-      borderColor: '#32959d',
-      paddingHorizontal: wp(3.5),
-      paddingVertical: hp(1.1),
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'space-between'
-    }}>
-      <View className="flex-row items-center justify-between" >
-        <Text style={{ fontSize: wp(4), fontWeight: 'bold', color: '#455a64' }} >
-          Individual Therapy
+  // Extracting time in HH:MM:SS AM/PM format
+  const timeString = rtime; // Example time string in the format HH:MM:SS
+  const [hours, minutes, seconds] = timeString.split(":").map(Number);
+  const date = new Date(); // Creates a new Date object with the current date
+  date.setHours(hours);
+  date.setMinutes(minutes);
+  date.setSeconds(seconds);
+
+  const timeOptions = {
+    hour12: true,
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  };
+  const formattedTime = date.toLocaleTimeString("en-US", timeOptions);
+  // console.log(formattedDate,formattedTime)
+  return { formattedDate, formattedTime };
+};
+
+const CardDetails = (props) => {
+  const [datetime, setDateTime] = useState({});
+  useEffect(() => {
+    let rdate = props.props.session_date;
+    let rtime = props.props.start_time;
+    const jsonn = DateTimeComponent(rtime, rdate);
+    setDateTime(jsonn);
+
+    // console.log(datetime);
+  }, []);
+
+  return (
+    <View
+      style={{
+        width: wp(76),
+        height: hp(13),
+        backgroundColor: "#ffffff",
+        marginTop: hp(2),
+        borderWidth: wp(0.5),
+        borderColor: "#32959d",
+        paddingHorizontal: wp(3.5),
+        paddingVertical: hp(1.1),
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+      }}
+    >
+      <View className="flex-row items-center justify-between">
+        <Text
+          style={{
+            fontSize: wp(4),
+            fontWeight: "bold",
+            color: "#455a64",
+          }}
+        >
+          {props.props.service_type}
         </Text>
-        <TouchableOpacity className="flex-row justify-center items-center" style={{ width: wp(17), height: hp(3.8), backgroundColor: '#32959d', borderRadius: wp(1.5) }} >
-          <Text style={{ fontSize: wp(4), fontWeight: 'bold', color: '#ffffff' }} >Join</Text>
+        <TouchableOpacity
+          className="flex-row justify-center items-center"
+          style={{
+            width: wp(17),
+            height: hp(3.8),
+            backgroundColor: "#32959d",
+            borderRadius: wp(1.5),
+          }}
+          onPress={() => {
+            outLink(props.props.google_meeting_link);
+          }}
+        >
+          <Text
+            style={{
+              fontSize: wp(4),
+              fontWeight: "bold",
+              color: "#ffffff",
+            }}
+          >
+            Join
+          </Text>
         </TouchableOpacity>
       </View>
       <View>
-        <View className="flex-row justify-between items-center " >
-          <Text style={{ fontSize: wp(3.8), color: '#455a64' }} >
-            16/04/2022
+        <View className="flex-row justify-between items-center ">
+          <Text style={{ fontSize: wp(3.8), color: "#455a64" }}>
+            {datetime.formattedDate}
           </Text>
-          <View style={{ height: hp(2.2), width: wp(0.5), backgroundColor: '#32959d' }} />
-          <Text style={{ fontSize: wp(3.8), color: '#455a64' }} >
-            10:30 am
+          <View
+            style={{
+              height: hp(2.2),
+              width: wp(0.5),
+              backgroundColor: "#32959d",
+            }}
+          />
+          <Text style={{ fontSize: wp(3.8), color: "#455a64" }}>
+            {datetime.formattedTime}
           </Text>
-          <View style={{ height: hp(2.2), width: wp(0.5), backgroundColor: '#32959d' }} />
-          <Text style={{ fontSize: wp(3.8), color: '#455a64' }}>
-            Online
-          </Text>
+          <View
+            style={{
+              height: hp(2.2),
+              width: wp(0.5),
+              backgroundColor: "#32959d",
+            }}
+          />
+          <Text style={{ fontSize: wp(3.8), color: "#455a64" }}>Online</Text>
         </View>
-        <Text style={{ fontSize: wp(3.8), color: '#455a64', marginTop: hp(0.4) }} >
-          ID :  <Text style={{ fontWeight: 'bold', color: '#455a64' }} >654821</Text>
+        <Text
+          style={{
+            fontSize: wp(3.8),
+            color: "#455a64",
+            marginTop: hp(0.4),
+          }}
+        >
+          ID :{" "}
+          <Text style={{ fontWeight: "bold", color: "#455a64" }}>
+            {props.props.appointment_id}
+          </Text>
         </Text>
       </View>
-    </View> */}
-    </ScrollView>
-  </View>
-);
+    </View>
+  );
+};
 
-const renderScene = SceneMap({
-  first: FirstRoute,
-  second: SecondRoute,
-});
+// ddkdld
+const FirstRoute = (props) => {
+  const [hasApp, sethasApp] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState({});
+  useEffect(() => {
+    const url = "https://n8n.heartitout.in/webhook/api/fetch-session-history";
+    const payload = props.data;
+    payload.data = "upcoming";
+    axios
+      .post(url, payload)
+      .then((res) => {
+        if (res.data.has_upc === "yes") {
+          sethasApp(true);
+          setData(res.data.upc_data);
+        } else sethasApp(false);
+
+        setLoading(false);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  return (
+    <View style={styles.scrollContainer}>
+      <ScrollView style={{ width: "100%", paddingLeft: wp(3.5) }}>
+        {loading ? (
+          <ActivityIndicator animating={loading} size="large" />
+        ) : (
+          <>
+            {hasApp ? (
+              <>
+                {data.map((item, index) => (
+                  <CardDetails key={index} props={item} />
+                ))}
+                {/* <CardDetails props={data} /> */}
+              </>
+            ) : (
+              <>
+                <NoSessions />
+              </>
+            )}
+          </>
+        )}
+      </ScrollView>
+    </View>
+  );
+};
+
+const SecondRoute = (props) => {
+  const [hasApp, sethasApp] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState({});
+  useEffect(() => {
+    const url = "https://n8n.heartitout.in/webhook/api/fetch-session-history";
+    const payload = props.data;
+    payload.data = "history";
+    axios
+      .post(url, payload)
+      .then((res) => {
+        if (res.data.has_his === "yes") {
+          sethasApp(true);
+          setData(res.data.his_data);
+        } else sethasApp(false);
+        setLoading(false);
+      })
+      .catch((err) => console.log(err));
+  }, []);
+
+  return (
+    <View className="flex-col items-center " style={styles.scrollContainer}>
+      <ScrollView style={{ width: "100%", paddingLeft: wp(3.5) }}>
+        {loading ? (
+          <ActivityIndicator animating={loading} size="large" />
+        ) : (
+          <>
+            {hasApp ? (
+              <>
+                {/* <CardDetails props={data} /> */}
+                {data.map((item, index) => (
+                  <CardDetails key={index} props={item} />
+                ))}
+              </>
+            ) : (
+              <>
+                <NoSessions />
+              </>
+            )}
+          </>
+        )}
+      </ScrollView>
+    </View>
+  );
+};
 // ---------
 
 const renderTabBar = (props) => (
@@ -435,35 +403,40 @@ const Card = () => {
 };
 
 export default function ProfileScreen(props) {
-  const layout = useWindowDimensions();
-
+  const data = props.route.params.data;
+  const navigation = useNavigation();
+  // const [firstTime, setFirstTime] = useState(true);
   const [name, setName] = useState("");
   const [mail, setMail] = useState("");
   const [code, setCode] = useState("");
   const [phone, setPhone] = useState("");
   const [det, setDet] = useState({});
-
   const [isSession, setSession] = React.useState(1);
-  const navigation = useNavigation();
-  useEffect(() => {
-    const setDetailss = async () => {
-      const dd = await SInfo.getItem("token");
-      const dett = JSON.parse(dd);
-      setDet(dett);
-      setName(dett.usr_fullname);
-      setMail(dett.user_email);
-      setCode(dett.code);
-      setPhone(dett.phone);
-      // console.log(name, mail,code,phone)
-    };
-    setDetailss();
-  }, []);
-
+  const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
   const [routes] = React.useState([
     { key: "first", title: "Upcoming" },
     { key: "second", title: "History" },
   ]);
+
+  useEffect(() => {
+    setDet(data);
+    setName(data.usr_fullname);
+    setMail(data.user_email);
+    setCode(data.code);
+    setPhone(data.phone);
+  }, [name]);
+
+  const renderScene = ({ route }) => {
+    switch (route.key) {
+      case "first":
+        return <FirstRoute data={data} />;
+      case "second":
+        return <SecondRoute data={data} />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <SafeAreaView>
@@ -549,6 +522,7 @@ export default function ProfileScreen(props) {
               height: isSession ? hp(40) : hp(20),
             }}
             renderTabBar={renderTabBar}
+            initialParams={{ det }}
           ></TabView>
         </View>
 
