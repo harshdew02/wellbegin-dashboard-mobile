@@ -2,7 +2,6 @@ import {
   View,
   Text,
   SafeAreaView,
-  Image,
   StatusBar,
   StyleSheet,
   TextInput,
@@ -10,25 +9,24 @@ import {
   ActivityIndicator,
   ScrollView,
 } from "react-native";
-import React, { useState, useEffect } from "react";
-import TopBar from "../components/TopBar";
+import React, { useState } from "react";
 import SInfo from "react-native-encrypted-storage";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { Dropdown } from "react-native-element-dropdown";
-import { MagnifyingGlassIcon } from "react-native-heroicons/outline";
 import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import analytics from '@react-native-firebase/analytics'
+import firebase from '@react-native-firebase/app'
+// import crashlytics from '@react-native-firebase/crashlytics';
 
 import { useNavigation } from "@react-navigation/native";
 
 import { data, codes } from "../constants";
 
-const encryptionKey = "qwertyuiopasdfghjklzxcvbnm";
 
-const requestOTP = async (code, number, navigation, [loading, setLoading]) => {
+const requestOTP = async (code, number, navigation, [, setLoading]) => {
   const apiUrl = "https://n8n.heartitout.in/webhook/api/auth";
 
   let date = new Date();
@@ -58,9 +56,9 @@ const requestOTP = async (code, number, navigation, [loading, setLoading]) => {
           date: res.data.date,
         };
         const dataString = JSON.stringify(jsonData);
-        await SInfo.setItem("token", dataString).then(()=>{
+        await SInfo.setItem("token", dataString).then(() => {
           console.log('Data stored securely');
-        }).catch((error)=>{
+        }).catch((error) => {
           console.log('Error: ', error);
         });
         navigation.navigate("verifyPage", res.data);
@@ -75,14 +73,48 @@ const requestOTP = async (code, number, navigation, [loading, setLoading]) => {
   }
 };
 
-import Logo4 from "../../assets/images/myvec.svg";
+
+import Loginbg from "../components/Loginbg";
 
 const Login = () => {
+
+  React.useEffect(() => {
+    firebase.initializeApp({
+      // Paste your Firebase config object here
+      apiKey: "AIzaSyDv7xfM3f5Xu4_r0FkbplzK5N20T3i0WlM",
+      authDomain: "wellbeing-dashboard-mobile.firebaseapp.com",
+      projectId: "wellbeing-dashboard-mobile",
+      storageBucket: "wellbeing-dashboard-mobile.appspot.com",
+      messagingSenderId: "87847447432",
+      appId: "1:87847447432:android:34575c2cab1541ea8a283d",
+      measurementId: "", // Leave this blank if you don't use Analytics
+      databaseURL : ""
+    })
+  }, [])
+  
+
+  const predefinedEvent = async () => {
+    console.log("Predefined event")
+    await analytics().logLogin({
+      method: 'facebook'
+    })
+  }
+
+  const customEvent = async () => {
+    console.log("Predefined custom event")
+    await analytics().logEvent('bicket', {
+      id: 3745092,
+      item: 'mens grey t-shirt',
+      description: ['round neck', 'long sleeved'],
+      size: 'L'
+    })
+  }
+
   const [value, setValue] = useState("IN");
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const [number, onChangeNumber] = React.useState("");
-  navigation.addListener("focus", (ref) => {
+  navigation.addListener("focus", () => {
     setLoading(false);
   });
 
@@ -90,21 +122,17 @@ const Login = () => {
 
   return (
     <SafeAreaView>
-      <TopBar />
-      <ScrollView>
+      {/* <TopBar /> */}
+      <ScrollView  >
         <StatusBar
-          backgroundColor={"#fff"}
+          backgroundColor={"#eaf7fc"}
           barStyle={"dark-content"}
           hidden={false}
         />
 
-        {/* <View style={styles.box}> */}
-        {/* <View className="bg-[#EAF7FC]" style={styles.vect}>
-          </View> */}
-
-        <Logo4 width={wp(100)} height={wp(85)} style={styles.box} />
-        {/* <View style={{ height: hp(10) }}></View> */}
-        {/* </View> */}
+        <View style={{ width: wp(100), justifyContent: 'center', alignItems: 'center' }}>
+          <Loginbg />
+        </View>
 
         <View className="flex-col items-center" style={{ marginTop: hp(2.5) }}>
           <Text style={styles.well}>Your Wellbeing Comes First!</Text>
@@ -143,6 +171,7 @@ const Login = () => {
               onChange={(item) => {
                 setValue(item.code);
                 console.log(item);
+                customEvent();
               }}
             />
 
@@ -165,6 +194,7 @@ const Login = () => {
                 loading,
                 setLoading,
               ]);
+              predefinedEvent();
             }}
           >
             <Text style={styles.textStyle}>Get OTP</Text>
