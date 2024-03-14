@@ -93,7 +93,7 @@ const verifyOTP = async (
   }
 };
 
-const requestOTP = async (code, number, [loading, setLoading], [counter, setCounter], [timer, setTimer]) => {
+const requestOTP = async (code, number, [loading, setLoading], [counter, setCounter], [timer,setTimer], [mul, setMul]) => {
   const apiUrl = "https://n8n.heartitout.in/webhook/api/auth";
 
   let date = new Date();
@@ -133,8 +133,9 @@ const requestOTP = async (code, number, [loading, setLoading], [counter, setCoun
             console.log("Error: ", error);
           });
         showToast("OTP resent successfully");
-        setCounter(30);
-        setTimer(30);
+        setMul(++mul);
+        setCounter(mul*30);
+        setTimer(mul*30);
         resendOTPT([timer, setTimer])
       })
       .catch((err) => {
@@ -154,7 +155,8 @@ const resendOTPT = ([, setTimer]) => {
 };
 
 export default function Verify({ navigation, route }) {
-  const [counter, setCounter] = useState(30);
+  const [mul,setMul]  = useState(1)
+  const [counter, setCounter] = useState(30*mul);
   const [timer, setTimer] = useState(false);
   const [otp, setOtp] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -259,7 +261,7 @@ export default function Verify({ navigation, route }) {
                   requestOTP(route.params.code, route.params.phone, [
                     loading,
                     setLoading,
-                  ], [counter, setCounter], [timer, setTimer]);
+                  ], [counter,setCounter], [timer, setTimer], [mul, setMul]);
                   // setTimer(false);
                   // resendOTPT([, setTimer]);
                 }

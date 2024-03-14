@@ -22,8 +22,14 @@ import TasksIcon from "../../assets/images/TasksIcon.svg";
 import NewIcon from "../../assets/images/NewIcon.svg";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
 import Home1 from "../../assets/images/home1.svg";
+import FeelBanner from '../../assets/images/FeelBanner.svg';
+import Emoji1 from '../../assets/images/emoji1.svg';
+import Emoji2 from '../../assets/images/emoji2.svg';
+import Emoji3 from '../../assets/images/emoji3.svg';
+import Emoji4 from '../../assets/images/emoji4.svg';
+import Emoji5 from '../../assets/images/emoji5.svg';
 import Home2 from "../../assets/images/home2.svg";
-import { InAppBrowser } from 'react-native-inappbrowser-reborn'
+import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import SInfo from "react-native-encrypted-storage";
 import { theme } from "../theme";
 import TopBell from "../components/TopBell";
@@ -41,7 +47,7 @@ import HomePageBanner from "../components/HomePageBanner";
 
 const outLink = async (link) => {
   try {
-    const url = link
+    const url = link;
     if (await InAppBrowser.isAvailable()) {
       const result = await InAppBrowser.open(url, {
         // // iOS Properties
@@ -56,33 +62,33 @@ const outLink = async (link) => {
         // enableBarCollapsing: false,
         // Android Properties
         showTitle: true,
-        toolbarColor: '#01818C',
-        secondaryToolbarColor: 'red',
-        navigationBarColor: 'white',
-        navigationBarDividerColor: 'white',
+        toolbarColor: "#01818C",
+        secondaryToolbarColor: "red",
+        navigationBarColor: "white",
+        navigationBarDividerColor: "white",
         enableUrlBarHiding: true,
         enableDefaultShare: false,
         forceCloseOnRedirection: false,
         hasBackButton: true,
 
+
         // Specify full animation resource identifier(package:anim/name)
         // or only resource name(in case of animation bundled with app).
         animations: {
-          startEnter: 'slide_in_right',
+          startEnter: "slide_in_right",
         },
         headers: {
-          'my-custom-header': 'my custom header value'
-        }
-      })
-      console.log(result)
-    }
-    else Linking.openURL(url)
+          "my-custom-header": "my custom header value",
+        },
+      });
+      console.log(result);
+    } else Linking.openURL(url);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-  // Linking.canOpenURL(link).then((supported)=>{
-  //   if(supported) Linking.openURL(link); else console.log('error')
-  // });
+// Linking.canOpenURL(link).then((supported)=>{
+//   if(supported) Linking.openURL(link); else console.log('error')
+// });
 }
 
 const Btn = (props) => {
@@ -174,7 +180,7 @@ export default function HomeScreen(props) {
   const [is2hour, setIs2hour] = useState(false);
   const [name, setName] = useState("User");
   const [link, setLink] = useState("");
-  const [mood, setMood] = useState("Track Your Mood");
+  const [mood, setMood] = useState(false);
   const [time, setTime] = useState("");
   const [date, setDate] = useState("");
   const [statusColor , setStatusColor] = useState('green')
@@ -198,9 +204,7 @@ export default function HomeScreen(props) {
   };
   React.useEffect(() => {
     setName(data.usr_fullname);
-    data.has_mood == "no"
-      ? setMood("Track Your Mood")
-      : setMood("View Mood Insights");
+    data.has_mood == "no" ? setMood(false) : setMood(true);
     // console.log("It is coming from home screen: ", appointment);
     if (appointment.has_appointment === "no") setBooked(false);
     else {
@@ -212,7 +216,7 @@ export default function HomeScreen(props) {
       let year = timestamp.getFullYear();
       let month = String(timestamp.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
       let date = String(timestamp.getDate()).padStart(2, "0");
-      let [part1, part2, part3] = apiTime.split(':');
+      let [part1, part2, part3] = apiTime.split(":");
       let hours = part1;
       let minutes = part2;
       let seconds = part3;
@@ -226,7 +230,7 @@ export default function HomeScreen(props) {
       }
       // let showTime = `${}/${}/${} at `
       let showTime = `${hours}:${minutes} ${period}`;
-      let showDate = `${date}/${month}/${year}`
+      let showDate = `${date}/${month}/${year}`;
       let finalAPITime = `${year}-${month}-${date}T${apiTime}Z`;
 
       // Extracting date components from system
@@ -354,11 +358,10 @@ export default function HomeScreen(props) {
                             fontFamily: "Roboto",
                             fontWeight: "400",
                             marginTop: wp(4),
-                            width: wp(53)
+                            width: wp(53),
                           }}
                         >
-                          Your next Online
-                          session is on{" "}
+                          Your next Online session is on{" "}
                           <Text
                             style={{
                               color: "white",
@@ -368,7 +371,8 @@ export default function HomeScreen(props) {
                             }}
                           >
                             {date}
-                          </Text> at{" "}
+                          </Text>{" "}
+                          at{" "}
                           <Text
                             style={{
                               color: "white",
@@ -387,10 +391,10 @@ export default function HomeScreen(props) {
                           color: "white",
                           fontSize: wp(4),
                           fontFamily: "Roboto",
-                          fontWeight: '700',
+                          fontWeight: "700",
                           marginTop: wp(4),
                           width: wp(53)
-
+                          
                         }}
                       >
                         Continue your well-begin journey.
@@ -438,7 +442,7 @@ export default function HomeScreen(props) {
           style={[styles.cardContainer, { height: hp(15.8) }]}
         >
           <TouchableOpacity
-            onPress={() => { console.log("working") }}
+            onPress={()=>{console.log("working")}}
             style={[styles.card, { backgroundColor: "#FEF8C8" }]}
           >
             <Text style={styles.cardText}>My {"\n"}Tasks</Text>
@@ -472,62 +476,118 @@ export default function HomeScreen(props) {
           </TouchableOpacity>
         </View>
 
-        <View
-          className="flex-col justify-between items-center"
-          style={[styles.cardContainer, { marginTop: hp(3) }]}
-        >
-          <Home2 width={"100%"} height={hp(13)} />
-          <View
-            style={{
-              position: "absolute",
-              // left: wp(43),
-              right: wp(11),
-              top: hp(2.4),
-              zIndex: 2,
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <Text
-              style={{
-                color: "#455a64",
-                fontSize: wp(4),
-                fontFamily: "Roboto",
-                fontWeight: "800",
-              }}
-            >
-              Understanding You
-            </Text>
-            <TouchableOpacity
-              activeOpacity={0.8}
-              style={{
-                marginTop: hp(1.2),
-                width: wp(43),
-                height: hp(3.5),
-                backgroundColor: "#01818c",
-                borderRadius: wp(8),
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "row",
-              }}
-              onPress={() => {
-                navigation.navigate('mood')
-              }}
+        {!mood ? (
+          <>
+            <View
+              className="flex-col justify-between items-center"
+              style={[
+                styles.cardContainer,
+                { height: hp(12.5), marginTop: hp(3) },
+              ]}
             >
               <Text
                 style={{
-                  textAlign: "center",
-                  color: "#ffffff",
+                  color: "#043953",
                   fontSize: wp(4),
                   fontFamily: "Roboto",
-                  fontWeight: "600",
+                  fontWeight: "700",
                 }}
               >
-                {mood}
+                How are you feeling today?
               </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+              <FeelBanner
+                width={wp(85)}
+                height={hp(9)}
+                style={styles.feelBanner}
+              />
+              <View
+                className="flex-row justify-between items-center"
+                style={[
+                  { position: "absolute", bottom: 8, zIndex: 1, width: wp(78) },
+                ]}
+              >
+                <TouchableOpacity>
+                  <Emoji1 width={wp(8)} height={wp(8)} />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Emoji2 width={wp(8)} height={wp(8)} />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Emoji3
+                    style={{ marginHorizontal: wp(1.5) }}
+                    width={wp(10)}
+                    height={wp(10)}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Emoji4 width={wp(8)} height={wp(8)} />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Emoji5 width={wp(8)} height={wp(8)} />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </>
+        ) : (
+          <>
+            <View
+              className="flex-col justify-between items-center"
+              style={[styles.cardContainer, { marginTop: hp(3) }]}
+            >
+              <Home2 width={"100%"} height={hp(13)} />
+              <View
+                style={{
+                  position: "absolute",
+                  // left: wp(43),
+                  right: wp(11),
+                  top: hp(2.4),
+                  zIndex: 2,
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    color: "#455a64",
+                    fontSize: wp(4),
+                    fontFamily: "Roboto",
+                    fontWeight: "800",
+                  }}
+                >
+                  Understanding You
+                </Text>
+                <TouchableOpacity
+                  activeOpacity={0.8}
+                  style={{
+                    marginTop: hp(1.2),
+                    width: wp(43),
+                    height: hp(3.5),
+                    backgroundColor: "#01818c",
+                    borderRadius: wp(8),
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flexDirection: "row",
+                  }}
+                  onPress={() => {
+                    navigation.navigate("mood");
+                  }}
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: "#ffffff",
+                      fontSize: wp(4),
+                      fontFamily: "Roboto",
+                      fontWeight: "600",
+                    }}
+                  >
+                    View mood insights
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </>
+        )}
 
         {/* Package */}
 
@@ -565,7 +625,13 @@ export default function HomeScreen(props) {
               style={{ height: hp(9) }}
             >
               <Text style={styles.cardText}>Self-care Tools for you</Text>
-              <TouchableOpacity onPress={() => { outLink('https://heartitout.in/products/') }} activeOpacity={0.5} style={styles.Btn}>
+              <TouchableOpacity
+                onPress={() => {
+                  outLink("https://heartitout.in/products/");
+                }}
+                activeOpacity={0.5}
+                style={styles.Btn}
+              >
                 <Text style={styles.btnText2}>Discover Now</Text>
               </TouchableOpacity>
             </View>
@@ -678,6 +744,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+  },
+
+  feelBanner: {
+    position: 'absolute',
+    bottom: 0,
+    zIndex: -1,
   },
 
   Btn: {

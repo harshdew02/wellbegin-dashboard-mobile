@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, Image, StyleSheet, ToastAndroid } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TopBar from "./TopBar";
@@ -9,6 +9,10 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import SInfo from "react-native-encrypted-storage";
 import axios from "axios";
+
+const showToast = (message) => {
+  ToastAndroid.show(message,ToastAndroid.SHORT);
+}
 
 export default function InitLoaderEffect({navigation}) {
   // const navigation = useNavigation();
@@ -81,6 +85,9 @@ export default function InitLoaderEffect({navigation}) {
               
               if (res.data.status === "0") {
                 // await AsyncStorage.setItem("token", Token);
+                SInfo.removeItem('token');
+                showToast('Please login again, user credentials expired.');
+                navigation.navigate('LoginPage')
                 console.log("User invalid");
               } else if (res.data.status === "10") {
                 // console.log("Show Book a Session");
