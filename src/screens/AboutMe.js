@@ -28,7 +28,7 @@ const showToast = (message) => {
   ToastAndroid.show(message,ToastAndroid.SHORT);
 }
 
-const fillDetails = (details,[loading, setLoading]) => {
+const fillDetails = (details,[loading, setLoading], navigation) => {
   //This the first call from the flowchart
   const apiUrl = "https://n8n.heartitout.in/webhook/api/fetch-user-details";
   axios
@@ -46,6 +46,7 @@ const fillDetails = (details,[loading, setLoading]) => {
         setLoading(false);
         //A message to be displayed as toast
         showToast('User details updated, successfully')
+        navigation.navigate('loader')
         // console.log("It is sucess from about me :", res.data, data);
       } else {
         setLoading(false);
@@ -153,7 +154,7 @@ export default function AboutMe(props) {
                   data.insert_details = "true";
                   setLoading(true)
                   // console.log(data)
-                  fillDetails(data,[loading, setLoading],);
+                  fillDetails(data,[loading, setLoading],navigation);
                 }}
                 style={[styles.BookBtn3, { marginTop: hp(1.5) }]}
               >
