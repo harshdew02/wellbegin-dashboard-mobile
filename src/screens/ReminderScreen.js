@@ -2,12 +2,16 @@ import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, Image } from 'r
 import React, { useState } from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Back from "../../assets/images/arrow.svg";
+import SInfo from "react-native-encrypted-storage";
 import TopBarMain from '../components/TopBarMain';
 
 
 // import {ringTick} from '../components/ringTick';
 import RingIcon from '../components/RingIcon'
 
+// const logout = ()=> {
+//     SInfo.removeItem('token');
+// }
 
 const Card = ({ isTick }) => {
     return (

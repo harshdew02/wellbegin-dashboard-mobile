@@ -7,9 +7,10 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   ScrollView,
+  ToastAndroid,
 } from "react-native";
 import React, { useState } from "react";
-import SInfo from 'react-native-encrypted-storage';
+import SInfo from "react-native-encrypted-storage";
 import TopBar from "../components/TopBar";
 import {
   widthPercentageToDP as wp,
@@ -19,8 +20,20 @@ import axios from "axios";
 import Logo4 from "../../assets/images/verifyDisplay.svg";
 import Back from "../../assets/images/arrow.svg";
 
+const showToast = (message) => {
+  ToastAndroid.show(message, ToastAndroid.SHORT);
+};
 
-const verifyOTP = async (code ,mobile, Token, otp,date, navigation, [loading, setLoading], [error, setError]) => {
+const verifyOTP = async (
+  code,
+  mobile,
+  Token,
+  otp,
+  date,
+  navigation,
+  [loading, setLoading],
+  [counter, setCounter]
+) => {
   const apiUrl = "https://n8n.heartitout.in/webhook/api/auth";
   try {
     const session = await SInfo.getItem("token");
@@ -28,51 +41,58 @@ const verifyOTP = async (code ,mobile, Token, otp,date, navigation, [loading, se
     // console.log("Parsed data",data);
     const requestData = {
       phone: data.phone,
-      code:data.code,
+      code: data.code,
       token: data.token,
       otp: otp,
-      date:data.date,
-      type:"verfiy_otp"
+      date: data.date,
+      type: "verfiy_otp",
     };
 
     axios
       .post(apiUrl, requestData)
       .then(async (res) => {
         console.log(res.data);
-        
+
         if (res.data.status == "true") {
           // await AsyncStorage.setItem("token", Token);
-          await SInfo.setItem("token",JSON.stringify({
-            token:data.token,
-            new_token:res.data.token,
-            phone:res.data.phone,
-            code:res.data.code,
-            otp:res.data.otp,
-            date:res.data.date,
-            status:res.data.status,
-            usr_fullname:"",
-            user_email:"",
-          }))
+          await SInfo.setItem(
+            "token",
+            JSON.stringify({
+              token: data.token,
+              new_token: res.data.token,
+              phone: res.data.phone,
+              code: res.data.code,
+              otp: res.data.otp,
+              date: res.data.date,
+              status: res.data.status,
+              usr_fullname: "",
+              user_email: "",
+            })
+          );
+          // setCounter(0);
           navigation.navigate("loader");
         } else {
           console.log("wrong otp received");
-          setError("You entered the wrong code. Please try again.");
+          // setError("You entered the wrong code. Please try again.");
+          showToast("You entered the wrong code. Please try again.")
           setLoading(false);
         }
       })
       .catch((err) => {
         console.log(err);
-        setError("Something went wrong. Please try again later.");
+        // setError("Something went wrong. Please try again later.");
+        showToast("Something went wrong. Please try again later.")
         setLoading(false);
       });
   } catch (error) {
     console.log("Error requesting OTP:", error.message);
-    setError("Something went wrong. Please try again later.");
+    // setError("Something went wrong. Please try again later.");
+    showToast("Something went wrong. Please try again later.")
     setLoading(false);
   }
 };
 
-const requestOTP = async (mobile, [loading, setLoading]) => {
+const requestOTP = async (code, number, [loading, setLoading], [counter, setCounter], [timer,setTimer]) => {
   const apiUrl = "https://n8n.heartitout.in/webhook/api/auth";
 
   let date = new Date();
@@ -103,12 +123,18 @@ const requestOTP = async (mobile, [loading, setLoading]) => {
           date: res.data.date,
         };
         const dataString = JSON.stringify(jsonData);
-        console.log(dataString);
-        await SInfo.setItem("token", dataString).then(()=>{
-          console.log('Data stored securely');
-        }).catch((error)=>{
-          console.log('Error: ', error);
-        });
+        // console.log(dataString);
+        await SInfo.setItem("token", dataString)
+          .then(() => {
+            console.log("Data stored securely");
+          })
+          .catch((error) => {
+            console.log("Error: ", error);
+          });
+        showToast("OTP resent successfully");
+        setCounter(30);
+        setTimer(30);
+        resendOTPT([timer, setTimer])
       })
       .catch((err) => {
         console.log(err);
@@ -120,16 +146,32 @@ const requestOTP = async (mobile, [loading, setLoading]) => {
   }
 };
 
+const resendOTPT = ([, setTimer]) => {
+  setTimeout(() => {
+    setTimer(true);
+  }, 30000);
+};
+
 export default function Verify({ navigation, route }) {
-  const [value, setValue] = useState("91");
+  const [counter, setCounter] = useState(30);
+  const [timer, setTimer] = useState(false);
   const [otp, setOtp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState(null);
-  
+
   navigation.addListener("focus", (ref) => {
+    resendOTPT([, setTimer]);
     setLoading(false);
     setOtp(false);
   });
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      if (counter == 0) clearInterval(interval);
+      else setCounter(counter - 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [counter]);
 
   const [number, onChangeNumber] = React.useState("");
 
@@ -157,7 +199,10 @@ export default function Verify({ navigation, route }) {
           </Text>
 
           {/* <Text style={styles.mob}>+{route.params.mobile}</Text> */}
-          <Text style={styles.mob}>+{route.params.code}{route.params.phone}</Text>
+          <Text style={styles.mob}>
+            +{route.params.code}
+            {route.params.phone}
+          </Text>
 
           <TextInput
             className="rounded-lg"
@@ -169,16 +214,14 @@ export default function Verify({ navigation, route }) {
           />
 
           {showErrorMessage && (
-            <Text style={styles.wrong}>
-              {showErrorMessage}
-            </Text>
+            <Text style={styles.wrong}>{showErrorMessage}</Text>
           )}
 
+          {counter > 0 ? (<Text style={styles.wrong}>Please wait for {counter} seconds, to resend OTP.</Text>) : (<></>)}
           <ActivityIndicator animating={loading} size="large" />
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
-              
               setLoading(true);
               setShowErrorMessage(null);
               verifyOTP(
@@ -189,7 +232,7 @@ export default function Verify({ navigation, route }) {
                 route.params.date,
                 navigation,
                 [loading, setLoading],
-                [showErrorMessage,setShowErrorMessage]
+                [showErrorMessage, setShowErrorMessage]
               );
             }}
           >
@@ -200,9 +243,16 @@ export default function Verify({ navigation, route }) {
             <Text style={styles.check}>Haven’t received an OTP? </Text>
             <TouchableOpacity
               onPress={() => {
-                setLoading(true);
-                setShowErrorMessage(null);
-                requestOTP(route.params.mobile, [loading, setLoading]);
+                if (timer == true) {
+                  setLoading(true);
+                  setShowErrorMessage(null);
+                  requestOTP(route.params.code, route.params.phone, [
+                    loading,
+                    setLoading,
+                  ], [counter,setCounter], [timer, setTimer]);
+                  // setTimer(false);
+                  // resendOTPT([, setTimer]);
+                } 
               }}
             >
               <Text style={styles.check1}>RESEND OTP</Text>
