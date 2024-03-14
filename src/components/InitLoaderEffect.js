@@ -10,8 +10,8 @@ import { useNavigation } from "@react-navigation/native";
 import SInfo from "react-native-encrypted-storage";
 import axios from "axios";
 
-export default function InitLoaderEffect() {
-  const navigation = useNavigation();
+export default function InitLoaderEffect({navigation}) {
+  // const navigation = useNavigation();
 
   navigation.addListener("focus", async (ref) => {
     try {

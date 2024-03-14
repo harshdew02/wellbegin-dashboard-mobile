@@ -32,7 +32,7 @@ const verifyOTP = async (
   date,
   navigation,
   [loading, setLoading],
-  [error, setError]
+  [counter, setCounter]
 ) => {
   const apiUrl = "https://n8n.heartitout.in/webhook/api/auth";
   try {
@@ -69,26 +69,30 @@ const verifyOTP = async (
               user_email: "",
             })
           );
+          // setCounter(0);
           navigation.navigate("loader");
         } else {
           console.log("wrong otp received");
-          setError("You entered the wrong code. Please try again.");
+          // setError("You entered the wrong code. Please try again.");
+          showToast("You entered the wrong code. Please try again.")
           setLoading(false);
         }
       })
       .catch((err) => {
         console.log(err);
-        setError("Something went wrong. Please try again later.");
+        // setError("Something went wrong. Please try again later.");
+        showToast("Something went wrong. Please try again later.")
         setLoading(false);
       });
   } catch (error) {
     console.log("Error requesting OTP:", error.message);
-    setError("Something went wrong. Please try again later.");
+    // setError("Something went wrong. Please try again later.");
+    showToast("Something went wrong. Please try again later.")
     setLoading(false);
   }
 };
 
-const requestOTP = async (code, number, [loading, setLoading]) => {
+const requestOTP = async (code, number, [loading, setLoading], [counter, setCounter], [timer,setTimer]) => {
   const apiUrl = "https://n8n.heartitout.in/webhook/api/auth";
 
   let date = new Date();
@@ -119,7 +123,7 @@ const requestOTP = async (code, number, [loading, setLoading]) => {
           date: res.data.date,
         };
         const dataString = JSON.stringify(jsonData);
-        console.log(dataString);
+        // console.log(dataString);
         await SInfo.setItem("token", dataString)
           .then(() => {
             console.log("Data stored securely");
@@ -128,6 +132,9 @@ const requestOTP = async (code, number, [loading, setLoading]) => {
             console.log("Error: ", error);
           });
         showToast("OTP resent successfully");
+        setCounter(30);
+        setTimer(30);
+        resendOTPT([timer, setTimer])
       })
       .catch((err) => {
         console.log(err);
@@ -139,31 +146,32 @@ const requestOTP = async (code, number, [loading, setLoading]) => {
   }
 };
 
-const resendOTPT = ([,setTimer],[el,setEL]) => {
-  let time = 31;
-  const timerId = setTimeout(() => {
+const resendOTPT = ([, setTimer]) => {
+  setTimeout(() => {
     setTimer(true);
-    clearInterval(timerId1)
   }, 30000);
-  const timerId1 = setInterval(() => {
-    time--;
-    setEL(time);
-    console.log(el);
-  }, 1000);
 };
 
 export default function Verify({ navigation, route }) {
+  const [counter, setCounter] = useState(30);
   const [timer, setTimer] = useState(false);
-  const [el,setEL] = useState(30);
   const [otp, setOtp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState(null);
 
   navigation.addListener("focus", (ref) => {
-    resendOTPT([,setTimer], [el,setEL]);
+    resendOTPT([, setTimer]);
     setLoading(false);
     setOtp(false);
   });
+
+  React.useEffect(() => {
+    const interval = setInterval(() => {
+      if (counter == 0) clearInterval(interval);
+      else setCounter(counter - 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [counter]);
 
   const [number, onChangeNumber] = React.useState("");
 
@@ -209,6 +217,7 @@ export default function Verify({ navigation, route }) {
             <Text style={styles.wrong}>{showErrorMessage}</Text>
           )}
 
+          {counter > 0 ? (<Text style={styles.wrong}>Please wait for {counter} seconds, to resend OTP.</Text>) : (<></>)}
           <ActivityIndicator animating={loading} size="large" />
           <TouchableOpacity
             style={styles.button}
@@ -240,13 +249,10 @@ export default function Verify({ navigation, route }) {
                   requestOTP(route.params.code, route.params.phone, [
                     loading,
                     setLoading,
-                  ]);
-                  setTimer(false);
-                  setEL(30);
-                  resendOTPT([,setTimer],[el,setEL]);
-                } else {
-                  setShowErrorMessage(`Wait for ${el} seconds, to resend OTP.`)
-                }
+                  ], [counter,setCounter], [timer, setTimer]);
+                  // setTimer(false);
+                  // resendOTPT([, setTimer]);
+                } 
               }}
             >
               <Text style={styles.check1}>RESEND OTP</Text>

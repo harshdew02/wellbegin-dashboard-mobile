@@ -160,6 +160,18 @@ export default function AboutMe(props) {
               >
                 <Text style={styles.btnText3}>Save My Details</Text>
               </TouchableOpacity>
+
+              <TouchableOpacity onPress={()=>{
+                SInfo.removeItem('token').then(()=>{
+                  navigation.navigate('loader');
+                  showToast('User logout successfully.')
+                }).catch((err)=>{
+                  showToast('Something went wrong.')
+                  console.log('Error from logout system: ', err)
+                });
+            }} style={{width: wp(20) , backgroundColor: 'red' ,  height: hp(4)}} >
+                <Text>Logout {" "}</Text>
+            </TouchableOpacity>
             </View>
           </View>
 

@@ -17,14 +17,13 @@ import {
 } from "react-native-responsive-screen";
 import { Dropdown } from "react-native-element-dropdown";
 import axios from "axios";
-import analytics from '@react-native-firebase/analytics'
-import firebase from '@react-native-firebase/app'
+import analytics from "@react-native-firebase/analytics";
+import firebase from "@react-native-firebase/app";
 // import crashlytics from '@react-native-firebase/crashlytics';
 
 import { useNavigation } from "@react-navigation/native";
 
 import { data, codes } from "../constants";
-
 
 const requestOTP = async (code, number, navigation, [, setLoading]) => {
   const apiUrl = "https://n8n.heartitout.in/webhook/api/auth";
@@ -56,11 +55,13 @@ const requestOTP = async (code, number, navigation, [, setLoading]) => {
           date: res.data.date,
         };
         const dataString = JSON.stringify(jsonData);
-        await SInfo.setItem("token", dataString).then(() => {
-          console.log('Data stored securely');
-        }).catch((error) => {
-          console.log('Error: ', error);
-        });
+        await SInfo.setItem("token", dataString)
+          .then(() => {
+            console.log("Data stored securely");
+          })
+          .catch((error) => {
+            console.log("Error: ", error);
+          });
         navigation.navigate("verifyPage", res.data);
       })
       .catch((err) => {
@@ -73,42 +74,41 @@ const requestOTP = async (code, number, navigation, [, setLoading]) => {
   }
 };
 
-
 import Loginbg from "../components/Loginbg";
 
 const Login = () => {
-
   React.useEffect(() => {
-    firebase.initializeApp({
-      // Paste your Firebase config object here
-      apiKey: "AIzaSyDv7xfM3f5Xu4_r0FkbplzK5N20T3i0WlM",
-      authDomain: "wellbeing-dashboard-mobile.firebaseapp.com",
-      projectId: "wellbeing-dashboard-mobile",
-      storageBucket: "wellbeing-dashboard-mobile.appspot.com",
-      messagingSenderId: "87847447432",
-      appId: "1:87847447432:android:34575c2cab1541ea8a283d",
-      measurementId: "", // Leave this blank if you don't use Analytics
-      databaseURL : ""
-    })
-  }, [])
-  
+    if (!firebase.apps.length) {
+      firebase.initializeApp({
+        // Paste your Firebase config object here
+        apiKey: "AIzaSyDv7xfM3f5Xu4_r0FkbplzK5N20T3i0WlM",
+        authDomain: "wellbeing-dashboard-mobile.firebaseapp.com",
+        projectId: "wellbeing-dashboard-mobile",
+        storageBucket: "wellbeing-dashboard-mobile.appspot.com",
+        messagingSenderId: "87847447432",
+        appId: "1:87847447432:android:34575c2cab1541ea8a283d",
+        measurementId: "", // Leave this blank if you don't use Analytics
+        databaseURL: "",
+      });
+    }
+  }, []);
 
   const predefinedEvent = async () => {
-    console.log("Predefined event")
+    console.log("Predefined event");
     await analytics().logLogin({
-      method: 'facebook'
-    })
-  }
+      method: "facebook",
+    });
+  };
 
   const customEvent = async () => {
-    console.log("Predefined custom event")
-    await analytics().logEvent('bicket', {
+    console.log("Predefined custom event");
+    await analytics().logEvent("bicket", {
       id: 3745092,
-      item: 'mens grey t-shirt',
-      description: ['round neck', 'long sleeved'],
-      size: 'L'
-    })
-  }
+      item: "mens grey t-shirt",
+      description: ["round neck", "long sleeved"],
+      size: "L",
+    });
+  };
 
   const [value, setValue] = useState("IN");
   const [loading, setLoading] = useState(false);
@@ -123,14 +123,20 @@ const Login = () => {
   return (
     <SafeAreaView>
       {/* <TopBar /> */}
-      <ScrollView  >
+      <ScrollView>
         <StatusBar
           backgroundColor={"#eaf7fc"}
           barStyle={"dark-content"}
           hidden={false}
         />
 
-        <View style={{ width: wp(100), justifyContent: 'center', alignItems: 'center' }}>
+        <View
+          style={{
+            width: wp(100),
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           <Loginbg />
         </View>
 
