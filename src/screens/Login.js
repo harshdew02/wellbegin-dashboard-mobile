@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ScrollView,
+  ToastAndroid
 } from "react-native";
 import React, { useState } from "react";
 import SInfo from "react-native-encrypted-storage";
@@ -19,11 +20,22 @@ import { Dropdown } from "react-native-element-dropdown";
 import axios from "axios";
 import analytics from "@react-native-firebase/analytics";
 import firebase from "@react-native-firebase/app";
+import { Mixpanel } from "mixpanel-react-native";
 // import crashlytics from '@react-native-firebase/crashlytics';
 
 import { useNavigation } from "@react-navigation/native";
 
 import { data, codes } from "../constants";
+
+import * as Sentry from '@sentry/react-native';
+
+Sentry.init({
+  dsn: 'https://e5adfef643df1d558d810f49f20e22a9@o4506911526813696.ingest.us.sentry.io/4506911552569344',
+});
+
+const showToast = (message) => {
+  ToastAndroid.show(message,ToastAndroid.SHORT);
+}
 
 const requestOTP = async (code, number, navigation, [, setLoading]) => {
   const apiUrl = "https://n8n.heartitout.in/webhook/api/auth";
@@ -43,7 +55,7 @@ const requestOTP = async (code, number, navigation, [, setLoading]) => {
       type: "send_otp",
     };
     if ((code + number).length < 10)
-      throw new Error("Mobile number is too short");
+      throw new Error("invalid mobile number");
 
     axios
       .post(apiUrl, requestData)
@@ -61,6 +73,7 @@ const requestOTP = async (code, number, navigation, [, setLoading]) => {
           })
           .catch((error) => {
             console.log("Error: ", error);
+            // showToast("Mobile number is too short")
           });
         navigation.navigate("verifyPage", res.data);
       })
@@ -70,11 +83,16 @@ const requestOTP = async (code, number, navigation, [, setLoading]) => {
       });
   } catch (error) {
     console.log("Error requesting OTP:", error.message);
+    showToast("Error requesting OTP " + error.message)
     setLoading(false);
   }
 };
 
 import Loginbg from "../components/Loginbg";
+
+const trackAutomaticEvents = false;
+const mixpanel = new Mixpanel("f0f7cc32e3642946a8622275a4ec22c8", trackAutomaticEvents);
+mixpanel.init();
 
 const Login = () => {
   React.useEffect(() => {
@@ -91,6 +109,8 @@ const Login = () => {
         databaseURL: "",
       });
     }
+
+
   }, []);
 
   const predefinedEvent = async () => {
@@ -207,6 +227,8 @@ const Login = () => {
                 setLoading,
               ]);
               predefinedEvent();
+              mixpanel.track("OTP Request done by", { "Phone " : codes[value]+number })
+              Sentry.captureException(new Error('Someone clicked the otp request button.'))
             }}
           >
             <Text style={styles.textStyle}>Get OTP</Text>

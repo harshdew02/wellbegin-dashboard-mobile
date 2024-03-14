@@ -249,6 +249,13 @@ export const codes = {
 
 export const data = [
   {
+    name: "India",
+    dial_code: "+91",
+    code: "IN",
+    ccode: "91",
+    show: "IN(+91)",
+  },
+  {
     name: "Afghanistan",
     dial_code: "+93",
     code: "AF",
@@ -926,13 +933,6 @@ export const data = [
     code: "IS",
     ccode: "354",
     show: "IS(+354)",
-  },
-  {
-    name: "India",
-    dial_code: "+91",
-    code: "IN",
-    ccode: "91",
-    show: "IN(+91)",
   },
   {
     name: "Indonesia",
