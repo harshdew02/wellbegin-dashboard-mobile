@@ -21,17 +21,64 @@ import NewIcon from "../../assets/images/NewIcon.svg";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
 import Home1 from "../../assets/images/home1.svg";
 import Home2 from "../../assets/images/home2.svg";
+import { InAppBrowser } from 'react-native-inappbrowser-reborn'
 import SInfo from "react-native-encrypted-storage";
 
 // F:\HIO\Progress\hio_UI\hio\assets\images\
 
-const outLink = (link) => {
-  Linking.openURL(link)
-    .then((responsive) => {
-      console.log(responsive);
-    })
-    .catch((err) => console.log(err));
-};
+// const outLink = (link) => {
+//   Linking.openURL(link)
+//     .then((responsive) => {
+//       console.log(responsive);
+//     })
+//     .catch((err) => console.log(err));
+// };
+
+const outLink = async (link) => {
+  try {
+    const url = link
+    if (await InAppBrowser.isAvailable()) {
+      const result = await InAppBrowser.open(url, {
+        // // iOS Properties
+        // dismissButtonStyle: 'cancel',
+        // preferredBarTintColor: '#453AA4',
+        // preferredControlTintColor: 'white',
+        // readerMode: false,
+        // animated: true,
+        // modalPresentationStyle: 'fullScreen',
+        // modalTransitionStyle: 'coverVertical',
+        // modalEnabled: true,
+        // enableBarCollapsing: false,
+        // Android Properties
+        showTitle: true,
+        toolbarColor: '#01818C',
+        secondaryToolbarColor: 'red',
+        navigationBarColor: 'white',
+        navigationBarDividerColor: 'white',
+        enableUrlBarHiding: true,
+        enableDefaultShare: false,
+        forceCloseOnRedirection: false,
+        hasBackButton: true,
+        
+        // Specify full animation resource identifier(package:anim/name)
+        // or only resource name(in case of animation bundled with app).
+        animations: {
+          startEnter: 'slide_in_right',
+        },
+        headers: {
+          'my-custom-header': 'my custom header value'
+        }
+      })
+      console.log(result)
+    }
+    else Linking.openURL(url)
+  } catch (error) {
+    console.log(error)
+  }
+// Linking.canOpenURL(link).then((supported)=>{
+//   if(supported) Linking.openURL(link); else console.log('error')
+// });
+}
 
 const Btn = (props) => {
   return (
@@ -123,6 +170,8 @@ export default function HomeScreen(props) {
   const [link, setLink] = useState("");
   const [mood, setMood] = useState("Track Your Mood");
   const [time, setTime] = useState("");
+  const [date, setDate] = useState("");
+
   const data = props.route.params.data.route.params;
 
   const appointment = {
@@ -135,7 +184,7 @@ export default function HomeScreen(props) {
     //   app_cl_email: "vaishnavi5913@gmail.com",
     //   app_staff: "2",
     //   app_session_date:
-    //     "Fri Mar 13 2024 00:00:00 GMT+0000 (Coordinated Universal Time)",
+    //     "Fri Mar 14 2024 00:00:00 GMT+0000 (Coordinated Universal Time)",
     //   app_session_time: "01:00:00",
     //   app_session_link: "https://meet.google.com/pgx-mwxa-jdj",
     // },
@@ -169,7 +218,8 @@ export default function HomeScreen(props) {
         hours = 12;
       }
       // let showTime = `${}/${}/${} at `
-      let showTime = `${date}/${month}/${year} at ${hours}:${minutes}:${seconds} ${period} IST`;
+      let showTime = `${hours}:${minutes} ${period}`;
+      let showDate = `${date}/${month}/${year}`
       let finalAPITime = `${year}-${month}-${date}T${apiTime}Z`;
 
       // Extracting date components from system
@@ -208,6 +258,7 @@ export default function HomeScreen(props) {
         setBooked(true);
         setIs2hour(true);
         setTime(showTime);
+        setDate(showDate);
       }
     }
   }, [name]);
@@ -243,10 +294,31 @@ export default function HomeScreen(props) {
                             fontFamily: "Roboto",
                             fontWeight: "400",
                             marginTop: wp(4),
+                            width: wp(53)
                           }}
                         >
-                          Continue your well-begin journey. Your next Online
-                          session is on {time}
+                          Your next Online
+                          session is on{" "}
+                          <Text
+                            style={{
+                              color: "white",
+                              fontSize: wp(4),
+                              fontFamily: "Roboto",
+                              fontWeight: "700",
+                            }}
+                          >
+                            {date}
+                          </Text> at{" "}
+                          <Text
+                            style={{
+                              color: "white",
+                              fontSize: wp(4),
+                              fontFamily: "Roboto",
+                              fontWeight: "700",
+                            }}
+                          >
+                            {time}
+                          </Text>
                         </Text>
                       </>
                     ) : (
@@ -255,8 +327,10 @@ export default function HomeScreen(props) {
                           color: "white",
                           fontSize: wp(4),
                           fontFamily: "Roboto",
-                          fontWeight: "400",
+                          fontWeight: '700',
                           marginTop: wp(4),
+                          width: wp(53)
+                          
                         }}
                       >
                         Continue your well-begin journey.
@@ -302,15 +376,17 @@ export default function HomeScreen(props) {
         {/* Content */}
         <View
           className="flex-row justify-between"
-          style={[styles.cardContiner, { height: hp(15.8) }]}
+          style={[styles.cardContainer, { height: hp(15.8) }]}
         >
           <TouchableOpacity
+            onPress={()=>{console.log("working")}}
             style={[styles.card, { backgroundColor: "#FEF8C8" }]}
           >
             <Text style={styles.cardText}>My {"\n"}Tasks</Text>
 
             <TasksIcon width={wp(11)} height={hp(6)} />
           </TouchableOpacity>
+
           <TouchableOpacity
             style={[styles.card, { backgroundColor: "#EBF2F5" }]}
           >
@@ -328,6 +404,7 @@ export default function HomeScreen(props) {
               }}
             />
           </TouchableOpacity>
+
           <TouchableOpacity
             style={[styles.card, { backgroundColor: "#EAF7FC" }]}
           >
@@ -336,10 +413,9 @@ export default function HomeScreen(props) {
           </TouchableOpacity>
         </View>
 
-
         <View
           className="flex-col justify-between items-center"
-          style={[styles.cardContiner, { marginTop: hp(3) }]}
+          style={[styles.cardContainer, { marginTop: hp(3) }]}
         >
           <Home2 width={"100%"} height={hp(13)} />
           <View
@@ -375,6 +451,9 @@ export default function HomeScreen(props) {
                 alignItems: "center",
                 flexDirection: "row",
               }}
+              onPress={() => {
+                navigation.navigate('mood')
+              }}
             >
               <Text
                 style={{
@@ -395,7 +474,7 @@ export default function HomeScreen(props) {
 
         <View
           className="flex-col items-center"
-          style={[styles.cardContiner, { height: hp(15.8), marginTop: hp(3) }]}
+          style={[styles.cardContainer, { height: hp(15.8), marginTop: hp(3) }]}
         >
           <Home1 width={"100%"} height={hp(17)} />
           <View
@@ -419,7 +498,7 @@ export default function HomeScreen(props) {
 
         <View
           className="flex-col items-center"
-          style={[styles.cardContiner, { height: hp(15.8), marginTop: hp(4) }]}
+          style={[styles.cardContainer, { height: hp(15.8), marginTop: hp(4) }]}
         >
           <View style={[styles.packageCard, { backgroundColor: "#EAF7FC" }]}>
             <View
@@ -427,7 +506,7 @@ export default function HomeScreen(props) {
               style={{ height: hp(9) }}
             >
               <Text style={styles.cardText}>Self-care Tools for you</Text>
-              <TouchableOpacity onPress={()=>{outLink('https://heartitout.in/products/')}} activeOpacity={0.5} style={styles.Btn}>
+              <TouchableOpacity onPress={() => { outLink('https://heartitout.in/products/') }} activeOpacity={0.5} style={styles.Btn}>
                 <Text style={styles.btnText2}>Discover Now</Text>
               </TouchableOpacity>
             </View>
@@ -441,7 +520,7 @@ export default function HomeScreen(props) {
         <View
           className="flex-row items-center"
           style={[
-            styles.cardContiner,
+            styles.cardContainer,
             { height: hp(20), marginTop: hp(5), backgroundColor: "#EBEFF2CC" },
           ]}
         >

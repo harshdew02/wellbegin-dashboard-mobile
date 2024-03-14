@@ -47,19 +47,18 @@ const outLink = async (link) => {
           // Android Properties
           showTitle: true,
           toolbarColor: '#01818C',
-          secondaryToolbarColor: 'black',
-          navigationBarColor: 'black',
+          secondaryToolbarColor: 'red',
+          navigationBarColor: 'white',
           navigationBarDividerColor: 'white',
-          enableUrlBarHiding: false,
+          enableUrlBarHiding: true,
           enableDefaultShare: false,
           forceCloseOnRedirection: false,
+          hasBackButton: true,
+          
           // Specify full animation resource identifier(package:anim/name)
           // or only resource name(in case of animation bundled with app).
           animations: {
             startEnter: 'slide_in_right',
-            startExit: 'slide_out_left',
-            endEnter: 'slide_in_left',
-            endExit: 'slide_out_right'
           },
           headers: {
             'my-custom-header': 'my custom header value'
@@ -94,7 +93,7 @@ export default function DiscoverScreen() {
           Discover Our Offerings Here 😍
         </Text>
 
-        <View style={[styles.cardContiner, { marginTop: hp(2) }]}>
+        <View style={[styles.cardContainer, { marginTop: hp(2) }]}>
           <View
             className="flex-row justify-between "
             style={{ height: hp(25) }}
@@ -170,7 +169,7 @@ export default function DiscoverScreen() {
           </View>
         </View>
 
-        <TouchableOpacity style={[styles.cardContiner, { height: hp(16) }]}
+        <TouchableOpacity style={[styles.cardContainer, { height: hp(16) }]}
         onPress={() => {
             // Checking if the link is supported for links with custom URL scheme.
             outLink('https://heartitout.in/nudge-a-friend/')
@@ -199,7 +198,7 @@ export default function DiscoverScreen() {
         <View
           className="flex-row items-center"
           style={[
-            styles.cardContiner,
+            styles.cardContainer,
             { height: hp(20), marginTop: hp(3), backgroundColor: "#EBEFF2CC" },
           ]}
         >
@@ -226,7 +225,7 @@ const styles = StyleSheet.create({
   },
 
   // Cards
-  cardContiner: {
+  cardContainer: {
     width: wp(100),
     paddingHorizontal: wp(8),
   },

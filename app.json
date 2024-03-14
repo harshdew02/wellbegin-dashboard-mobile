@@ -18,12 +18,14 @@
       "supportsTablet": true
     },
     "android": {
+      "googleServicesFile": "./assets/analytics/google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
       "package": "com.as828.hio"
     },
+    "plugins": ["@react-native-firebase/app"],
     "web": {
       "favicon": "./assets/favicon.png"
     },
