@@ -7,7 +7,7 @@ import {
   Linking,
   StyleSheet,
   TouchableOpacity,
-  Animated
+  Animated,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { ScrollView } from "react-native-gesture-handler";
@@ -22,12 +22,12 @@ import TasksIcon from "../../assets/images/TasksIcon.svg";
 import NewIcon from "../../assets/images/NewIcon.svg";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
 import Home1 from "../../assets/images/home1.svg";
-import FeelBanner from '../../assets/images/FeelBanner.svg';
-import Emoji1 from '../../assets/images/emoji1.svg';
-import Emoji2 from '../../assets/images/emoji2.svg';
-import Emoji3 from '../../assets/images/emoji3.svg';
-import Emoji4 from '../../assets/images/emoji4.svg';
-import Emoji5 from '../../assets/images/emoji5.svg';
+import FeelBanner from "../../assets/images/FeelBanner.svg";
+import Emoji1 from "../../assets/images/emoji1.svg";
+import Emoji2 from "../../assets/images/emoji2.svg";
+import Emoji3 from "../../assets/images/emoji3.svg";
+import Emoji4 from "../../assets/images/emoji4.svg";
+import Emoji5 from "../../assets/images/emoji5.svg";
 import Home2 from "../../assets/images/home2.svg";
 import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import SInfo from "react-native-encrypted-storage";
@@ -71,7 +71,6 @@ const outLink = async (link) => {
         forceCloseOnRedirection: false,
         hasBackButton: true,
 
-
         // Specify full animation resource identifier(package:anim/name)
         // or only resource name(in case of animation bundled with app).
         animations: {
@@ -86,10 +85,10 @@ const outLink = async (link) => {
   } catch (error) {
     console.log(error);
   }
-// Linking.canOpenURL(link).then((supported)=>{
-//   if(supported) Linking.openURL(link); else console.log('error')
-// });
-}
+  // Linking.canOpenURL(link).then((supported)=>{
+  //   if(supported) Linking.openURL(link); else console.log('error')
+  // });
+};
 
 const Btn = (props) => {
   return (
@@ -183,7 +182,7 @@ export default function HomeScreen(props) {
   const [mood, setMood] = useState(false);
   const [time, setTime] = useState("");
   const [date, setDate] = useState("");
-  const [statusColor , setStatusColor] = useState('green')
+  const [statusColor, setStatusColor] = useState("green");
 
   const data = props.route.params.data.route.params;
 
@@ -274,10 +273,10 @@ export default function HomeScreen(props) {
     }
   }, [name]);
 
-  navigation.addListener("focus",()=>{
-    setStatusColor('red');
-    console.log(statusColor)
-  })
+  navigation.addListener("focus", () => {
+    setStatusColor("red");
+    console.log(statusColor);
+  });
 
   const [scrollPercentage, setScrollPercentage] = useState(0);
   const animatedColor = new Animated.Value(0);
@@ -293,8 +292,8 @@ export default function HomeScreen(props) {
 
   const statusBarColor = animatedColor.interpolate({
     inputRange: [0, 1],
-    outputRange: ['rgb(0, 0, 255)', 'rgb(255, 0, 0)'],
-    extrapolate: 'clamp',
+    outputRange: ["rgb(0, 0, 255)", "rgb(255, 0, 0)"],
+    extrapolate: "clamp",
   });
 
   const handleScroll = (event) => {
@@ -317,16 +316,24 @@ export default function HomeScreen(props) {
 
       <StatusBar
         backgroundColor={theme.maincolor}
-        barStyle={'light-content'}
+        barStyle={"light-content"}
         hidden={false}
       />
 
-
-
-      <ScrollView onScroll={handleScroll} style={{ backgroundColor: "#fff", height: hp(100) }}>
+      <ScrollView
+        onScroll={handleScroll}
+        style={{ backgroundColor: "#fff", height: hp(100) }}
+      >
         {/* Banner */}
 
-        <View className="flex-row justify-center items-center " style={{ backgroundColor: theme.maincolor, width: wp(100), height: hp(6) }} >
+        <View
+          className="flex-row justify-center items-center "
+          style={{
+            backgroundColor: theme.maincolor,
+            width: wp(100),
+            height: hp(6),
+          }}
+        >
           <Text
             style={{
               color: "white",
@@ -337,7 +344,7 @@ export default function HomeScreen(props) {
           >
             Welcome👋 {name}
           </Text>
-          <TouchableOpacity style={{ position: 'absolute', right: wp(8) }} >
+          <TouchableOpacity style={{ position: "absolute", right: wp(8) }}>
             <TopBell active={true} />
           </TouchableOpacity>
         </View>
@@ -393,8 +400,7 @@ export default function HomeScreen(props) {
                           fontFamily: "Roboto",
                           fontWeight: "700",
                           marginTop: wp(4),
-                          width: wp(53)
-                          
+                          width: wp(53),
                         }}
                       >
                         Continue your well-begin journey.
@@ -442,7 +448,9 @@ export default function HomeScreen(props) {
           style={[styles.cardContainer, { height: hp(15.8) }]}
         >
           <TouchableOpacity
-            onPress={()=>{console.log("working")}}
+            onPress={() => {
+              console.log("working");
+            }}
             style={[styles.card, { backgroundColor: "#FEF8C8" }]}
           >
             <Text style={styles.cardText}>My {"\n"}Tasks</Text>
@@ -507,23 +515,50 @@ export default function HomeScreen(props) {
                 ]}
               >
                 <TouchableOpacity>
-                  <Emoji1 width={wp(8)} height={wp(8)} />
+                  <Emoji1
+                    width={wp(8)}
+                    height={wp(8)}
+                    onPress={() => {
+                      navigation.navigate("mood");
+                    }}
+                  />
                 </TouchableOpacity>
                 <TouchableOpacity>
-                  <Emoji2 width={wp(8)} height={wp(8)} />
+                  <Emoji2
+                    width={wp(8)}
+                    height={wp(8)}
+                    onPress={() => {
+                      navigation.navigate("mood");
+                    }}
+                  />
                 </TouchableOpacity>
                 <TouchableOpacity>
                   <Emoji3
                     style={{ marginHorizontal: wp(1.5) }}
                     width={wp(10)}
                     height={wp(10)}
+                    onPress={() => {
+                      navigation.navigate("mood");
+                    }}
                   />
                 </TouchableOpacity>
                 <TouchableOpacity>
-                  <Emoji4 width={wp(8)} height={wp(8)} />
+                  <Emoji4
+                    width={wp(8)}
+                    height={wp(8)}
+                    onPress={() => {
+                      navigation.navigate("mood");
+                    }}
+                  />
                 </TouchableOpacity>
                 <TouchableOpacity>
-                  <Emoji5 width={wp(8)} height={wp(8)} />
+                  <Emoji5
+                    width={wp(8)}
+                    height={wp(8)}
+                    onPress={() => {
+                      navigation.navigate("mood");
+                    }}
+                  />
                 </TouchableOpacity>
               </View>
             </View>
@@ -747,7 +782,7 @@ const styles = StyleSheet.create({
   },
 
   feelBanner: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     zIndex: -1,
   },

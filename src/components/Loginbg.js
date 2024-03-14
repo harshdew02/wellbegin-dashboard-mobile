@@ -10,7 +10,7 @@ import {
 const Loginbg = (props) => (
   <Svg
     width={wp(100)}
-    height={hp(30.9)}
+    height={wp(64)}
     viewBox="0 0 375 240"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
