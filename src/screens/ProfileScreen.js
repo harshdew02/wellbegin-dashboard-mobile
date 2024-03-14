@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   useWindowDimensions,
+  StatusBar,
   ActivityIndicator,
   Linking,
 } from "react-native";
@@ -21,8 +22,9 @@ import ProfileDisplay from "../../assets/images/ProfileDisplay.svg";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
 import BookIcon from "../../assets/images/bookIcon.svg";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
-import {InAppBrowser} from 'react-native-inappbrowser-reborn'
+import { InAppBrowser } from 'react-native-inappbrowser-reborn'
 import axios from "axios";
+import theme from '../theme'
 
 const outLink = async (link) => {
   try {
@@ -49,7 +51,7 @@ const outLink = async (link) => {
         enableDefaultShare: false,
         forceCloseOnRedirection: false,
         hasBackButton: true,
-        
+
         // Specify full animation resource identifier(package:anim/name)
         // or only resource name(in case of animation bundled with app).
         animations: {
@@ -65,9 +67,9 @@ const outLink = async (link) => {
   } catch (error) {
     console.log(error)
   }
-// Linking.canOpenURL(link).then((supported)=>{
-//   if(supported) Linking.openURL(link); else console.log('error')
-// });
+  // Linking.canOpenURL(link).then((supported)=>{
+  //   if(supported) Linking.openURL(link); else console.log('error')
+  // });
 }
 
 const NoSessions = () => {
@@ -94,9 +96,8 @@ const DateTimeComponent = (rtime, rdate) => {
   const dateTime = new Date(dateTimeString);
 
   // Extracting date in DD/MM/YYYY format
-  const formattedDate = `${dateTime.getDate()}/${
-    dateTime.getMonth() + 1
-  }/${dateTime.getFullYear()}`;
+  const formattedDate = `${dateTime.getDate()}/${dateTime.getMonth() + 1
+    }/${dateTime.getFullYear()}`;
 
   // Extracting time in HH:MM:SS AM/PM format
   const timeString = rtime; // Example time string in the format HH:MM:SS
@@ -430,7 +431,7 @@ const Card = () => {
               backgroundColor: "#01818c",
               borderRadius: wp(1),
             }}
-            onPress={()=>{outLink('https://heartitout.in/products/doodle-notebooks/')}}
+            onPress={() => { outLink('https://heartitout.in/products/doodle-notebooks/') }}
           >
             <Text style={{ color: "white", fontSize: wp(3.8) }}>
               Try doodling!
@@ -454,6 +455,9 @@ export default function ProfileScreen(props) {
   const [isSession, setSession] = React.useState(1);
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
+
+  const [statusColor , setStatusColor] = useState('green')
+
   const [routes] = React.useState([
     { key: "first", title: "Upcoming" },
     { key: "second", title: "History" },
@@ -478,8 +482,17 @@ export default function ProfileScreen(props) {
     }
   };
 
+  navigation.addListener("focus",()=>{
+    setStatusColor('green');
+  })
+
   return (
     <SafeAreaView>
+      {/* <StatusBar
+        backgroundColor={statusColor}
+        barStyle={'light-content'}
+        hidden={false}
+      /> */}
       {/* <TopBarMain /> */}
       <ScrollView style={{ backgroundColor: "#fff", height: hp(100) }}>
         <View style={{ marginTop: hp(9.5) }}>

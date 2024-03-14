@@ -157,10 +157,11 @@ const Login = () => {
             alignItems: "center",
           }}
         >
+          <View style={{backgroundColor: '#eaf7fc', width: wp(100) , height: hp(6)  }} />
           <Loginbg />
         </View>
 
-        <View className="flex-col items-center" style={{ marginTop: hp(2.5) }}>
+        <View className="flex-col items-center" style={{ marginTop: hp(3) }}>
           <Text style={styles.well}>Your Wellbeing Comes First!</Text>
 
           <Text style={styles.getinstant}>
@@ -307,13 +308,13 @@ const styles = StyleSheet.create({
     borderStyle: "solid",
     color: "#455A64",
     fontWeight: "600",
-    paddingLeft: wp(23),
+    paddingLeft: wp(25),
     fontSize: wp(4),
   },
   dropdown: {
     // marginTop: 7,
     height: hp(7),
-    width: wp(22),
+    width: wp(23),
     backgroundColor: "white",
     borderRadius: wp(3),
     borderWidth: wp(0.4),
