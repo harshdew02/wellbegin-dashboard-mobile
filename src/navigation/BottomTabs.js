@@ -68,7 +68,7 @@ export default function BottomTabs(props) {
             width,
             height,
         }}>
-            <TopBarMain/>
+            {/* <TopBarMain/> */}
             <Tab.Navigator initialRouteName='Home_Tab' screenOptions={screenOptions}>
                 <Tab.Screen
                     name="Discover_Tab"
