@@ -166,11 +166,12 @@ export default function Verify({ navigation, route }) {
   });
 
   React.useEffect(() => {
+    // setBut(true)
     const interval = setInterval(() => {
       if (counter == 0) clearInterval(interval);
       else setCounter(counter - 1);
     }, 1000);
-    return () => clearInterval(interval);
+    return () => { clearInterval(interval);}
   }, [counter]);
 
   const [number, onChangeNumber] = React.useState("");
@@ -242,6 +243,7 @@ export default function Verify({ navigation, route }) {
           <View className="flex-row" style={styles.resend}>
             <Text style={styles.check}>Haven’t received an OTP? </Text>
             <TouchableOpacity
+              disabled={counter > 0}
               onPress={() => {
                 if (timer == true) {
                   setLoading(true);
@@ -252,10 +254,10 @@ export default function Verify({ navigation, route }) {
                   ], [counter,setCounter], [timer, setTimer]);
                   // setTimer(false);
                   // resendOTPT([, setTimer]);
-                } 
+                }
               }}
             >
-              <Text style={styles.check1}>RESEND OTP</Text>
+              <Text style={[{color: (counter > 0) ? "#455A64" : "#32959D" }, styles.check1]}>RESEND OTP</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -347,7 +349,7 @@ const styles = StyleSheet.create({
   },
 
   check1: {
-    color: "#043953",
+    // color: "#043953",
     fontSize: wp(3.4),
     fontFamily: "Roboto",
     fontWeight: "700",

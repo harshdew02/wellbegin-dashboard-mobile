@@ -164,12 +164,18 @@ const Login = () => {
               iconStyle={styles.iconStyle}
               itemTextStyle={{ fontSize: wp(4) }}
               data={data}
-              search
-              maxHeight={200}
+              search={false}
+              dropdownPosition="top"
+              inverted={false}
+              showsVerticalScrollIndicator={true}
               iconColor="#455A64"
+              mode="auto"
+              maxHeight={400}
+              autoScroll={false}
               // onFocus={() => setIsFocus(true)}
               // onBlur={() => setIsFocus(false)}
               labelField="show"
+              // alwaysRenderSelectedItem = {false}
               valueField="code"
               placeholder="IN(+91)"
               searchPlaceholder="Search..."
