@@ -3,11 +3,13 @@ import {
   Text,
   SafeAreaView,
   Image,
+  StatusBar,
   Linking,
   StyleSheet,
   TouchableOpacity,
+  Animated
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import {
   widthPercentageToDP as wp,
@@ -23,6 +25,9 @@ import Home1 from "../../assets/images/home1.svg";
 import Home2 from "../../assets/images/home2.svg";
 import { InAppBrowser } from 'react-native-inappbrowser-reborn'
 import SInfo from "react-native-encrypted-storage";
+import { theme } from "../theme";
+import TopBell from "../components/TopBell";
+import HomePageBanner from "../components/HomePageBanner";
 
 // F:\HIO\Progress\hio_UI\hio\assets\images\
 
@@ -59,7 +64,7 @@ const outLink = async (link) => {
         enableDefaultShare: false,
         forceCloseOnRedirection: false,
         hasBackButton: true,
-        
+
         // Specify full animation resource identifier(package:anim/name)
         // or only resource name(in case of animation bundled with app).
         animations: {
@@ -75,9 +80,9 @@ const outLink = async (link) => {
   } catch (error) {
     console.log(error)
   }
-// Linking.canOpenURL(link).then((supported)=>{
-//   if(supported) Linking.openURL(link); else console.log('error')
-// });
+  // Linking.canOpenURL(link).then((supported)=>{
+  //   if(supported) Linking.openURL(link); else console.log('error')
+  // });
 }
 
 const Btn = (props) => {
@@ -96,6 +101,7 @@ const Btn = (props) => {
 };
 const Bookbtn = (props) => {
   // console.log(props.props.is2hour)
+
   const ishour = props.props.is2hour;
   return (
     // <></>
@@ -171,6 +177,7 @@ export default function HomeScreen(props) {
   const [mood, setMood] = useState("Track Your Mood");
   const [time, setTime] = useState("");
   const [date, setDate] = useState("");
+  const [statusColor , setStatusColor] = useState('green')
 
   const data = props.route.params.data.route.params;
 
@@ -263,26 +270,79 @@ export default function HomeScreen(props) {
     }
   }, [name]);
 
+  navigation.addListener("focus",()=>{
+    setStatusColor('red');
+    console.log(statusColor)
+  })
+
+  const [scrollPercentage, setScrollPercentage] = useState(0);
+  const animatedColor = new Animated.Value(0);
+
+  // useEffect(() => {
+  //   Animated.timing(animatedColor, {
+  //     toValue: scrollPercentage > 84 ? 1 : 0,
+  //     duration: 300, // Adjust duration as needed
+  //     useNativeDriver: false,
+  //   }).start();
+  //   console.log(JSON.stringify(statusBarColor))
+  // }, [scrollPercentage]);
+
+  const statusBarColor = animatedColor.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['rgb(0, 0, 255)', 'rgb(255, 0, 0)'],
+    extrapolate: 'clamp',
+  });
+
+  const handleScroll = (event) => {
+    const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
+    const maxScroll = contentSize.height - layoutMeasurement.height;
+    const currentScroll = contentOffset.y;
+    const scrollPercentage = (currentScroll / maxScroll) * 100;
+    setScrollPercentage(scrollPercentage);
+    // console.log(scrollPercentage)
+  };
+
   return (
     <SafeAreaView>
       {/* <TopBarMain /> */}
-      <ScrollView style={{ backgroundColor: "#fff", height: hp(100) }}>
+      {/* <StatusBar
+        backgroundColor={(scrollPercentage>84)?'#fff':theme.maincolor}
+        barStyle={'light-content'}
+        hidden={false}
+      /> */}
+
+      <StatusBar
+        backgroundColor={theme.maincolor}
+        barStyle={'light-content'}
+        hidden={false}
+      />
+
+
+
+      <ScrollView onScroll={handleScroll} style={{ backgroundColor: "#fff", height: hp(100) }}>
         {/* Banner */}
-        <View style={{ marginTop: hp(9.5) }}>
-          <Logo4 width={wp(100)} height={wp(59.5)} />
+
+        <View className="flex-row justify-center items-center " style={{ backgroundColor: theme.maincolor, width: wp(100), height: hp(6) }} >
+          <Text
+            style={{
+              color: "white",
+              fontSize: wp(4),
+              fontFamily: "Roboto",
+              fontWeight: "400",
+            }}
+          >
+            Welcome👋 {name}
+          </Text>
+          <TouchableOpacity style={{ position: 'absolute', right: wp(8) }} >
+            <TopBell active={true} />
+          </TouchableOpacity>
+        </View>
+
+        <View style={{}}>
+          <HomePageBanner />
           <View style={styles.banner}>
             <View className="flex-row justify-between items-center">
               <View>
-                <Text
-                  style={{
-                    color: "white",
-                    fontSize: wp(4),
-                    fontFamily: "Roboto",
-                    fontWeight: "400",
-                  }}
-                >
-                  Welcome👋 {name}
-                </Text>
                 {isBooked ? (
                   <>
                     {is2hour ? (
@@ -330,7 +390,7 @@ export default function HomeScreen(props) {
                           fontWeight: '700',
                           marginTop: wp(4),
                           width: wp(53)
-                          
+
                         }}
                       >
                         Continue your well-begin journey.
@@ -345,7 +405,6 @@ export default function HomeScreen(props) {
                         fontSize: wp(4),
                         fontFamily: "Roboto",
                         fontWeight: "400",
-                        marginTop: wp(4),
                       }}
                     >
                       Take care of yourself with
@@ -379,7 +438,7 @@ export default function HomeScreen(props) {
           style={[styles.cardContainer, { height: hp(15.8) }]}
         >
           <TouchableOpacity
-            onPress={()=>{console.log("working")}}
+            onPress={() => { console.log("working") }}
             style={[styles.card, { backgroundColor: "#FEF8C8" }]}
           >
             <Text style={styles.cardText}>My {"\n"}Tasks</Text>
@@ -540,7 +599,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     left: wp(8),
     right: wp(8),
-    top: hp(2.6),
+    top: hp(4),
     zIndex: 2,
   },
 

@@ -131,7 +131,7 @@ export default function InitLoaderEffect({navigation}) {
 
   return (
     <SafeAreaView className="bg-white" style={{ height: hp(100) }}>
-      <TopBar />
+      {/* <TopBar /> */}
       {/* <LottieView
         source={require()}
         style={styles.animation}
