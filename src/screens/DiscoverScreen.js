@@ -78,7 +78,7 @@ const outLink = async (link) => {
 export default function DiscoverScreen() {
   return (
     <SafeAreaView>
-      <TopBarMain />
+      {/* <TopBarMain /> */}
       <ScrollView style={{ backgroundColor: "#fff", height: hp(100) }}>
         <Text
           style={{

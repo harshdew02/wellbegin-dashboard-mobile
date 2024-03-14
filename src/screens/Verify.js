@@ -3,6 +3,7 @@ import {
   Text,
   SafeAreaView,
   StyleSheet,
+  StatusBar,
   TextInput,
   ActivityIndicator,
   TouchableOpacity,
@@ -173,14 +174,21 @@ export default function Verify({ navigation, route }) {
       if (counter == 0) clearInterval(interval);
       else setCounter(counter - 1);
     }, 1000);
-    return () => { clearInterval(interval);}
+    return () => { clearInterval(interval); }
   }, [counter]);
 
   const [number, onChangeNumber] = React.useState("");
 
   return (
     <SafeAreaView>
-      <TopBar />
+      {/* <TopBar /> */}
+
+      <StatusBar
+        backgroundColor={"#fff"}
+        barStyle={"dark-content"}
+        hidden={false}
+      />
+
       <ScrollView>
         <View style={styles.box}>
           <TouchableOpacity
@@ -191,7 +199,7 @@ export default function Verify({ navigation, route }) {
           >
             <Back width={wp(8.5)} height={wp(8.5)} />
           </TouchableOpacity>
-          <Logo4 width={wp(46)} height={wp(37)} style={{ marginTop: hp(2) }} />
+          <Logo4 width={wp(46)} height={wp(37)} style={{ marginTop: hp(8) }} />
         </View>
 
         <View style={{ marginTop: hp(4) }} className="flex-col items-center">
@@ -259,7 +267,7 @@ export default function Verify({ navigation, route }) {
                 }
               }}
             >
-              <Text style={[{color: (counter > 0) ? "#455A64" : "#32959D" }, styles.check1]}>RESEND OTP</Text>
+              <Text style={[{ color: (counter > 0) ? "#455A64" : "#32959D" , fontWeight: (counter > 0) ? "normal" : '700', }, styles.check1]}>RESEND OTP</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -308,7 +316,7 @@ const styles = StyleSheet.create({
   box: {
     // overflow: 'hidden',
     alignItems: "center",
-    marginTop: hp(13),
+    marginTop: hp(4),
     // backgroundColor: 'red'
   },
   input: {
@@ -322,7 +330,7 @@ const styles = StyleSheet.create({
   button: {
     height: hp(7.3),
     width: wp(82),
-    marginTop: hp(4),
+    marginTop: hp(1),
     backgroundColor: "#32959D",
     borderRadius: wp(10),
     justifyContent: "center",
@@ -354,7 +362,6 @@ const styles = StyleSheet.create({
     // color: "#043953",
     fontSize: wp(3.4),
     fontFamily: "Roboto",
-    fontWeight: "700",
-    textDecorationLine: "underline",
+    // textDecorationLine: "underline",
   },
 });

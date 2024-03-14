@@ -17,16 +17,15 @@ export default function TopBarMain() {
 
   return (
     <View className="flex-row  justify-between items-center bg-red p-3" style={[styles.card, styles.elevation]}>
-      <StatusBar
+      {/* <StatusBar
         backgroundColor={"#fff"}
         barStyle={"dark-content"}
         hidden={false}
-      />
+      /> */}
 
-      <Animated.Image source={require('../../assets/logo.png')} style={{ width: wp(32), height: hp(16), marginLeft: wp(2) }} sharedTransitionTag="tag" />
+      {/* <Animated.Image source={require('../../assets/logo.png')} style={{ width: wp(32), height: hp(16), marginLeft: wp(2) }} sharedTransitionTag="tag" /> */}
 
-
-      <View className=" flex-row justify-center items-center  " style={{ width: wp(20), marginBottom: wp(1) }}>
+      <View className=" flex-row items-center justify-end " style={{ width: wp(20), marginBottom: wp(1) }}>
         {/* <TouchableOpacity onPress={() => navigation.openDrawer()}> */}
         <TouchableOpacity onPress={() => navigation.navigate('reminder')}>
           <TopBell active={true} />
