@@ -33,7 +33,7 @@ const verifyOTP = async (
   date,
   navigation,
   [loading, setLoading],
-  [counter, setCounter]
+  [error, setError]
 ) => {
   const apiUrl = "https://n8n.heartitout.in/webhook/api/auth";
   try {
@@ -74,26 +74,33 @@ const verifyOTP = async (
           navigation.navigate("loader");
         } else {
           console.log("wrong otp received");
-          // setError("You entered the wrong code. Please try again.");
-          showToast("You entered the wrong code. Please try again.")
+          setError("You entered the wrong code. Please try again.");
+          // showToast("You entered the wrong code. Please try again.");
           setLoading(false);
         }
       })
       .catch((err) => {
         console.log(err);
-        // setError("Something went wrong. Please try again later.");
-        showToast("Something went wrong. Please try again later.")
+        setError("Something went wrong. Please try again later.");
+        // showToast("Something went wrong. Please try again later.");
         setLoading(false);
       });
   } catch (error) {
     console.log("Error requesting OTP:", error.message);
-    // setError("Something went wrong. Please try again later.");
-    showToast("Something went wrong. Please try again later.")
+    setError("Something went wrong. Please try again later.");
+    // showToast("Something went wrong. Please try again later.");
     setLoading(false);
   }
 };
 
-const requestOTP = async (code, number, [loading, setLoading], [counter, setCounter], [timer,setTimer], [mul, setMul]) => {
+const requestOTP = async (
+  code,
+  number,
+  [loading, setLoading],
+  [counter, setCounter],
+  [timer, setTimer],
+  [mul, setMul]
+) => {
   const apiUrl = "https://n8n.heartitout.in/webhook/api/auth";
 
   let date = new Date();
@@ -134,9 +141,9 @@ const requestOTP = async (code, number, [loading, setLoading], [counter, setCoun
           });
         showToast("OTP resent successfully");
         setMul(++mul);
-        setCounter(mul*30);
-        setTimer(mul*30);
-        resendOTPT([timer, setTimer])
+        setCounter(mul * 30);
+        setTimer(mul * 30);
+        resendOTPT([timer, setTimer]);
       })
       .catch((err) => {
         console.log(err);
@@ -155,8 +162,8 @@ const resendOTPT = ([, setTimer]) => {
 };
 
 export default function Verify({ navigation, route }) {
-  const [mul,setMul]  = useState(1)
-  const [counter, setCounter] = useState(30*mul);
+  const [mul, setMul] = useState(1);
+  const [counter, setCounter] = useState(30 * mul);
   const [timer, setTimer] = useState(false);
   const [otp, setOtp] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -174,7 +181,9 @@ export default function Verify({ navigation, route }) {
       if (counter == 0) clearInterval(interval);
       else setCounter(counter - 1);
     }, 1000);
-    return () => { clearInterval(interval); }
+    return () => {
+      clearInterval(interval);
+    };
   }, [counter]);
 
   const [number, onChangeNumber] = React.useState("");
@@ -227,9 +236,8 @@ export default function Verify({ navigation, route }) {
           {showErrorMessage && (
             <Text style={styles.wrong}>{showErrorMessage}</Text>
           )}
-
-          {counter > 0 ? (<Text style={styles.wrong}>Please wait for {Math.floor(counter/60).toString().padStart(2, '0')}:{(counter%60).toString().padStart(2, '0')} to resend OTP.</Text>) : (<></>)}
           <ActivityIndicator animating={loading} size="large" />
+
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
@@ -251,24 +259,52 @@ export default function Verify({ navigation, route }) {
           </TouchableOpacity>
 
           <View className="flex-row" style={styles.resend}>
-            <Text style={styles.check}>Haven’t received an OTP? </Text>
-            <TouchableOpacity
-              disabled={counter > 0}
-              onPress={() => {
-                if (timer == true) {
-                  setLoading(true);
-                  setShowErrorMessage(null);
-                  requestOTP(route.params.code, route.params.phone, [
-                    loading,
-                    setLoading,
-                  ], [counter,setCounter], [timer, setTimer], [mul, setMul]);
-                  // setTimer(false);
-                  // resendOTPT([, setTimer]);
-                }
-              }}
-            >
-              <Text style={[{ color: (counter > 0) ? "#455A64" : "#32959D" , fontWeight: (counter > 0) ? "normal" : '700', }, styles.check1]}>RESEND OTP</Text>
-            </TouchableOpacity>
+            {counter > 0 ? (
+              <>
+                <Text style={styles.check}>
+                  Haven’t received an OTP? Resend OTP in{" "}
+                  {Math.floor(counter / 60)
+                    .toString()
+                    .padStart(2, "0")}
+                  :{(counter % 60).toString().padStart(2, "0")} seconds.{" "}
+                </Text>
+              </>
+            ) : (
+              <>
+                <Text style={styles.check}>Haven’t received an OTP? </Text>
+                <TouchableOpacity
+                  disabled={counter > 0}
+                  onPress={() => {
+                    if (timer == true) {
+                      setLoading(true);
+                      setShowErrorMessage(null);
+                      requestOTP(
+                        route.params.code,
+                        route.params.phone,
+                        [loading, setLoading],
+                        [counter, setCounter],
+                        [timer, setTimer],
+                        [mul, setMul]
+                      );
+                      // setTimer(false);
+                      // resendOTPT([, setTimer]);
+                    }
+                  }}
+                >
+                  <Text
+                    style={[
+                      {
+                        color: counter > 0 ? "#455A64" : "#32959D",
+                        fontWeight: counter > 0 ? "normal" : "700",
+                      },
+                      styles.check1,
+                    ]}
+                  >
+                    RESEND OTP
+                  </Text>
+                </TouchableOpacity>
+              </>
+            )}
           </View>
         </View>
       </ScrollView>

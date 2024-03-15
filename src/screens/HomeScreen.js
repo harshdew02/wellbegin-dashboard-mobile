@@ -34,6 +34,7 @@ import SInfo from "react-native-encrypted-storage";
 import { theme } from "../theme";
 import TopBell from "../components/TopBell";
 import HomePageBanner from "../components/HomePageBanner";
+import { Svg } from "react-native-svg";
 
 // F:\HIO\Progress\hio_UI\hio\assets\images\
 
@@ -184,6 +185,9 @@ export default function HomeScreen(props) {
   const [mood, setMood] = useState(false);
   const [time, setTime] = useState("");
   const [date, setDate] = useState("");
+  const [banner, setBanner] = useState(false);
+  const [banLink, setBanLink] = useState("");
+  const [cbanLink, setCBanLink] = useState("");
   const [statusColor, setStatusColor] = useState("green");
 
   const data = props.route.params.data.route.params;
@@ -206,7 +210,14 @@ export default function HomeScreen(props) {
   React.useEffect(() => {
     setName(data.usr_fullname);
     data.has_mood == "no" ? setMood(false) : setMood(true);
-    // console.log("It is coming from home screen: ", appointment);
+    if (data.has_banner == "yes") {
+      setBanner(true);
+      setBanLink(data.banner_link);
+      setCBanLink(data.on_click);
+    } else {
+      setBanner(false);
+    }
+    console.log("It is coming from home screen: ", data);
     if (appointment.has_appointment === "no") setBooked(false);
     else {
       const apiDate = appointment.appointment.app_session_date;
@@ -273,12 +284,12 @@ export default function HomeScreen(props) {
         setDate(showDate);
       }
     }
-  }, [name]);
+  }, [name,banner,mood,isBooked]);
 
-  navigation.addListener("focus", () => {
-    setStatusColor("red");
-    console.log(statusColor);
-  });
+  // navigation.addListener("focus", () => {
+  //   setStatusColor("red");
+  //   console.log(statusColor);
+  // });
 
   const [scrollPercentage, setScrollPercentage] = useState(0);
   const animatedColor = new Animated.Value(0);
@@ -307,18 +318,17 @@ export default function HomeScreen(props) {
   //   console.log(scrollPercentage)
   // };
 
-
   const scrollViewRef = useRef(null);
   const [scrollOffset, setScrollOffset] = useState(0);
 
-  const handleScroll = event => {
+  const handleScroll = (event) => {
     const { y } = event.nativeEvent.contentOffset;
     if (y < 0) {
       scrollViewRef.current.scrollTo({ y: 0, animated: false });
     } else {
       setScrollOffset(y);
     }
-    console.log(y);
+    // console.log(y);
   };
 
   return (
@@ -330,24 +340,55 @@ export default function HomeScreen(props) {
         hidden={false}
       /> */}
 
-      <View
-      style={{
-        backgroundColor: theme.maincolor,
-        width: wp(100),
-        height: hp(1),
-        position: 'absolute',
-        top: 0,
-        zIndex: 10
-
-      }}>
-
-      </View>
+      {!banner ? (
+        <View
+          style={{
+            backgroundColor: theme.maincolor,
+            width: wp(100),
+            height: hp(1),
+            position: "absolute",
+            top: 0,
+            zIndex: 4,
+          }}
+        ></View>
+      ) : (
+        <></>
+      )}
 
       <StatusBar
         backgroundColor={theme.maincolor}
         barStyle={"light-content"}
         hidden={false}
       />
+
+      {banner ? (
+        <TouchableOpacity
+          activeOpacity={1}
+          style={{
+            width: wp(100),
+            height: hp(10),
+            backgroundColor: "red",
+            position: "absolute",
+            zIndex: 2,
+            top: 0,
+          }}
+          onPress={() => {
+            outLink(cbanLink);
+          }}
+        >
+          <View>
+            <Image
+              style={{ width: wp(100), height: wp(24.66) }}
+              source={{
+                uri: "https://ucarecdn.com/79a0d49d-7c28-4aff-b312-28d5c8a0beae/TopBanner2.png",
+              }}
+            />
+          </View>
+        </TouchableOpacity>
+      ) : (
+        <></>
+      )}
+      {/*  */}
 
       <ScrollView
         // alwaysBounceHorizontal={false}
@@ -362,46 +403,45 @@ export default function HomeScreen(props) {
       >
         {/* Banner */}
 
-        
-
-        <View style={{}}>
+        <View style={banner ? { marginTop: wp(22.66) } : { marginTop: hp(0) }}>
           <HomePageBanner />
 
           <View style={styles.banner}>
+            <View
+              className="flex-row justify-center items-center "
+              style={{
+                backgroundColor: theme.maincolor,
+                // width: wp(100),
+                // height: hp(),
+                // marginB: hp(2),
+                width: wp(84),
+                // height: hp(6),
+                // backgroundColor: "white",
+                // borderRadius: wp(8),
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "row",
+              }}
+            >
+              <Text
+                style={{
+                  color: "white",
+                  fontSize: wp(4),
+                  fontFamily: "Roboto",
+                  fontWeight: "400",
+                }}
+              >
+                Welcome👋 {name.split(/\s+/).filter((word) => word !== "")[0]}
+              </Text>
+              <TouchableOpacity style={{ position: "absolute", right: wp(0) }}>
+                <TopBell active={true} />
+              </TouchableOpacity>
+            </View>
 
-          <View
-          className="flex-row justify-center items-center "
-          style={{
-            backgroundColor: theme.maincolor,
-            // width: wp(100),
-            // height: hp(),
-            // marginB: hp(2),
-            width: wp(84),
-            // height: hp(6),
-            // backgroundColor: "white",
-            // borderRadius: wp(8),
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "row",
-          }}
-        >
-          <Text
-            style={{
-              color: "white",
-              fontSize: wp(4),
-              fontFamily: "Roboto",
-              fontWeight: "400",
-            }}
-          >
-            Welcome👋 {name.split(/\s+/).filter((word) => word !== "")[0]}
-          </Text>
-          <TouchableOpacity style={{ position: "absolute", right: wp(0) }}>
-            <TopBell active={true} />
-          </TouchableOpacity>
-        </View>
-
-
-            <View className="flex-row justify-between items-center" style={{marginTop: hp(1)}} >
+            <View
+              className="flex-row justify-between items-center"
+              style={{ marginTop: hp(1) }}
+            >
               <View>
                 {isBooked ? (
                   <>

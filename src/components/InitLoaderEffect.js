@@ -49,6 +49,10 @@ export default function InitLoaderEffect({navigation}) {
             has_mood:"no",
             usr_fullname : data.usr_fullname,
             user_email : data.user_email,
+            booking_link: "https://heartitout.in/therapists/",
+            has_banner: "no",
+            banner_link: "",
+            on_click:""
           }
 
 
@@ -86,12 +90,13 @@ export default function InitLoaderEffect({navigation}) {
               if (res.data.status === "0") {
                 // await AsyncStorage.setItem("token", Token);
                 SInfo.removeItem('token');
-                showToast('Please login again, user credentials expired.');
+                showToast('User credentials expired, please login again.');
                 navigation.navigate('LoginPage')
                 console.log("User invalid");
               } else if (res.data.status === "10") {
                 // console.log("Show Book a Session");
                 finalDetails.has_appointment= "no";
+                finalDetails.booking_link=res.data.booking_link;
                 // navigation.navigate('main');
               }
               else
@@ -110,13 +115,34 @@ export default function InitLoaderEffect({navigation}) {
               console.log(err);
             });
 
-
-
             //This is the third api call from flowchart
             const apiUrl3 =
-            "https://n8n.heartitout.in/webhook/api/check_mood_tracker_logs";
+            "https://n8n.heartitout.in/webhook/api/get-home-banner";
           await axios
             .post(apiUrl3, userDetails)
+            .then(async (res) => {
+              if (res.data.status === "1") {
+                // await AsyncStorage.setItem("token", Token);
+                finalDetails.has_banner = res.data.has_banner,
+                finalDetails.banner_link = res.data.banner_link,
+                finalDetails.on_click = res.data.on_click
+              }
+              else
+              {
+                throw new Error("User credentails expired");
+              } 
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+
+
+
+            //This is the fourth api call from flowchart
+            const apiUrl4 =
+            "https://n8n.heartitout.in/webhook/api/check_mood_tracker_logs";
+          await axios
+            .post(apiUrl4, userDetails)
             .then(async (res) => {
               if (res.data.status === "1") {
                 // await AsyncStorage.setItem("token", Token);
