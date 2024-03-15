@@ -1,13 +1,13 @@
 // import { StatusBar } from "expo-status-bar";
 import * as React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View  } from "react-native";
 import AppNavigation from "./src/navigation";
 import AppNavigation2 from "./src/navigation/index2";
 import SInfo from "react-native-encrypted-storage";
-import * as Sentry from '@sentry/react-native';
+import * as Sentry from "@sentry/react-native";
 
 Sentry.init({
-  dsn: 'https://e5adfef643df1d558d810f49f20e22a9@o4506911526813696.ingest.us.sentry.io/4506911552569344',
+  dsn: "https://e5adfef643df1d558d810f49f20e22a9@o4506911526813696.ingest.us.sentry.io/4506911552569344",
 });
 
 export default function App() {
@@ -38,7 +38,10 @@ export default function App() {
   }, []);
   if (loading) {
   } else {
-    return <>{token ? <AppNavigation /> : <AppNavigation2 />}</>;
+    return <>
+    
+    {token ? <AppNavigation /> : <AppNavigation2 />}
+    </>;
   }
 }
 

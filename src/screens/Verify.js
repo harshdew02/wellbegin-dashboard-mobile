@@ -228,7 +228,7 @@ export default function Verify({ navigation, route }) {
             <Text style={styles.wrong}>{showErrorMessage}</Text>
           )}
 
-          {counter > 0 ? (<Text style={styles.wrong}>Please wait for {counter} seconds, to resend OTP.</Text>) : (<></>)}
+          {counter > 0 ? (<Text style={styles.wrong}>Please wait for {Math.floor(counter/60).toString().padStart(2, '0')}:{(counter%60).toString().padStart(2, '0')} to resend OTP.</Text>) : (<></>)}
           <ActivityIndicator animating={loading} size="large" />
           <TouchableOpacity
             style={styles.button}

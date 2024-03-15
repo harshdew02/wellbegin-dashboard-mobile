@@ -7,9 +7,9 @@ import {
   Linking,
   StyleSheet,
   TouchableOpacity,
-  Animated
+  Animated,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import {
   widthPercentageToDP as wp,
@@ -22,12 +22,12 @@ import TasksIcon from "../../assets/images/TasksIcon.svg";
 import NewIcon from "../../assets/images/NewIcon.svg";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
 import Home1 from "../../assets/images/home1.svg";
-import FeelBanner from '../../assets/images/FeelBanner.svg';
-import Emoji1 from '../../assets/images/emoji1.svg';
-import Emoji2 from '../../assets/images/emoji2.svg';
-import Emoji3 from '../../assets/images/emoji3.svg';
-import Emoji4 from '../../assets/images/emoji4.svg';
-import Emoji5 from '../../assets/images/emoji5.svg';
+import FeelBanner from "../../assets/images/FeelBanner.svg";
+import Emoji1 from "../../assets/images/emoji1.svg";
+import Emoji2 from "../../assets/images/emoji2.svg";
+import Emoji3 from "../../assets/images/emoji3.svg";
+import Emoji4 from "../../assets/images/emoji4.svg";
+import Emoji5 from "../../assets/images/emoji5.svg";
 import Home2 from "../../assets/images/home2.svg";
 import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import SInfo from "react-native-encrypted-storage";
@@ -37,13 +37,15 @@ import HomePageBanner from "../components/HomePageBanner";
 
 // F:\HIO\Progress\hio_UI\hio\assets\images\
 
-// const outLink = (link) => {
-//   Linking.openURL(link)
-//     .then((responsive) => {
-//       console.log(responsive);
-//     })
-//     .catch((err) => console.log(err));
-// };
+const gMeet = (link) => {
+  if (link == "" || link == null || link == undefined)
+    link = "https://meet.google.com";
+  Linking.openURL(link)
+    .then((responsive) => {
+      console.log(responsive);
+    })
+    .catch((err) => console.log(err));
+};
 
 const outLink = async (link) => {
   try {
@@ -71,7 +73,6 @@ const outLink = async (link) => {
         forceCloseOnRedirection: false,
         hasBackButton: true,
 
-
         // Specify full animation resource identifier(package:anim/name)
         // or only resource name(in case of animation bundled with app).
         animations: {
@@ -86,10 +87,10 @@ const outLink = async (link) => {
   } catch (error) {
     console.log(error);
   }
-// Linking.canOpenURL(link).then((supported)=>{
-//   if(supported) Linking.openURL(link); else console.log('error')
-// });
-}
+  // Linking.canOpenURL(link).then((supported)=>{
+  //   if(supported) Linking.openURL(link); else console.log('error')
+  // });
+};
 
 const Btn = (props) => {
   return (
@@ -152,7 +153,7 @@ const Bookbtn = (props) => {
             }}
             onPress={() => {
               // Checking if the link is supported for links with custom URL scheme.
-              outLink(props.props.link);
+              gMeet(props.props.link);
             }}
           >
             <Text style={styles.btnText}>Join Your Session</Text>
@@ -183,7 +184,7 @@ export default function HomeScreen(props) {
   const [mood, setMood] = useState(false);
   const [time, setTime] = useState("");
   const [date, setDate] = useState("");
-  const [statusColor , setStatusColor] = useState('green')
+  const [statusColor, setStatusColor] = useState("green");
 
   const data = props.route.params.data.route.params;
 
@@ -197,8 +198,8 @@ export default function HomeScreen(props) {
     //   app_cl_email: "vaishnavi5913@gmail.com",
     //   app_staff: "2",
     //   app_session_date:
-    //     "Fri Mar 14 2024 00:00:00 GMT+0000 (Coordinated Universal Time)",
-    //   app_session_time: "01:00:00",
+    //     "Fri Mar 15 2024 00:00:00 GMT+0000 (Coordinated Universal Time)",
+    //   app_session_time: "15:00:00",
     //   app_session_link: "https://meet.google.com/pgx-mwxa-jdj",
     // },
   };
@@ -274,10 +275,10 @@ export default function HomeScreen(props) {
     }
   }, [name]);
 
-  navigation.addListener("focus",()=>{
-    setStatusColor('red');
-    console.log(statusColor)
-  })
+  navigation.addListener("focus", () => {
+    setStatusColor("red");
+    console.log(statusColor);
+  });
 
   const [scrollPercentage, setScrollPercentage] = useState(0);
   const animatedColor = new Animated.Value(0);
@@ -293,17 +294,31 @@ export default function HomeScreen(props) {
 
   const statusBarColor = animatedColor.interpolate({
     inputRange: [0, 1],
-    outputRange: ['rgb(0, 0, 255)', 'rgb(255, 0, 0)'],
-    extrapolate: 'clamp',
+    outputRange: ["rgb(0, 0, 255)", "rgb(255, 0, 0)"],
+    extrapolate: "clamp",
   });
 
-  const handleScroll = (event) => {
-    const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
-    const maxScroll = contentSize.height - layoutMeasurement.height;
-    const currentScroll = contentOffset.y;
-    const scrollPercentage = (currentScroll / maxScroll) * 100;
-    setScrollPercentage(scrollPercentage);
-    // console.log(scrollPercentage)
+  // const handleScroll = (event) => {
+  //   const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
+  //   const maxScroll = contentSize.height - layoutMeasurement.height;
+  //   const currentScroll = contentOffset.y;
+  //   const scrollPercentage = (currentScroll / maxScroll) * 100;
+  //   setScrollPercentage(scrollPercentage);
+  //   console.log(scrollPercentage)
+  // };
+
+
+  const scrollViewRef = useRef(null);
+  const [scrollOffset, setScrollOffset] = useState(0);
+
+  const handleScroll = event => {
+    const { y } = event.nativeEvent.contentOffset;
+    if (y < 0) {
+      scrollViewRef.current.scrollTo({ y: 0, animated: false });
+    } else {
+      setScrollOffset(y);
+    }
+    console.log(y);
   };
 
   return (
@@ -315,18 +330,61 @@ export default function HomeScreen(props) {
         hidden={false}
       /> */}
 
+      <View
+      style={{
+        backgroundColor: theme.maincolor,
+        width: wp(100),
+        height: hp(1),
+        position: 'absolute',
+        top: 0,
+        zIndex: 10
+
+      }}>
+
+      </View>
+
       <StatusBar
         backgroundColor={theme.maincolor}
-        barStyle={'light-content'}
+        barStyle={"light-content"}
         hidden={false}
       />
 
-
-
-      <ScrollView onScroll={handleScroll} style={{ backgroundColor: "#fff", height: hp(100) }}>
+      <ScrollView
+        // alwaysBounceHorizontal={false}
+        // alwaysBounceVertical={false}
+        // bounces={false}
+        // onScroll={handleScroll}
+        ref={scrollViewRef}
+        onScroll={handleScroll}
+        scrollEventThrottle={1}
+        contentContainerStyle={{ flexGrow: 1 }}
+        style={{ backgroundColor: "#fff", height: hp(100) }}
+      >
         {/* Banner */}
 
-        <View className="flex-row justify-center items-center " style={{ backgroundColor: theme.maincolor, width: wp(100), height: hp(6) }} >
+        
+
+        <View style={{}}>
+          <HomePageBanner />
+
+          <View style={styles.banner}>
+
+          <View
+          className="flex-row justify-center items-center "
+          style={{
+            backgroundColor: theme.maincolor,
+            // width: wp(100),
+            // height: hp(),
+            // marginB: hp(2),
+            width: wp(84),
+            // height: hp(6),
+            // backgroundColor: "white",
+            // borderRadius: wp(8),
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "row",
+          }}
+        >
           <Text
             style={{
               color: "white",
@@ -335,17 +393,15 @@ export default function HomeScreen(props) {
               fontWeight: "400",
             }}
           >
-            Welcome👋 {name}
+            Welcome👋 {name.split(/\s+/).filter((word) => word !== "")[0]}
           </Text>
-          <TouchableOpacity style={{ position: 'absolute', right: wp(8) }} >
+          <TouchableOpacity style={{ position: "absolute", right: wp(0) }}>
             <TopBell active={true} />
           </TouchableOpacity>
         </View>
 
-        <View style={{}}>
-          <HomePageBanner />
-          <View style={styles.banner}>
-            <View className="flex-row justify-between items-center">
+
+            <View className="flex-row justify-between items-center" style={{marginTop: hp(1)}} >
               <View>
                 {isBooked ? (
                   <>
@@ -393,8 +449,7 @@ export default function HomeScreen(props) {
                           fontFamily: "Roboto",
                           fontWeight: "700",
                           marginTop: wp(4),
-                          width: wp(53)
-                          
+                          width: wp(53),
                         }}
                       >
                         Continue your well-begin journey.
@@ -442,7 +497,9 @@ export default function HomeScreen(props) {
           style={[styles.cardContainer, { height: hp(15.8) }]}
         >
           <TouchableOpacity
-            onPress={()=>{console.log("working")}}
+            onPress={() => {
+              console.log("working");
+            }}
             style={[styles.card, { backgroundColor: "#FEF8C8" }]}
           >
             <Text style={styles.cardText}>My {"\n"}Tasks</Text>
@@ -507,23 +564,50 @@ export default function HomeScreen(props) {
                 ]}
               >
                 <TouchableOpacity>
-                  <Emoji1 width={wp(8)} height={wp(8)} />
+                  <Emoji1
+                    width={wp(8)}
+                    height={wp(8)}
+                    onPress={() => {
+                      navigation.navigate("mood");
+                    }}
+                  />
                 </TouchableOpacity>
                 <TouchableOpacity>
-                  <Emoji2 width={wp(8)} height={wp(8)} />
+                  <Emoji2
+                    width={wp(8)}
+                    height={wp(8)}
+                    onPress={() => {
+                      navigation.navigate("mood");
+                    }}
+                  />
                 </TouchableOpacity>
                 <TouchableOpacity>
                   <Emoji3
                     style={{ marginHorizontal: wp(1.5) }}
                     width={wp(10)}
                     height={wp(10)}
+                    onPress={() => {
+                      navigation.navigate("mood");
+                    }}
                   />
                 </TouchableOpacity>
                 <TouchableOpacity>
-                  <Emoji4 width={wp(8)} height={wp(8)} />
+                  <Emoji4
+                    width={wp(8)}
+                    height={wp(8)}
+                    onPress={() => {
+                      navigation.navigate("mood");
+                    }}
+                  />
                 </TouchableOpacity>
                 <TouchableOpacity>
-                  <Emoji5 width={wp(8)} height={wp(8)} />
+                  <Emoji5
+                    width={wp(8)}
+                    height={wp(8)}
+                    onPress={() => {
+                      navigation.navigate("mood");
+                    }}
+                  />
                 </TouchableOpacity>
               </View>
             </View>
@@ -747,7 +831,7 @@ const styles = StyleSheet.create({
   },
 
   feelBanner: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     zIndex: -1,
   },

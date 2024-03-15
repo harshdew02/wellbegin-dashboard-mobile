@@ -26,6 +26,15 @@ import { InAppBrowser } from 'react-native-inappbrowser-reborn'
 import axios from "axios";
 import theme from '../theme'
 
+const gMeet = (link) => {
+  if(link == "" || link==null || link==undefined) link = "https://meet.google.com"
+  Linking.openURL(link)
+    .then((responsive) => {
+      console.log(responsive);
+    })
+    .catch((err) => console.log(err));
+};
+
 const outLink = async (link) => {
   try {
     const url = link
@@ -164,7 +173,7 @@ const CardDetails = (props) => {
             borderRadius: wp(1.5),
           }}
           onPress={() => {
-            outLink(props.props.google_meeting_link);
+            gMeet(props.props.google_meeting_link);
           }}
         >
           <Text
