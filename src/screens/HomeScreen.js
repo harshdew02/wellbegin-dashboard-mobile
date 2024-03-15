@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Animated,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import {
   widthPercentageToDP as wp,
@@ -37,13 +37,15 @@ import HomePageBanner from "../components/HomePageBanner";
 
 // F:\HIO\Progress\hio_UI\hio\assets\images\
 
-// const outLink = (link) => {
-//   Linking.openURL(link)
-//     .then((responsive) => {
-//       console.log(responsive);
-//     })
-//     .catch((err) => console.log(err));
-// };
+const gMeet = (link) => {
+  if (link == "" || link == null || link == undefined)
+    link = "https://meet.google.com";
+  Linking.openURL(link)
+    .then((responsive) => {
+      console.log(responsive);
+    })
+    .catch((err) => console.log(err));
+};
 
 const outLink = async (link) => {
   try {
@@ -151,7 +153,7 @@ const Bookbtn = (props) => {
             }}
             onPress={() => {
               // Checking if the link is supported for links with custom URL scheme.
-              outLink(props.props.link);
+              gMeet(props.props.link);
             }}
           >
             <Text style={styles.btnText}>Join Your Session</Text>
@@ -196,8 +198,8 @@ export default function HomeScreen(props) {
     //   app_cl_email: "vaishnavi5913@gmail.com",
     //   app_staff: "2",
     //   app_session_date:
-    //     "Fri Mar 14 2024 00:00:00 GMT+0000 (Coordinated Universal Time)",
-    //   app_session_time: "01:00:00",
+    //     "Fri Mar 15 2024 00:00:00 GMT+0000 (Coordinated Universal Time)",
+    //   app_session_time: "15:00:00",
     //   app_session_link: "https://meet.google.com/pgx-mwxa-jdj",
     // },
   };
@@ -296,13 +298,27 @@ export default function HomeScreen(props) {
     extrapolate: "clamp",
   });
 
-  const handleScroll = (event) => {
-    const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
-    const maxScroll = contentSize.height - layoutMeasurement.height;
-    const currentScroll = contentOffset.y;
-    const scrollPercentage = (currentScroll / maxScroll) * 100;
-    setScrollPercentage(scrollPercentage);
-    // console.log(scrollPercentage)
+  // const handleScroll = (event) => {
+  //   const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
+  //   const maxScroll = contentSize.height - layoutMeasurement.height;
+  //   const currentScroll = contentOffset.y;
+  //   const scrollPercentage = (currentScroll / maxScroll) * 100;
+  //   setScrollPercentage(scrollPercentage);
+  //   console.log(scrollPercentage)
+  // };
+
+
+  const scrollViewRef = useRef(null);
+  const [scrollOffset, setScrollOffset] = useState(0);
+
+  const handleScroll = event => {
+    const { y } = event.nativeEvent.contentOffset;
+    if (y < 0) {
+      scrollViewRef.current.scrollTo({ y: 0, animated: false });
+    } else {
+      setScrollOffset(y);
+    }
+    console.log(y);
   };
 
   return (
@@ -314,6 +330,19 @@ export default function HomeScreen(props) {
         hidden={false}
       /> */}
 
+      <View
+      style={{
+        backgroundColor: theme.maincolor,
+        width: wp(100),
+        height: hp(1),
+        position: 'absolute',
+        top: 0,
+        zIndex: 10
+
+      }}>
+
+      </View>
+
       <StatusBar
         backgroundColor={theme.maincolor}
         barStyle={"light-content"}
@@ -321,17 +350,39 @@ export default function HomeScreen(props) {
       />
 
       <ScrollView
+        // alwaysBounceHorizontal={false}
+        // alwaysBounceVertical={false}
+        // bounces={false}
+        // onScroll={handleScroll}
+        ref={scrollViewRef}
         onScroll={handleScroll}
+        scrollEventThrottle={1}
+        contentContainerStyle={{ flexGrow: 1 }}
         style={{ backgroundColor: "#fff", height: hp(100) }}
       >
         {/* Banner */}
 
-        <View
+        
+
+        <View style={{}}>
+          <HomePageBanner />
+
+          <View style={styles.banner}>
+
+          <View
           className="flex-row justify-center items-center "
           style={{
             backgroundColor: theme.maincolor,
-            width: wp(100),
-            height: hp(6),
+            // width: wp(100),
+            // height: hp(),
+            // marginB: hp(2),
+            width: wp(84),
+            // height: hp(6),
+            // backgroundColor: "white",
+            // borderRadius: wp(8),
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "row",
           }}
         >
           <Text
@@ -342,17 +393,15 @@ export default function HomeScreen(props) {
               fontWeight: "400",
             }}
           >
-            Welcome👋 {name}
+            Welcome👋 {name.split(/\s+/).filter((word) => word !== "")[0]}
           </Text>
-          <TouchableOpacity style={{ position: "absolute", right: wp(8) }}>
+          <TouchableOpacity style={{ position: "absolute", right: wp(0) }}>
             <TopBell active={true} />
           </TouchableOpacity>
         </View>
 
-        <View style={{}}>
-          <HomePageBanner />
-          <View style={styles.banner}>
-            <View className="flex-row justify-between items-center">
+
+            <View className="flex-row justify-between items-center" style={{marginTop: hp(1)}} >
               <View>
                 {isBooked ? (
                   <>
