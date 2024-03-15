@@ -30,7 +30,7 @@ export default function AppNavigation() {
           },
           headerShown: false
         }}
-        initialRouteName={'loader'}
+        initialRouteName={'main'}
         // initialRouteName={'LoginPage'}
         // initialRouteName={'main'}
         // initialRouteName={'about'}
