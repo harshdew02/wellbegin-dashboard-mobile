@@ -120,9 +120,8 @@ const DateTimeComponent = (rtime, rdate) => {
     hour12: true,
     hour: "2-digit",
     minute: "2-digit",
-    second: "2-digit",
   };
-  const formattedTime = date.toLocaleTimeString("en-US", timeOptions);
+  const formattedTime = date.toLocaleTimeString("en-US", timeOptions).toLowerCase();
   // console.log(formattedDate,formattedTime)
   return { formattedDate, formattedTime };
 };
@@ -164,7 +163,7 @@ const CardDetails = (props) => {
         >
           {props.props.service_type}
         </Text>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           className="flex-row justify-center items-center"
           style={{
             width: wp(17),
@@ -185,7 +184,7 @@ const CardDetails = (props) => {
           >
             Join
           </Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
       <View>
         <View className="flex-row justify-between items-center ">
