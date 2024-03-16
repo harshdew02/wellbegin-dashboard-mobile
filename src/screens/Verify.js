@@ -226,7 +226,7 @@ export default function Verify({ navigation, route }) {
 
           <TextInput
             className="rounded-lg"
-            style={styles.input}
+            style={[styles.input , {textAlign: 'center'}]}
             onChangeText={onChangeNumber}
             value={number}
             placeholder="Enter OTP"

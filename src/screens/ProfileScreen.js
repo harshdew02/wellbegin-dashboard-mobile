@@ -27,7 +27,9 @@ import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import axios from "axios";
 import theme from "../theme";
 
+
 const gMeet = (link) => {
+
   if (link == "" || link == null || link == undefined)
     link = "https://meet.google.com";
   Linking.openURL(link)
@@ -259,7 +261,6 @@ const FirstRoute = (props) => {
   const renderSecondElement = () => {
     props.onRender(true);
   };
-
   useEffect(() => {
     const url = "https://n8n.heartitout.in/webhook/api/fetch-session-history";
     const payload = props.data;
@@ -271,6 +272,7 @@ const FirstRoute = (props) => {
         if (res.data.has_upc === "yes") {
           sethasApp(true);
           setData(res.data.upc_data);
+
           parentData.has_ban = true;
           parentData.banner_link = res.data.banner_link;
           parentData.on_click = res.data.on_click;
@@ -321,6 +323,7 @@ const FirstRoute = (props) => {
 const SecondRoute = (props) => {
   const [hasApp, sethasApp] = useState(false);
   const [loading, setLoading] = useState(true);
+  
   const [data, setData] = useState({});
 
   const parentData = {
@@ -627,14 +630,25 @@ export default function ProfileScreen(props) {
   return (
     <SafeAreaView>
       {/* <StatusBar
-        backgroundColor={statusColor}
+        // backgroundColor={statusColor}
+        translucent backgroundColor="transparent"
         barStyle={'light-content'}
         hidden={false}
       /> */}
       {/* <TopBarMain /> */}
+      <View
+        style={{
+          backgroundColor:'#01818C',
+          width: wp(100),
+          height: hp(1),
+          position: "absolute",
+          top: 0,
+          zIndex: 4,
+        }}
+      ></View>
       <ScrollView style={{ backgroundColor: "#fff", height: hp(100) }}>
-        <View style={{ marginTop: hp(9.5) }}>
-          <ProfileBg width={wp(100)} height={hp(29)} />
+        <View style={{}}>
+          <ProfileBg width={wp(100)} height={wp(58.4)} />
           <View style={styles.banner}>
             <Text
               style={{
@@ -723,6 +737,7 @@ export default function ProfileScreen(props) {
             initialParams={{ det }}
           ></TabView>
         </View>
+
 
         {index == 0 ? (
           <>
