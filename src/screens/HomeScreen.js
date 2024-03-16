@@ -10,15 +10,13 @@ import {
   Animated,
   BackHandler,
 } from "react-native";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef , useFocusEffect, useCallback } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { Link, useNavigation } from "@react-navigation/native";
-
-import Logo4 from "../../assets/images/homePageBanner.svg";
 import TasksIcon from "../../assets/images/TasksIcon.svg";
 import NewIcon from "../../assets/images/NewIcon.svg";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
@@ -299,6 +297,7 @@ export default function HomeScreen(props) {
         setDate(showDate);
       }
     }
+
   }, [name, banner, mood, isBooked]);
 
   // navigation.addListener("focus", () => {
@@ -349,12 +348,11 @@ export default function HomeScreen(props) {
   return (
     <SafeAreaView>
       {/* <TopBarMain /> */}
-      {/* <StatusBar
+      <StatusBar
         backgroundColor={(scrollPercentage>84)?'#fff':theme.maincolor}
         barStyle={'light-content'}
         hidden={false}
-      /> */}
-
+      />
       {!banner ? (
         <View
           style={{
@@ -375,15 +373,15 @@ export default function HomeScreen(props) {
         translucent={true}
         barStyle={"light-content"}
         hidden={false}
+        // translucent backgroundColor="transparent"
       />
 
       {banner ? (
         <TouchableOpacity
           activeOpacity={1}
           style={{
-            width: wp(100),
-            height: hp(10),
-            backgroundColor: "red",
+            // width: wp(100),
+            // height: hp(10),
             position: "absolute",
             zIndex: 2,
             top: 0,
@@ -392,14 +390,12 @@ export default function HomeScreen(props) {
             outLink(cbanLink);
           }}
         >
-          <View>
             <Image
               style={{ width: wp(100), height: wp(24.66) }}
               source={{
                 uri: "https://ucarecdn.com/79a0d49d-7c28-4aff-b312-28d5c8a0beae/TopBanner2.png",
               }}
             />
-          </View>
         </TouchableOpacity>
       ) : (
         <></>

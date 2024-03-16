@@ -1,6 +1,6 @@
 // import { StatusBar } from "expo-status-bar";
 import * as React from "react";
-import { StyleSheet, Text, View  } from "react-native";
+import { StyleSheet, Text, View, StatusBar } from "react-native";
 import AppNavigation from "./src/navigation";
 import AppNavigation2 from "./src/navigation/index2";
 import SInfo from "react-native-encrypted-storage";
@@ -39,8 +39,14 @@ export default function App() {
   if (loading) {
   } else {
     return <>
-    
-    {token ? <AppNavigation /> : <AppNavigation2 />}
+      {/* <StatusBar
+        // backgroundColor={theme.maincolor}
+        barStyle={"light-content"}
+        hidden={false}
+        translucent backgroundColor="transparent"
+      /> */}
+
+      {token ? <AppNavigation /> : <AppNavigation2 />}
     </>;
   }
 }

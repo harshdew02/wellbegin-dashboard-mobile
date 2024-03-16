@@ -25,10 +25,10 @@ import axios from "axios";
 import SInfo from "react-native-encrypted-storage";
 
 const showToast = (message) => {
-  ToastAndroid.show(message,ToastAndroid.SHORT);
+  ToastAndroid.show(message, ToastAndroid.SHORT);
 }
 
-const fillDetails = (details,[loading, setLoading], navigation) => {
+const fillDetails = (details, [loading, setLoading], navigation) => {
   //This the first call from the flowchart
   const apiUrl = "https://n8n.heartitout.in/webhook/api/fetch-user-details";
   axios
@@ -90,7 +90,7 @@ export default function AboutMe(props) {
                 justifyContent: "center",
                 alignItems: "center",
                 top: hp(1),
-                marginTop: hp(10),
+                marginTop: hp(2),
               }}
             >
               <TouchableOpacity
@@ -114,10 +114,10 @@ export default function AboutMe(props) {
 
             <View
               className="flex-col justify-between items-center "
-              style={{ height: hp(32), marginTop: hp(3.5) }}
+              style={{ height: hp(45), marginTop: hp(3.5) }}
             >
               <TextInput
-                style={styles.input}
+                style={[{ marginTop: hp(2) }, styles.input]}
                 // onChangeText={onChangeNumber}
                 value={name}
                 onChangeText={setName}
@@ -126,7 +126,8 @@ export default function AboutMe(props) {
               />
 
               <TextInput
-                style={styles.input}
+                style={[styles.input, { backgroundColor: '#cde3e9' }]}
+                // editable={false}
                 // onChangeText={onChangeNumber}
                 value={`+${code}-${phone}`}
                 // placeholder="+91-9480052103"
@@ -144,7 +145,7 @@ export default function AboutMe(props) {
                 inputMode="email"
               />
 
-              <ActivityIndicator animating={loading} size="large" />
+              <ActivityIndicator animating={loading} size='small' />
 
               <TouchableOpacity
                 activeOpacity={0.8}
@@ -154,24 +155,24 @@ export default function AboutMe(props) {
                   data.insert_details = "true";
                   setLoading(true)
                   // console.log(data)
-                  fillDetails(data,[loading, setLoading],navigation);
+                  fillDetails(data, [loading, setLoading], navigation);
                 }}
-                style={[styles.BookBtn3, { marginTop: hp(1.5) }]}
+                style={[styles.BookBtn3, {}]}
               >
                 <Text style={styles.btnText3}>Save My Details</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity onPress={()=>{
-                SInfo.removeItem('token').then(()=>{
+              <TouchableOpacity onPress={() => {
+                SInfo.removeItem('token').then(() => {
                   navigation.navigate('loader');
                   showToast('User logout successfully.')
-                }).catch((err)=>{
+                }).catch((err) => {
                   showToast('Something went wrong.')
                   console.log('Error from logout system: ', err)
                 });
-            }} style={{width: wp(20) , backgroundColor: 'red' ,  height: hp(4)}} >
+              }} style={{ width: wp(20), backgroundColor: 'red', height: hp(4) }} >
                 <Text>Logout {" "}</Text>
-            </TouchableOpacity>
+              </TouchableOpacity>
             </View>
           </View>
 
