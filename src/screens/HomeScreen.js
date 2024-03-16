@@ -8,16 +8,15 @@ import {
   StyleSheet,
   TouchableOpacity,
   Animated,
+  BackHandler,
 } from "react-native";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef , useFocusEffect, useCallback } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { Link, useNavigation } from "@react-navigation/native";
-
-import Logo4 from "../../assets/images/homePageBanner.svg";
 import TasksIcon from "../../assets/images/TasksIcon.svg";
 import NewIcon from "../../assets/images/NewIcon.svg";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
@@ -107,6 +106,7 @@ const Btn = (props) => {
     </TouchableOpacity>
   );
 };
+
 const Bookbtn = (props) => {
   // console.log(props.props.is2hour)
 
@@ -192,6 +192,19 @@ export default function HomeScreen(props) {
 
   const data = props.route.params.data.route.params;
 
+  const backHandler = () => {
+    BackHandler.exitApp();
+    return true;
+  };
+
+  navigation.addListener("focus", () => {
+    BackHandler.addEventListener("hardwareBackPress", backHandler);
+  });
+
+  navigation.addListener("blur", () => {
+    BackHandler.removeEventListener("hardwareBackPress", backHandler);
+  });
+
   const appointment = {
     appointment: data.app_det,
     has_appointment: data.has_appointment,
@@ -217,7 +230,7 @@ export default function HomeScreen(props) {
     } else {
       setBanner(false);
     }
-    console.log("It is coming from home screen: ", data);
+    // console.log("It is coming from home screen: ", data);
     if (appointment.has_appointment === "no") setBooked(false);
     else {
       const apiDate = appointment.appointment.app_session_date;
@@ -284,7 +297,8 @@ export default function HomeScreen(props) {
         setDate(showDate);
       }
     }
-  }, [name,banner,mood,isBooked]);
+
+  }, [name, banner, mood, isBooked]);
 
   // navigation.addListener("focus", () => {
   //   setStatusColor("red");
@@ -334,12 +348,11 @@ export default function HomeScreen(props) {
   return (
     <SafeAreaView>
       {/* <TopBarMain /> */}
-      {/* <StatusBar
+      <StatusBar
         backgroundColor={(scrollPercentage>84)?'#fff':theme.maincolor}
         barStyle={'light-content'}
         hidden={false}
-      /> */}
-
+      />
       {!banner ? (
         <View
           style={{
@@ -356,18 +369,19 @@ export default function HomeScreen(props) {
       )}
 
       <StatusBar
-        backgroundColor={theme.maincolor}
+        backgroundColor={"transparent"}
+        translucent={true}
         barStyle={"light-content"}
         hidden={false}
+        // translucent backgroundColor="transparent"
       />
 
       {banner ? (
         <TouchableOpacity
           activeOpacity={1}
           style={{
-            width: wp(100),
-            height: hp(10),
-            backgroundColor: "red",
+            // width: wp(100),
+            // height: hp(10),
             position: "absolute",
             zIndex: 2,
             top: 0,
@@ -376,14 +390,12 @@ export default function HomeScreen(props) {
             outLink(cbanLink);
           }}
         >
-          <View>
             <Image
               style={{ width: wp(100), height: wp(24.66) }}
               source={{
                 uri: "https://ucarecdn.com/79a0d49d-7c28-4aff-b312-28d5c8a0beae/TopBanner2.png",
               }}
             />
-          </View>
         </TouchableOpacity>
       ) : (
         <></>

@@ -8,6 +8,7 @@ import {
   Linking,
   Button,
   TextComponent,
+  BackHandler,
 } from "react-native";
 import React from "react";
 import TopBarMain from "../components/TopBarMain";
@@ -76,13 +77,27 @@ const outLink = async (link) => {
 }
 
 export default function DiscoverScreen() {
+  const navigation = useNavigation();
+  const backHandler = () => {
+    navigation.navigate('Home_Tab')
+    return true;
+  };
+
+  navigation.addListener("focus", () => {
+    BackHandler.addEventListener("hardwareBackPress", backHandler);
+  });
+
+  navigation.addListener("blur", () => {
+    BackHandler.removeEventListener("hardwareBackPress", backHandler);
+  });
+
   return (
     <SafeAreaView>
       {/* <TopBarMain /> */}
       <ScrollView style={{ backgroundColor: "#fff", height: hp(100) }}>
         <Text
           style={{
-            marginTop: hp(11.5),
+            marginTop: hp(4),
             marginLeft: wp(8),
             color: "#043953",
             fontSize: wp(5),
@@ -136,6 +151,9 @@ export default function DiscoverScreen() {
             style={{ height: hp(25), marginTop: hp(3) }}
           >
             <TouchableOpacity
+
+              onPress={()=>{ navigation.navigate('task') }}
+
               style={[
                 styles.packageCard,
                 { width: wp(39), backgroundColor: "rgba(4, 84, 123, 0.08)" },
@@ -204,7 +222,6 @@ export default function DiscoverScreen() {
         >
           <BottomQuote width={wp(71)} height={hp(15)} />
         </View>
-
         <View style={{ width: wp(100), height: hp(6), marginTop: hp(3) }} />
       </ScrollView>
     </SafeAreaView>
