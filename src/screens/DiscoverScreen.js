@@ -8,6 +8,7 @@ import {
   Linking,
   Button,
   TextComponent,
+  BackHandler
 } from "react-native";
 import React from "react";
 import TopBarMain from "../components/TopBarMain";
@@ -76,6 +77,20 @@ const outLink = async (link) => {
 }
 
 export default function DiscoverScreen() {
+  const navigation = useNavigation();
+  const backHandler = () => {
+    navigation.navigate('Home_Tab')
+    return true;
+  };
+
+  navigation.addListener("focus", () => {
+    BackHandler.addEventListener("hardwareBackPress", backHandler);
+  });
+
+  navigation.addListener("blur", () => {
+    BackHandler.removeEventListener("hardwareBackPress", backHandler);
+  });
+
   return (
     <SafeAreaView>
       {/* <TopBarMain /> */}

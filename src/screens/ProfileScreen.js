@@ -8,6 +8,7 @@ import {
   StatusBar,
   ActivityIndicator,
   Linking,
+  BackHandler,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { ScrollView } from "react-native-gesture-handler";
@@ -22,12 +23,13 @@ import ProfileDisplay from "../../assets/images/ProfileDisplay.svg";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
 import BookIcon from "../../assets/images/bookIcon.svg";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
-import { InAppBrowser } from 'react-native-inappbrowser-reborn'
+import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import axios from "axios";
-import theme from '../theme'
+import theme from "../theme";
 
 const gMeet = (link) => {
-  if(link == "" || link==null || link==undefined) link = "https://meet.google.com"
+  if (link == "" || link == null || link == undefined)
+    link = "https://meet.google.com";
   Linking.openURL(link)
     .then((responsive) => {
       console.log(responsive);
@@ -37,7 +39,7 @@ const gMeet = (link) => {
 
 const outLink = async (link) => {
   try {
-    const url = link
+    const url = link;
     if (await InAppBrowser.isAvailable()) {
       const result = await InAppBrowser.open(url, {
         // // iOS Properties
@@ -52,10 +54,10 @@ const outLink = async (link) => {
         // enableBarCollapsing: false,
         // Android Properties
         showTitle: true,
-        toolbarColor: '#01818C',
-        secondaryToolbarColor: 'red',
-        navigationBarColor: 'white',
-        navigationBarDividerColor: 'white',
+        toolbarColor: "#01818C",
+        secondaryToolbarColor: "red",
+        navigationBarColor: "white",
+        navigationBarDividerColor: "white",
         enableUrlBarHiding: true,
         enableDefaultShare: false,
         forceCloseOnRedirection: false,
@@ -64,22 +66,21 @@ const outLink = async (link) => {
         // Specify full animation resource identifier(package:anim/name)
         // or only resource name(in case of animation bundled with app).
         animations: {
-          startEnter: 'slide_in_right',
+          startEnter: "slide_in_right",
         },
         headers: {
-          'my-custom-header': 'my custom header value'
-        }
-      })
-      console.log(result)
-    }
-    else Linking.openURL(url)
+          "my-custom-header": "my custom header value",
+        },
+      });
+      console.log(result);
+    } else Linking.openURL(url);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
   // Linking.canOpenURL(link).then((supported)=>{
   //   if(supported) Linking.openURL(link); else console.log('error')
   // });
-}
+};
 
 const NoSessions = () => {
   return (
@@ -105,8 +106,9 @@ const DateTimeComponent = (rtime, rdate) => {
   const dateTime = new Date(dateTimeString);
 
   // Extracting date in DD/MM/YYYY format
-  const formattedDate = `${dateTime.getDate()}/${dateTime.getMonth() + 1
-    }/${dateTime.getFullYear()}`;
+  const formattedDate = `${dateTime.getDate()}/${
+    dateTime.getMonth() + 1
+  }/${dateTime.getFullYear()}`;
 
   // Extracting time in HH:MM:SS AM/PM format
   const timeString = rtime; // Example time string in the format HH:MM:SS
@@ -121,7 +123,9 @@ const DateTimeComponent = (rtime, rdate) => {
     hour: "2-digit",
     minute: "2-digit",
   };
-  const formattedTime = date.toLocaleTimeString("en-US", timeOptions).toLowerCase();
+  const formattedTime = date
+    .toLocaleTimeString("en-US", timeOptions)
+    .toLowerCase();
   // console.log(formattedDate,formattedTime)
   return { formattedDate, formattedTime };
 };
@@ -229,48 +233,13 @@ const CardDetails = (props) => {
 
 // ddkdld
 const FirstRoute = (props) => {
-  const [hasApp, sethasApp] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState({});
   useEffect(() => {
-    const url = "https://n8n.heartitout.in/webhook/api/fetch-session-history";
-    const payload = props.data;
-    payload.data = "upcoming";
-    axios
-      .post(url, payload)
-      .then((res) => {
-        if (res.data.has_upc === "yes") {
-          sethasApp(true);
-          setData(res.data.upc_data);
-        } else sethasApp(false);
-
-        setLoading(false);
-      })
-      .catch((err) => console.log(err));
+    console.log(props);
   }, []);
 
   return (
     <View style={styles.scrollContainer}>
-      <ScrollView style={{ width: "100%", paddingLeft: wp(3.5) }}>
-        {loading ? (
-          <ActivityIndicator animating={loading} size="large" />
-        ) : (
-          <>
-            {hasApp ? (
-              <>
-                {data.map((item, index) => (
-                  <CardDetails key={index} props={item} />
-                ))}
-                {/* <CardDetails props={data} /> */}
-              </>
-            ) : (
-              <>
-                <NoSessions />
-              </>
-            )}
-          </>
-        )}
-      </ScrollView>
+      <ScrollView style={{ width: "100%", paddingLeft: wp(3.5) }}></ScrollView>
     </View>
   );
 };
@@ -439,7 +408,9 @@ const Card = () => {
               backgroundColor: "#01818c",
               borderRadius: wp(1),
             }}
-            onPress={() => { outLink('https://heartitout.in/products/doodle-notebooks/') }}
+            onPress={() => {
+              outLink("https://heartitout.in/products/doodle-notebooks/");
+            }}
           >
             <Text style={{ color: "white", fontSize: wp(3.8) }}>
               Try doodling!
@@ -464,12 +435,25 @@ export default function ProfileScreen(props) {
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
 
-  const [statusColor , setStatusColor] = useState('green')
+  const [statusColor, setStatusColor] = useState("green");
 
   const [routes] = React.useState([
     { key: "first", title: "Upcoming" },
     { key: "second", title: "History" },
   ]);
+
+  const backHandler = () => {
+    navigation.navigate("Home_Tab");
+    return true;
+  };
+
+  navigation.addListener("focus", () => {
+    BackHandler.addEventListener("hardwareBackPress", backHandler);
+  });
+
+  navigation.addListener("blur", () => {
+    BackHandler.removeEventListener("hardwareBackPress", backHandler);
+  });
 
   useEffect(() => {
     setDet(data);
@@ -479,20 +463,95 @@ export default function ProfileScreen(props) {
     setPhone(data.phone);
   }, [name]);
 
-  const renderScene = ({ route }) => {
-    switch (route.key) {
-      case "first":
-        return <FirstRoute data={data} />;
-      case "second":
-        return <SecondRoute data={data} />;
-      default:
-        return null;
-    }
+  const url = "https://n8n.heartitout.in/webhook/api/fetch-session-history";
+  // const [hasApp, sethasApp] = useState(false);
+  // const [loading, setLoading] = useState(true);
+  // const [datas, setDatas] = useState({});
+  // const [hasBan, setHasBan] = useState(false);
+  // const [but1, setBut1] = useState();
+  // const [but2, setBut2] = useState();
+  // const [but1U, setBut1U] = useState();
+  // const [but2U, setBut2U] = useState();
+  // const [bann, setBann] = useState(false);
+  // const [bannURL, setbannURL] = useState("");
+  // const [click, setClick] = useState("");
+
+  const payload1 = {
+    hasApp: false,
+    bann: true,
+    datas: [],
+    bannURL: "",
+    click: "",
+    but1: {
+      text: "Book A session",
+      url: "https://heartitout.in",
+    },
+    but2: {
+      text: "Continue your journey",
+      url: "https://heartitout.in/therapist",
+    },
+    loading: true,
   };
 
-  navigation.addListener("focus",()=>{
-    setStatusColor('green');
-  })
+  const [load, setLoad] = useState(true);
+
+  // useEffect(() => {
+  //   , []);
+
+  const payl = () => {};
+
+  const [routeComponent, setRouteComponent] = useState(null);
+
+  const renderScene = ({ route }) => {
+    const payload = data;
+    payload.data = "upcoming";
+    axios
+      .post(url, payload)
+      .then((res) => {
+        if (res.data.has_upc === "yes") {
+          payload1.hasApp = true;
+          payload1.bann = true;
+          payload1.bannURL = res.data.banner_link;
+          payload1.click = res.data.on_click;
+          payload1.datas = res.data.upc_data;
+        } else {
+          // sethasApp(false);
+          payload1.hasApp = false;
+          payload1.bann = false;
+          // payload1.but1.text = res.data.btn1-text;
+          // payload1.but1.url = res.data.btn1-url;
+          // payload1.but2.text = res.data.btn2-text;
+          // payload1.but2.url = res.data.btn2-url;
+          // setHasBan(false);
+          // setBut1();
+          // setBut2(res.data.btn2-text);
+          // setBut1U();
+          // setBut2U(res.data.btn2-url);
+        }
+
+        // console.log(payload1);
+        // setLoading(false);
+        
+      })
+      .catch((err) => console.log("errror here", err))
+      .finally(() => {
+        console.log(payload1)
+        switch (route.key) {
+          case "first":
+            // setRouteComponent()
+            return <FirstRoute data={payload1} />;
+            
+          case "second":
+            return <SecondRoute data={data} />;
+          default:
+            return null;
+        }
+      });
+  };
+
+  navigation.addListener("focus", () => {
+    setStatusColor("green");
+  });
 
   return (
     <SafeAreaView>

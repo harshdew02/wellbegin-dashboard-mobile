@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet, ToastAndroid } from "react-native";
+import { View, Text, Image, StyleSheet, ToastAndroid, BackHandler } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TopBar from "./TopBar";
@@ -15,7 +15,18 @@ const showToast = (message) => {
 }
 
 export default function InitLoaderEffect({navigation}) {
-  // const navigation = useNavigation();
+  const backHandler = () => {
+    BackHandler.exitApp();
+    return true;
+  };
+
+  navigation.addListener("focus", () => {
+    BackHandler.addEventListener("hardwareBackPress", backHandler);
+  });
+
+  navigation.addListener("blur", () => {
+    BackHandler.removeEventListener("hardwareBackPress", backHandler);
+  });
 
   navigation.addListener("focus", async (ref) => {
     try {
