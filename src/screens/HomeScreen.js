@@ -16,8 +16,6 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { Link, useNavigation } from "@react-navigation/native";
-
-import Logo4 from "../../assets/images/homePageBanner.svg";
 import TasksIcon from "../../assets/images/TasksIcon.svg";
 import NewIcon from "../../assets/images/NewIcon.svg";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
@@ -365,9 +363,8 @@ export default function HomeScreen(props) {
         <TouchableOpacity
           activeOpacity={1}
           style={{
-            width: wp(100),
-            height: hp(10),
-            backgroundColor: theme.maincolor,
+            // width: wp(100),
+            // height: hp(10),
             position: "absolute",
             zIndex: 2,
             top: 0,
@@ -376,14 +373,12 @@ export default function HomeScreen(props) {
             outLink(cbanLink);
           }}
         >
-          <View>
             <Image
               style={{ width: wp(100), height: wp(24.66) }}
               source={{
                 uri: "https://ucarecdn.com/79a0d49d-7c28-4aff-b312-28d5c8a0beae/TopBanner2.png",
               }}
             />
-          </View>
         </TouchableOpacity>
       ) : (
         <></>

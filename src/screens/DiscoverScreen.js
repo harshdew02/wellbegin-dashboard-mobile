@@ -76,13 +76,16 @@ const outLink = async (link) => {
 }
 
 export default function DiscoverScreen() {
+
+  const navigation = useNavigation();
+
   return (
     <SafeAreaView>
       {/* <TopBarMain /> */}
       <ScrollView style={{ backgroundColor: "#fff", height: hp(100) }}>
         <Text
           style={{
-            marginTop: hp(1),
+            marginTop: hp(4),
             marginLeft: wp(8),
             color: "#043953",
             fontSize: wp(5),
@@ -136,6 +139,9 @@ export default function DiscoverScreen() {
             style={{ height: hp(25), marginTop: hp(3) }}
           >
             <TouchableOpacity
+
+              onPress={()=>{ navigation.navigate('task') }}
+
               style={[
                 styles.packageCard,
                 { width: wp(39), backgroundColor: "rgba(4, 84, 123, 0.08)" },
@@ -204,7 +210,6 @@ export default function DiscoverScreen() {
         >
           <BottomQuote width={wp(71)} height={hp(15)} />
         </View>
-
         <View style={{ width: wp(100), height: hp(6), marginTop: hp(3) }} />
       </ScrollView>
     </SafeAreaView>

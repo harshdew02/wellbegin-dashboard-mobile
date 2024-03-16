@@ -613,7 +613,7 @@ export default function ProfileScreen(props) {
           ></TabView>
         </View>
 
-        {isSession ? <Card/> :<Buttons props={{btn1T:,btn2T:,btn1U:,btn2U:}} />}
+        {/* {isSession ? <Card/> :<Buttons props={{btn1T:,btn2T:,btn1U:,btn2U:}} />} */}
 
         <View
           className="flex-row items-center"

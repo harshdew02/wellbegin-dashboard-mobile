@@ -126,7 +126,7 @@ export default function AboutMe(props) {
               />
 
               <TextInput
-                style={[styles.input , {backgroundColor: '#cde3e9'}]}
+                style={[styles.input, { backgroundColor: '#cde3e9' }]}
                 // editable={false}
                 // onChangeText={onChangeNumber}
                 value={`+${code}-${phone}`}
