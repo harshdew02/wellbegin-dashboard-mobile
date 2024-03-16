@@ -82,7 +82,7 @@ export default function DiscoverScreen() {
       <ScrollView style={{ backgroundColor: "#fff", height: hp(100) }}>
         <Text
           style={{
-            marginTop: hp(11.5),
+            marginTop: hp(1),
             marginLeft: wp(8),
             color: "#043953",
             fontSize: wp(5),

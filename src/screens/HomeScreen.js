@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   Animated,
 } from "react-native";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef , useFocusEffect, useCallback } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import {
   widthPercentageToDP as wp,
@@ -284,7 +284,7 @@ export default function HomeScreen(props) {
         setDate(showDate);
       }
     }
-  }, [name,banner,mood,isBooked]);
+  }, [name, banner, mood]);
 
   // navigation.addListener("focus", () => {
   //   setStatusColor("red");
@@ -334,12 +334,11 @@ export default function HomeScreen(props) {
   return (
     <SafeAreaView>
       {/* <TopBarMain /> */}
-      {/* <StatusBar
+      <StatusBar
         backgroundColor={(scrollPercentage>84)?'#fff':theme.maincolor}
         barStyle={'light-content'}
         hidden={false}
-      /> */}
-
+      />
       {!banner ? (
         <View
           style={{
@@ -359,6 +358,7 @@ export default function HomeScreen(props) {
         backgroundColor={theme.maincolor}
         barStyle={"light-content"}
         hidden={false}
+        // translucent backgroundColor="transparent"
       />
 
       {banner ? (
@@ -367,7 +367,7 @@ export default function HomeScreen(props) {
           style={{
             width: wp(100),
             height: hp(10),
-            backgroundColor: "red",
+            backgroundColor: theme.maincolor,
             position: "absolute",
             zIndex: 2,
             top: 0,

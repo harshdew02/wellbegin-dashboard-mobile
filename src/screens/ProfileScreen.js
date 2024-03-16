@@ -26,8 +26,9 @@ import { InAppBrowser } from 'react-native-inappbrowser-reborn'
 import axios from "axios";
 import theme from '../theme'
 
+
 const gMeet = (link) => {
-  if(link == "" || link==null || link==undefined) link = "https://meet.google.com"
+  if (link == "" || link == null || link == undefined) link = "https://meet.google.com"
   Linking.openURL(link)
     .then((responsive) => {
       console.log(responsive);
@@ -232,6 +233,10 @@ const FirstRoute = (props) => {
   const [hasApp, sethasApp] = useState(false);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({});
+  const [but1, setBut1] = useState("");
+  const [but2, setBut2] = useState("");
+  const [but1URL, setBut1URL] = useState("");
+  const [but2URL, setBut2URL] = useState("");
   useEffect(() => {
     const url = "https://n8n.heartitout.in/webhook/api/fetch-session-history";
     const payload = props.data;
@@ -242,7 +247,13 @@ const FirstRoute = (props) => {
         if (res.data.has_upc === "yes") {
           sethasApp(true);
           setData(res.data.upc_data);
-        } else sethasApp(false);
+        } else {
+          sethasApp(false);
+          setBut1(res.data.btn_dat.btn1-text);
+          setBut2(res.data.btn_dat.btn2-text);
+          setBut1URL(res.data.btn_dat.btn1-url);
+          setBut2URL(res.data.btn_dat.btn2-url);
+        }
 
         setLoading(false);
       })
@@ -278,6 +289,7 @@ const FirstRoute = (props) => {
 const SecondRoute = (props) => {
   const [hasApp, sethasApp] = useState(false);
   const [loading, setLoading] = useState(true);
+  
   const [data, setData] = useState({});
   useEffect(() => {
     const url = "https://n8n.heartitout.in/webhook/api/fetch-session-history";
@@ -289,7 +301,9 @@ const SecondRoute = (props) => {
         if (res.data.has_his === "yes") {
           sethasApp(true);
           setData(res.data.his_data);
-        } else sethasApp(false);
+        } else {
+          sethasApp(false);
+        }
         setLoading(false);
       })
       .catch((err) => console.log(err));
@@ -460,11 +474,12 @@ export default function ProfileScreen(props) {
   const [code, setCode] = useState("");
   const [phone, setPhone] = useState("");
   const [det, setDet] = useState({});
-  const [isSession, setSession] = React.useState(1);
+  // con
+  const [isSession, setSession] = React.useState(false);
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
 
-  const [statusColor , setStatusColor] = useState('green')
+  const [statusColor, setStatusColor] = useState('green')
 
   const [routes] = React.useState([
     { key: "first", title: "Upcoming" },
@@ -490,21 +505,32 @@ export default function ProfileScreen(props) {
     }
   };
 
-  navigation.addListener("focus",()=>{
+  navigation.addListener("focus", () => {
     setStatusColor('green');
   })
 
   return (
     <SafeAreaView>
       {/* <StatusBar
-        backgroundColor={statusColor}
+        // backgroundColor={statusColor}
+        translucent backgroundColor="transparent"
         barStyle={'light-content'}
         hidden={false}
       /> */}
       {/* <TopBarMain /> */}
+      <View
+        style={{
+          backgroundColor:'#01818C',
+          width: wp(100),
+          height: hp(1),
+          position: "absolute",
+          top: 0,
+          zIndex: 4,
+        }}
+      ></View>
       <ScrollView style={{ backgroundColor: "#fff", height: hp(100) }}>
-        <View style={{ marginTop: hp(9.5) }}>
-          <ProfileBg width={wp(100)} height={hp(29)} />
+        <View style={{}}>
+          <ProfileBg width={wp(100)} height={wp(58.4)} />
           <View style={styles.banner}>
             <Text
               style={{
@@ -587,7 +613,7 @@ export default function ProfileScreen(props) {
           ></TabView>
         </View>
 
-        {isSession ? <Card /> : <Buttons />}
+        {isSession ? <Card/> :<Buttons props={{btn1T:,btn2T:,btn1U:,btn2U:}} />}
 
         <View
           className="flex-row items-center"
