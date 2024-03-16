@@ -8,7 +8,7 @@ import {
   Linking,
   Button,
   TextComponent,
-  BackHandler
+  BackHandler,
 } from "react-native";
 import React from "react";
 import TopBarMain from "../components/TopBarMain";

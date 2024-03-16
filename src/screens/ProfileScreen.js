@@ -8,7 +8,7 @@ import {
   StatusBar,
   ActivityIndicator,
   Linking,
-  BackHandler,
+  Image,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { ScrollView } from "react-native-gesture-handler";
@@ -145,7 +145,7 @@ const CardDetails = (props) => {
     <View
       style={{
         width: wp(76),
-        height: hp(13),
+        height: hp(10),
         backgroundColor: "#ffffff",
         marginTop: hp(2),
         borderWidth: wp(0.5),
@@ -166,6 +166,19 @@ const CardDetails = (props) => {
           }}
         >
           {props.props.service_type}
+        </Text>
+
+        <Text
+          style={{
+            fontSize: wp(3.8),
+            color: "#455a64",
+            marginTop: hp(0.0),
+          }}
+        >
+          ID :{" "}
+          <Text style={{ fontWeight: "bold", color: "#455a64" }}>
+            {props.props.appointment_id}
+          </Text>
         </Text>
         {/* <TouchableOpacity
           className="flex-row justify-center items-center"
@@ -214,18 +227,6 @@ const CardDetails = (props) => {
           />
           <Text style={{ fontSize: wp(3.8), color: "#455a64" }}>Online</Text>
         </View>
-        <Text
-          style={{
-            fontSize: wp(3.8),
-            color: "#455a64",
-            marginTop: hp(0.4),
-          }}
-        >
-          ID :{" "}
-          <Text style={{ fontWeight: "bold", color: "#455a64" }}>
-            {props.props.appointment_id}
-          </Text>
-        </Text>
       </View>
     </View>
   );
@@ -233,13 +234,86 @@ const CardDetails = (props) => {
 
 // ddkdld
 const FirstRoute = (props) => {
+  const [hasApp, sethasApp] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState({});
+
+  const parentData = {
+    has_ban: false,
+    btn_data: {
+      "btn1-text": "Book A session",
+      "btn1-url": "https://heartitout.in/",
+      "btn2-text": "Continue your journey",
+      "btn2-url": "https://heartitout.in/therapist",
+    },
+    banner_link:
+      "https://hiopublicstore.s3.us-east-2.amazonaws.com/TopBannerSVG.svg",
+    on_click: "https://heartitout.in/",
+  };
+
+  const passDataToParent = (data) => {
+    // Call the function passed from the parent component
+    props.onDataReceived(data);
+  };
+
+  const renderSecondElement = () => {
+    props.onRender(true);
+  };
+
   useEffect(() => {
-    console.log(props);
+    const url = "https://n8n.heartitout.in/webhook/api/fetch-session-history";
+    const payload = props.data;
+    payload.data = "upcoming";
+    axios
+      .post(url, payload)
+      .then((res) => {
+        // console.log(res.data)
+        if (res.data.has_upc === "yes") {
+          sethasApp(true);
+          setData(res.data.upc_data);
+          parentData.has_ban = true;
+          parentData.banner_link = res.data.banner_link;
+          parentData.on_click = res.data.on_click;
+        } else {
+          sethasApp(false);
+          parentData.has_ban = false;
+          // parentData.btn_data["btn1-text"] = res.data.btn_data["btn1-text"];
+          // parentData.btn_data["btn2-text"] = res.data.btn_data["btn2-text"];
+          parentData.btn_data["btn1-url"] = res.data.btn_dat["btn1"];
+          parentData.btn_data["btn2-url"] = res.data.btn_dat["btn2"];
+        }
+        passDataToParent(parentData);
+        renderSecondElement();
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.log("error is here:", err);
+        setLoading(false);
+      });
   }, []);
 
   return (
     <View style={styles.scrollContainer}>
-      <ScrollView style={{ width: "100%", paddingLeft: wp(3.5) }}></ScrollView>
+      <ScrollView style={{ width: "100%", paddingLeft: wp(3.5) }}>
+        {loading ? (
+          <ActivityIndicator animating={loading} size="large" />
+        ) : (
+          <>
+            {hasApp ? (
+              <>
+                {data.map((item, index) => (
+                  <CardDetails key={index} props={item} />
+                ))}
+                {/* <CardDetails props={data} /> */}
+              </>
+            ) : (
+              <>
+                <NoSessions />
+              </>
+            )}
+          </>
+        )}
+      </ScrollView>
     </View>
   );
 };
@@ -248,6 +322,29 @@ const SecondRoute = (props) => {
   const [hasApp, sethasApp] = useState(false);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({});
+
+  const parentData = {
+    has_ban: false,
+    btn_data: {
+      "btn1-text": "Book A session",
+      "btn1-url": "https://heartitout.in/",
+      "btn2-text": "Continue your journey",
+      "btn2-url": "https://heartitout.in/therapist",
+    },
+    banner_link:
+      "https://hiopublicstore.s3.us-east-2.amazonaws.com/TopBannerSVG.svg",
+    on_click: "https://heartitout.in/",
+  };
+
+  const passDataToParent = (data) => {
+    // Call the function passed from the parent component
+    props.onDataReceived(data);
+  };
+
+  const renderSecondElement = () => {
+    props.onRender(true);
+  };
+
   useEffect(() => {
     const url = "https://n8n.heartitout.in/webhook/api/fetch-session-history";
     const payload = props.data;
@@ -258,10 +355,25 @@ const SecondRoute = (props) => {
         if (res.data.has_his === "yes") {
           sethasApp(true);
           setData(res.data.his_data);
-        } else sethasApp(false);
+          parentData.has_ban = true;
+          parentData.banner_link = res.data.banner_link;
+          parentData.on_click = res.data.on_click;
+        } else {
+          sethasApp(false);
+          parentData.has_ban = false;
+          // parentData.btn_data["btn1-text"] = res.data.btn_data["btn1-text"];
+          // parentData.btn_data["btn2-text"] = res.data.btn_data["btn2-text"];
+          parentData.btn_data["btn1-url"] = res.data.btn_dat["btn1"];
+          parentData.btn_data["btn2-url"] = res.data.btn_dat["btn2"];
+        }
+        passDataToParent(parentData);
+        renderSecondElement();
         setLoading(false);
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
   }, []);
 
   return (
@@ -330,15 +442,21 @@ const renderTabBar = (props) => (
   />
 );
 
-const Buttons = () => {
+const Buttons = (props) => {
   return (
     <>
       <View
         className="flex-col items-center"
         style={[styles.cardContainer, { marginTop: hp(4) }]}
       >
-        <TouchableOpacity activeOpacity={0.8} style={styles.BookBtn2}>
-          <Text style={styles.btnText2}>Book a Session</Text>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={styles.BookBtn2}
+          onPress={() => {
+            outLink(props.props.but1URL);
+          }}
+        >
+          <Text style={styles.btnText2}>{props.props.but1}</Text>
         </TouchableOpacity>
       </View>
       <View
@@ -365,59 +483,40 @@ const Buttons = () => {
         className="flex-col items-center"
         style={[styles.cardContainer, { marginTop: hp(3) }]}
       >
-        <TouchableOpacity activeOpacity={0.8} style={styles.BookBtn3}>
-          <Text style={styles.btnText3}>
-            Take a Free Mental Health Check up
-          </Text>
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={styles.BookBtn3}
+          onPress={() => {
+            outLink(props.props.but2URL);
+          }}
+        >
+          <Text style={styles.btnText3}>{props.props.but2}</Text>
         </TouchableOpacity>
       </View>
     </>
   );
 };
 
-const Card = () => {
+const Card = (props) => {
+  console.log("It is from card in history: ", props);
   return (
     <View
-      className="flex-col items-center"
-      style={[styles.cardContainer, { marginTop: hp(4) }]}
+      className="flex-col justify-center items-center"
+      style={[styles.cardContainer, { marginTop: hp(4), height: hp(18) }]}
     >
-      <View
-        style={{
-          width: "100%",
-          height: hp(18),
-          backgroundColor: "rgba(247, 207, 106, 0.5)",
-          borderRadius: wp(2.6),
-          paddingHorizontal: wp(2),
-          paddingVertical: hp(3.3),
-          display: "flex",
-          justifyContent: "space-between",
-          flexDirection: "row",
+      <TouchableOpacity
+        onPress={() => {
+          outLink(props.props.banClick);
         }}
       >
-        <BookIcon width={wp(30)} height={hp(13)} />
-        <View className="flex-col justify-between items-left ">
-          <Text style={{ width: wp(46), fontSize: wp(3.4), color: "#455a64" }}>
-            Treat yourself with a little self-care while you await your next
-            therapy session.💛
-          </Text>
-          <TouchableOpacity
-            className="flex-row items-center justify-center "
-            style={{
-              width: wp(38),
-              height: hp(4),
-              backgroundColor: "#01818c",
-              borderRadius: wp(1),
-            }}
-            onPress={() => {
-              outLink("https://heartitout.in/products/doodle-notebooks/");
-            }}
-          >
-            <Text style={{ color: "white", fontSize: wp(3.8) }}>
-              Try doodling!
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+        <Image
+          resizeMode="stretch"
+          style={{ width: wp(84), height: hp(18), borderRadius: wp(2) }}
+          source={{
+            uri: props.props.banLink,
+          }}
+        />
+      </TouchableOpacity>
     </View>
   );
 };
@@ -431,29 +530,31 @@ export default function ProfileScreen(props) {
   const [code, setCode] = useState("");
   const [phone, setPhone] = useState("");
   const [det, setDet] = useState({});
-  const [isSession, setSession] = React.useState(1);
+  const [isSession, setSession] = React.useState(false);
+  const [isSessionH, setSessionH] = React.useState(false);
   const layout = useWindowDimensions();
   const [index, setIndex] = React.useState(0);
+  const [but1, setBut1] = useState("");
+  const [but2, setBut2] = useState("");
+  const [but1URL, setBut1URL] = useState("");
+  const [but2URL, setBut2URL] = useState("");
+  const [banner, setBanner] = useState(false);
+  const [banLink, setBanLink] = useState("");
+  const [banClick, setBanClick] = useState("");
 
+  const [but1H, setBut1H] = useState("");
+  const [but2H, setBut2H] = useState("");
+  const [but1URLH, setBut1URLH] = useState("");
+  const [but2URLH, setBut2URLH] = useState("");
+  const [bannerH, setBannerH] = useState(false);
+  const [banLinkH, setBanLinkH] = useState("");
+  const [banClickH, setBanClickH] = useState("");
   const [statusColor, setStatusColor] = useState("green");
 
   const [routes] = React.useState([
     { key: "first", title: "Upcoming" },
     { key: "second", title: "History" },
   ]);
-
-  const backHandler = () => {
-    navigation.navigate("Home_Tab");
-    return true;
-  };
-
-  navigation.addListener("focus", () => {
-    BackHandler.addEventListener("hardwareBackPress", backHandler);
-  });
-
-  navigation.addListener("blur", () => {
-    BackHandler.removeEventListener("hardwareBackPress", backHandler);
-  });
 
   useEffect(() => {
     setDet(data);
@@ -463,95 +564,65 @@ export default function ProfileScreen(props) {
     setPhone(data.phone);
   }, [name]);
 
-  const url = "https://n8n.heartitout.in/webhook/api/fetch-session-history";
-  // const [hasApp, sethasApp] = useState(false);
-  // const [loading, setLoading] = useState(true);
-  // const [datas, setDatas] = useState({});
-  // const [hasBan, setHasBan] = useState(false);
-  // const [but1, setBut1] = useState();
-  // const [but2, setBut2] = useState();
-  // const [but1U, setBut1U] = useState();
-  // const [but2U, setBut2U] = useState();
-  // const [bann, setBann] = useState(false);
-  // const [bannURL, setbannURL] = useState("");
-  // const [click, setClick] = useState("");
-
-  const payload1 = {
-    hasApp: false,
-    bann: true,
-    datas: [],
-    bannURL: "",
-    click: "",
-    but1: {
-      text: "Book A session",
-      url: "https://heartitout.in",
-    },
-    but2: {
-      text: "Continue your journey",
-      url: "https://heartitout.in/therapist",
-    },
-    loading: true,
-  };
-
-  const [load, setLoad] = useState(true);
-
-  // useEffect(() => {
-  //   , []);
-
-  const payl = () => {};
-
-  const [routeComponent, setRouteComponent] = useState(null);
-
-  const renderScene = ({ route }) => {
-    const payload = data;
-    payload.data = "upcoming";
-    axios
-      .post(url, payload)
-      .then((res) => {
-        if (res.data.has_upc === "yes") {
-          payload1.hasApp = true;
-          payload1.bann = true;
-          payload1.bannURL = res.data.banner_link;
-          payload1.click = res.data.on_click;
-          payload1.datas = res.data.upc_data;
-        } else {
-          // sethasApp(false);
-          payload1.hasApp = false;
-          payload1.bann = false;
-          // payload1.but1.text = res.data.btn1-text;
-          // payload1.but1.url = res.data.btn1-url;
-          // payload1.but2.text = res.data.btn2-text;
-          // payload1.but2.url = res.data.btn2-url;
-          // setHasBan(false);
-          // setBut1();
-          // setBut2(res.data.btn2-text);
-          // setBut1U();
-          // setBut2U(res.data.btn2-url);
-        }
-
-        // console.log(payload1);
-        // setLoading(false);
-        
-      })
-      .catch((err) => console.log("errror here", err))
-      .finally(() => {
-        console.log(payload1)
-        switch (route.key) {
-          case "first":
-            // setRouteComponent()
-            return <FirstRoute data={payload1} />;
-            
-          case "second":
-            return <SecondRoute data={data} />;
-          default:
-            return null;
-        }
-      });
-  };
-
   navigation.addListener("focus", () => {
     setStatusColor("green");
   });
+
+  const handleDataFromChild = (data) => {
+    // Do something with the received data, such as updating state
+    console.log("It is from upcoming: ", data);
+    setSession(data.has_ban);
+    setBut1(data.btn_data["btn1-text"]);
+    setBut2(data.btn_data["btn2-text"]);
+    setBut1URL(data.btn_data["btn1-url"]);
+    setBut2URL(data.btn_data["btn2-url"]);
+    setBanner(data.has_ban);
+    setBanClick(data.on_click);
+    setBanLink(data.banner_link);
+  };
+
+  const handleDataFromChild2 = (data) => {
+    // Do something with the received data, such as updating state
+    console.log("It is from history: ", data);
+    setSessionH(data.has_ban);
+    setBut1H(data.btn_data["btn1-text"]);
+    setBut2H(data.btn_data["btn2-text"]);
+    setBut1URLH(data.btn_data["btn1-url"]);
+    setBut2URLH(data.btn_data["btn2-url"]);
+    setBannerH(data.has_ban);
+    setBanClickH(data.on_click);
+    setBanLinkH(data.banner_link);
+  };
+
+  const renderScene = ({ route }) => {
+    switch (route.key) {
+      case "first":
+        return (
+          <FirstRoute
+            data={data}
+            onDataReceived={handleDataFromChild}
+            onRender={handleChild1Render}
+          />
+        );
+      case "second":
+        return (
+          <SecondRoute
+            data={data}
+            onDataReceived={handleDataFromChild2}
+            onRender={handleChild1Render}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  const [isChild1Rendered, setIsChild1Rendered] = useState(false);
+
+  // Function to update isChild1Rendered state
+  const handleChild1Render = () => {
+    setIsChild1Rendered(true);
+  };
 
   return (
     <SafeAreaView>
@@ -634,19 +705,63 @@ export default function ProfileScreen(props) {
             renderScene={renderScene}
             onIndexChange={setIndex}
             initialLayout={{ width: layout.width }}
-            animationEnabled={false}
+            animationEnabled={true}
             style={{
               width: "100%",
               backgroundColor: "#f8f7fc",
               borderRadius: wp(2.5),
-              height: isSession ? hp(40) : hp(20),
+              height:
+                index == 0
+                  ? isSession
+                    ? hp(40)
+                    : hp(20)
+                  : isSessionH
+                  ? hp(40)
+                  : hp(20),
             }}
             renderTabBar={renderTabBar}
             initialParams={{ det }}
           ></TabView>
         </View>
 
-        {isSession ? <Card /> : <Buttons />}
+        {index == 0 ? (
+          <>
+            {isChild1Rendered && (
+              <>
+                {isSession ? (
+                  <Card props={{ banner, banLink, banClick }} />
+                ) : (
+                  <Buttons props={{ but1, but1URL, but2, but2URL }} />
+                )}
+              </>
+            )}
+          </>
+        ) : (
+          <>
+            {isChild1Rendered && (
+              <>
+                {isSessionH ? (
+                  <Card
+                    props={{
+                      banner: bannerH,
+                      banLink: banLinkH,
+                      banClick: banClickH,
+                    }}
+                  />
+                ) : (
+                  <Buttons
+                    props={{
+                      but1: but1H,
+                      but1URL: but1URLH,
+                      but2: but2H,
+                      but2URL: but2URLH,
+                    }}
+                  />
+                )}
+              </>
+            )}
+          </>
+        )}
 
         <View
           className="flex-row items-center"
