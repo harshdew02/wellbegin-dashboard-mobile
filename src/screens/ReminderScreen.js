@@ -1,4 +1,4 @@
-import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
+import { SafeAreaView, StyleSheet, Text, View, TouchableOpacity, Image , ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 import Back from "../../assets/images/arrow.svg";
@@ -56,48 +56,54 @@ export default function ReminderScreen({ navigation }) {
     const [ifReminder, setIfReminder] = useState(true);
     return (
         <SafeAreaView>
-            <TopBarMain />
-            <View
-                style={{
-                    backgroundColor: "#fff",
-                    height: hp(6),
-                    justifyContent: "center",
-                    alignItems: "center",
-                    top: hp(1),
-                    marginTop: hp(10)
-                }}
-            >
-                <TouchableOpacity onPress={() => navigation.goBack()} style={{ position: "absolute", left: wp(8) }} >
-                    <Back width={wp(8)} height={wp(8)} />
-                </TouchableOpacity>
-                <Text style={{
-                    color: "#043953",
-                    fontSize: wp(5.5),
-                    fontFamily: 'Roboto',
-                    fontWeight: '600'
-                }}>Your Reminders</Text>
-            </View>
-
-            <View className="flex-col items-center" style={{ marginTop: hp(2) }}>
-                {ifReminder ?
-                (<Card isTick={0}/>) :
-
-                (<View className="flex-col items-center">
-                    <Image
-                        className="mr-8"
-                        source={require("../../assets/images/noReminders.gif")}
-                        style={{ height: hp(28), width: wp(100), marginTop: hp(24) }}
-                    />
+            {/* <TopBarMain /> */}
+            <ScrollView>
+                <View
+                    style={{
+                        backgroundColor: "#fff",
+                        height: hp(6),
+                        justifyContent: "center",
+                        alignItems: "center",
+                        top: hp(1),
+                        marginTop: hp(0)
+                    }}
+                >
+                    <TouchableOpacity onPress={() => navigation.goBack()} style={{ position: "absolute", left: wp(8) }} >
+                        <Back width={wp(8)} height={wp(8)} />
+                    </TouchableOpacity>
                     <Text style={{
                         color: "#043953",
                         fontSize: wp(5.5),
                         fontFamily: 'Roboto',
                         fontWeight: '600'
-                    }}>You have no reminders.</Text>
+                    }}>Your Reminders</Text>
                 </View>
-                )
-            }
-            </View>
+
+                <View className="flex-col items-center" style={{ marginTop: hp(2) }}>
+                    {ifReminder ?
+                        (<Card isTick={0} />) :
+
+                        (<View className="flex-col items-center">
+                            <Image
+                                className="mr-8"
+                                source={require("../../assets/images/noReminders.gif")}
+                                style={{ height: hp(28), width: wp(100), marginTop: hp(24) }}
+                            />
+                            <Text style={{
+                                color: "#043953",
+                                fontSize: wp(5.5),
+                                fontFamily: 'Roboto',
+                                fontWeight: '600'
+                            }}>You have no reminders.</Text>
+                        </View>
+                        )
+                    }
+
+                    <View style={{ width: wp(100), height: hp(10), backgroundColor: 'red', marginTop: hp(3) }} >
+
+                    </View>
+                </View>
+            </ScrollView>
         </SafeAreaView>
     )
 }
