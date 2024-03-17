@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Linking,
   Image,
+  BackHandler
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { ScrollView } from "react-native-gesture-handler";
@@ -325,7 +326,8 @@ const SecondRoute = (props) => {
   const [loading, setLoading] = useState(true);
   
   const [data, setData] = useState({});
-
+  
+  console.log("IT IS FROM SECOND ROUTE: ");
   const parentData = {
     has_ban: false,
     btn_data: {
@@ -364,11 +366,12 @@ const SecondRoute = (props) => {
         } else {
           sethasApp(false);
           parentData.has_ban = false;
-          // parentData.btn_data["btn1-text"] = res.data.btn_data["btn1-text"];
-          // parentData.btn_data["btn2-text"] = res.data.btn_data["btn2-text"];
-          parentData.btn_data["btn1-url"] = res.data.btn_dat["btn1"];
-          parentData.btn_data["btn2-url"] = res.data.btn_dat["btn2"];
+          parentData.btn_data["btn1-text"] = res.data.btn_dat["btn1-text"];
+          parentData.btn_data["btn2-text"] = res.data.btn_dat["btn2-text"];
+          parentData.btn_data["btn1-url"] = res.data.btn_dat["btn1-url"];
+          parentData.btn_data["btn2-url"] = res.data.btn_dat["btn2-url"];
         }
+        console.log(res.data)
         passDataToParent(parentData);
         renderSecondElement();
         setLoading(false);
@@ -446,6 +449,8 @@ const renderTabBar = (props) => (
 );
 
 const Buttons = (props) => {
+  console.log("It is from button in history: ", props);
+
   return (
     <>
       <View
@@ -518,6 +523,7 @@ const Card = (props) => {
           source={{
             uri: props.props.banLink,
           }}
+          alt={'Ad by Heart it Out'}
         />
       </TouchableOpacity>
     </View>
@@ -569,6 +575,19 @@ export default function ProfileScreen(props) {
 
   navigation.addListener("focus", () => {
     setStatusColor("green");
+  });
+
+  const backHandler = () => {
+    navigation.navigate('Home_Tab')
+    return true;
+  };
+
+  navigation.addListener("focus", () => {
+    BackHandler.addEventListener("hardwareBackPress", backHandler);
+  });
+
+  navigation.addListener("blur", () => {
+    BackHandler.removeEventListener("hardwareBackPress", backHandler);
   });
 
   const handleDataFromChild = (data) => {

@@ -349,7 +349,8 @@ export default function HomeScreen(props) {
     <SafeAreaView>
       {/* <TopBarMain /> */}
       <StatusBar
-        backgroundColor={(scrollPercentage>84)?'#fff':theme.maincolor}
+        backgroundColor={theme.maincolor}
+        // backgroundColor={(scrollPercentage>84)?'#fff':theme.maincolor}
         barStyle={'light-content'}
         hidden={false}
       />
@@ -368,13 +369,13 @@ export default function HomeScreen(props) {
         <></>
       )}
 
-      <StatusBar
+      {/* <StatusBar
         backgroundColor={"transparent"}
         translucent={true}
         barStyle={"light-content"}
         hidden={false}
         // translucent backgroundColor="transparent"
-      />
+      /> */}
 
       {banner ? (
         <TouchableOpacity
@@ -445,7 +446,7 @@ export default function HomeScreen(props) {
               >
                 Welcome👋 {name.split(/\s+/).filter((word) => word !== "")[0]}
               </Text>
-              <TouchableOpacity style={{ position: "absolute", right: wp(0) }}>
+              <TouchableOpacity onPress={()=>{navigation.navigate('reminder')}} style={{ position: "absolute", right: wp(0) }}>
                 <TopBell active={true} />
               </TouchableOpacity>
             </View>
