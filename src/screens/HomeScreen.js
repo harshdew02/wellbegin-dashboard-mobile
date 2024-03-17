@@ -10,7 +10,7 @@ import {
   Animated,
   BackHandler,
 } from "react-native";
-import React, { useState, useEffect, useRef , useFocusEffect, useCallback } from "react";
+import React, { useState, useEffect, useRef, useFocusEffect, useCallback } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import {
   widthPercentageToDP as wp,
@@ -391,12 +391,12 @@ export default function HomeScreen(props) {
             outLink(cbanLink);
           }}
         >
-            <Image
-              style={{ width: wp(100), height: wp(24.66) }}
-              source={{
-                uri: "https://ucarecdn.com/79a0d49d-7c28-4aff-b312-28d5c8a0beae/TopBanner2.png",
-              }}
-            />
+          <Image
+            style={{ width: wp(100), height: wp(24.66) }}
+            source={{
+              uri: "https://ucarecdn.com/79a0d49d-7c28-4aff-b312-28d5c8a0beae/TopBanner2.png",
+            }}
+          />
         </TouchableOpacity>
       ) : (
         <></>
@@ -446,7 +446,7 @@ export default function HomeScreen(props) {
               >
                 Welcome👋 {name.split(/\s+/).filter((word) => word !== "")[0]}
               </Text>
-              <TouchableOpacity onPress={()=>{navigation.navigate('reminder')}} style={{ position: "absolute", right: wp(0) }}>
+              <TouchableOpacity onPress={() => { navigation.navigate('reminder') }} style={{ position: "absolute", right: wp(0) }}>
                 <TopBell active={true} />
               </TouchableOpacity>
             </View>
@@ -551,7 +551,8 @@ export default function HomeScreen(props) {
         >
           <TouchableOpacity
             onPress={() => {
-              console.log("working");
+                console.log("working");
+                navigation.navigate('homework')
             }}
             style={[styles.card, { backgroundColor: "#FEF8C8" }]}
           >
