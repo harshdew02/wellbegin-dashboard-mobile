@@ -9,7 +9,8 @@ import {
   ActivityIndicator,
   Linking,
   Image,
-  BackHandler
+  BackHandler,
+  ToastAndroid,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { ScrollView } from "react-native-gesture-handler";
@@ -28,9 +29,7 @@ import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import axios from "axios";
 import theme from "../theme";
 
-
 const gMeet = (link) => {
-
   if (link == "" || link == null || link == undefined)
     link = "https://meet.google.com";
   Linking.openURL(link)
@@ -324,9 +323,9 @@ const FirstRoute = (props) => {
 const SecondRoute = (props) => {
   const [hasApp, sethasApp] = useState(false);
   const [loading, setLoading] = useState(true);
-  
+
   const [data, setData] = useState({});
-  
+
   console.log("IT IS FROM SECOND ROUTE: ");
   const parentData = {
     has_ban: false,
@@ -371,7 +370,7 @@ const SecondRoute = (props) => {
           parentData.btn_data["btn1-url"] = res.data.btn_dat["btn1-url"];
           parentData.btn_data["btn2-url"] = res.data.btn_dat["btn2-url"];
         }
-        console.log(res.data)
+        console.log(res.data);
         passDataToParent(parentData);
         renderSecondElement();
         setLoading(false);
@@ -507,6 +506,7 @@ const Buttons = (props) => {
 
 const Card = (props) => {
   console.log("It is from card in history: ", props);
+  const [imageError, setImageError] = useState(false);
   return (
     <View
       className="flex-col justify-center items-center"
@@ -517,14 +517,24 @@ const Card = (props) => {
           outLink(props.props.banClick);
         }}
       >
-        <Image
-          resizeMode="stretch"
-          style={{ width: wp(84), height: hp(18), borderRadius: wp(2) }}
-          source={{
-            uri: props.props.banLink,
-          }}
-          alt={'Ad by Heart it Out'}
-        />
+        {!imageError ? (
+          <>
+            <Image
+              onError={() => {
+                setImageError(true);
+              }}
+              resizeMode="stretch"
+              style={{ width: wp(84), height: hp(18), borderRadius: wp(2) }}
+              source={{
+                uri: props.props.banLink,
+              }}
+              // alt={''}
+            />
+          </>
+        ) : (
+          // 
+          <Text> Ad by Heart it Out </Text>
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -578,7 +588,7 @@ export default function ProfileScreen(props) {
   });
 
   const backHandler = () => {
-    navigation.navigate('Home_Tab')
+    navigation.navigate("Home_Tab");
     return true;
   };
 
@@ -657,7 +667,7 @@ export default function ProfileScreen(props) {
       {/* <TopBarMain /> */}
       <View
         style={{
-          backgroundColor:'#01818C',
+          backgroundColor: "#01818C",
           width: wp(100),
           height: hp(1),
           position: "absolute",
@@ -756,7 +766,6 @@ export default function ProfileScreen(props) {
             initialParams={{ det }}
           ></TabView>
         </View>
-
 
         {index == 0 ? (
           <>
