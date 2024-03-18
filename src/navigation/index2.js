@@ -16,6 +16,7 @@ import ReminderScreen from "../screens/ReminderScreen";
 import ProfileNavigator from "./ProfileNavigator";
 import MoodTracker from "../screens/MoodTracker";
 import Task from "../screens/Task";
+import HomeWork from "../screens/HomeWork";
 
 const Stack = createNativeStackNavigator();
 
@@ -44,6 +45,7 @@ export default function AppNavigation2() {
         <Stack.Screen name="verifyPage" component={Verify} />
         <Stack.Screen name="task" component={Task}/>
         <Stack.Screen name="aboutMe" component={AboutMe}/>
+        <Stack.Screen name="homework" component={HomeWork}/>
         <Stack.Screen name="reminder" component={ReminderScreen}
 
           options={{

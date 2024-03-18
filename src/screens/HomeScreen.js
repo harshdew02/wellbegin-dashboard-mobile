@@ -11,13 +11,7 @@ import {
   BackHandler,
   ActivityIndicator,
 } from "react-native";
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useFocusEffect,
-  useCallback,
-} from "react";
+import React, { useState, useEffect, useRef, useFocusEffect, useCallback } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import {
   widthPercentageToDP as wp,
@@ -485,6 +479,7 @@ export default function HomeScreen(props) {
               >
                 Welcome👋 {name.split(/\s+/).filter((word) => word !== "")[0]}
               </Text>
+
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate("reminder");
@@ -595,7 +590,8 @@ export default function HomeScreen(props) {
         >
           <TouchableOpacity
             onPress={() => {
-              console.log("working");
+                console.log("working");
+                navigation.navigate('homework')
             }}
             style={[styles.card, { backgroundColor: "#FEF8C8" }]}
           >

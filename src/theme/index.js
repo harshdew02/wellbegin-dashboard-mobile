@@ -3,5 +3,5 @@ export const theme = {
     text: '#16247d',
     maincolor : '#01818C',
     grey: '#455A64',
-    black: '#455A64'
+    black: '#043953'
 }
