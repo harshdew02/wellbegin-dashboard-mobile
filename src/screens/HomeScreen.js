@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   Animated,
   BackHandler,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect, useRef, useFocusEffect, useCallback } from "react";
 import { ScrollView } from "react-native-gesture-handler";
@@ -205,6 +206,12 @@ export default function HomeScreen(props) {
     BackHandler.removeEventListener("hardwareBackPress", backHandler);
   });
 
+  const [loader, setLoader] = useState(false);
+
+  useEffect(() => {
+    if (!loader) setBanner(false);
+  }, [loader]);
+
   const appointment = {
     appointment: data.app_det,
     has_appointment: data.has_appointment,
@@ -297,7 +304,6 @@ export default function HomeScreen(props) {
         setDate(showDate);
       }
     }
-
   }, [name, banner, mood, isBooked]);
 
   // navigation.addListener("focus", () => {
@@ -345,13 +351,15 @@ export default function HomeScreen(props) {
     // console.log(y);
   };
 
+  const [loading, setLoading] = useState(true);
+
   return (
     <SafeAreaView>
       {/* <TopBarMain /> */}
       <StatusBar
         backgroundColor={theme.maincolor}
         // backgroundColor={(scrollPercentage>84)?'#fff':theme.maincolor}
-        barStyle={'light-content'}
+        barStyle={"light-content"}
         hidden={false}
       />
       {!banner ? (
@@ -391,16 +399,41 @@ export default function HomeScreen(props) {
             outLink(cbanLink);
           }}
         >
+          {loading ? (
+            <ActivityIndicator
+              animating={loading}
+              size="small"
+            ></ActivityIndicator>
+          ) : (
+            <></>
+          )}
+          {loader ? setBanner(false) : <></>}
           <Image
-            style={{ width: wp(100), height: wp(24.66) }}
+            onLoad={() => {
+              setLoading(false);
+              console.log(loading);
+            }}
+            onError={() => {
+              setLoading(false);
+              console.log("failed");
+              setLoader(true);
+            }}
+            style={{
+              width: wp(100),
+              height: wp(24.66),
+              position: "absolute",
+              zIndex: 5,
+            }}
             source={{
               uri: "https://ucarecdn.com/79a0d49d-7c28-4aff-b312-28d5c8a0beae/TopBanner2.png",
             }}
           />
+          <></>
         </TouchableOpacity>
       ) : (
         <></>
       )}
+
       {/*  */}
 
       <ScrollView
@@ -446,7 +479,13 @@ export default function HomeScreen(props) {
               >
                 Welcome👋 {name.split(/\s+/).filter((word) => word !== "")[0]}
               </Text>
-              <TouchableOpacity onPress={() => { navigation.navigate('reminder') }} style={{ position: "absolute", right: wp(0) }}>
+
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("reminder");
+                }}
+                style={{ position: "absolute", right: wp(0) }}
+              >
                 <TopBell active={true} />
               </TouchableOpacity>
             </View>

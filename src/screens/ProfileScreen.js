@@ -74,7 +74,7 @@ const outLink = async (link) => {
           "my-custom-header": "my custom header value",
         },
       });
-      console.log(result);
+      // console.log(result);
     } else Linking.openURL(url);
   } catch (error) {
     console.log(error);
@@ -103,7 +103,6 @@ const NoSessions = () => {
 };
 
 const DateTimeComponent = (rtime, rdate) => {
-  console.log(rtime, rdate);
   const dateTimeString = rdate;
   const dateTime = new Date(dateTimeString);
 
@@ -236,6 +235,7 @@ const CardDetails = (props) => {
 
 // ddkdld
 const FirstRoute = (props) => {
+  // console.log("It is from first route: ", props)
   const [hasApp, sethasApp] = useState(false);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({});
@@ -268,7 +268,7 @@ const FirstRoute = (props) => {
     axios
       .post(url, payload)
       .then((res) => {
-        // console.log(res.data)
+        console.log(res.data)
         if (res.data.has_upc === "yes") {
           sethasApp(true);
           setData(res.data.upc_data);
@@ -279,10 +279,10 @@ const FirstRoute = (props) => {
         } else {
           sethasApp(false);
           parentData.has_ban = false;
-          // parentData.btn_data["btn1-text"] = res.data.btn_data["btn1-text"];
-          // parentData.btn_data["btn2-text"] = res.data.btn_data["btn2-text"];
-          parentData.btn_data["btn1-url"] = res.data.btn_dat["btn1"];
-          parentData.btn_data["btn2-url"] = res.data.btn_dat["btn2"];
+          parentData.btn_data["btn1-text"] = res.data.btn_dat["btn1-text"];
+          parentData.btn_data["btn2-text"] = res.data.btn_dat["btn2-text"];
+          parentData.btn_data["btn1-url"] = res.data.btn_dat["btn1-url"];
+          parentData.btn_data["btn2-url"] = res.data.btn_dat["btn2-url"];
         }
         passDataToParent(parentData);
         renderSecondElement();
@@ -326,7 +326,6 @@ const SecondRoute = (props) => {
 
   const [data, setData] = useState({});
 
-  console.log("IT IS FROM SECOND ROUTE: ");
   const parentData = {
     has_ban: false,
     btn_data: {
@@ -370,7 +369,7 @@ const SecondRoute = (props) => {
           parentData.btn_data["btn1-url"] = res.data.btn_dat["btn1-url"];
           parentData.btn_data["btn2-url"] = res.data.btn_dat["btn2-url"];
         }
-        console.log(res.data);
+        // console.log(res.data);
         passDataToParent(parentData);
         renderSecondElement();
         setLoading(false);
@@ -448,7 +447,7 @@ const renderTabBar = (props) => (
 );
 
 const Buttons = (props) => {
-  console.log("It is from button in history: ", props);
+  // console.log("It is from button in history: ", props);
 
   return (
     <>
@@ -505,37 +504,44 @@ const Buttons = (props) => {
 };
 
 const Card = (props) => {
-  console.log("It is from card in history: ", props);
+  // console.log("It is from card in history: ", props);
   const [imageError, setImageError] = useState(false);
+  const passDataToParent = (data) => {
+    // Call the function passed from the parent component
+    props.handleCard(data);
+  };
   return (
     <View
       className="flex-col justify-center items-center"
       style={[styles.cardContainer, { marginTop: hp(4), height: hp(18) }]}
     >
-      <TouchableOpacity
-        onPress={() => {
-          outLink(props.props.banClick);
-        }}
-      >
-        {!imageError ? (
-          <>
-            <Image
-              onError={() => {
-                setImageError(true);
-              }}
-              resizeMode="stretch"
-              style={{ width: wp(84), height: hp(18), borderRadius: wp(2) }}
-              source={{
-                uri: props.props.banLink,
-              }}
-              // alt={''}
-            />
-          </>
-        ) : (
-          // 
-          <Text> Ad by Heart it Out </Text>
-        )}
-      </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            outLink(props.props.banClick);
+          }}
+        >
+          {!imageError ? (
+            <>
+              <Image
+                onError={() => {
+                  setImageError(true);
+                  passDataToParent({state:false, type:props.props.type});
+                  console.log(true);
+
+                }}
+                resizeMode="stretch"
+                style={{ width: wp(84), height: hp(18), borderRadius: wp(2) }}
+                source={{
+                  uri: props.props.banLink,
+                }}
+                // alt={''}
+              />
+            </>
+          ) : (
+            //
+            <Text> Ad by Heart it Out </Text>
+          )}
+        </TouchableOpacity>
     </View>
   );
 };
@@ -560,7 +566,7 @@ export default function ProfileScreen(props) {
   const [banner, setBanner] = useState(false);
   const [banLink, setBanLink] = useState("");
   const [banClick, setBanClick] = useState("");
-
+  const [isChild1Rendered, setIsChild1Rendered] = useState(false);
   const [but1H, setBut1H] = useState("");
   const [but2H, setBut2H] = useState("");
   const [but1URLH, setBut1URLH] = useState("");
@@ -626,6 +632,21 @@ export default function ProfileScreen(props) {
     setBanLinkH(data.banner_link);
   };
 
+  const handleCard = (data) => {
+    // Do something with the received data, such as updating state
+    if(data.type == "H") setSessionH(false);
+    if(data.type == "U") setSession(false);
+  };
+
+  useEffect(() => {
+
+  }, [isSessionH])
+
+  useEffect(() => {
+
+  }, [isSession])
+  
+
   const renderScene = ({ route }) => {
     switch (route.key) {
       case "first":
@@ -649,7 +670,7 @@ export default function ProfileScreen(props) {
     }
   };
 
-  const [isChild1Rendered, setIsChild1Rendered] = useState(false);
+  
 
   // Function to update isChild1Rendered state
   const handleChild1Render = () => {
@@ -757,10 +778,10 @@ export default function ProfileScreen(props) {
                 index == 0
                   ? isSession
                     ? hp(40)
-                    : hp(20)
+                    : hp(22)
                   : isSessionH
                   ? hp(40)
-                  : hp(20),
+                  : hp(22),
             }}
             renderTabBar={renderTabBar}
             initialParams={{ det }}
@@ -772,7 +793,7 @@ export default function ProfileScreen(props) {
             {isChild1Rendered && (
               <>
                 {isSession ? (
-                  <Card props={{ banner, banLink, banClick }} />
+                  <Card props={{ banner, banLink, banClick, type:"U" }} handleCard={handleCard} />
                 ) : (
                   <Buttons props={{ but1, but1URL, but2, but2URL }} />
                 )}
@@ -786,10 +807,12 @@ export default function ProfileScreen(props) {
                 {isSessionH ? (
                   <Card
                     props={{
+                      type:"H",
                       banner: bannerH,
                       banLink: banLinkH,
                       banClick: banClickH,
                     }}
+                    handleCard={handleCard}
                   />
                 ) : (
                   <Buttons

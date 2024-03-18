@@ -8,7 +8,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ScrollView,
-  ToastAndroid
+  ToastAndroid,
 } from "react-native";
 import React, { useState } from "react";
 import SInfo from "react-native-encrypted-storage";
@@ -27,15 +27,15 @@ import { useNavigation } from "@react-navigation/native";
 
 import { data, codes } from "../constants";
 
-import * as Sentry from '@sentry/react-native';
+import * as Sentry from "@sentry/react-native";
 
 Sentry.init({
-  dsn: 'https://e5adfef643df1d558d810f49f20e22a9@o4506911526813696.ingest.us.sentry.io/4506911552569344',
+  dsn: "https://e5adfef643df1d558d810f49f20e22a9@o4506911526813696.ingest.us.sentry.io/4506911552569344",
 });
 
 const showToast = (message) => {
-  ToastAndroid.show(message,ToastAndroid.SHORT);
-}
+  ToastAndroid.show(message, ToastAndroid.SHORT);
+};
 
 const requestOTP = async (code, number, navigation, [, setLoading]) => {
   const apiUrl = "https://n8n.heartitout.in/webhook/api/auth";
@@ -54,8 +54,7 @@ const requestOTP = async (code, number, navigation, [, setLoading]) => {
       code: code,
       type: "send_otp",
     };
-    if ((code + number).length < 10)
-      throw new Error("invalid mobile number");
+    if ((code + number).length < 10) throw new Error("invalid mobile number");
 
     axios
       .post(apiUrl, requestData)
@@ -83,18 +82,20 @@ const requestOTP = async (code, number, navigation, [, setLoading]) => {
       });
   } catch (error) {
     console.log("Error requesting OTP:", error.message);
-    showToast("Error requesting OTP " + error.message)
+    showToast("Error requesting OTP " + error.message);
     setLoading(false);
   }
 };
 
 import Loginbg from "../components/Loginbg";
 
-const trackAutomaticEvents = false;
-const mixpanel = new Mixpanel("f0f7cc32e3642946a8622275a4ec22c8", trackAutomaticEvents);
-mixpanel.init();
-
 const Login = () => {
+  const trackAutomaticEvents = true;
+  const mixpanel = new Mixpanel(
+    "f0f7cc32e3642946a8622275a4ec22c8",
+    trackAutomaticEvents
+  );
+  mixpanel.init();
   React.useEffect(() => {
     if (!firebase.apps.length) {
       firebase.initializeApp({
@@ -109,8 +110,6 @@ const Login = () => {
         databaseURL: "",
       });
     }
-
-
   }, []);
 
   const predefinedEvent = async () => {
@@ -157,7 +156,13 @@ const Login = () => {
             alignItems: "center",
           }}
         >
-          <View style={{backgroundColor: '#eaf7fc', width: wp(100) , height: hp(6)  }} />
+          <View
+            style={{
+              backgroundColor: "#eaf7fc",
+              width: wp(100),
+              height: hp(6),
+            }}
+          />
           <Loginbg />
         </View>
 
@@ -227,9 +232,13 @@ const Login = () => {
                 loading,
                 setLoading,
               ]);
-              predefinedEvent();
-              mixpanel.track("OTP Request done by", { "Phone " : codes[value]+number })
-              Sentry.captureException(new Error('Someone clicked the otp request button.'))
+              // predefinedEvent();
+              mixpanel.track("OTP Request done by", {
+                "Phone ": codes[value] + number,
+              });
+              // Sentry.captureException(
+              //   new Error("Someone clicked the otp request button.")
+              // );
             }}
           >
             <Text style={styles.textStyle}>Get OTP</Text>
