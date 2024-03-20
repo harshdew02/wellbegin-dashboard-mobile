@@ -96,7 +96,7 @@ const HomeWork = () => {
             fontWeight: "bold",
           }}
         >
-          My Wellbeing Tests
+          My Tasks
         </Text>
       </View>
 

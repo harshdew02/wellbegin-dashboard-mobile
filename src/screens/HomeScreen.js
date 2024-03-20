@@ -551,8 +551,8 @@ export default function HomeScreen(props) {
         >
           <TouchableOpacity
             onPress={() => {
-                console.log("working");
-                navigation.navigate('homework')
+              console.log("working");
+              navigation.navigate('homework')
             }}
             style={[styles.card, { backgroundColor: "#FEF8C8" }]}
           >
@@ -744,6 +744,7 @@ export default function HomeScreen(props) {
           >
             <Text style={styles.cardText}>Session Packages</Text>
             <TouchableOpacity
+              onPress={()=>{navigation.navigate('moodInsights')}}
               activeOpacity={0.5}
               style={[styles.Btn, { marginTop: hp(2) }]}
             >
