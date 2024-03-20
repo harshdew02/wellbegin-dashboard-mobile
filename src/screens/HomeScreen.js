@@ -591,7 +591,7 @@ export default function HomeScreen(props) {
           <TouchableOpacity
             onPress={() => {
                 console.log("working");
-                navigation.navigate('homework')
+                navigation.navigate('homework',data)
             }}
             style={[styles.card, { backgroundColor: "#FEF8C8" }]}
           >

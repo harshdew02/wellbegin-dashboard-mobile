@@ -76,7 +76,8 @@ const outLink = async (link) => {
   // });
 }
 
-export default function DiscoverScreen() {
+export default function DiscoverScreen(props) {
+  const data = props.route.params.data.route.params;
   const navigation = useNavigation();
   const backHandler = () => {
     navigation.navigate('Home_Tab')
@@ -152,7 +153,7 @@ export default function DiscoverScreen() {
           >
             <TouchableOpacity
 
-              onPress={()=>{ navigation.navigate('task') }}
+              onPress={()=>{ navigation.navigate('task', data) }}
 
               style={[
                 styles.packageCard,
