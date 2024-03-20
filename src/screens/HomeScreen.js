@@ -425,7 +425,7 @@ export default function HomeScreen(props) {
               zIndex: 5,
             }}
             source={{
-              uri: "https://ucarecdn.com/79a0d49d-7c28-4aff-b312-28d5c8a0beae/TopBanner2.png",
+              uri: banLink,
             }}
           />
           <></>

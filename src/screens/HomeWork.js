@@ -5,6 +5,7 @@ import {
   ScrollView,
   useWindowDimensions,
   TouchableOpacity,
+  ActivityIndicator
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -27,6 +28,7 @@ import Pending from "../components/HomeComp/Pending";
 import Done from "../components/HomeComp/Done";
 import axios from "axios";
 
+
 const DateTimeComponent = (rdate) => {
   const dateTimeString = rdate;
   const dateTime = new Date(dateTimeString);
@@ -36,13 +38,34 @@ const DateTimeComponent = (rdate) => {
     dateTime.getMonth() + 1
   )
     .toString()
-    .padStart(2, "0")}/${dateTime.getFullYear()}`;
+    .padStart(2, "0")}/${dateTime.getFullYear().toString().slice(-2)}`;
   return formattedDate;
 };
 
-const DoneCard = (props) => {
-  console.log(props.props);
-  // const [date, setDate] = useState(DateTimeComponent(props.props.due));
+const Card = (props) => {
+  console.log(props.props.item);
+  const data = props.props.data;
+  const item = props.props.item;
+  const [value, setValue] = useState(item.homework_done_or_not);
+  const [date, setDate] = useState(DateTimeComponent(item.due));
+  React.useEffect(() => {
+    if (item.homework_done_or_not === "Yes") setValue(true);
+    else setValue(false);
+  }, [value]);
+
+  const homework = () => {
+    const url = "https://n8n.heartitout.in/webhook/api/update-homework-status";
+    axios
+      .post(url, data)
+      .then((res) => {
+        console.log(res.data);
+        if (res.data.status === "1") setValue(true);
+        else if (res.data.status === "10") setValue(false);
+      })
+      .catch((err) => {
+        console.log("error is here:", err);
+      });
+  };
   return (
     <View
       style={{
@@ -54,12 +77,15 @@ const DoneCard = (props) => {
       }}
     >
       <View style={{ position: "absolute", left: 0, zIndex: 10 }}>
-        <Done />
+        {value ? <Done /> : <Pending />}
       </View>
       <View
         style={[
           styles.cardStyle,
-          { backgroundColor: "#f2f8f9", borderColor: theme.maincolor },
+          {
+            backgroundColor: value ? "#f2f8f9" : "#fffbf1",
+            borderColor: value ? theme.maincolor : theme.grey,
+          },
         ]}
       >
         <View style={{ height: "100%", justifyContent: "space-between" }}>
@@ -71,7 +97,7 @@ const DoneCard = (props) => {
               fontWeight: "bold",
             }}
           >
-            {props.props.homework}
+            {item.homework}
           </Text>
           <Text
             style={{
@@ -81,119 +107,52 @@ const DoneCard = (props) => {
               fontWeight: "500",
             }}
           >
-            During Session
+            {value ? "During Session" : `Due by ${date}`}
           </Text>
         </View>
         <View className="items-center">
-          <Text
-            style={{
-              color: theme.grey,
-              fontSize: wp(4.3),
-              fontFamily: "Roboto",
-              fontWeight: "900",
-            }}
-          >
-            Finished
-          </Text>
-          <Text
-            style={{
-              color: theme.grey,
-              fontSize: wp(3.7),
-              fontFamily: "Roboto",
-              fontWeight: "normal",
-            }}
-          >
-            {/* {date} */}
-          </Text>
+          {value ? (
+            <>
+              <Text
+                style={{
+                  color: theme.grey,
+                  fontSize: wp(4.3),
+                  fontFamily: "Roboto",
+                  fontWeight: "900",
+                }}
+              >
+                Finished
+              </Text>
+              <Text
+                style={{
+                  color: theme.grey,
+                  fontSize: wp(3.7),
+                  fontFamily: "Roboto",
+                  fontWeight: "normal",
+                }}
+              >
+                {date}
+              </Text>
+            </>
+          ) : (
+            <TouchableOpacity
+              onPress={() => {
+                homework();
+              }}
+            >
+              <Text
+                style={{
+                  color: theme.maincolor,
+                  fontSize: wp(4.3),
+                  fontFamily: "Roboto",
+                  fontWeight: "bold",
+                }}
+              >
+                Start
+              </Text>
+            </TouchableOpacity>
+          )}
         </View>
-      </View>
-    </View>
-  );
-};
-
-const PendingCard = (props) => {
-  // console.log();
-  const data = props.props.data;
-  const [date, setDate] = useState(DateTimeComponent(props.props.item.due));
-  const [status, setStatus] = useState("10");
-  const homework = () => {
-    // console.log(data);
-    const url = "https://n8n.heartitout.in/webhook/api/update-homework-status";
-    axios
-      .post(url, data)
-      .then((res) => {
-        console.log(res.data);
-        if(res.data.status === "1") 
-        {
-          setStatus("1")
-          passDataToParent(true)
-        }
-        else if(res.data.status === "10") setStatus("10")
-        // setData(res.data);
-      })
-      .catch((err) => {
-        console.log("error is here:", err);
-        // setLoading(false);
-      });
-  };
-
-  const passDataToParent = (data) => {
-    // Call the function passed from the parent component
-    props.handleCard(data);
-  };
-  return (
-    <View
-      style={{
-        width: wp(87),
-        height: hp(11),
-        marginTop: hp(2.4),
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <View style={{ position: "absolute", left: 0, zIndex: 10 }}>
-        <Pending />
-      </View>
-      <View
-        style={[
-          styles.cardStyle,
-          { backgroundColor: "#fffbf1", borderColor: theme.grey },
-        ]}
-      >
-        <View style={{ height: "100%", justifyContent: "space-between" }}>
-          <Text
-            style={{
-              color: theme.grey,
-              fontSize: wp(4.3),
-              fontFamily: "Roboto",
-              fontWeight: "bold",
-            }}
-          >
-            {props.props.item.homework}
-          </Text>
-          <Text
-            style={{
-              color: theme.grey,
-              fontSize: wp(4.3),
-              fontFamily: "Roboto",
-              fontWeight: "normal",
-            }}
-          >
-            Due by {date}
-          </Text>
-        </View>
-        <TouchableOpacity onPress={()=>{homework()}}>
-          <Text
-            style={{
-              color: theme.maincolor,
-              fontSize: wp(4.3),
-              fontFamily: "Roboto",
-              fontWeight: "bold",
-            }}
-          >
-            Start
-          </Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
@@ -201,15 +160,9 @@ const PendingCard = (props) => {
 
 const HomeWork = (route) => {
   const navigation = useNavigation();
+  const [loading, setLoading] = useState(true);
   // console.log(route.route.params)
-  const data = {
-    token: "o1hTU9pb8xIwE3T/Ho6bxujmFtjKLJtxAlBcZYwCGPc=",
-    phone: "9330396039",
-    code: "91",
-    otp: "2953",
-    date: "2024-02-16",
-  };
-  const [isHomework, setIsHomework] = useState(false);
+  const data = route.route.params;
   const [datas, setData] = useState({});
   React.useEffect(() => {
     // console.log(data);
@@ -219,6 +172,7 @@ const HomeWork = (route) => {
       .then((res) => {
         // console.log(res.data);
         setData(res.data);
+        setLoading(false);
       })
       .catch((err) => {
         console.log("error is here:", err);
@@ -264,20 +218,20 @@ const HomeWork = (route) => {
         }}
         style={{ width: wp(100), height: hp(92) }}
       >
-        {datas.has_hw === "yes" ? (
-          <>
-            {/* {datas.hw_data.map((item, index) =>
-              !item.homework_done_or_not === "Yes" ? (
-                <DoneCard key={index} props={item} />
-              ) : (
-                <PendingCard key={index} props={{ item, data }} />
-              )
-            )} */}
-            <DoneCard />
-            
-          </>
+        {loading ? (
+          <ActivityIndicator animating={loading} size="large" />
         ) : (
-          <></>
+          <>
+            {datas.has_hw === "yes" ? (
+              <>
+                {datas.hw_data.map((item, index) => (
+                  <Card props={{ item, data }} key={index} />
+                ))}
+              </>
+            ) : (
+              <></>
+            )}
+          </>
         )}
       </ScrollView>
       <View
