@@ -107,8 +107,8 @@ const DateTimeComponent = (rtime, rdate) => {
   const dateTime = new Date(dateTimeString);
 
   // Extracting date in DD/MM/YYYY format
-  const formattedDate = `${dateTime.getDate()}/${
-    dateTime.getMonth() + 1
+  const formattedDate = `${dateTime.getDate().toString().padStart(2, "0")}/${
+    (dateTime.getMonth() + 1).toString().padStart(2, "0")
   }/${dateTime.getFullYear()}`;
 
   // Extracting time in HH:MM:SS AM/PM format
@@ -261,6 +261,7 @@ const FirstRoute = (props) => {
   const renderSecondElement = () => {
     props.onRender(true);
   };
+
   useEffect(() => {
     const url = "https://n8n.heartitout.in/webhook/api/fetch-session-history";
     const payload = props.data;
@@ -567,6 +568,7 @@ export default function ProfileScreen(props) {
   const [banLink, setBanLink] = useState("");
   const [banClick, setBanClick] = useState("");
   const [isChild1Rendered, setIsChild1Rendered] = useState(false);
+  const [isChild2Rendered, setIsChild2Rendered] = useState(false);
   const [but1H, setBut1H] = useState("");
   const [but2H, setBut2H] = useState("");
   const [but1URLH, setBut1URLH] = useState("");
@@ -662,7 +664,7 @@ export default function ProfileScreen(props) {
           <SecondRoute
             data={data}
             onDataReceived={handleDataFromChild2}
-            onRender={handleChild1Render}
+            onRender={handleChild2Render}
           />
         );
       default:
@@ -676,7 +678,9 @@ export default function ProfileScreen(props) {
   const handleChild1Render = () => {
     setIsChild1Rendered(true);
   };
-
+  const handleChild2Render = () => {
+    setIsChild2Rendered(true);
+  };
   return (
     <SafeAreaView>
       {/* <StatusBar
@@ -802,7 +806,7 @@ export default function ProfileScreen(props) {
           </>
         ) : (
           <>
-            {isChild1Rendered && (
+            {isChild2Rendered && (
               <>
                 {isSessionH ? (
                   <Card
