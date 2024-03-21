@@ -43,15 +43,18 @@ const DateTimeComponent = (rdate) => {
 };
 
 const Card = (props) => {
-  console.log(props.props.item);
+  // console.log(props.props.item);
   const data = props.props.data;
+  data.id = props.props.item.id;
   const item = props.props.item;
   const [value, setValue] = useState(item.homework_done_or_not);
   const [date, setDate] = useState(DateTimeComponent(item.due));
+  const [updated, setUpdated] = useState(false);
+
   React.useEffect(() => {
-    if (item.homework_done_or_not === "Yes") setValue(true);
+    if (item.homework_done_or_not === "Yes" || updated==true) setValue(true);
     else setValue(false);
-  }, [value]);
+  }, [updated]);
 
   const homework = () => {
     const url = "https://n8n.heartitout.in/webhook/api/update-homework-status";
@@ -59,8 +62,8 @@ const Card = (props) => {
       .post(url, data)
       .then((res) => {
         console.log(res.data);
-        if (res.data.status === "1") setValue(true);
-        else if (res.data.status === "10") setValue(false);
+        if (res.data.status === "1") setUpdated(true);
+        else if (res.data.status === "10") setUpdated(false);
       })
       .catch((err) => {
         console.log("error is here:", err);
@@ -107,7 +110,7 @@ const Card = (props) => {
               fontWeight: "500",
             }}
           >
-            {value ? "During Session" : `Due by ${date}`}
+            {value ? `${item.stage.charAt(0).toUpperCase() + item.stage.slice(1)}` : `Due by ${date}`}
           </Text>
         </View>
         <View className="items-center">
@@ -229,7 +232,7 @@ const HomeWork = (route) => {
                 ))}
               </>
             ) : (
-              <></>
+              <><Text style={{marginTop: hp(40)}}>Yay! You are all set!</Text></>
             )}
           </>
         )}

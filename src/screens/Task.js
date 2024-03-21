@@ -6,6 +6,7 @@ import {
   useWindowDimensions,
   TouchableOpacity,
   ActivityIndicator,
+  ToastAndroid,
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -27,6 +28,9 @@ import BottomQuote from "../components/BottomQuote";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { InAppBrowser } from "react-native-inappbrowser-reborn";
+import Share from "react-native-share";
+import RNFetchBlob from "rn-fetch-blob";
+import FileViewer from "react-native-file-viewer";
 
 const outLink = async (link) => {
   try {
@@ -184,7 +188,13 @@ const CardDetails = (props) => {
             alignItems: "center",
           }}
           onPress={() => {
-            outLink(props.props.report_url);
+            // outLink(props.props.report_url);
+            downloadFile(
+              props.props.report_url,
+              props.props.phone_no,
+              sdate,
+              props.props.test
+            );
           }}
         >
           <Text style={{ color: "#fff", fontSize: wp(3.4) }}>View Results</Text>
@@ -327,7 +337,13 @@ const GeneralCard = (props) => {
       ]}
     >
       <View style={{ position: "absolute", right: wp(5) }}>
-        {containsWord(props.props.test_name,"Depression") ? (<Depression/>) : (containsWord(props.props.test_name, "Attachment") ? (<Attachment/>) : (<Anxiety/>))}
+        {containsWord(props.props.test_name, "Depression") ? (
+          <Depression />
+        ) : containsWord(props.props.test_name, "Attachment") ? (
+          <Attachment />
+        ) : (
+          <Anxiety />
+        )}
       </View>
       <View
         style={{
@@ -346,12 +362,73 @@ const GeneralCard = (props) => {
         >
           {props.props.test_name}
         </Text>
-        <TouchableOpacity style={styles.btnStyle} onPress={()=>{outLink(props.props.url)}}>
+        <TouchableOpacity
+          style={styles.btnStyle}
+          onPress={() => {
+            outLink(props.props.url);
+          }}
+        >
           <Text style={{ color: "#fff", fontSize: wp(3.4) }}>Take Test</Text>
         </TouchableOpacity>
       </View>
     </View>
   );
+};
+
+const showToast = (message) => {
+  ToastAndroid.show(message, ToastAndroid.SHORT);
+};
+
+const downloadFile = (url, user, date, type) => {
+  showToast("Report download starts.");
+
+  function previewFile(filePath) {
+    FileViewer.open(filePath)
+      .then(() => {
+        console.log("Success");
+      })
+      .catch((_err) => {
+        console.log(_err);
+      });
+  }
+
+  const { config, fs } = RNFetchBlob;
+  let DownloadDir =
+    Platform.OS === "ios" ? fs.dirs.DocumentDir : fs.dirs.DownloadDir;
+  const replacedDate = date.replace(/\//g, "-");
+  const filename = `Report on ${replacedDate}.pdf`;
+  const path = `${DownloadDir}/Heart it Out/${user}/${type}/${filename}`;
+  config({
+    fileCache: true,
+    addAndroidDownloads: {
+      useDownloadManager: true,
+      notification: true,
+      path: path,
+    },
+  })
+    .fetch("GET", url)
+    .then((res) => {
+      showToast("Report downloaded.");
+      previewFile(path);
+    })
+    .catch((error) => {
+      console.error(error);
+      Alert.alert("Error", "Failed to download file.");
+    });
+};
+
+const ShareMessage = (text) => {
+  const shareMessage = async (text) => {
+    try {
+      const options = {
+        message: text,
+      };
+      await Share.open(options);
+    } catch (error) {
+      console.log("Error sharing:", error);
+    }
+  };
+  shareMessage(text);
 };
 
 const Task = (props) => {
@@ -472,7 +549,7 @@ const Task = (props) => {
           style={{ width: wp(86), height: hp(12.8), marginTop: hp(2) }}
         >
           {test.map((item, index) => (
-            <GeneralCard key={index} props={item} colors={index%2} />
+            <GeneralCard key={index} props={item} colors={index % 2} />
           ))}
           {/* <DepressionTest />
           <AttachmentTest /> */}
@@ -503,7 +580,14 @@ const Task = (props) => {
               Help your loved one understand their symptoms better so they can
               get the help they deserve!
             </Text>
-            <TouchableOpacity style={[styles.btnStyle2]}>
+            <TouchableOpacity
+              style={[styles.btnStyle2]}
+              onPress={() => {
+                ShareMessage(
+                  "Hey, Check out this cool app that helped me understand my symptoms better. It might give you some clarity and get you the support you need. Give it a shot! Here's the link: https://heartitout.in/diagnostic"
+                );
+              }}
+            >
               <Text
                 style={{
                   color: theme.black,
