@@ -9,9 +9,14 @@ import {
   TouchableOpacity,
   Animated,
   BackHandler,
-  ActivityIndicator,
 } from "react-native";
-import React, { useState, useEffect, useRef, useFocusEffect, useCallback } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useFocusEffect,
+  useCallback,
+} from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import {
   widthPercentageToDP as wp,
@@ -94,13 +99,14 @@ const outLink = async (link) => {
 };
 
 const Btn = (props) => {
+  // console.log("It is from btn: ",props)
   return (
     <TouchableOpacity
       activeOpacity={0.8}
       style={styles.BookBtn}
       onPress={() => {
         // Checking if the link is supported for links with custom URL scheme.
-        outLink("https://heartitout.in/therapists/");
+        outLink(props.props);
       }}
     >
       <Text style={styles.btnText}>Book a Session</Text>
@@ -109,7 +115,7 @@ const Btn = (props) => {
 };
 
 const Bookbtn = (props) => {
-  // console.log(props.props.is2hour)
+  // console.log("It is from bookbtn: ",props)
 
   const ishour = props.props.is2hour;
   return (
@@ -132,7 +138,7 @@ const Bookbtn = (props) => {
             }}
             onPress={() => {
               // Checking if the link is supported for links with custom URL scheme.
-              outLink("https://heartitout.in/therapists/");
+              outLink(props.props.booking);
             }}
           >
             <Text
@@ -178,6 +184,10 @@ const Bookbtn = (props) => {
 };
 
 export default function HomeScreen(props) {
+  const data = props.route.params.data.route.params;
+
+  // console.log("It is from homescreen through mood tracker: ",props.route.params.data.route.params)
+
   const navigation = useNavigation();
   const [isBooked, setBooked] = useState(false);
   const [is2hour, setIs2hour] = useState(false);
@@ -189,9 +199,14 @@ export default function HomeScreen(props) {
   const [banner, setBanner] = useState(false);
   const [banLink, setBanLink] = useState("");
   const [cbanLink, setCBanLink] = useState("");
+  const [whatsnew, setWhatsnew] = useState("");
+  const [product, setProduct] = useState("");
+  const [booking, setBooking] = useState("");
+  const [showsub, setShowsub] = useState(false);
+  const [subsdet, setSubsdet] = useState(false);
+  const [subdays, setSubdays] = useState(0);
+  const [success, setSuccess] = useState(false);
   const [statusColor, setStatusColor] = useState("green");
-
-  const data = props.route.params.data.route.params;
 
   const backHandler = () => {
     BackHandler.exitApp();
@@ -206,12 +221,6 @@ export default function HomeScreen(props) {
     BackHandler.removeEventListener("hardwareBackPress", backHandler);
   });
 
-  const [loader, setLoader] = useState(false);
-
-  useEffect(() => {
-    if (!loader) setBanner(false);
-  }, [loader]);
-
   const appointment = {
     appointment: data.app_det,
     has_appointment: data.has_appointment,
@@ -222,8 +231,8 @@ export default function HomeScreen(props) {
     //   app_cl_email: "vaishnavi5913@gmail.com",
     //   app_staff: "2",
     //   app_session_date:
-    //     "Fri Mar 15 2024 00:00:00 GMT+0000 (Coordinated Universal Time)",
-    //   app_session_time: "15:00:00",
+    //     "Fri Mar 21 2024 00:00:00 GMT+0000 (Coordinated Universal Time)",
+    //   app_session_time: "03:00:00",
     //   app_session_link: "https://meet.google.com/pgx-mwxa-jdj",
     // },
   };
@@ -237,6 +246,14 @@ export default function HomeScreen(props) {
     } else {
       setBanner(false);
     }
+    setWhatsnew(data.whats_new_onclick);
+    setProduct(data.product_onclick);
+    setBooking(data.booking_link);
+    if (data.show_sub === "yes") setShowsub(true);
+    else setShowsub(false);
+    if (data.subs_det === "yes") setSubsdet(true);
+    else setSubsdet(false);
+    setSubdays(Number.parseInt(data.subs_no_of_days));
     // console.log("It is coming from home screen: ", data);
     if (appointment.has_appointment === "no") setBooked(false);
     else {
@@ -304,7 +321,7 @@ export default function HomeScreen(props) {
         setDate(showDate);
       }
     }
-  }, [name, banner, mood, isBooked]);
+  }, []);
 
   // navigation.addListener("focus", () => {
   //   setStatusColor("red");
@@ -351,8 +368,7 @@ export default function HomeScreen(props) {
     // console.log(y);
   };
 
-  const [loading, setLoading] = useState(true);
-
+  const [loaded, setLoaded] = useState(false);
   return (
     <SafeAreaView>
       {/* <TopBarMain /> */}
@@ -399,25 +415,14 @@ export default function HomeScreen(props) {
             outLink(cbanLink);
           }}
         >
-          {loading ? (
-            <ActivityIndicator
-              animating={loading}
-              size="small"
-            ></ActivityIndicator>
-          ) : (
-            <></>
-          )}
-          {loader ? setBanner(false) : <></>}
           <Image
             onLoad={() => {
-              setLoading(false);
-              console.log(loading);
+              setLoaded(true);
             }}
             onError={() => {
-              setLoading(false);
               console.log("failed");
-              setLoader(true);
             }}
+            resizeMode="stretch"
             style={{
               width: wp(100),
               height: wp(24.66),
@@ -449,7 +454,13 @@ export default function HomeScreen(props) {
       >
         {/* Banner */}
 
-        <View style={banner ? { marginTop: wp(22.66) } : { marginTop: hp(0) }}>
+        <View
+          style={
+            banner
+              ? { marginTop: loaded ? wp(22.66) : hp(-0.05) }
+              : { marginTop: hp(0) }
+          }
+        >
           <HomePageBanner />
 
           <View style={styles.banner}>
@@ -482,7 +493,7 @@ export default function HomeScreen(props) {
 
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate("reminder");
+                  navigation.navigate("reminder", data);
                 }}
                 style={{ position: "absolute", right: wp(0) }}
               >
@@ -579,7 +590,11 @@ export default function HomeScreen(props) {
                 style={{ height: wp(30), width: wp(30) }}
               />
             </View>
-            {isBooked ? <Bookbtn props={{ is2hour, link }} /> : <Btn />}
+            {isBooked ? (
+              <Bookbtn props={{ is2hour, link, booking }} />
+            ) : (
+              <Btn props={booking} />
+            )}
           </View>
         </View>
 
@@ -590,8 +605,7 @@ export default function HomeScreen(props) {
         >
           <TouchableOpacity
             onPress={() => {
-                console.log("working");
-                navigation.navigate('homework',data)
+              navigation.navigate("homework", data);
             }}
             style={[styles.card, { backgroundColor: "#FEF8C8" }]}
           >
@@ -620,6 +634,9 @@ export default function HomeScreen(props) {
 
           <TouchableOpacity
             style={[styles.card, { backgroundColor: "#EAF7FC" }]}
+            onPress={() => {
+              outLink(whatsnew);
+            }}
           >
             <Text style={styles.cardText}>What's {"\n"}New?</Text>
             <NewIcon width={wp(20)} height={hp(5)} />
@@ -661,7 +678,7 @@ export default function HomeScreen(props) {
                     width={wp(8)}
                     height={wp(8)}
                     onPress={() => {
-                      navigation.navigate("mood");
+                      navigation.navigate("mood", data);
                     }}
                   />
                 </TouchableOpacity>
@@ -670,7 +687,7 @@ export default function HomeScreen(props) {
                     width={wp(8)}
                     height={wp(8)}
                     onPress={() => {
-                      navigation.navigate("mood");
+                      navigation.navigate("mood", data);
                     }}
                   />
                 </TouchableOpacity>
@@ -680,7 +697,7 @@ export default function HomeScreen(props) {
                     width={wp(10)}
                     height={wp(10)}
                     onPress={() => {
-                      navigation.navigate("mood");
+                      navigation.navigate("mood", data);
                     }}
                   />
                 </TouchableOpacity>
@@ -689,7 +706,7 @@ export default function HomeScreen(props) {
                     width={wp(8)}
                     height={wp(8)}
                     onPress={() => {
-                      navigation.navigate("mood");
+                      navigation.navigate("mood", data);
                     }}
                   />
                 </TouchableOpacity>
@@ -698,7 +715,7 @@ export default function HomeScreen(props) {
                     width={wp(8)}
                     height={wp(8)}
                     onPress={() => {
-                      navigation.navigate("mood");
+                      navigation.navigate("mood", data);
                     }}
                   />
                 </TouchableOpacity>
@@ -746,7 +763,7 @@ export default function HomeScreen(props) {
                     flexDirection: "row",
                   }}
                   onPress={() => {
-                    navigation.navigate("mood");
+                    navigation.navigate("mood", data);
                   }}
                 >
                   <Text
@@ -781,13 +798,21 @@ export default function HomeScreen(props) {
               zIndex: 2,
             }}
           >
-            <Text style={styles.cardText}>Session Packages</Text>
+            <Text style={styles.cardText}>
+              {subsdet
+                ? "Your Whole Hearted Subscription is Active"
+                : "Session Packages"}
+            </Text>
             <TouchableOpacity
-              onPress={()=>{navigation.navigate('moodInsights')}}
+              onPress={() => {
+                navigation.navigate("moodInsights", data);
+              }}
               activeOpacity={0.5}
               style={[styles.Btn, { marginTop: hp(2) }]}
             >
-              <Text style={styles.btnText2}>Book a Session</Text>
+              <Text style={styles.btnText2}>
+                {subsdet ? "See Details" : "See Plans"}
+              </Text>
             </TouchableOpacity>
           </View>
           {/* <Gift width={wp(25)} height={hp(9)} /> */}
@@ -805,7 +830,7 @@ export default function HomeScreen(props) {
               <Text style={styles.cardText}>Self-care Tools for you</Text>
               <TouchableOpacity
                 onPress={() => {
-                  outLink("https://heartitout.in/products/");
+                  outLink(product);
                 }}
                 activeOpacity={0.5}
                 style={styles.Btn}
