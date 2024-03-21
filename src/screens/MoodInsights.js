@@ -124,7 +124,7 @@ const MoodInsights = () => {
 
             <ScrollView contentContainerStyle={{ display: 'flex-1', flexDirection: 'col', alignItems: 'center' }} style={{ width: wp(100), height: hp(92) }} >
 
-                <TouchableOpacity style={styles.NavCard}>
+                <TouchableOpacity onPress={()=>{navigation.navigate('moodLog')}} style={styles.NavCard}>
                     <HeartBook />
                     <View className="flex-col justify-between" style={{ height: hp(5.6) }} >
                         <Text style={{
@@ -306,7 +306,7 @@ const styles = StyleSheet.create({
     HeadText: {
         width: wp(40.5),
         color: theme.black,
-        fontSize: wp(4, 2),
+        fontSize: wp(4.2),
         fontFamily: "Roboto",
         fontWeight: '700',
         textAlign: 'center'

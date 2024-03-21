@@ -18,6 +18,7 @@ import MoodTracker from "../screens/MoodTracker";
 import Task from "../screens/Task";
 import HomeWork from "../screens/HomeWork";
 import MoodInsights from "../screens/MoodInsights";
+import MoodLog from "../screens/MoodLog";
 
 const Stack = createNativeStackNavigator();
 
@@ -40,6 +41,7 @@ export default function AppNavigation2() {
       >
         <Stack.Screen name="loader" component={LoaderEffect} />
         <Stack.Screen name="moodInsights" component={MoodInsights} />
+        <Stack.Screen name="moodLog" component={MoodLog} />
         {/* <Stack.Screen name="about" component={ProfileNavigator} /> */}
         <Stack.Screen name="main" component={RightDrawer} />
         <Stack.Screen name="mood" component={MoodTracker} />
