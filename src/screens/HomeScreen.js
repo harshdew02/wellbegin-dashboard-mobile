@@ -793,6 +793,7 @@ export default function HomeScreen(props) {
           >
             <Text style={styles.cardText}>{subsdet ? "Your Whole Hearted Subscription is Active" : "Session Packages"}</Text>
             <TouchableOpacity
+              onPress={()=>{navigation.navigate('moodInsights')}}
               activeOpacity={0.5}
               style={[styles.Btn, { marginTop: hp(2) }]}
               onPress={()=>{

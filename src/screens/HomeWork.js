@@ -209,7 +209,7 @@ const HomeWork = (route) => {
             fontWeight: "bold",
           }}
         >
-          My Wellbeing Tests
+          My Tasks
         </Text>
       </View>
 

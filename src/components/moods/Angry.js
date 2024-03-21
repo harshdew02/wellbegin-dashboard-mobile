@@ -3,10 +3,10 @@ import Svg, { Circle, Path } from "react-native-svg";
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 
-const Angry = ({isSelect}) => (
+const Angry = ({isSelect , h=11, w=11}) => (
   <Svg
-  width={wp(11)}
-  height={wp(11)}
+  width={wp(w)}
+  height={wp(h)}
     viewBox="0 0 40 40"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
