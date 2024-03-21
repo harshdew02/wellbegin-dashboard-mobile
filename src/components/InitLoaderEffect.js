@@ -57,10 +57,20 @@ export default function InitLoaderEffect({navigation}) {
             get_details: "false",
             has_appointment: "no",
             app_det:{},
-            has_mood:"no",
+            
             usr_fullname : data.usr_fullname,
             user_email : data.user_email,
             booking_link: "https://heartitout.in/therapists/",
+            whats_new_onclick:"https://heartitout.in",
+            product_onclick:"https://heartitout.in",
+            //This is mood tracker
+            has_mood:"no",
+            //This is subscription status
+            show_sub:"no",
+            subs_det:"no",
+            subs_no_of_days: "0",
+
+            //This is banner section
             has_banner: "no",
             banner_link: "",
             on_click:""
@@ -128,36 +138,36 @@ export default function InitLoaderEffect({navigation}) {
 
             //This is the third api call from flowchart
             const apiUrl3 =
-            "https://n8n.heartitout.in/webhook/api/get-home-banner";
+            "https://n8n.heartitout.in/webhook/api/home-page-details";
           await axios
             .post(apiUrl3, userDetails)
             .then(async (res) => {
               if (res.data.status === "1") {
                 // await AsyncStorage.setItem("token", Token);
                 finalDetails.has_banner = res.data.has_banner,
-                finalDetails.banner_link = res.data.banner_link,
-                finalDetails.on_click = res.data.on_click
+                finalDetails.banner_link = res.data.banner,
+                finalDetails.on_click = res.data.ban_on_click,
+                finalDetails.has_mood = res.data.mood_tacker;
+                finalDetails.show_sub = res.data.show_sub;
+                finalDetails.subs_det = res.data.subs_det;
+                finalDetails.subs_no_of_days = res.data.subs_no_of_days;
+                finalDetails.booking_link = res.data.booking_link;
+                finalDetails.whats_new_onclick = res.data.whats_new_onclick;
+                finalDetails.product_onclick = res.data.product_onclick;
+              }
+              else if (res.data.status === "10")
+              {
+                finalDetails.has_mood = res.data.mood_tacker;
+                finalDetails.show_sub = res.data.show_sub;
+                finalDetails.subs_det = res.data.subs_det;
+                finalDetails.has_banner = res.data.has_banner;
+                finalDetails.booking_link = res.data.booking_link;
+                finalDetails.whats_new_onclick = res.data.whats_new_onclick;
+                finalDetails.product_onclick = res.data.product_onclick;
               }
               else
               {
                 throw new Error("User credentails expired");
-              } 
-            })
-            .catch((err) => {
-              console.log(err);
-            });
-
-
-
-            //This is the fourth api call from flowchart
-            const apiUrl4 =
-            "https://n8n.heartitout.in/webhook/api/check_mood_tracker_logs";
-          await axios
-            .post(apiUrl4, userDetails)
-            .then(async (res) => {
-              if (res.data.status === "1") {
-                // await AsyncStorage.setItem("token", Token);
-                finalDetails.has_mood=res.data.has_mood;
               } 
             })
             .catch((err) => {
