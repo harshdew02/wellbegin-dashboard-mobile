@@ -17,6 +17,7 @@ import ProfileNavigator from "./ProfileNavigator";
 import MoodTracker from "../screens/MoodTracker";
 import Task from "../screens/Task";
 import HomeWork from "../screens/HomeWork";
+import MoodInsights from "../screens/MoodInsights";
 
 
 const Stack = createNativeStackNavigator();
@@ -39,6 +40,7 @@ export default function AppNavigation() {
         // initialRouteName={'verifyPage'}
       >
         <Stack.Screen name="loader" component={LoaderEffect} />
+        <Stack.Screen name="moodInsights" component={MoodInsights} />
         {/* <Stack.Screen name="about" component={ProfileNavigator} /> */}
         <Stack.Screen name="main" component={RightDrawer} />
         <Stack.Screen name="mood" component={MoodTracker} />
