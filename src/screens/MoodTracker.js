@@ -323,7 +323,7 @@ const MoodTracker = (props) => {
   };
 
   const saveMood = (payload) => {
-    const url = "https://heartitout.in/welcome/dashboard/moodtracker";
+    const url = "https://n8n.heartitout.in/webhook/api/moodtracker-submit";
     axios
       .post(url, payload)
       .then((res) => {

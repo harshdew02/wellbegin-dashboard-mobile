@@ -11,12 +11,15 @@ const Fear = ({ isSelect, h = 11, w = 11, inCol = '#fff', outCol = '#01818c' }) 
     if (isSelect == 5) {
       setOutColor("#01818C");
       setInColor("#455A64");
+    }else if (isSelect == -1) {
+      setOutColor(outCol);
+      setInColor(inCol);
     } else if (isSelect != -1) {
       setOutColor("#dce3e6");
       setInColor("#98a5ab");
     }
 
-  }, [])
+  }, [isSelect])
 
   return (
     <Svg
