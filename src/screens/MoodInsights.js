@@ -778,32 +778,23 @@ const MoodInsights = (props) => {
 export default MoodInsights;
 
 const styles = StyleSheet.create({
-  HeadContainer: {
-    height: hp(6),
-    width: wp(100),
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: hp(2),
-  },
-  HeadText: {
-    width: wp(40.5),
-    color: theme.black,
-    fontSize: wp(4, 2),
-    fontFamily: "Roboto",
-    fontWeight: "700",
-    textAlign: "center",
-  },
-  NavCard: {
-    display: "flex",
-    flexDirection: "row",
-    width: wp(84),
-    backgroundColor: "red",
-    height: hp(11),
-    paddingHorizontal: wp(2),
-    justifyContent: "space-between",
-    alignItems: "center",
-    backgroundColor: "#F7FBFD",
-    borderRadius: wp(5.3),
-    marginTop: hp(2),
-  },
-});
+
+    HeadContainer: {
+        height: hp(6),
+        width: wp(100),
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: hp(2),
+    },
+    HeadText: {
+        width: wp(40.5),
+        color: theme.black,
+        fontSize: wp(4.2),
+        fontFamily: "Roboto",
+        fontWeight: '700',
+        textAlign: 'center'
+    },
+    NavCard: { display: 'flex', flexDirection: 'row', width: wp(84), backgroundColor: 'red', height: hp(11), paddingHorizontal: wp(2), justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#F7FBFD', borderRadius: wp(5.3), marginTop: hp(2) }
+
+
+})
