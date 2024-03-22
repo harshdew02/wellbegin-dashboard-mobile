@@ -254,15 +254,7 @@ const MoodInsights = (props) => {
     payload.week = 0;
     const url = "https://n8n.heartitout.in/webhook/api/mt-percentage";
     axios
-      .post(url, {
-        "token": "o1hTU9pb8xIwE3T/Ho6bxujmFtjKLJtxAlBcZYwCGPc=",
-        "phone": "9330396039",
-        "code": "91",
-        "otp": "2953",
-        "date": "2024-02-16",
-        "week":"0"
-    }
-    )
+      .post(url, payload)
       .then((res) => {
         mood_percent = res.data.data;
         for (let i = 0; i < mood_percent.length; i++) {
@@ -296,7 +288,6 @@ const MoodInsights = (props) => {
         }
 
         for (let i = 0; i < mood_value.length; i++) {
-          console.log(maxii, mood_value[i]);
           if (mood_value[i] == maxii && mood_value[i] != 0) {
             index = i + 1;
             break;
@@ -346,7 +337,9 @@ const MoodInsights = (props) => {
         }}
         style={{ width: wp(100), height: hp(92) }}
       >
-        <TouchableOpacity style={styles.NavCard}>
+        <TouchableOpacity style={styles.NavCard} onPress={()=>{
+            navigation.navigate("moodLog", payload)
+        }} >
           <HeartBook />
           <View
             className="flex-col justify-between"
@@ -394,7 +387,7 @@ const MoodInsights = (props) => {
               fontWeight: "500",
             }}
           >
-            Consecutive Recording Days 
+            Consecutive Recording Days
           </Text>
 
           <View

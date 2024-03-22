@@ -13,7 +13,6 @@ const Happy = ({
   outCol = "#D2A100",
 }) => {
   const [inColor, setInColor] = React.useState(inCol);
-  console.log("From happy: ", isSelect);
   const [outColor, setOutColor] = React.useState(outCol);
   React.useEffect(() => {
     if (isSelect == 1) {
