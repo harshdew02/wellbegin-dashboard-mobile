@@ -11,12 +11,16 @@ const Disgust = ({ isSelect, h = 11, w = 11, inCol = '#fff', outCol = '#723F2D'}
     if (isSelect == 4) {
       setOutColor('#DF7550');
       setInColor("#455A64");
-    } else if (isSelect != -1) {
+    } else if (isSelect == -1) {
+    setOutColor(outCol);
+    setInColor(inCol);
+  }else if (isSelect != -1) {
       setOutColor("#dce3e6");
       setInColor("#98a5ab");
     }
 
-  }, [])
+  }, [isSelect])
+
 
   return (
     <Svg
