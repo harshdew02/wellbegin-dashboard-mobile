@@ -20,138 +20,160 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import { Angry, Happy, Sad, Fear, Surprised, Disgust } from "../components/moods";
-import { Work } from "../components/spheres";
 import Signal from "../../assets/images/signal.svg";
+import {
+  Work,
+  Health,
+  Friendship,
+  Finance,
+  Love,
+  Personal,
+  Family,
+  Leisure,
+} from "../components/spheres";
 
 const component = {
   Happy: <Happy />,
-  Sad: <Sad/>,
-  Fear: <Fear/>,
-  Angry: <Angry/>,
-  Surprised:<Surprised/>,
-  Disgust:<Disgust/>
+  Sad: <Sad />,
+  Fear: <Fear />,
+  Angry: <Angry />,
+  Surprised: <Surprised />,
+  Disgust: <Disgust />
 }
 
-const MoodCard = (props)=> {
-  console.log("It is from mood card: ",props)
+const SphereOfLife = {
+  family: <Family w={3.7} h={3.1} isClicked={true} />,
+  work: <Work w={3.7} h={3.1} isClicked={true} />,
+  finance: <Finance w={3.7} h={3.1} isClicked={true} />,
+  friendship: <Friendship w={3.7} h={3.1} isClicked={true} />,
+  health: <Health w={3.7} h={3.1} isClicked={true} />,
+  leisure: <Leisure w={3.7} h={3.1} isClicked={true} />,
+  love: <Love w={3.7} h={3.1} isClicked={true} />,
+  personal: <Personal w={3.7} h={3.1} isClicked={true} />,
+}
+
+const MoodCard = (props) => {
+  console.log("It is from mood card: ", props.props)
   return (
     <View style={styles.CardStyle}>
-          <View
+      <Text style={{ width: wp(75) , color: theme.black , fontSize:wp(3.2) }} >30 January 2024</Text>
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          width: "100%",
+          alignItems: "center",
+        }}
+      >
+        {component[props.props.mood]}
+        <Text
+          style={{
+            color: theme.black,
+            fontSize: wp(4),
+            fontWeight: "500",
+            marginLeft: wp(4.2),
+          }}
+        >
+          {props.props.mood}
+        </Text>
+        <Text
+          style={{
+            position: "absolute",
+            right: 0,
+            color: theme.black,
+            fontSize: wp(4),
+            fontWeight: "500",
+          }}
+        >
+          {props.props.sub_time.toUpperCase()}
+        </Text>
+      </View>
+      <View
+        style={{
+          width: "100%",
+          borderTopWidth: wp(0.2),
+          borderColor: theme.black,
+          paddingTop: hp(1),
+          marginTop: hp(0),
+        }}
+      >
+        <Text
+          style={{
+            color: "#6a7b83",
+            fontSize: wp(3.7),
+            fontWeight: "normal",
+            textAlign: "left",
+          }}
+        >
+          {props.props.notes}
+        </Text>
+      </View>
+      <View
+        style={{
+          display: "flex",
+          flexDirection: "row",
+          marginTop: hp(1.4),
+          width: "100%",
+        }}
+      >
+        <View
+          style={{
+            marginRight: wp(1),
+            height: hp(2.5),
+            paddingHorizontal: wp(1.6),
+            backgroundColor: "#dbf2f2",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            borderRadius: wp(2.6),
+          }}
+        >
+          {/* <Work w={3.7} h={3.1} isClicked={true} /> */}
+          {SphereOfLife[props.props.sphere_of_life]}
+          <Text
             style={{
-              display: "flex",
-              flexDirection: "row",
-              width: "100%",
-              alignItems: "center",
+              marginLeft: wp(0.2),
+              color: "#01818c",
+              fontSize: wp(3.2),
+              fontWeight: "normal",
+              textAlign: "left",
             }}
           >
-            {component[props.props.mood]}
-            <Text
-              style={{
-                color: theme.black,
-                fontSize: wp(4),
-                fontWeight: "500",
-                marginLeft: wp(4.2),
-              }}
-            >
-              {props.props.mood}
-            </Text>
-            <Text
-              style={{
-                position: "absolute",
-                right: 0,
-                color: theme.black,
-                fontSize: wp(4),
-                fontWeight: "500",
-              }}
-            >
-              {props.props.sub_time.toUpperCase()}              
-            </Text>
-          </View>
-          <View
-            style={{
-              width: "100%",
-              borderTopWidth: wp(0.2),
-              borderColor: theme.black,
-              paddingTop: hp(1),
-              marginTop: hp(1.4),
-            }}
-          >
-            <Text
-              style={{
-                color: "#6a7b83",
-                fontSize: wp(3.7),
-                fontWeight: "normal",
-                textAlign: "left",
-              }}
-            >
-              {props.props.notes}
-            </Text>
-          </View>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              marginTop: hp(1.4),
-              width: "100%",
-            }}
-          >
-            <View
-              style={{
-                marginRight: wp(1),
-                height: hp(2.5),
-                paddingHorizontal: wp(1.6),
-                backgroundColor: "#dbf2f2",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                borderRadius: wp(2.6),
-              }}
-            >
-              <Work w={3.7} h={3.1} isClicked={true} />
-              <Text
-                style={{
-                  marginLeft: wp(0.2),
-                  color: "#01818c",
-                  fontSize: wp(3.2),
-                  fontWeight: "normal",
-                  textAlign: "left",
-                }}
-              >
-                {" "}{props.props.sphere_of_life}
-              </Text>
-            </View>
-            <View
-              style={{
-                height: hp(2.5),
-                paddingHorizontal: wp(1.6),
-                backgroundColor: "#fceecb",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                borderRadius: wp(2.6),
-              }}
-            >
-              <Text
-                style={{
-                  marginLeft: wp(0.2),
-                  color: theme.black,
-                  fontSize: wp(3.2),
-                  fontWeight: "normal",
-                  textAlign: "left",
-                }}
-              >
-                Frustrated
-              </Text>
-            </View>
-          </View>
+            {" "}{props.props.sphere_of_life}
+          </Text>
         </View>
+        <View
+          style={{
+            height: hp(2.5),
+            paddingHorizontal: wp(1.6),
+            backgroundColor: "#fceecb",
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            borderRadius: wp(2.6),
+          }}
+        >
+          <Text
+            style={{
+              marginLeft: wp(0.2),
+              color: theme.black,
+              fontSize: wp(3.2),
+              fontWeight: "normal",
+              textAlign: "left",
+            }}
+          >
+            Frustrated
+          </Text>
+        </View>
+      </View>
+    </View>
   )
 }
 
 const MoodLog = (props) => {
   const navigation = useNavigation();
   const [datas, setData] = useState([]);
-  console.log("It is from mood logs: ",props.route.params)
+  console.log("It is from mood logs: ", props.route.params)
   useEffect(() => {
     // payload.week = 0;
     const url = "https://n8n.heartitout.in/webhook/api/mt-weekly-mood";
@@ -165,7 +187,7 @@ const MoodLog = (props) => {
         week: "0",
       })
       .then((res) => {
-        console.log(res.data) 
+        console.log(res.data)
         setData(res.data.data)
       })
       .catch((err) => {
@@ -198,11 +220,11 @@ const MoodLog = (props) => {
           display: "flex-1",
           flexDirection: "col",
           alignItems: "center",
-          height: hp(92),
+          
         }}
-        style={{ width: wp(100), marginTop: hp(1) }}
+        style={{ width: wp(100), marginTop: hp(1), height: hp(92) }}
       >
-        {datas.map((item,index)=>(
+        {datas.map((item, index) => (
           <MoodCard key={index} props={item} />
         ))}
 
@@ -275,14 +297,16 @@ const styles = StyleSheet.create({
   },
   CardStyle: {
     width: wp(84),
-    height: hp(18),
+    height: hp(21),
     backgroundColor: "#fff",
-    padding: wp(4.2),
+    paddingBottom: wp(4.2),
+    paddingHorizontal: wp(4.2),
+    paddingTop: wp(2),
     marginTop: hp(2),
     borderRadius: wp(2.6),
     display: "flex",
     flexDirection: "column",
-    justifyContent: "center",
+    justifyContent: 'space-between',
     alignItems: "center",
     shadowColor: theme.maincolor,
     shadowOffset: {

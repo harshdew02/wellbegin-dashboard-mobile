@@ -222,7 +222,7 @@ const Login = () => {
             />
           </View>
 
-          <ActivityIndicator animating={loading} size="large" />
+          <ActivityIndicator animating={loading} size={10} style={{marginTop:hp(0.8)}} />
 
           <TouchableOpacity
             style={styles.button}
