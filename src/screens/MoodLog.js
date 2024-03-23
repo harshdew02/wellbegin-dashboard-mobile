@@ -253,7 +253,8 @@ const MoodLog = (props) => {
       .then((res) => {
         console.log(res.data);
         if(res.data.has_res === "yes"){
-          setData(res.data.data);
+          if(res.data.data != (undefined || null))
+            setData(res.data.data);
         } 
         // setData(res.data.data);
       })
