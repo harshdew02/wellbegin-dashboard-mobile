@@ -204,6 +204,8 @@ export default function HomeScreen(props) {
   const [success, setSuccess] = useState(false);
   const [statusColor, setStatusColor] = useState("green");
 
+  const [bell , setBell ] = useState(true);
+
   const backHandler = () => {
     BackHandler.exitApp();
     return true;
@@ -457,11 +459,12 @@ export default function HomeScreen(props) {
 
               <TouchableOpacity
                 onPress={() => {
+                  setBell(false)
                   navigation.navigate("reminder", data);
                 }}
                 style={{ position: "absolute", right: wp(0) }}
               >
-                <TopBell active={true} />
+                <TopBell active={bell} />
               </TouchableOpacity>
             </View>
 
@@ -769,15 +772,23 @@ export default function HomeScreen(props) {
                 zIndex: 2,
               }}
             >
-              <Text style={styles.cardText}>
-                Your Whole Hearted Subscription is Active 
+              <Text style={{
+                // textAlign: "center",
+                color: "#455A64",
+                fontSize: wp(3.8),
+                width: wp(60),
+                fontFamily: "Roboto",
+                lineHeight: wp(6),
+                fontWeight: "800",
+              }}>
+                Your Whole Hearted Subscription is Active
               </Text>
               <TouchableOpacity
                 onPress={() => {
                   outLink(sub);
                 }}
                 activeOpacity={0.5}
-                style={[styles.Btn, { marginTop: hp(2) }]}
+                style={[styles.Btn, { marginTop: hp(0.8) }]}
               >
                 <Text style={styles.btnText2}>See Details </Text>
               </TouchableOpacity>
