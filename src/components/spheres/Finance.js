@@ -1,13 +1,17 @@
 import * as React from "react";
 import Svg, { Path } from "react-native-svg";
-const Finance = ({isClicked}) => (
+import {
+    widthPercentageToDP as wp,
+    heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+const Finance = ({ isClicked, w=9.3, h=10.4 }) => (
     <Svg
-        width={35}
-        height={39}
+        width={wp(w)}
+        height={wp(h)}
         viewBox="0 0 35 39"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        // {...props}
+    // {...props}
     >
         <Path
             d="M12.2803 10.9878C12.2803 11.1493 12.3612 11.3111 12.4418 11.4726C12.5227 11.5535 12.765 11.715 13.088 11.7959V10.2607C12.8457 10.2607 12.6033 10.3416 12.4418 10.5031C12.3612 10.6646 12.2803 10.8261 12.2803 10.9878Z"

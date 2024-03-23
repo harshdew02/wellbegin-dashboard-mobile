@@ -107,9 +107,8 @@ const DateTimeComponent = (rtime, rdate) => {
   const dateTime = new Date(dateTimeString);
 
   // Extracting date in DD/MM/YYYY format
-  const formattedDate = `${dateTime.getDate().toString().padStart(2, "0")}/${
-    (dateTime.getMonth() + 1).toString().padStart(2, "0")
-  }/${dateTime.getFullYear()}`;
+  const formattedDate = `${dateTime.getDate().toString().padStart(2, "0")}/${(dateTime.getMonth() + 1).toString().padStart(2, "0")
+    }/${dateTime.getFullYear()}`;
 
   // Extracting time in HH:MM:SS AM/PM format
   const timeString = rtime; // Example time string in the format HH:MM:SS
@@ -295,11 +294,16 @@ const FirstRoute = (props) => {
       });
   }, []);
 
+  const temp = true;
+
   return (
     <View style={styles.scrollContainer}>
       <ScrollView style={{ width: "100%", paddingLeft: wp(3.5) }}>
         {loading ? (
-          <ActivityIndicator animating={loading} size="large" />
+          <View style={{ height: hp(15), width: '100%', justifyContent: 'center', alignItems: 'center' }} >
+            <ActivityIndicator color="#01818C" animating={loading} size={wp(6)} />
+          </View>
+          // <ActivityIndicator animating={loading} size="large" />
         ) : (
           <>
             {hasApp ? (
@@ -516,33 +520,33 @@ const Card = (props) => {
       className="flex-col justify-center items-center"
       style={[styles.cardContainer, { marginTop: hp(4), height: hp(18) }]}
     >
-        <TouchableOpacity
-          onPress={() => {
-            outLink(props.props.banClick);
-          }}
-        >
-          {!imageError ? (
-            <>
-              <Image
-                onError={() => {
-                  setImageError(true);
-                  passDataToParent({state:false, type:props.props.type});
-                  console.log(true);
+      <TouchableOpacity
+        onPress={() => {
+          outLink(props.props.banClick);
+        }}
+      >
+        {!imageError ? (
+          <>
+            <Image
+              onError={() => {
+                setImageError(true);
+                passDataToParent({ state: false, type: props.props.type });
+                console.log(true);
 
-                }}
-                resizeMode="stretch"
-                style={{ width: wp(84), height: hp(18), borderRadius: wp(2) }}
-                source={{
-                  uri: props.props.banLink,
-                }}
-                // alt={''}
-              />
-            </>
-          ) : (
-            //
-            <Text> Ad by Heart it Out </Text>
-          )}
-        </TouchableOpacity>
+              }}
+              resizeMode="stretch"
+              style={{ width: wp(84), height: hp(18), borderRadius: wp(2) }}
+              source={{
+                uri: props.props.banLink,
+              }}
+            // alt={''}
+            />
+          </>
+        ) : (
+          //
+          <Text> Ad by Heart it Out </Text>
+        )}
+      </TouchableOpacity>
     </View>
   );
 };
@@ -636,8 +640,8 @@ export default function ProfileScreen(props) {
 
   const handleCard = (data) => {
     // Do something with the received data, such as updating state
-    if(data.type == "H") setSessionH(false);
-    if(data.type == "U") setSession(false);
+    if (data.type == "H") setSessionH(false);
+    if (data.type == "U") setSession(false);
   };
 
   useEffect(() => {
@@ -647,7 +651,7 @@ export default function ProfileScreen(props) {
   useEffect(() => {
 
   }, [isSession])
-  
+
 
   const renderScene = ({ route }) => {
     switch (route.key) {
@@ -672,7 +676,7 @@ export default function ProfileScreen(props) {
     }
   };
 
-  
+
 
   // Function to update isChild1Rendered state
   const handleChild1Render = () => {
@@ -784,8 +788,8 @@ export default function ProfileScreen(props) {
                     ? hp(40)
                     : hp(22)
                   : isSessionH
-                  ? hp(40)
-                  : hp(22),
+                    ? hp(40)
+                    : hp(22),
             }}
             renderTabBar={renderTabBar}
             initialParams={{ det }}
@@ -797,7 +801,7 @@ export default function ProfileScreen(props) {
             {isChild1Rendered && (
               <>
                 {isSession ? (
-                  <Card props={{ banner, banLink, banClick, type:"U" }} handleCard={handleCard} />
+                  <Card props={{ banner, banLink, banClick, type: "U" }} handleCard={handleCard} />
                 ) : (
                   <Buttons props={{ but1, but1URL, but2, but2URL }} />
                 )}
@@ -811,7 +815,7 @@ export default function ProfileScreen(props) {
                 {isSessionH ? (
                   <Card
                     props={{
-                      type:"H",
+                      type: "H",
                       banner: bannerH,
                       banLink: banLinkH,
                       banClick: banClickH,

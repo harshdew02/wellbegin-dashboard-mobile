@@ -52,7 +52,7 @@ const Card = (props) => {
   const [updated, setUpdated] = useState(false);
 
   React.useEffect(() => {
-    if (item.homework_done_or_not === "Yes" || updated==true) setValue(true);
+    if (item.homework_done_or_not === "Yes" || updated == true) setValue(true);
     else setValue(false);
   }, [updated]);
 
@@ -222,7 +222,9 @@ const HomeWork = (route) => {
         style={{ width: wp(100), height: hp(92) }}
       >
         {loading ? (
-          <ActivityIndicator animating={loading} size="large" />
+          <View style={{ height: hp(60), width: '100%', justifyContent: 'center', alignItems: 'center' }} >
+            <ActivityIndicator color="#01818C" animating={loading} size={wp(10)} />
+          </View>
         ) : (
           <>
             {datas.has_hw === "yes" ? (
@@ -232,7 +234,7 @@ const HomeWork = (route) => {
                 ))}
               </>
             ) : (
-              <><Text style={{marginTop: hp(40)}}>Yay! You are all set!</Text></>
+              <><Text style={{ marginTop: hp(30), fontSize:wp(5), color:theme.black }}>Yay! You are all set!</Text></>
             )}
           </>
         )}

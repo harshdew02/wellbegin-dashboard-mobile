@@ -1,9 +1,13 @@
 import * as React from "react";
 import Svg, { Path } from "react-native-svg";
-const Love = ({isClicked}) => (
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
+const Love = ({isClicked, w = 12.2, h = 10.4}) => (
   <Svg
-    width={46}
-    height={39}
+    width={wp(w)}
+    height={wp(h)}
     viewBox="0 0 46 39"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"

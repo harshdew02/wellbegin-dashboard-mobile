@@ -71,7 +71,19 @@ const Card = (props) => {
   );
 };
 
-const Banners = (props) => {};
+const Banners = (props) => {
+  return (
+    <Image
+      resizeMode="stretch"
+      style={{
+        width: wp(100),
+        height: wp(24.66),
+        marginTop: hp(2.7)
+      }}
+      source={{ uri: 'https://heartitout.in/links/wp-content/uploads/2024/03/TryDoodling.png' }}
+    />
+  )
+};
 
 export default function ReminderScreen({ navigation, route }) {
   // console.log("It is from reminder screen: ", route.params)
@@ -105,6 +117,8 @@ export default function ReminderScreen({ navigation, route }) {
       });
   }, []);
 
+  console.log(datas);
+
   return (
     <SafeAreaView>
       {/* <TopBarMain /> */}
@@ -136,9 +150,12 @@ export default function ReminderScreen({ navigation, route }) {
             Your Reminders
           </Text>
         </View>
-
+        {/* loading */}
+        {/* <ActivityIndicator animating={loading} size="large" style={{}} /> */}
         {loading ? (
-          <ActivityIndicator animating={loading} size="large" />
+          <View style={{ height:hp(80) , width:'100%', justifyContent: 'center', alignItems: 'center' }} >
+            <ActivityIndicator color="#01818C" animating={loading} size={wp(14)} />
+          </View>
         ) : (
           <>
             <View
@@ -192,7 +209,10 @@ export default function ReminderScreen({ navigation, route }) {
               )}
             </View>
           </>
+
         )}
+        {/* this is for example for correct style --Anuj */}
+        {/* <Banners /> */}
       </ScrollView>
     </SafeAreaView>
   );

@@ -40,7 +40,7 @@ import { theme } from "../theme";
 import TopBell from "../components/TopBell";
 import HomePageBanner from "../components/HomePageBanner";
 import { Svg } from "react-native-svg";
-
+import Gift from "../../assets/images/Gift.svg";
 // F:\HIO\Progress\hio_UI\hio\assets\images\
 
 const gMeet = (link) => {
@@ -368,6 +368,8 @@ export default function HomeScreen(props) {
     // console.log(y);
   };
 
+  console.log(banLink);
+
   const [loaded, setLoaded] = useState(false);
   return (
     <SafeAreaView>
@@ -401,43 +403,7 @@ export default function HomeScreen(props) {
         // translucent backgroundColor="transparent"
       /> */}
 
-      {banner ? (
-        <TouchableOpacity
-          activeOpacity={1}
-          style={{
-            // width: wp(100),
-            // height: hp(10),
-            position: "absolute",
-            zIndex: 2,
-            top: 0,
-          }}
-          onPress={() => {
-            outLink(cbanLink);
-          }}
-        >
-          <Image
-            onLoad={() => {
-              setLoaded(true);
-            }}
-            onError={() => {
-              console.log("failed");
-            }}
-            resizeMode="stretch"
-            style={{
-              width: wp(100),
-              height: wp(24.66),
-              position: "absolute",
-              zIndex: 5,
-            }}
-            source={{
-              uri: banLink,
-            }}
-          />
-          <></>
-        </TouchableOpacity>
-      ) : (
-        <></>
-      )}
+
 
       {/*  */}
 
@@ -453,6 +419,43 @@ export default function HomeScreen(props) {
         style={{ backgroundColor: "#fff", height: hp(100) }}
       >
         {/* Banner */}
+        {banner ? (
+          <TouchableOpacity
+            activeOpacity={1}
+            style={{
+              // width: wp(100),
+              // height: hp(10),
+              position: "absolute",
+              zIndex: 2,
+              top: 0,
+            }}
+            onPress={() => {
+              outLink(cbanLink);
+            }}
+          >
+            <Image
+              onLoad={() => {
+                setLoaded(true);
+              }}
+              onError={() => {
+                console.log("failed");
+              }}
+              resizeMode="stretch"
+              style={{
+                width: wp(100),
+                height: wp(24.66),
+                position: "absolute",
+                zIndex: 5,
+              }}
+              source={{
+                uri: banLink,
+              }}
+            />
+            <></>
+          </TouchableOpacity>
+        ) : (
+          <></>
+        )}
 
         <View
           style={
@@ -615,6 +618,7 @@ export default function HomeScreen(props) {
           </TouchableOpacity>
 
           <TouchableOpacity
+            onPress={() => { navigation.navigate('progress') }}
             style={[styles.card, { backgroundColor: "#EBF2F5" }]}
           >
             <Text style={styles.cardText}>My {"\n"}Progress</Text>
@@ -816,6 +820,24 @@ export default function HomeScreen(props) {
             </TouchableOpacity>
           </View>
           {/* <Gift width={wp(25)} height={hp(9)} /> */}
+        </View>
+
+
+        {/* Package */}
+        <View className="flex-col items-center" style={[styles.cardContiner, { height: hp(15.8), marginTop: hp(3) }]}>
+          <View style={[styles.packageCard, {}]}>
+            <View className="flex-col justify-between items-start " style={{ height: hp(9) }}>
+              <Text style={styles.cardText}>
+                Session Packages
+              </Text>
+              <TouchableOpacity activeOpacity={.5} style={styles.Btn}>
+                <Text style={styles.btnText2}>
+                  Explore Packages
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <Gift width={wp(25)} height={hp(9)} />
+          </View>
         </View>
 
         <View
