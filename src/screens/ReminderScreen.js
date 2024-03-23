@@ -18,15 +18,19 @@ import RingIcon from "../components/RingIcon";
 import axios from "axios";
 
 const Card = (props) => {
+
+  // Anuj ise props ke according set kar dena to fir ho jayega shyad
+  const [isTick , setTick ] = useState(false);
+
   return (
-    <View
+    <TouchableOpacity
       className="flex-row justify-between items-center"
       style={styles.container}
     >
       <View
         style={{
           height: "100%",
-          // backgroundColor: isTick ? '#455A64' : '#01818C',
+          backgroundColor: isTick ? '#455A64' : '#01818C',
           width: wp(1),
           position: "absolute",
           left: wp(2),
@@ -38,7 +42,7 @@ const Card = (props) => {
       >
         <Text
           style={{
-            // color: isTick ? '#455A64' : '#01818C',
+            color: isTick ? '#455A64' : '#01818C',
             fontSize: wp(4.2),
             fontFamily: "Roboto",
             fontWeight: "800",
@@ -65,9 +69,9 @@ const Card = (props) => {
         style={{ height: hp(6), width: wp(18) }}
       >
         <Text style={{ fontSize: wp(3.2) }}>18 mins ago</Text>
-        {/* <RingIcon active={isTick} /> */}
+        <RingIcon active={isTick} />
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 
