@@ -20,10 +20,11 @@ import axios from "axios";
 const Card = (props) => {
 
   // Anuj ise props ke according set kar dena to fir ho jayega shyad
-  const [isTick , setTick ] = useState(false);
+  const [isTick, setTick] = useState(false);
 
   return (
     <TouchableOpacity
+      onPress={() => { setTick(true) }}
       className="flex-row justify-between items-center"
       style={styles.container}
     >
@@ -116,7 +117,7 @@ export default function ReminderScreen({ navigation, route }) {
       })
       .catch((err) => {
         console.log("error is here:", err);
-      }).finally(()=>{
+      }).finally(() => {
         setLoading(false);
       });
   }, []);
@@ -157,7 +158,7 @@ export default function ReminderScreen({ navigation, route }) {
         {/* loading */}
         {/* <ActivityIndicator animating={loading} size="large" style={{}} /> */}
         {loading ? (
-          <View style={{ height:hp(80) , width:'100%', justifyContent: 'center', alignItems: 'center' }} >
+          <View style={{ height: hp(80), width: '100%', justifyContent: 'center', alignItems: 'center' }} >
             <ActivityIndicator color="#01818C" animating={loading} size={wp(14)} />
           </View>
         ) : (
