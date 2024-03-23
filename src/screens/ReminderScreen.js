@@ -109,10 +109,10 @@ export default function ReminderScreen({ navigation, route }) {
           setCBanLink(res.data.on_click);
         } else setBanner(false);
         setData(res.data.data);
-        setLoading(false);
       })
       .catch((err) => {
         console.log("error is here:", err);
+      }).finally(()=>{
         setLoading(false);
       });
   }, []);
