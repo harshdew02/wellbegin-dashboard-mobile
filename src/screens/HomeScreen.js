@@ -93,9 +93,6 @@ const outLink = async (link) => {
   } catch (error) {
     console.log(error);
   }
-  // Linking.canOpenURL(link).then((supported)=>{
-  //   if(supported) Linking.openURL(link); else console.log('error')
-  // });
 };
 
 const Btn = (props) => {
@@ -185,9 +182,6 @@ const Bookbtn = (props) => {
 
 export default function HomeScreen(props) {
   const data = props.route.params.data.route.params;
-
-  // console.log("It is from homescreen through mood tracker: ",props.route.params.data.route.params)
-
   const navigation = useNavigation();
   const [isBooked, setBooked] = useState(false);
   const [is2hour, setIs2hour] = useState(false);
@@ -202,6 +196,8 @@ export default function HomeScreen(props) {
   const [whatsnew, setWhatsnew] = useState("");
   const [product, setProduct] = useState("");
   const [booking, setBooking] = useState("");
+  const [sub, setSub] = useState("");
+  const [packages, setPackage] = useState("");
   const [showsub, setShowsub] = useState(false);
   const [subsdet, setSubsdet] = useState(false);
   const [subdays, setSubdays] = useState(0);
@@ -249,8 +245,14 @@ export default function HomeScreen(props) {
     setWhatsnew(data.whats_new_onclick);
     setProduct(data.product_onclick);
     setBooking(data.booking_link);
-    if (data.show_sub === "yes") setShowsub(true);
-    else setShowsub(false);
+    // console.log(data.show_sub)
+    if (data.show_sub === "yes") {
+      setShowsub(true);
+      setSub(data.sub_onclick);
+    } else {
+      setShowsub(false);
+      setPackage(data.packages_onclick);
+    }
     if (data.subs_det === "yes") setSubsdet(true);
     else setSubsdet(false);
     setSubdays(Number.parseInt(data.subs_no_of_days));
@@ -323,37 +325,14 @@ export default function HomeScreen(props) {
     }
   }, []);
 
-  // navigation.addListener("focus", () => {
-  //   setStatusColor("red");
-  //   console.log(statusColor);
-  // });
-
   const [scrollPercentage, setScrollPercentage] = useState(0);
   const animatedColor = new Animated.Value(0);
-
-  // useEffect(() => {
-  //   Animated.timing(animatedColor, {
-  //     toValue: scrollPercentage > 84 ? 1 : 0,
-  //     duration: 300, // Adjust duration as needed
-  //     useNativeDriver: false,
-  //   }).start();
-  //   console.log(JSON.stringify(statusBarColor))
-  // }, [scrollPercentage]);
 
   const statusBarColor = animatedColor.interpolate({
     inputRange: [0, 1],
     outputRange: ["rgb(0, 0, 255)", "rgb(255, 0, 0)"],
     extrapolate: "clamp",
   });
-
-  // const handleScroll = (event) => {
-  //   const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
-  //   const maxScroll = contentSize.height - layoutMeasurement.height;
-  //   const currentScroll = contentOffset.y;
-  //   const scrollPercentage = (currentScroll / maxScroll) * 100;
-  //   setScrollPercentage(scrollPercentage);
-  //   console.log(scrollPercentage)
-  // };
 
   const scrollViewRef = useRef(null);
   const [scrollOffset, setScrollOffset] = useState(0);
@@ -367,8 +346,6 @@ export default function HomeScreen(props) {
     }
     // console.log(y);
   };
-
-  console.log(banLink);
 
   const [loaded, setLoaded] = useState(false);
   return (
@@ -395,23 +372,7 @@ export default function HomeScreen(props) {
         <></>
       )}
 
-      {/* <StatusBar
-        backgroundColor={"transparent"}
-        translucent={true}
-        barStyle={"light-content"}
-        hidden={false}
-        // translucent backgroundColor="transparent"
-      /> */}
-
-
-
-      {/*  */}
-
       <ScrollView
-        // alwaysBounceHorizontal={false}
-        // alwaysBounceVertical={false}
-        // bounces={false}
-        // onScroll={handleScroll}
         ref={scrollViewRef}
         onScroll={handleScroll}
         scrollEventThrottle={1}
@@ -618,7 +579,9 @@ export default function HomeScreen(props) {
           </TouchableOpacity>
 
           <TouchableOpacity
-            onPress={() => { navigation.navigate('progress') }}
+            onPress={() => {
+              navigation.navigate("progress", data);
+            }}
             style={[styles.card, { backgroundColor: "#EBF2F5" }]}
           >
             <Text style={styles.cardText}>My {"\n"}Progress</Text>
@@ -767,7 +730,7 @@ export default function HomeScreen(props) {
                     flexDirection: "row",
                   }}
                   onPress={() => {
-                    navigation.navigate("mood", data);
+                    navigation.navigate("moodInsights", data);
                   }}
                 >
                   <Text
@@ -789,56 +752,67 @@ export default function HomeScreen(props) {
 
         {/* Package */}
 
-        <View
-          className="flex-col items-center"
-          style={[styles.cardContainer, { height: hp(15.8), marginTop: hp(3) }]}
-        >
-          <Home1 width={"100%"} height={hp(17)} />
+        {showsub ? (
           <View
-            style={{
-              position: "absolute",
-              left: wp(13),
-              top: hp(4),
-              zIndex: 2,
-            }}
+            className="flex-col items-center"
+            style={[
+              styles.cardContainer,
+              { height: hp(15.8), marginTop: hp(3) },
+            ]}
           >
-            <Text style={styles.cardText}>
-              {subsdet
-                ? "Your Whole Hearted Subscription is Active"
-                : "Session Packages"}
-            </Text>
-            <TouchableOpacity
-              onPress={() => {
-                navigation.navigate("moodInsights", data);
+            <Home1 width={"100%"} height={hp(17)} />
+            <View
+              style={{
+                position: "absolute",
+                left: wp(13),
+                top: hp(4),
+                zIndex: 2,
               }}
-              activeOpacity={0.5}
-              style={[styles.Btn, { marginTop: hp(2) }]}
             >
-              <Text style={styles.btnText2}>
-                {subsdet ? "See Details" : "See Plans"}
-              </Text>
-            </TouchableOpacity>
-          </View>
-          {/* <Gift width={wp(25)} height={hp(9)} /> */}
-        </View>
-
-
-        {/* Package */}
-        <View className="flex-col items-center" style={[styles.cardContiner, { height: hp(15.8), marginTop: hp(3) }]}>
-          <View style={[styles.packageCard, {}]}>
-            <View className="flex-col justify-between items-start " style={{ height: hp(9) }}>
               <Text style={styles.cardText}>
-                Session Packages
+                Your Whole Hearted Subscription is Active 
               </Text>
-              <TouchableOpacity activeOpacity={.5} style={styles.Btn}>
-                <Text style={styles.btnText2}>
-                  Explore Packages
-                </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  outLink(sub);
+                }}
+                activeOpacity={0.5}
+                style={[styles.Btn, { marginTop: hp(2) }]}
+              >
+                <Text style={styles.btnText2}>See Details </Text>
               </TouchableOpacity>
             </View>
-            <Gift width={wp(25)} height={hp(9)} />
+            {/* <Gift width={wp(25)} height={hp(9)} /> */}
           </View>
-        </View>
+        ) : (
+          <View
+            className="flex-col items-center"
+            style={[
+              styles.cardContiner,
+              { height: hp(15.8), marginTop: hp(3) },
+            ]}
+          >
+            <View style={[styles.packageCard, {}]}>
+              <View
+                className="flex-col justify-between items-start "
+                style={{ height: hp(9) }}
+              >
+                <Text style={styles.cardText}>Session Packages</Text>
+                <TouchableOpacity
+                  activeOpacity={0.5}
+                  style={styles.Btn}
+                  onPress={() => {
+                    outLink(packages);
+                  }}
+                >
+                  <Text style={styles.btnText2}>Explore Packages</Text>
+                </TouchableOpacity>
+              </View>
+              <Gift width={wp(25)} height={hp(9)} />
+            </View>
+          </View>
+        )}
+        {/* Package */}
 
         <View
           className="flex-col items-center"

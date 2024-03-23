@@ -19,7 +19,14 @@ import { theme } from "../theme";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { InAppBrowser } from "react-native-inappbrowser-reborn";
-import { Angry, Happy, Sad, Fear, Surprised, Disgust } from "../components/moods";
+import {
+  Angry,
+  Happy,
+  Sad,
+  Fear,
+  Surprised,
+  Disgust,
+} from "../components/moods";
 import Signal from "../../assets/images/signal.svg";
 import {
   Work,
@@ -38,8 +45,8 @@ const component = {
   Fear: <Fear />,
   Angry: <Angry />,
   Surprised: <Surprised />,
-  Disgust: <Disgust />
-}
+  Disgust: <Disgust />,
+};
 
 const SphereOfLife = {
   family: <Family w={3.7} h={3.1} isClicked={true} />,
@@ -50,13 +57,15 @@ const SphereOfLife = {
   leisure: <Leisure w={3.7} h={3.1} isClicked={true} />,
   love: <Love w={3.7} h={3.1} isClicked={true} />,
   personal: <Personal w={3.7} h={3.1} isClicked={true} />,
-}
+};
 
 const MoodCard = (props) => {
-  console.log("It is from mood card: ", props.props)
+  console.log("It is from mood card: ", props.props);
   return (
     <View style={styles.CardStyle}>
-      <Text style={{ width: wp(75) , color: theme.black , fontSize:wp(3.2) }} >30 January 2024</Text>
+      <Text style={{ width: wp(75), color: theme.black, fontSize: wp(3.2) }}>
+        {props.props.day_sub} {props.props.month_sub.replace(/\s+/g, '')} {props.props.year_sub}
+      </Text>
       <View
         style={{
           display: "flex",
@@ -139,62 +148,118 @@ const MoodCard = (props) => {
               textAlign: "left",
             }}
           >
-            {" "}{props.props.sphere_of_life}
+            {" "}
+            {props.props.sphere_of_life.charAt(0).toUpperCase() +props.props.sphere_of_life.slice(1)}
           </Text>
         </View>
-        <View
-          style={{
-            height: hp(2.5),
-            paddingHorizontal: wp(1.6),
-            backgroundColor: "#fceecb",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            borderRadius: wp(2.6),
-          }}
-        >
-          <Text
+        {props.props.emotion_1 != (null || undefined) ? (
+          <View
             style={{
-              marginLeft: wp(0.2),
-              color: theme.black,
-              fontSize: wp(3.2),
-              fontWeight: "normal",
-              textAlign: "left",
+              height: hp(2.5),
+              paddingHorizontal: wp(1.6),
+              backgroundColor: "#fceecb",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              borderRadius: wp(2.6),
             }}
           >
-            Frustrated
-          </Text>
-        </View>
+            <Text
+              style={{
+                marginLeft: wp(0.2),
+                color: theme.black,
+                fontSize: wp(3.2),
+                fontWeight: "normal",
+                textAlign: "left",
+              }}
+            >
+              {props.props.emotion_1.charAt(0).toUpperCase() + props.props.emotion_1.slice(1)}
+            </Text>
+          </View>
+        ) : (
+          <></>
+        )}
+
+        {props.props.emotion_2 != (null || undefined) ? (
+          <View
+            style={{
+              height: hp(2.5),
+              paddingHorizontal: wp(1.6),
+              backgroundColor: "#fceecb",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              borderRadius: wp(2.6),
+            }}
+          >
+            <Text
+              style={{
+                marginLeft: wp(0.2),
+                color: theme.black,
+                fontSize: wp(3.2),
+                fontWeight: "normal",
+                textAlign: "left",
+              }}
+            >
+              {props.props.emotion_2.charAt(0).toUpperCase() + props.props.emotion_2.slice(1)}
+            </Text>
+          </View>
+        ) : (
+          <></>
+        )}
+        {props.props.emotion_3 != (null || undefined) ? (
+          <View
+            style={{
+              height: hp(2.5),
+              paddingHorizontal: wp(1.6),
+              backgroundColor: "#fceecb",
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              borderRadius: wp(2.6),
+            }}
+          >
+            <Text
+              style={{
+                marginLeft: wp(0.2),
+                color: theme.black,
+                fontSize: wp(3.2),
+                fontWeight: "normal",
+                textAlign: "left",
+              }}
+            >
+              {props.props.emotion_3.charAt(0).toUpperCase() + props.props.emotion_3.slice(1)}
+            </Text>
+          </View>
+        ) : (
+          <></>
+        )}
       </View>
     </View>
-  )
-}
+  );
+};
 
 const MoodLog = (props) => {
+  const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
   const [datas, setData] = useState([]);
-  console.log("It is from mood logs: ", props.route.params)
+  console.log("It is from mood logs: ", props.route.params);
+  let payload = props.route.params;
   useEffect(() => {
-    // payload.week = 0;
+    payload.week = 0;
     const url = "https://n8n.heartitout.in/webhook/api/mt-weekly-mood";
     axios
-      .post(url, {
-        token: "o1hTU9pb8xIwE3T/Ho6bxujmFtjKLJtxAlBcZYwCGPc=",
-        phone: "9330396039",
-        code: "91",
-        otp: "2953",
-        date: "2024-02-16",
-        week: "0",
-      })
+      .post(url, payload)
       .then((res) => {
-        console.log(res.data)
-        setData(res.data.data)
+        console.log(res.data);
+        setData(res.data.data);
       })
       .catch((err) => {
         console.log(err);
       })
       .finally(() => {
         // console.log(mood_data);
+        setLoading(false);
       });
   }, []);
 
@@ -220,14 +285,16 @@ const MoodLog = (props) => {
           display: "flex-1",
           flexDirection: "col",
           alignItems: "center",
-          
         }}
         style={{ width: wp(100), marginTop: hp(1), height: hp(92) }}
       >
-        {datas.map((item, index) => (
+        {loading ? (
+        <View style={{ height: hp(30), width: '100%', justifyContent: 'center', alignItems: 'center' }} >
+          <ActivityIndicator color="#01818C" animating={loading} size={wp(10)} />
+        </View>
+      ) : (datas.map((item, index) => (
           <MoodCard key={index} props={item} />
-        ))}
-
+        )))}
         <Text
           style={{
             color: theme.black,
@@ -306,7 +373,7 @@ const styles = StyleSheet.create({
     borderRadius: wp(2.6),
     display: "flex",
     flexDirection: "column",
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
     alignItems: "center",
     shadowColor: theme.maincolor,
     shadowOffset: {

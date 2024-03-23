@@ -188,7 +188,7 @@ export default function DiscoverScreen(props) {
           </View>
         </View>
 
-        <TouchableOpacity style={[styles.cardContainer, { height: hp(16) }]}
+        {/* <TouchableOpacity style={[styles.cardContainer, { height: hp(16) }]}
         onPress={() => {
             // Checking if the link is supported for links with custom URL scheme.
             outLink('https://heartitout.in/nudge-a-friend/')
@@ -212,13 +212,13 @@ export default function DiscoverScreen(props) {
             </Text>
             <ReferIcon width={wp(11)} height={hp(7)} />
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <View
           className="flex-row items-center"
           style={[
             styles.cardContainer,
-            { height: hp(20), marginTop: hp(3), backgroundColor: "#EBEFF2CC" },
+            { height: hp(20), marginTop: hp(8.75), backgroundColor: "#EBEFF2CC" },
           ]}
         >
           <BottomQuote width={wp(71)} height={hp(15)} />

@@ -175,10 +175,10 @@ const HomeWork = (route) => {
       .then((res) => {
         // console.log(res.data);
         setData(res.data);
-        setLoading(false);
       })
       .catch((err) => {
         console.log("error is here:", err);
+      }).finally(()=>{
         setLoading(false);
       });
   }, []);

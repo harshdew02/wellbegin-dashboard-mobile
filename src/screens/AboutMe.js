@@ -44,13 +44,11 @@ const fillDetails = (details, [loading, setLoading], navigation) => {
         data.get_details = res.data.get_details;
         await SInfo.setItem("token", JSON.stringify(data));
         // await AsyncStorage.setItem("token", Token);
-        setLoading(false);
         //A message to be displayed as toast
         showToast('User details updated, successfully')
         navigation.navigate('loader')
         // console.log("It is sucess from about me :", res.data, data);
       } else {
-        setLoading(false);
         //A message to be displayed as toast
         showToast("An error occurred and we can't update")
         // navigation.navigate('main');
@@ -59,10 +57,11 @@ const fillDetails = (details, [loading, setLoading], navigation) => {
       }
     })
     .catch((err) => {
-      setLoading(false);
       showToast("An error occurred and we can't update")
       //A message to be displayed as toast
       console.log(err);
+    }).finally(()=>{
+      setLoading(false);
     });
 };
 
