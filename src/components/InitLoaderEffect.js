@@ -161,7 +161,7 @@ export default function InitLoaderEffect({ navigation }) {
                 finalDetails.sub_onclick = res.data.sub_onclick != (null || undefined) ? res.data.sub_onclick : "https://heartitout.in/";
                 finalDetails.packages_onclick = res.data.packages_onclick != (null || undefined) ? res.data.packages_onclick : "https://heartitout.in/";
               } else if (res.data.status === "10") {
-                finalDetails.has_mood = res.data.mood_tacker;
+                (finalDetails.has_mood = res.data.mood_tacker != (null || undefined) ? res.data.mood_tacker : "no");
                 finalDetails.show_sub = res.data.show_sub;
                 finalDetails.subs_det = res.data.subs_det;
                 finalDetails.has_banner = res.data.has_banner;
