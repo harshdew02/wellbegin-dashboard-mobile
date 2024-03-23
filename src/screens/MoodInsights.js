@@ -5,6 +5,7 @@ import {
   ScrollView,
   useWindowDimensions,
   TouchableOpacity,
+  ActivityIndicator
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -167,6 +168,7 @@ const MoodInsights = (props) => {
   const [date, setDate] = useState(getCurrentDate());
   const [curDate, setCurDate] = useState(date.dates);
   const [longest, setLongest] = useState(0);
+  const [loading, setLoading] = useState(true);
   const [showMood, setShowMood] = useState({
     happy: 0,
     surprised: 0,
@@ -300,7 +302,7 @@ const MoodInsights = (props) => {
         console.log(err);
       })
       .finally(() => {
-        // console.log(mood_data);
+        setLoading(false);
       });
   }, []);
 
@@ -337,9 +339,12 @@ const MoodInsights = (props) => {
         }}
         style={{ width: wp(100), height: hp(92) }}
       >
-        <TouchableOpacity style={styles.NavCard} onPress={()=>{
-            navigation.navigate("moodLog", payload)
-        }} >
+        <TouchableOpacity
+          style={styles.NavCard}
+          onPress={() => {
+            navigation.navigate("moodLog", payload);
+          }}
+        >
           <HeartBook />
           <View
             className="flex-col justify-between"
@@ -367,402 +372,441 @@ const MoodInsights = (props) => {
           </View>
           <RightNav />
         </TouchableOpacity>
-
-        <View
-          style={{
-            width: wp(84),
-            height: hp(20),
-            backgroundColor: "#fefcf7",
-            marginTop: hp(2.3),
-            paddingVertical: hp(1.6),
-            alignItems: "center",
-            borderRadius: wp(5.3),
-          }}
-        >
-          <Text
-            style={{
-              width: wp(61),
-              color: theme.black,
-              fontSize: wp(4),
-              fontWeight: "500",
-            }}
-          >
-            Consecutive Recording Days
-          </Text>
-
+        {loading ? (
           <View
             style={{
+              height: hp(30),
               width: "100%",
-              height: wp(8),
-              alignItems: "center",
               justifyContent: "center",
-              marginTop: hp(0.9),
+              alignItems: "center",
             }}
           >
-            <View
-              style={{
-                position: "absolute",
-                height: hp(0.2),
-                width: "100%",
-                backgroundColor: "#a1abad",
-                zIndex: -1,
-              }}
+            <ActivityIndicator
+              color="#01818C"
+              animating={loading}
+              size={wp(10)}
             />
+          </View>
+        ) : (
+          <>
             <View
               style={{
-                display: "flex",
-                flexDirection: "row",
-                width: wp(75),
-                justifyContent: "space-around",
+                width: wp(84),
+                height: hp(20),
+                backgroundColor: "#fefcf7",
+                marginTop: hp(2.3),
+                paddingVertical: hp(1.6),
+                alignItems: "center",
+                borderRadius: wp(5.3),
               }}
             >
-              <View>
-                {day1 != -1 ? day1 == 1 ? <Tick /> : <Cross /> : <Space />}
-                {/* <Tick /> */}
+              <Text
+                style={{
+                  width: wp(61),
+                  color: theme.black,
+                  fontSize: wp(4),
+                  fontWeight: "500",
+                }}
+              >
+                Consecutive Recording Days
+              </Text>
+
+              <View
+                style={{
+                  width: "100%",
+                  height: wp(8),
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginTop: hp(0.9),
+                }}
+              >
+                <View
+                  style={{
+                    position: "absolute",
+                    height: hp(0.2),
+                    width: "100%",
+                    backgroundColor: "#a1abad",
+                    zIndex: -1,
+                  }}
+                />
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    width: wp(75),
+                    justifyContent: "space-around",
+                  }}
+                >
+                  <View>
+                    {day1 != -1 ? day1 == 1 ? <Tick /> : <Cross /> : <Space />}
+                    {/* <Tick /> */}
+                  </View>
+                  <View>
+                    {day2 != -1 ? day2 == 1 ? <Tick /> : <Cross /> : <Space />}
+                    {/* <Cross /> */}
+                  </View>
+                  <View>
+                    {day3 != -1 ? day3 == 1 ? <Tick /> : <Cross /> : <Space />}
+                    {/* <Tick /> */}
+                  </View>
+                  <View>
+                    {day4 != -1 ? day4 == 1 ? <Tick /> : <Cross /> : <Space />}
+                    {/* <Cross /> */}
+                  </View>
+                  <View>
+                    {day5 != -1 ? day5 == 1 ? <Tick /> : <Cross /> : <Space />}
+                    {/* <Space /> */}
+                  </View>
+                  <View>
+                    {day6 != -1 ? day6 == 1 ? <Tick /> : <Cross /> : <Space />}
+                    {/* <Cross /> */}
+                  </View>
+                  <View>
+                    {day7 != -1 ? day7 == 1 ? <Tick /> : <Cross /> : <Space />}
+                    {/* <Cross /> */}
+                  </View>
+                </View>
               </View>
-              <View>
-                {day2 != -1 ? day2 == 1 ? <Tick /> : <Cross /> : <Space />}
-                {/* <Cross /> */}
+
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  width: wp(75),
+                  justifyContent: "space-around",
+                  marginTop: hp(0.6),
+                }}
+              >
+                <Text
+                  style={{
+                    width: wp(8),
+                    textAlign: "center",
+                    color: theme.black,
+                    fontSize: wp(3.5),
+                  }}
+                >
+                  Mon
+                </Text>
+                <Text
+                  style={{
+                    width: wp(8),
+                    textAlign: "center",
+                    color: theme.black,
+                    fontSize: wp(3.5),
+                  }}
+                >
+                  Tue
+                </Text>
+                <Text
+                  style={{
+                    width: wp(8),
+                    textAlign: "center",
+                    color: theme.black,
+                    fontSize: wp(3.5),
+                  }}
+                >
+                  Wed
+                </Text>
+                <Text
+                  style={{
+                    width: wp(8),
+                    textAlign: "center",
+                    color: theme.black,
+                    fontSize: wp(3.5),
+                  }}
+                >
+                  Thu
+                </Text>
+                <Text
+                  style={{
+                    width: wp(8),
+                    textAlign: "center",
+                    color: theme.black,
+                    fontSize: wp(3.5),
+                  }}
+                >
+                  Fri
+                </Text>
+                <Text
+                  style={{
+                    width: wp(8),
+                    textAlign: "center",
+                    color: theme.black,
+                    fontSize: wp(3.5),
+                  }}
+                >
+                  Sat
+                </Text>
+                <Text
+                  style={{
+                    width: wp(8),
+                    textAlign: "center",
+                    color: theme.black,
+                    fontSize: wp(3.5),
+                  }}
+                >
+                  Sun
+                </Text>
               </View>
-              <View>
-                {day3 != -1 ? day3 == 1 ? <Tick /> : <Cross /> : <Space />}
-                {/* <Tick /> */}
-              </View>
-              <View>
-                {day4 != -1 ? day4 == 1 ? <Tick /> : <Cross /> : <Space />}
-                {/* <Cross /> */}
-              </View>
-              <View>
-                {day5 != -1 ? day5 == 1 ? <Tick /> : <Cross /> : <Space />}
-                {/* <Space /> */}
-              </View>
-              <View>
-                {day6 != -1 ? day6 == 1 ? <Tick /> : <Cross /> : <Space />}
-                {/* <Cross /> */}
-              </View>
-              <View>
-                {day7 != -1 ? day7 == 1 ? <Tick /> : <Cross /> : <Space />}
-                {/* <Cross /> */}
+
+              <View
+                style={{
+                  height: hp(0.2),
+                  width: wp(75),
+                  backgroundColor: theme.black,
+                  marginTop: hp(2),
+                }}
+              />
+
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  width: wp(75),
+                  justifyContent: "flex-start",
+                  marginTop: hp(2),
+                }}
+              >
+                <View
+                  style={{
+                    width: wp(36),
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Cup Home2 width={wp(3.6)} height={wp(4.2)} />
+                  <Text
+                    style={{
+                      color: theme.black,
+                      fontSize: wp(3.5),
+                    }}
+                  >
+                    Longest Chain : {longest}
+                  </Text>
+                </View>
               </View>
             </View>
-          </View>
 
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              width: wp(75),
-              justifyContent: "space-around",
-              marginTop: hp(0.6),
-            }}
-          >
-            <Text
-              style={{
-                width: wp(8),
-                textAlign: "center",
-                color: theme.black,
-                fontSize: wp(3.5),
-              }}
-            >
-              Mon
-            </Text>
-            <Text
-              style={{
-                width: wp(8),
-                textAlign: "center",
-                color: theme.black,
-                fontSize: wp(3.5),
-              }}
-            >
-              Tue
-            </Text>
-            <Text
-              style={{
-                width: wp(8),
-                textAlign: "center",
-                color: theme.black,
-                fontSize: wp(3.5),
-              }}
-            >
-              Wed
-            </Text>
-            <Text
-              style={{
-                width: wp(8),
-                textAlign: "center",
-                color: theme.black,
-                fontSize: wp(3.5),
-              }}
-            >
-              Thu
-            </Text>
-            <Text
-              style={{
-                width: wp(8),
-                textAlign: "center",
-                color: theme.black,
-                fontSize: wp(3.5),
-              }}
-            >
-              Fri
-            </Text>
-            <Text
-              style={{
-                width: wp(8),
-                textAlign: "center",
-                color: theme.black,
-                fontSize: wp(3.5),
-              }}
-            >
-              Sat
-            </Text>
-            <Text
-              style={{
-                width: wp(8),
-                textAlign: "center",
-                color: theme.black,
-                fontSize: wp(3.5),
-              }}
-            >
-              Sun
-            </Text>
-          </View>
-
-          <View
-            style={{
-              height: hp(0.2),
-              width: wp(75),
-              backgroundColor: theme.black,
-              marginTop: hp(2),
-            }}
-          />
-
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              width: wp(75),
-              justifyContent: "flex-start",
-              marginTop: hp(2),
-            }}
-          >
             <View
               style={{
-                width: wp(36),
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
+                width: wp(84),
+                height: hp(20),
+                backgroundColor: "#f7fbfd",
+                borderRadius: wp(4),
+                marginTop: hp(2.5),
+                alignItems: "center",
+                paddingVertical: hp(2.4),
               }}
             >
-              <Cup Home2 width={wp(3.6)} height={wp(4.2)} />
               <Text
                 style={{
                   color: theme.black,
-                  fontSize: wp(3.5),
+                  fontSize: wp(4),
+                  fontWeight: "500",
                 }}
               >
-                Longest Chain : {longest}
+                Average Daily Mood
               </Text>
-            </View>
-          </View>
-        </View>
 
-        <View
-          style={{
-            width: wp(84),
-            height: hp(20),
-            backgroundColor: "#f7fbfd",
-            borderRadius: wp(4),
-            marginTop: hp(2.5),
-            alignItems: "center",
-            paddingVertical: hp(2.4),
-          }}
-        >
-          <Text
-            style={{
-              color: theme.black,
-              fontSize: wp(4),
-              fontWeight: "500",
-            }}
-          >
-            Average Daily Mood
-          </Text>
-
-          <View
-            style={{
-              height: hp(3.8),
-              display: "flex",
-              flexDirection: "row",
-              width: wp(75),
-              justifyContent: "space-around",
-              marginTop: hp(0.6),
-              borderRadius: wp(5),
-              overflow: "hidden",
-            }}
-          >
-            <View
-              style={{
-                height: "100%",
-                backgroundColor: select == 1 ? "#D2A100" : "#fddf7a",
-                width: wp(p1),
-              }}
-            />
-            <View
-              style={{
-                height: "100%",
-                backgroundColor: select == 2 ? "#007BB7" : "#d2e7f2",
-                width: wp(p2),
-              }}
-            />
-            <View
-              style={{
-                height: "100%",
-                backgroundColor: select == 3 ? "#0F435C" : "#aed5e8",
-                width: wp(p3),
-              }}
-            />
-            <View
-              style={{
-                height: "100%",
-                backgroundColor: select == 4 ? "#723F2D" : "#f0d3ca",
-                width: wp(p4),
-              }}
-            />
-            <View
-              style={{
-                height: "100%",
-                backgroundColor: select == 5 ? "#01818C" : "#7bbdc4",
-                width: wp(p5),
-              }}
-            />
-            <View
-              style={{
-                height: "100%",
-                backgroundColor: select == 6 ? "#BB6345" : "#e8b19e",
-                width: wp(p6),
-              }}
-            />
-          </View>
-
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              width: wp(75),
-              justifyContent: "space-around",
-              marginTop: hp(2),
-            }}
-          >
-            <View className="items-center">
-                
-              <Happy h={7.4} w={7.4} isSelect={select == 1 ? -1 : 1} />
-              <Text
-                style={{ fontSize: wp(3), color: "#455a64", marginTop: hp(1) }}
+              <View
+                style={{
+                  height: hp(3.8),
+                  display: "flex",
+                  flexDirection: "row",
+                  width: wp(75),
+                  justifyContent: "space-around",
+                  marginTop: hp(0.6),
+                  borderRadius: wp(5),
+                  overflow: "hidden",
+                }}
               >
-                {showMood.happy}% 
-                {/* {select} */}
-              </Text>
-            </View>
-            <View className="items-center">
-              <Surprised h={7.4} w={7.4} isSelect={select == 2 ? -1 : 2} />
-              <Text
-                style={{ fontSize: wp(3), color: "#455a64", marginTop: hp(1) }}
-              >
-                {showMood.surprised}%
-              </Text>
-            </View>
-            <View className="items-center">
-              <Sad h={7.4} w={7.4} isSelect={select == 3 ? -1 : 3} />
-              <Text
-                style={{ fontSize: wp(3), color: "#455a64", marginTop: hp(1) }}
-              >
-                {showMood.sad}%
-              </Text>
-            </View>
-            <View className="items-center">
-              <Disgust h={7.4} w={7.4} isSelect={select == 4 ? -1 : 4} />
+                <View
+                  style={{
+                    height: "100%",
+                    backgroundColor: select == 1 ? "#D2A100" : "#fddf7a",
+                    width: wp(p1),
+                  }}
+                />
+                <View
+                  style={{
+                    height: "100%",
+                    backgroundColor: select == 2 ? "#007BB7" : "#d2e7f2",
+                    width: wp(p2),
+                  }}
+                />
+                <View
+                  style={{
+                    height: "100%",
+                    backgroundColor: select == 3 ? "#0F435C" : "#aed5e8",
+                    width: wp(p3),
+                  }}
+                />
+                <View
+                  style={{
+                    height: "100%",
+                    backgroundColor: select == 4 ? "#723F2D" : "#f0d3ca",
+                    width: wp(p4),
+                  }}
+                />
+                <View
+                  style={{
+                    height: "100%",
+                    backgroundColor: select == 5 ? "#01818C" : "#7bbdc4",
+                    width: wp(p5),
+                  }}
+                />
+                <View
+                  style={{
+                    height: "100%",
+                    backgroundColor: select == 6 ? "#BB6345" : "#e8b19e",
+                    width: wp(p6),
+                  }}
+                />
+              </View>
 
-              <Text
-                style={{ fontSize: wp(3), color: "#455a64", marginTop: hp(1) }}
+              <View
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  width: wp(75),
+                  justifyContent: "space-around",
+                  marginTop: hp(2),
+                }}
               >
-                {showMood.disgust}%
-              </Text>
-            </View>
-            <View className="items-center">
-              <Fear h={7.4} w={7.4} isSelect={select == 5 ? -1 : 5} />
+                <View className="items-center">
+                  <Happy h={7.4} w={7.4} isSelect={select == 1 ? -1 : 1} />
+                  <Text
+                    style={{
+                      fontSize: wp(3),
+                      color: "#455a64",
+                      marginTop: hp(1),
+                    }}
+                  >
+                    {showMood.happy}%{/* {select} */}
+                  </Text>
+                </View>
+                <View className="items-center">
+                  <Surprised h={7.4} w={7.4} isSelect={select == 2 ? -1 : 2} />
+                  <Text
+                    style={{
+                      fontSize: wp(3),
+                      color: "#455a64",
+                      marginTop: hp(1),
+                    }}
+                  >
+                    {showMood.surprised}%
+                  </Text>
+                </View>
+                <View className="items-center">
+                  <Sad h={7.4} w={7.4} isSelect={select == 3 ? -1 : 3} />
+                  <Text
+                    style={{
+                      fontSize: wp(3),
+                      color: "#455a64",
+                      marginTop: hp(1),
+                    }}
+                  >
+                    {showMood.sad}%
+                  </Text>
+                </View>
+                <View className="items-center">
+                  <Disgust h={7.4} w={7.4} isSelect={select == 4 ? -1 : 4} />
 
-              <Text
-                style={{ fontSize: wp(3), color: "#455a64", marginTop: hp(1) }}
-              >
-                {showMood.fear}%
-              </Text>
-            </View>
-            <View className="items-center">
-              <Angry h={7.4} w={7.4} isSelect={select == 6 ? -1 : 6} />
-              <Text
-                style={{ fontSize: wp(3), color: "#455a64", marginTop: hp(1) }}
-              >
-                {showMood.angry}%
-              </Text>
-            </View>
-          </View>
-        </View>
+                  <Text
+                    style={{
+                      fontSize: wp(3),
+                      color: "#455a64",
+                      marginTop: hp(1),
+                    }}
+                  >
+                    {showMood.disgust}%
+                  </Text>
+                </View>
+                <View className="items-center">
+                  <Fear h={7.4} w={7.4} isSelect={select == 5 ? -1 : 5} />
 
-        <Text
-          style={{
-            color: theme.black,
-            fontSize: wp(4),
-            fontWeight: "500",
-            width: wp(84),
-            textAlign: "left",
-            marginTop: hp(2.4),
-          }}
-        >
-          Recommended Habit
-        </Text>
+                  <Text
+                    style={{
+                      fontSize: wp(3),
+                      color: "#455a64",
+                      marginTop: hp(1),
+                    }}
+                  >
+                    {showMood.fear}%
+                  </Text>
+                </View>
+                <View className="items-center">
+                  <Angry h={7.4} w={7.4} isSelect={select == 6 ? -1 : 6} />
+                  <Text
+                    style={{
+                      fontSize: wp(3),
+                      color: "#455a64",
+                      marginTop: hp(1),
+                    }}
+                  >
+                    {showMood.angry}%
+                  </Text>
+                </View>
+              </View>
+            </View>
 
-        <View
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginTop: hp(0.9),
-            width: wp(84),
-            height: hp(11.2),
-            backgroundColor: "#ECFFFF",
-            borderRadius: wp(4),
-            paddingVertical: hp(1.9),
-            paddingHorizontal: wp(3.2),
-          }}
-        >
-          <Logo height={wp(11)} width={wp(11)} />
-          <View style={{ height: "100%", justifyContent: "space-between" }}>
             <Text
               style={{
                 color: theme.black,
                 fontSize: wp(4),
                 fontWeight: "500",
-                width: wp(64),
+                width: wp(84),
                 textAlign: "left",
+                marginTop: hp(2.4),
               }}
             >
-              {habbit[ind].head}
+              Recommended Habit
             </Text>
-            <Text
-              style={{
-                width: wp(64),
-                color: theme.black,
-                fontSize: wp(3.5),
-                textAlign: "left",
-              }}
-            >
-              {habbit[ind].cont}
-            </Text>
-          </View>
-        </View>
 
-        <BottomQuote />
+            <View
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginTop: hp(0.9),
+                width: wp(84),
+                height: hp(11.2),
+                backgroundColor: "#ECFFFF",
+                borderRadius: wp(4),
+                paddingVertical: hp(1.9),
+                paddingHorizontal: wp(3.2),
+              }}
+            >
+              <Logo height={wp(11)} width={wp(11)} />
+              <View style={{ height: "100%", justifyContent: "space-between" }}>
+                <Text
+                  style={{
+                    color: theme.black,
+                    fontSize: wp(4),
+                    fontWeight: "500",
+                    width: wp(64),
+                    textAlign: "left",
+                  }}
+                >
+                  {habbit[ind].head}
+                </Text>
+                <Text
+                  style={{
+                    width: wp(64),
+                    color: theme.black,
+                    fontSize: wp(3.5),
+                    textAlign: "left",
+                  }}
+                >
+                  {habbit[ind].cont}
+                </Text>
+              </View>
+            </View>
+            <BottomQuote />
+          </>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
@@ -771,23 +815,32 @@ const MoodInsights = (props) => {
 export default MoodInsights;
 
 const styles = StyleSheet.create({
-
-    HeadContainer: {
-        height: hp(6),
-        width: wp(100),
-        justifyContent: "center",
-        alignItems: "center",
-        marginTop: hp(2),
-    },
-    HeadText: {
-        width: wp(40.5),
-        color: theme.black,
-        fontSize: wp(4.2),
-        fontFamily: "Roboto",
-        fontWeight: '700',
-        textAlign: 'center'
-    },
-    NavCard: { display: 'flex', flexDirection: 'row', width: wp(84), backgroundColor: 'red', height: hp(11), paddingHorizontal: wp(2), justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#F7FBFD', borderRadius: wp(5.3), marginTop: hp(2) }
-
-
-})
+  HeadContainer: {
+    height: hp(6),
+    width: wp(100),
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: hp(2),
+  },
+  HeadText: {
+    width: wp(40.5),
+    color: theme.black,
+    fontSize: wp(4.2),
+    fontFamily: "Roboto",
+    fontWeight: "700",
+    textAlign: "center",
+  },
+  NavCard: {
+    display: "flex",
+    flexDirection: "row",
+    width: wp(84),
+    backgroundColor: "red",
+    height: hp(11),
+    paddingHorizontal: wp(2),
+    justifyContent: "space-between",
+    alignItems: "center",
+    backgroundColor: "#F7FBFD",
+    borderRadius: wp(5.3),
+    marginTop: hp(2),
+  },
+});

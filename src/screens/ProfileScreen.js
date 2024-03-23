@@ -272,24 +272,23 @@ const FirstRoute = (props) => {
         if (res.data.has_upc === "yes") {
           sethasApp(true);
           setData(res.data.upc_data);
-
           parentData.has_ban = true;
           parentData.banner_link = res.data.banner_link;
           parentData.on_click = res.data.on_click;
         } else {
           sethasApp(false);
           parentData.has_ban = false;
-          parentData.btn_data["btn1-text"] = res.data.btn_dat["btn1-text"];
-          parentData.btn_data["btn2-text"] = res.data.btn_dat["btn2-text"];
-          parentData.btn_data["btn1-url"] = res.data.btn_dat["btn1-url"];
-          parentData.btn_data["btn2-url"] = res.data.btn_dat["btn2-url"];
+          parentData.btn_data["btn1-text"] = res.data.btn_dat["btn1-text"] != (null || undefined) ? res.data.btn_dat['btn1-text'] : "Book a Session";
+          parentData.btn_data["btn2-text"] = res.data.btn_dat["btn2-text"] != (null || undefined) ? res.data.btn_dat['btn2-text'] : "Continue your journey";
+          parentData.btn_data["btn1-url"] = res.data.btn_dat["btn1-url"] != (null || undefined) ? res.data.btn_dat['btn1-url'] : "https://heartitout.in";
+          parentData.btn_data["btn2-url"] = res.data.btn_dat["btn2-url"] != (null || undefined) ? res.data.btn_dat['btn2-url'] : "https://heartitout.in";
         }
         passDataToParent(parentData);
         renderSecondElement();
-        setLoading(false);
       })
       .catch((err) => {
         console.log("error is here:", err);
+      }).finally(()=>{
         setLoading(false);
       });
   }, []);
@@ -369,18 +368,18 @@ const SecondRoute = (props) => {
         } else {
           sethasApp(false);
           parentData.has_ban = false;
-          parentData.btn_data["btn1-text"] = res.data.btn_dat["btn1-text"];
-          parentData.btn_data["btn2-text"] = res.data.btn_dat["btn2-text"];
-          parentData.btn_data["btn1-url"] = res.data.btn_dat["btn1-url"];
-          parentData.btn_data["btn2-url"] = res.data.btn_dat["btn2-url"];
+          parentData.btn_data["btn1-text"] = res.data.btn_dat["btn1-text"] != (null || undefined) ? res.data.btn_dat['btn1-text'] : "Book a Session";
+          parentData.btn_data["btn2-text"] = res.data.btn_dat["btn2-text"] != (null || undefined) ? res.data.btn_dat['btn2-text'] : "Continue your journey";
+          parentData.btn_data["btn1-url"] = res.data.btn_dat["btn1-url"] != (null || undefined) ? res.data.btn_dat['btn1-url'] : "https://heartitout.in";
+          parentData.btn_data["btn2-url"] = res.data.btn_dat["btn2-url"] != (null || undefined) ? res.data.btn_dat['btn2-url'] : "https://heartitout.in";
         }
         // console.log(res.data);
         passDataToParent(parentData);
         renderSecondElement();
-        setLoading(false);
       })
       .catch((err) => {
         console.log(err);
+      }).finally(()=>{
         setLoading(false);
       });
   }, []);
@@ -389,7 +388,9 @@ const SecondRoute = (props) => {
     <View className="flex-col items-center " style={styles.scrollContainer}>
       <ScrollView style={{ width: "100%", paddingLeft: wp(3.5) }}>
         {loading ? (
-          <ActivityIndicator animating={loading} size="large" />
+          <View style={{ height: hp(15), width: '100%', justifyContent: 'center', alignItems: 'center' }} >
+            <ActivityIndicator color="#01818C" animating={loading} size={wp(6)} />
+          </View>
         ) : (
           <>
             {hasApp ? (

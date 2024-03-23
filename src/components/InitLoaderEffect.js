@@ -1,4 +1,11 @@
-import { View, Text, Image, StyleSheet, ToastAndroid, BackHandler } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ToastAndroid,
+  BackHandler,
+} from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import TopBar from "./TopBar";
@@ -11,10 +18,10 @@ import SInfo from "react-native-encrypted-storage";
 import axios from "axios";
 
 const showToast = (message) => {
-  ToastAndroid.show(message,ToastAndroid.SHORT);
-}
+  ToastAndroid.show(message, ToastAndroid.SHORT);
+};
 
-export default function InitLoaderEffect({navigation}) {
+export default function InitLoaderEffect({ navigation }) {
   const backHandler = () => {
     BackHandler.exitApp();
     return true;
@@ -42,8 +49,8 @@ export default function InitLoaderEffect({navigation}) {
             token: data.new_token,
             otp: data.otp,
             date: data.date,
-            usr_fullname : data.usr_fullname,
-            user_email : data.user_email,
+            usr_fullname: data.usr_fullname,
+            user_email: data.user_email,
             insert_details: "false",
           };
 
@@ -56,26 +63,27 @@ export default function InitLoaderEffect({navigation}) {
             insert_details: "false",
             get_details: "false",
             has_appointment: "no",
-            app_det:{},
-            
-            usr_fullname : data.usr_fullname,
-            user_email : data.user_email,
+            app_det: {},
+
+            usr_fullname: data.usr_fullname,
+            user_email: data.user_email,
             booking_link: "https://heartitout.in/therapists/",
-            whats_new_onclick:"https://heartitout.in",
-            product_onclick:"https://heartitout.in",
+            whats_new_onclick: "https://heartitout.in",
+            product_onclick: "https://heartitout.in",
             //This is mood tracker
-            has_mood:"no",
+            has_mood: "no",
             //This is subscription status
-            show_sub:"no",
-            subs_det:"no",
+            show_sub: "no",
+            subs_det: "no",
             subs_no_of_days: "0",
+            sub_onclick: "https://heartitout.in/",
+            packages_onclick: "https://heartitout.in/",
 
             //This is banner section
             has_banner: "no",
             banner_link: "",
-            on_click:""
-          }
-
+            on_click: "",
+          };
 
           //This the first call from the flowchart (and it is done)
           const apiUrl =
@@ -87,18 +95,16 @@ export default function InitLoaderEffect({navigation}) {
               if (res.data.success == 10) {
                 // await AsyncStorage.setItem("token", Token);
                 // console.log("It is sucess:" ,res.data.success);
-                finalDetails['get_details'] = "true";
+                finalDetails["get_details"] = "true";
               } else {
-                finalDetails['usr_fullname'] = res.data.user_name;
-                finalDetails['user_email'] = res.data.user_email;
+                finalDetails["usr_fullname"] = res.data.user_name;
+                finalDetails["user_email"] = res.data.user_email;
                 // navigation.navigate('main');
               }
             })
             .catch((err) => {
               console.log(err);
             });
-
-
 
           //This is the second call from flowchart
           const apiUrl2 =
@@ -107,28 +113,26 @@ export default function InitLoaderEffect({navigation}) {
             .post(apiUrl2, userDetails)
             .then(async (res) => {
               //Needs to be enabled after
-              
+
               if (res.data.status === "0") {
                 // await AsyncStorage.setItem("token", Token);
-                SInfo.removeItem('token');
-                showToast('User credentials expired, please login again.');
-                navigation.navigate('LoginPage')
+                SInfo.removeItem("token");
+                showToast("User credentials expired, please login again.");
+                navigation.navigate("LoginPage");
                 console.log("User invalid");
               } else if (res.data.status === "10") {
                 // console.log("Show Book a Session");
-                finalDetails.has_appointment= "no";
-                finalDetails.booking_link=res.data.booking_link;
+                finalDetails.has_appointment = "no";
+                finalDetails.booking_link = res.data.booking_link != (null || undefined) ? res.data.booking_link : "https://heartitout.in/therapists/";
                 // navigation.navigate('main');
-              }
-              else
-              {
+              } else {
                 // console.log(res.data);
                 //If session is within 2 hours
                 //1. Book another session and Join your session
 
                 //If session is exists
-                 //1. Book another session and Continue your well-being journey
-                finalDetails.has_appointment = "yes"
+                //1. Book another session and Continue your well-being journey
+                finalDetails.has_appointment = "yes";
                 finalDetails.app_det = res.data.app_det;
               }
             })
@@ -136,50 +140,51 @@ export default function InitLoaderEffect({navigation}) {
               console.log(err);
             });
 
-            //This is the third api call from flowchart
-            const apiUrl3 =
+          //This is the third api call from flowchart
+          const apiUrl3 =
             "https://n8n.heartitout.in/webhook/api/home-page-details";
           await axios
             .post(apiUrl3, userDetails)
             .then(async (res) => {
               if (res.data.status === "1") {
                 // await AsyncStorage.setItem("token", Token);
-                finalDetails.has_banner = res.data.has_banner,
-                finalDetails.banner_link = res.data.banner,
-                finalDetails.on_click = res.data.ban_on_click,
-                finalDetails.has_mood = res.data.mood_tacker;
+                (finalDetails.has_banner = res.data.has_banner),
+                  (finalDetails.banner_link = res.data.banner),
+                  (finalDetails.on_click = res.data.ban_on_click != (null || undefined) ? res.data.ban_on_click : "https://heartitout.in/"),
+                  (finalDetails.has_mood = res.data.mood_tacker != (null || undefined) ? res.data.mood_tacker : "no");
                 finalDetails.show_sub = res.data.show_sub;
                 finalDetails.subs_det = res.data.subs_det;
                 finalDetails.subs_no_of_days = res.data.subs_no_of_days;
-                finalDetails.booking_link = res.data.booking_link;
-                finalDetails.whats_new_onclick = res.data.whats_new_onclick;
-                finalDetails.product_onclick = res.data.product_onclick;
-              }
-              else if (res.data.status === "10")
-              {
+                finalDetails.booking_link = res.data.booking_link != (null || undefined) ? res.data.booking_link : "https://heartitout.in/therapists/";
+                finalDetails.whats_new_onclick = res.data.whats_new_onclick != (null || undefined) ? res.data.whats_new_onclick : "https://heartitout.in/";
+                finalDetails.product_onclick = res.data.product_onclick != (null || undefined) ? res.data.product_onclick : "https://heartitout.in/";
+                finalDetails.sub_onclick = res.data.sub_onclick != (null || undefined) ? res.data.sub_onclick : "https://heartitout.in/";
+                finalDetails.packages_onclick = res.data.packages_onclick != (null || undefined) ? res.data.packages_onclick : "https://heartitout.in/";
+              } else if (res.data.status === "10") {
                 finalDetails.has_mood = res.data.mood_tacker;
                 finalDetails.show_sub = res.data.show_sub;
                 finalDetails.subs_det = res.data.subs_det;
                 finalDetails.has_banner = res.data.has_banner;
-                finalDetails.booking_link = res.data.booking_link;
-                finalDetails.whats_new_onclick = res.data.whats_new_onclick;
-                finalDetails.product_onclick = res.data.product_onclick;
-              }
-              else
-              {
+                finalDetails.booking_link = res.data.booking_link != (null || undefined) ? res.data.booking_link : "https://heartitout.in/therapists/";
+                finalDetails.whats_new_onclick = res.data.whats_new_onclick != (null || undefined) ? res.data.whats_new_onclick : "https://heartitout.in/";
+                finalDetails.product_onclick = res.data.product_onclick != (null || undefined) ? res.data.product_onclick : "https://heartitout.in/";
+                finalDetails.sub_onclick = res.data.sub_onclick != (null || undefined) ? res.data.sub_onclick : "https://heartitout.in/";
+                finalDetails.packages_onclick = res.data.packages_onclick != (null || undefined) ? res.data.packages_onclick : "https://heartitout.in/";
+              } else {
                 throw new Error("User credentails expired");
-              } 
+              }
+              // console.log(res.data.show_sub)
             })
             .catch((err) => {
               console.log(err);
             });
 
-            navigation.navigate("main",finalDetails);
+          navigation.navigate("main", finalDetails);
         }
       }
     } catch (error) {
       navigation.navigate("LoginPage");
-      console.log(error)
+      console.log(error);
     }
   });
 

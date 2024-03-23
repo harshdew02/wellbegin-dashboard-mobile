@@ -227,13 +227,11 @@ const FirstRoute = (props) => {
         } else {
           sethasApp(false);
         }
-        // passDataToParent(parentData);
-        // renderSecondElement();
-        setLoading(false);
         passDataToParent(res.data.rec_test);
       })
       .catch((err) => {
         console.log("error is here:", err);
+      }).finally(()=>{
         setLoading(false);
       });
   }, []);
