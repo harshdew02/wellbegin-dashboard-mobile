@@ -252,7 +252,10 @@ const MoodLog = (props) => {
       .post(url, payload)
       .then((res) => {
         console.log(res.data);
-        setData(res.data.data);
+        if(res.data.has_res === "yes"){
+          setData(res.data.data);
+        } 
+        // setData(res.data.data);
       })
       .catch((err) => {
         console.log(err);
