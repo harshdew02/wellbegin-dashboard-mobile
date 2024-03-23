@@ -41,6 +41,7 @@ import TopBell from "../components/TopBell";
 import HomePageBanner from "../components/HomePageBanner";
 import { Svg } from "react-native-svg";
 import Gift from "../../assets/images/Gift.svg";
+import axios from "axios";
 // F:\HIO\Progress\hio_UI\hio\assets\images\
 
 const gMeet = (link) => {
@@ -199,12 +200,10 @@ export default function HomeScreen(props) {
   const [sub, setSub] = useState("");
   const [packages, setPackage] = useState("");
   const [showsub, setShowsub] = useState(false);
+  const [moodcheck, setMoodCheck] = useState(false);
   const [subsdet, setSubsdet] = useState(false);
   const [subdays, setSubdays] = useState(0);
-  const [success, setSuccess] = useState(false);
-  const [statusColor, setStatusColor] = useState("green");
-
-  const [bell , setBell ] = useState(true);
+  const [bell, setBell] = useState(true);
 
   const backHandler = () => {
     BackHandler.exitApp();
@@ -212,12 +211,40 @@ export default function HomeScreen(props) {
   };
 
   navigation.addListener("focus", () => {
+    setMoodCheck(true);
     BackHandler.addEventListener("hardwareBackPress", backHandler);
   });
 
   navigation.addListener("blur", () => {
+    setMoodCheck(false);
     BackHandler.removeEventListener("hardwareBackPress", backHandler);
   });
+
+  useEffect(() => {
+    if (moodcheck) {
+      const apiUrl3 = "https://n8n.heartitout.in/webhook/api/home-page-details";
+      axios
+        .post(apiUrl3, data)
+        .then(async (res) => {
+          console.log(res.data.mood_tacker);
+          if (res.data.status === "1") {
+            res.data.mood_tacker === "yes"
+              ? setMood(true)
+              : setMood(false);
+          } else if (res.data.status === "10") {
+            res.data.mood_tacker === "yes"
+              ? setMood(true)
+              : setMood(false);
+          } else {
+            throw new Error("User credentails expired");
+          }
+          // console.log(res.data.show_sub)
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [moodcheck]);
 
   const appointment = {
     appointment: data.app_det,
@@ -459,7 +486,7 @@ export default function HomeScreen(props) {
 
               <TouchableOpacity
                 onPress={() => {
-                  setBell(false)
+                  setBell(false);
                   navigation.navigate("reminder", data);
                 }}
                 style={{ position: "absolute", right: wp(0) }}
@@ -772,15 +799,17 @@ export default function HomeScreen(props) {
                 zIndex: 2,
               }}
             >
-              <Text style={{
-                // textAlign: "center",
-                color: "#455A64",
-                fontSize: wp(3.8),
-                width: wp(60),
-                fontFamily: "Roboto",
-                lineHeight: wp(6),
-                fontWeight: "800",
-              }}>
+              <Text
+                style={{
+                  // textAlign: "center",
+                  color: "#455A64",
+                  fontSize: wp(3.8),
+                  width: wp(60),
+                  fontFamily: "Roboto",
+                  lineHeight: wp(6),
+                  fontWeight: "800",
+                }}
+              >
                 Your Whole Hearted Subscription is Active
               </Text>
               <TouchableOpacity
