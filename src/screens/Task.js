@@ -90,7 +90,7 @@ const NoSessions = () => {
         fontWeight: "normal",
       }}
     >
-      Sorry! You have no sessions.
+      Sorry! You have not taken any diagnostic test yet.
     </Text>
   );
 };
