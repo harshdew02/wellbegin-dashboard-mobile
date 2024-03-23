@@ -240,7 +240,9 @@ const FirstRoute = (props) => {
   return (
     <View style={styles.scrollContainer}>
       {loading ? (
-        <ActivityIndicator animating={loading} size="large" />
+        <View style={{ height: hp(30), width: '100%', justifyContent: 'center', alignItems: 'center' }} >
+          <ActivityIndicator color="#01818C" animating={loading} size={wp(10)} />
+        </View>
       ) : (
         <>
           {hasApp ? (

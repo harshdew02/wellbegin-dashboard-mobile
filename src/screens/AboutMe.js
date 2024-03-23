@@ -23,6 +23,7 @@ import Back from "../../assets/images/arrow2.svg";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
 import axios from "axios";
 import SInfo from "react-native-encrypted-storage";
+import { theme } from "../theme";
 
 const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
@@ -157,11 +158,14 @@ export default function AboutMe(props) {
                   // console.log(data)
                   fillDetails(data, [loading, setLoading], navigation);
                 }}
-                style={[styles.BookBtn3, {}]}
+                style={[styles.BookBtn3, {marginBottom:hp(4)}]}
               >
                 <Text style={styles.btnText3}>Save My Details</Text>
               </TouchableOpacity>
 
+
+            </View>
+            <View style={{width:wp(100), alignItems:'center', position:'absolute', bottom:hp(3)}} >
               <TouchableOpacity onPress={() => {
                 SInfo.removeItem('token').then(() => {
                   navigation.navigate('loader');
@@ -170,10 +174,11 @@ export default function AboutMe(props) {
                   showToast('Something went wrong.')
                   console.log('Error from logout system: ', err)
                 });
-              }} style={{ width: wp(20), backgroundColor: 'red', height: hp(4) }} >
-                <Text>Logout {" "}</Text>
+              }} style={{ width: wp(20), backgroundColor: theme.grey, height: hp(4), justifyContent: 'center', alignItems: 'center', borderRadius: wp(40) }} >
+                <Text style={{color:'#fff'}} >Logout</Text>
               </TouchableOpacity>
             </View>
+
           </View>
 
           <View
