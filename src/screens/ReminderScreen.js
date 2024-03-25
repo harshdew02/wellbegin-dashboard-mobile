@@ -16,15 +16,60 @@ import {
 import Back from "../../assets/images/arrow.svg";
 import RingIcon from "../components/RingIcon";
 import axios from "axios";
+import { InAppBrowser } from "react-native-inappbrowser-reborn";
+
+const outLink = async (link) => {
+  try {
+    const url = link;
+    if (await InAppBrowser.isAvailable()) {
+      const result = await InAppBrowser.open(url, {
+        // // iOS Properties
+        // dismissButtonStyle: 'cancel',
+        // preferredBarTintColor: '#453AA4',
+        // preferredControlTintColor: 'white',
+        // readerMode: false,
+        // animated: true,
+        // modalPresentationStyle: 'fullScreen',
+        // modalTransitionStyle: 'coverVertical',
+        // modalEnabled: true,
+        // enableBarCollapsing: false,
+        // Android Properties
+        showTitle: true,
+        toolbarColor: "#01818C",
+        secondaryToolbarColor: "red",
+        navigationBarColor: "white",
+        navigationBarDividerColor: "white",
+        enableUrlBarHiding: true,
+        enableDefaultShare: false,
+        forceCloseOnRedirection: false,
+        hasBackButton: true,
+
+        // Specify full animation resource identifier(package:anim/name)
+        // or only resource name(in case of animation bundled with app).
+        animations: {
+          startEnter: "slide_in_right",
+        },
+        headers: {
+          "my-custom-header": "my custom header value",
+        },
+      });
+      console.log(result);
+    } else Linking.openURL(url);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const Card = (props) => {
-
+  // console.log(props)
+  const data = props.props.item;
+  console.log("It is from card: ",data)
   // Anuj ise props ke according set kar dena to fir ho jayega shyad
   const [isTick, setTick] = useState(false);
 
   return (
     <TouchableOpacity
-      onPress={() => { setTick(true) }}
+      onPress={() => { setTick(true); outLink(data.on_click) }}
       className="flex-row justify-between items-center"
       style={styles.container}
     >
@@ -50,7 +95,7 @@ const Card = (props) => {
             marginBottom: hp(2),
           }}
         >
-          You have a session at 10:30 am on 17/03/22
+          {data.notification}
         </Text>
         <Text
           style={{
@@ -60,8 +105,7 @@ const Card = (props) => {
             fontWeight: "normal",
           }}
         >
-          You have an upcoming session with your therapist Jyoti Das on
-          17/03/2022
+          {data.notif_body}
         </Text>
       </View>
 
@@ -105,7 +149,7 @@ export default function ReminderScreen({ navigation, route }) {
     axios
       .post(url, route.params)
       .then((res) => {
-        console.log(res.data);
+        // console.log(res.data);
         if (res.data.has_notif === "yes") setIfReminder(true);
         else setIfReminder(false);
         if (res.data.has_banner === "yes") {
