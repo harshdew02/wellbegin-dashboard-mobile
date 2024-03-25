@@ -66,11 +66,11 @@ const Progress = (props) => {
         <View className="flex-row items-center">
           <Text style={styles.HeadText}>My Progress</Text>
         </View>
-        <Share
+        {/* <Share
           height={wp(10)}
           width={wp(10)}
           style={{ position: "absolute", right: wp(8) }}
-        />
+        /> */}
       </View>
 
       <ScrollView
@@ -109,7 +109,7 @@ const Progress = (props) => {
           </Text>
         </View>
 
-        <Text
+        {/* <Text
           style={{
             width: wp(79),
             color: theme.black,
@@ -120,7 +120,7 @@ const Progress = (props) => {
           }}
         >
           Tap on image to understand the current stage of your therapy
-        </Text>
+        </Text> */}
         {loading ? (
           <View
             style={{

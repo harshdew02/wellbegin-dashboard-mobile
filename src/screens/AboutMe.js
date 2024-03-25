@@ -60,7 +60,7 @@ const fillDetails = (details, [loading, setLoading], navigation) => {
       showToast("An error occurred and we can't update")
       //A message to be displayed as toast
       console.log(err);
-    }).finally(()=>{
+    }).finally(() => {
       setLoading(false);
     });
 };
@@ -112,9 +112,21 @@ export default function AboutMe(props) {
               </Text>
             </View>
 
+            <Text
+                style={{
+                  color: "#fff",
+                  fontSize: wp(3.7),
+                  width:wp(84),
+                  textAlign:'center',
+                  fontWeight: "500",
+                  marginTop:hp(3)
+                }}
+              >Please add a few more details to continue😊
+              </Text>
+
             <View
               className="flex-col justify-between items-center "
-              style={{ height: hp(45), marginTop: hp(3.5) }}
+              style={{height: hp(45), marginTop: hp(0.5)}}
             >
               <TextInput
                 style={[{ marginTop: hp(2) }, styles.input]}
@@ -157,14 +169,14 @@ export default function AboutMe(props) {
                   // console.log(data)
                   fillDetails(data, [loading, setLoading], navigation);
                 }}
-                style={[styles.BookBtn3, {marginBottom:hp(4)}]}
+                style={[styles.BookBtn3, { marginBottom: hp(4) }]}
               >
                 <Text style={styles.btnText3}>Save My Details</Text>
               </TouchableOpacity>
 
 
             </View>
-            <View style={{width:wp(100), alignItems:'center', position:'absolute', bottom:hp(3)}} >
+            <View style={{ width: wp(100), alignItems: 'center', position: 'absolute', bottom: hp(3) }} >
               <TouchableOpacity onPress={() => {
                 SInfo.removeItem('token').then(() => {
                   navigation.navigate('loader');
@@ -174,7 +186,7 @@ export default function AboutMe(props) {
                   console.log('Error from logout system: ', err)
                 });
               }} style={{ width: wp(20), backgroundColor: theme.grey, height: hp(4), justifyContent: 'center', alignItems: 'center', borderRadius: wp(40) }} >
-                <Text style={{color:'#fff'}} >Logout</Text>
+                <Text style={{ color: '#fff' }} >Logout</Text>
               </TouchableOpacity>
             </View>
 

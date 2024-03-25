@@ -783,7 +783,11 @@ export default function HomeScreen(props) {
         {/* Package */}
 
         {showsub ? (
-          <View
+          <TouchableOpacity
+            onPress={() => {
+              // navigation.navigate('mood');
+              outLink(sub);
+            }}
             className="flex-col items-center"
             style={[
               styles.cardContainer,
@@ -812,20 +816,24 @@ export default function HomeScreen(props) {
               >
                 Your Whole Hearted Subscription is Active
               </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  outLink(sub);
-                }}
+              <View
+                // onPress={() => {
+                //   // navigation.navigate('mood');
+                //   outLink(sub);
+                // }}
                 activeOpacity={0.5}
                 style={[styles.Btn, { marginTop: hp(0.8) }]}
               >
                 <Text style={styles.btnText2}>See Details </Text>
-              </TouchableOpacity>
+              </View>
             </View>
             {/* <Gift width={wp(25)} height={hp(9)} /> */}
-          </View>
+          </TouchableOpacity>
         ) : (
-          <View
+          <TouchableOpacity
+            onPress={() => {
+              outLink(packages);
+            }}
             className="flex-col items-center"
             style={[
               styles.cardContiner,
@@ -838,23 +846,26 @@ export default function HomeScreen(props) {
                 style={{ height: hp(9) }}
               >
                 <Text style={styles.cardText}>Session Packages</Text>
-                <TouchableOpacity
-                  activeOpacity={0.5}
+                <View
+                  // activeOpacity={0.5}
                   style={styles.Btn}
-                  onPress={() => {
-                    outLink(packages);
-                  }}
+                // onPress={() => {
+                //   outLink(packages);
+                // }}
                 >
                   <Text style={styles.btnText2}>Explore Packages</Text>
-                </TouchableOpacity>
+                </View>
               </View>
               <Gift width={wp(25)} height={hp(9)} />
             </View>
-          </View>
+          </TouchableOpacity>
         )}
         {/* Package */}
 
-        <View
+        <TouchableOpacity
+          onPress={() => {
+            outLink(product);
+          }}
           className="flex-col items-center"
           style={[styles.cardContainer, { height: hp(15.8), marginTop: hp(4) }]}
         >
@@ -864,22 +875,22 @@ export default function HomeScreen(props) {
               style={{ height: hp(9) }}
             >
               <Text style={styles.cardText}>Self-care Tools for you</Text>
-              <TouchableOpacity
-                onPress={() => {
-                  outLink(product);
-                }}
-                activeOpacity={0.5}
+              <View
+                // onPress={() => {
+                //   outLink(product);
+                // }}
+                // activeOpacity={0.5}
                 style={styles.Btn}
               >
                 <Text style={styles.btnText2}>Discover Now</Text>
-              </TouchableOpacity>
+              </View>
             </View>
             <Image
               source={require("../../assets/images/SelfCareIcon2.png")}
               style={{ width: wp(18), height: hp(14) }}
             />
           </View>
-        </View>
+        </TouchableOpacity>
 
         <View
           className="flex-row items-center"

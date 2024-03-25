@@ -431,7 +431,7 @@ const ShareMessage = (text) => {
   shareMessage(text);
 };
 
-const Task = (props) => {
+const Test = (props) => {
   const data = props.route.params;
   const [routes] = React.useState([
     { key: "first", title: "Your Recent Tests" },
@@ -607,7 +607,7 @@ const Task = (props) => {
   );
 };
 
-export default Task;
+export default Test;
 
 const styles = StyleSheet.create({
   cardContainer: {

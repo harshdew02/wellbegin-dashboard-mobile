@@ -49,18 +49,18 @@ const component = {
 };
 
 const SphereOfLife = {
-  family: <Family w={3.7} h={3.1} isClicked={true} />,
-  work: <Work w={3.7} h={3.1} isClicked={true} />,
-  finance: <Finance w={3.7} h={3.1} isClicked={true} />,
-  friendship: <Friendship w={3.7} h={3.1} isClicked={true} />,
-  health: <Health w={3.7} h={3.1} isClicked={true} />,
-  leisure: <Leisure w={3.7} h={3.1} isClicked={true} />,
-  love: <Love w={3.7} h={3.1} isClicked={true} />,
-  personal: <Personal w={3.7} h={3.1} isClicked={true} />,
+  FAMILY: <Family w={3.7} h={3.1} isClicked={true} />,
+  WORK: <Work w={3.7} h={3.1} isClicked={true} />,
+  FINANCE: <Finance w={3.7} h={3.1} isClicked={true} />,
+  FRIENDSHIP: <Friendship w={3.7} h={3.1} isClicked={true} />,
+  HEALTH: <Health w={3.7} h={3.1} isClicked={true} />,
+  LEISURE: <Leisure w={3.7} h={3.1} isClicked={true} />,
+  LOVE: <Love w={3.7} h={3.1} isClicked={true} />,
+  PERSONAL: <Personal w={3.7} h={3.1} isClicked={true} />,
 };
 
 const MoodCard = (props) => {
-  console.log("It is from mood card: ", props.props);
+  console.log("It is from mood card: ",props.props.sphere_of_life.toUpperCase());
   return (
     <View style={styles.CardStyle}>
       <Text style={{ width: wp(75), color: theme.black, fontSize: wp(3.2) }}>
@@ -132,13 +132,15 @@ const MoodCard = (props) => {
             paddingHorizontal: wp(1.6),
             backgroundColor: "#dbf2f2",
             flexDirection: "row",
+            flexWrap: 'wrap',
             alignItems: "center",
             justifyContent: "space-between",
             borderRadius: wp(2.6),
           }}
         >
           {/* <Work w={3.7} h={3.1} isClicked={true} /> */}
-          {SphereOfLife[props.props.sphere_of_life]}
+          {SphereOfLife[props.props.sphere_of_life.toUpperCase()]}
+          {/* {SphereOfLife['friendship']} */}
           <Text
             style={{
               marginLeft: wp(0.2),
@@ -290,7 +292,7 @@ const MoodLog = (props) => {
           flexDirection: "col",
           alignItems: "center",
         }}
-        style={{ width: wp(100), marginTop: hp(1), height: hp(92) }}
+        style={{ width: wp(100), marginTop: hp(1), height: hp(90) }}
       >
         {loading ? (
         <View style={{ height: hp(30), width: '100%', justifyContent: 'center', alignItems: 'center' }} >
@@ -342,6 +344,7 @@ const MoodLog = (props) => {
           </Text>
           <Signal width={wp(4.2)} height={wp(3.7)} />
         </TouchableOpacity>
+        <View style={{height:hp(5)}} />
       </ScrollView>
     </SafeAreaView>
   );

@@ -63,7 +63,7 @@ const outLink = async (link) => {
 const Card = (props) => {
   // console.log(props)
   const data = props.props.item;
-  console.log("It is from card: ",data)
+  console.log("It is from card: ", data)
   // Anuj ise props ke according set kar dena to fir ho jayega shyad
   const [isTick, setTick] = useState(false);
 
@@ -127,7 +127,7 @@ const Banners = (props) => {
       style={{
         width: wp(100),
         height: wp(24.66),
-        marginTop: hp(2.7)
+        marginTop: hp(8)
       }}
       source={{ uri: 'https://heartitout.in/links/wp-content/uploads/2024/03/TryDoodling.png' }}
     />
@@ -240,18 +240,9 @@ export default function ReminderScreen({ navigation, route }) {
                   </Text>
                 </View>
               )}
-              {banner ? (
+              {1 ? (
                 <>
-                  <View
-                    style={{
-                      width: wp(100),
-                      height: hp(10),
-                      backgroundColor: "red",
-                      marginTop: hp(3),
-                    }}
-                  >
-                    <Banners props={{ banLink, cbanLink }} />
-                  </View>
+                  <Banners props={{ banLink, cbanLink }} />
                 </>
               ) : (
                 <></>
