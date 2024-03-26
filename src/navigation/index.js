@@ -15,7 +15,7 @@ import AboutMe from "../screens/AboutMe";
 import ReminderScreen from "../screens/ReminderScreen";
 import ProfileNavigator from "./ProfileNavigator";
 import MoodTracker from "../screens/MoodTracker";
-import Task from "../screens/Task";
+import Test from "../screens/Test";
 import HomeWork from "../screens/HomeWork";
 import MoodInsights from "../screens/MoodInsights";
 import MoodLog from "../screens/MoodLog";
@@ -51,7 +51,7 @@ export default function AppNavigation() {
         <Stack.Screen name="LoginPage" component={Login} />
         <Stack.Screen name="verifyPage" component={Verify} />
         <Stack.Screen name="aboutMe" component={AboutMe}/>
-        <Stack.Screen name="task" component={Task}/>
+        <Stack.Screen name="test" component={Test}/>
         <Stack.Screen name="homework" component={HomeWork}/>
         <Stack.Screen name="reminder" component={ReminderScreen}
 
