@@ -20,6 +20,7 @@ import HomeWork from "../screens/HomeWork";
 import MoodInsights from "../screens/MoodInsights";
 import MoodLog from "../screens/MoodLog";
 import Progress from "../screens/Progress";
+import Heartitout from "../screens/Heartitout";
 
 
 const Stack = createNativeStackNavigator();
@@ -53,6 +54,7 @@ export default function AppNavigation() {
         <Stack.Screen name="aboutMe" component={AboutMe}/>
         <Stack.Screen name="test" component={Test}/>
         <Stack.Screen name="homework" component={HomeWork}/>
+        <Stack.Screen name='webview' component={Heartitout}/>
         <Stack.Screen name="reminder" component={ReminderScreen}
 
           options={{
