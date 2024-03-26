@@ -8,6 +8,7 @@ import {
   Button,
   ScrollView,
   ToastAndroid,
+  TextInput,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import TopBarMain from "../components/TopBarMain";
@@ -38,6 +39,7 @@ import {
 import { ArrowRightIcon } from "react-native-heroicons/solid";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
 import axios from "axios";
+import { theme } from "../theme";
 const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
 };
@@ -206,7 +208,6 @@ const AngryFeeling = [
   { value: "Withdrawn" },
   { value: "Numb" },
 ];
-
 const components = [
   Work,
   Health,
@@ -217,7 +218,6 @@ const components = [
   Family,
   Leisure,
 ];
-
 const component = [
   "Work",
   "Health",
@@ -314,11 +314,11 @@ const MoodTracker = (props) => {
 
     console.log("It is from extraPayload: ", payload);
     if (mood_array.length == 0) showToast("Please select atleast one feeling.");
-    else if(sphere == undefined || sphere == null) showToast("Please select your sphere of life.")
-    else if(mood == undefined || mood == null) showToast("Please select mood.")
+    else if (sphere == undefined || sphere == null) showToast("Please select your sphere of life.")
+    else if (mood == undefined || mood == null) showToast("Please select mood.")
     else {
       saveMood(payload)
-        // payload.successful = true;
+      // payload.successful = true;
     }
   };
 
@@ -331,7 +331,7 @@ const MoodTracker = (props) => {
         if (res.data.status === "1") {
           if (res.data.success === "true") showToast("Mood set");
           else showToast("Mood already set for today");
-          navigation.navigate("main", {mood_set: true})
+          navigation.navigate("main", { mood_set: true })
         } else {
           showToast("Some error occurred.");
         }
@@ -342,7 +342,7 @@ const MoodTracker = (props) => {
       });
   };
 
-  const [select, setSelect] = useState(1);
+  const [select, setSelect] = useState(0);
   const [data, setData] = useState(HappyFeeling);
   const [mood, setMood] = useState("Happy");
   const [value, setvalue] = useState(-1);
@@ -363,6 +363,8 @@ const MoodTracker = (props) => {
   useEffect(() => {
     mood_array = [];
   }, [select]);
+
+  const [text, onChangeText] = React.useState('');
 
   return (
     <SafeAreaView>
@@ -492,134 +494,190 @@ const MoodTracker = (props) => {
         </View>
       </View>
 
-      <ScrollView style={{ width: wp(100), height: hp(80) }}>
-        <Text
-          style={{
-            width: wp(100),
-            textAlign: "center",
-            color: "#455a64",
-            fontSize: wp(4),
-            fontWeight: "500",
-            marginTop: hp(1.5),
-          }}
-        >
-          Choose 3 Emotions You’re Feeling
-        </Text>
+      <ScrollView contentContainerStyle={{
+        display: "flex-1",
+        flexDirection: "col",
+        alignItems: "center",
+      }} style={{ width: wp(100) }}>
 
-        <View
-          style={[
-            {
-              width: wp(100),
-              paddingHorizontal: wp(8),
-              marginTop: hp(1.5),
-              display: "flex",
-              flexDirection: "row",
-              flexWrap: "wrap",
-              justifyContent: "space-between",
-            },
-          ]}
-        >
-          {data.map((item, index) => (
-            <Moods
-              key={index}
-              props={{ item, mood_array, index, select }}
-              onDataReceived={handleDataFromChild}
-            />
-          ))}
-        </View>
-
-        <Text
-          style={{
-            width: wp(100),
-            textAlign: "center",
-            color: "#455a64",
-            fontSize: wp(4),
-            fontWeight: "500",
-            marginTop: hp(2, 5),
-          }}
-        >
-          Spheres of Life
-        </Text>
-
-        <View
-          style={[
-            styles.cardContainer,
-            {
-              display: "flex",
-              flexDirection: "row",
-              flexWrap: "wrap",
-              justifyContent: "space-between",
-              marginTop: hp(1.5),
-            },
-          ]}
-        >
-          {components.map((Component, index) => (
-            <View className=" items-center " style={{ marginBottom: hp(4) }} key={index}>
-              <TouchableOpacity
-                
-                onPress={() => {
-                  index == value ? setvalue(-1) : setvalue(index);
-                }}
-                style={{
-                  width: wp(18),
-                  height: hp(7.3),
-                  backgroundColor: value == index ? "#A4DEDF66" : "#455A640A",
-                  borderRadius: wp(2.5),
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Component isClicked={value == index} />
-              </TouchableOpacity>
-              <Text
-                style={{
-                  fontSize: wp(3.5),
-                  fontWeight: "normal",
-                  color: "#455A64",
-                  marginTop: hp(0.5),
-                }}
-              >
-                {Component.name}
-              </Text>
+        {(select == 0) ?
+          <>
+            <Text style={{ width: wp(85), textAlign: 'center', marginTop: hp(3.4), fontSize: wp(3.7), color: '#455A64' }} >
+              📊 Understanding your moods helps you manage them and feel better faster. 😊🌟
+            </Text>
+            <View
+              className="flex-row items-center"
+              style={[
+                {
+                  width: wp(100),
+                  paddingHorizontal: wp(8),
+                  height: hp(20),
+                  marginTop: hp(52),
+                  backgroundColor: "#EBEFF2CC",
+                },
+              ]}
+            >
+              <BottomQuote width={wp(71)} height={hp(15)} />
             </View>
-          ))}
-        </View>
+          </>
+          :
+          <>
+            <Text
+              style={{
+                width: wp(100),
+                textAlign: "center",
+                color: "#455a64",
+                fontSize: wp(4),
+                fontWeight: "500",
+                marginTop: hp(1.5),
+              }}
+            >
+              Choose 3 Emotions You’re Feeling
+            </Text>
 
-        <View style={[{ marginTop: hp(1) }, styles.cardContainer]}>
-          <TouchableOpacity
-            className="flex-row "
-            activeOpacity={0.4}
-            style={styles.BookBtn}
-            onPress={() => {
-              extraPayloadandLaunch(
-                mood,
-                mood_array[0],
-                mood_array[1],
-                mood_array[2],
-                "abc",
-                component[value]
-              );
-            }}
-          >
-            <Text style={styles.btnText}>Next</Text>
-            <ArrowRightIcon size={wp(6.5)} color="#fff" />
-          </TouchableOpacity>
-        </View>
+            <View
+              style={[
+                {
+                  width: wp(100),
+                  paddingHorizontal: wp(8),
+                  marginTop: hp(1.5),
+                  display: "flex",
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  justifyContent: "space-between",
+                },
+              ]}
+            >
+              {data.map((item, index) => (
+                <Moods
+                  key={index}
+                  props={{ item, mood_array, index, select }}
+                  onDataReceived={handleDataFromChild}
+                />
+              ))}
+            </View>
 
-        <View
-          className="flex-row items-center"
-          style={[
-            {
-              width: wp(100),
-              paddingHorizontal: wp(8),
-              height: hp(20),
-              marginTop: hp(3),
-              backgroundColor: "#EBEFF2CC",
-            },
-          ]}
-        >
-          <BottomQuote width={wp(71)} height={hp(15)} />
-        </View>
+            <Text
+              style={{
+                width: wp(100),
+                textAlign: "center",
+                color: "#455a64",
+                fontSize: wp(4),
+                fontWeight: "500",
+                marginTop: hp(2),
+              }}
+            >
+              Spheres of Life
+            </Text>
+
+            <View
+              style={[
+                styles.cardContainer,
+                {
+                  display: "flex",
+                  flexDirection: "row",
+                  flexWrap: "wrap",
+                  justifyContent: "space-between",
+                  marginTop: hp(1.5),
+                },
+              ]}
+            >
+              {components.map((Component, index) => (
+                <View className=" items-center " style={{ marginBottom: hp(4) }} key={index}>
+                  <TouchableOpacity
+
+                    onPress={() => {
+                      index == value ? setvalue(-1) : setvalue(index);
+                    }}
+                    style={{
+                      width: wp(18),
+                      height: hp(7.3),
+                      backgroundColor: value == index ? "#A4DEDF66" : "#455A640A",
+                      borderRadius: wp(2.5),
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Component isClicked={value == index} />
+                  </TouchableOpacity>
+                  <Text
+                    style={{
+                      fontSize: wp(3.5),
+                      fontWeight: "normal",
+                      color: "#455A64",
+                      marginTop: hp(0.5),
+                    }}
+                  >
+                    {Component.name}
+                  </Text>
+                </View>
+              ))}
+            </View>
+
+
+            <Text
+              style={{
+                width: wp(100),
+                textAlign: "center",
+                color: "#455a64",
+                fontSize: wp(4),
+                fontWeight: "500",
+              }}
+            >
+              What’s going on?
+            </Text>
+
+            {/* here need to add backend */}
+            <TextInput
+              editable
+              multiline={true}
+              maxLength={1000}
+              textAlignVertical='top'
+              value={text}
+              onChangeText={text => onChangeText(text)}
+              style={{
+                marginTop: hp(2), borderWidth: wp(0.4), width: wp(84), height: hp(10), alignItems: 'flex-start', padding: wp(3), borderColor: '#96a1a7', borderRadius: wp(2), fontSize: wp(3.7), color: '#455A64',
+              }}
+            />
+
+            <View style={[{ marginTop: hp(1) }, styles.cardContainer]}>
+              <TouchableOpacity
+                className="flex-row "
+                activeOpacity={0.4}
+                style={styles.BookBtn}
+                onPress={() => {
+                  extraPayloadandLaunch(
+                    mood,
+                    mood_array[0],
+                    mood_array[1],
+                    mood_array[2],
+                    "abc",
+                    component[value]
+                  );
+                }}
+              >
+                <Text style={styles.btnText}>Next</Text>
+                <ArrowRightIcon size={wp(6.5)} color="#fff" />
+              </TouchableOpacity>
+            </View>
+
+            <View
+              className="flex-row items-center"
+              style={[
+                {
+                  width: wp(100),
+                  paddingHorizontal: wp(8),
+                  height: hp(20),
+                  marginTop: hp(3),
+                  backgroundColor: "#EBEFF2CC",
+                },
+              ]}
+            >
+              <BottomQuote width={wp(71)} height={hp(15)} />
+            </View>
+          </>
+        }
+        <View style={{ height: hp(20) }} />
       </ScrollView>
     </SafeAreaView>
   );

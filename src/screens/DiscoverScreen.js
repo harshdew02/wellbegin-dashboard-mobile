@@ -153,7 +153,7 @@ export default function DiscoverScreen(props) {
           >
             <TouchableOpacity
 
-              onPress={()=>{ navigation.navigate('task', data) }}
+              onPress={()=>{ navigation.navigate('test', data) }}
 
               style={[
                 styles.packageCard,
