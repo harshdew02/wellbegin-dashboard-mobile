@@ -228,13 +228,9 @@ export default function HomeScreen(props) {
         .then(async (res) => {
           console.log(res.data.mood_tacker);
           if (res.data.status === "1") {
-            res.data.mood_tacker === "yes"
-              ? setMood(true)
-              : setMood(false);
+            res.data.mood_tacker === "yes" ? setMood(true) : setMood(false);
           } else if (res.data.status === "10") {
-            res.data.mood_tacker === "yes"
-              ? setMood(true)
-              : setMood(false);
+            res.data.mood_tacker === "yes" ? setMood(true) : setMood(false);
           } else {
             throw new Error("User credentails expired");
           }
@@ -642,127 +638,90 @@ export default function HomeScreen(props) {
 
         {!mood ? (
           <>
-            <View
-              className="flex-col justify-between items-center"
-              style={[
-                styles.cardContainer,
-                { height: hp(12.5), marginTop: hp(3) },
-              ]}
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("mood", data);
+              }}
             >
-              <Text
-                style={{
-                  color: "#043953",
-                  fontSize: wp(4),
-                  fontFamily: "Roboto",
-                  fontWeight: "700",
-                }}
-              >
-                How are you feeling today?
-              </Text>
-              <FeelBanner
-                width={wp(85)}
-                height={hp(9)}
-                style={styles.feelBanner}
-              />
               <View
-                className="flex-row justify-between items-center"
+                className="flex-col justify-between items-center"
                 style={[
-                  { position: "absolute", bottom: 8, zIndex: 1, width: wp(78) },
+                  styles.cardContainer,
+                  { height: hp(12.5), marginTop: hp(3) },
                 ]}
               >
-                <TouchableOpacity>
-                  <Emoji1
-                    width={wp(8)}
-                    height={wp(8)}
-                    onPress={() => {
-                      navigation.navigate("mood", data);
-                    }}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Emoji2
-                    width={wp(8)}
-                    height={wp(8)}
-                    onPress={() => {
-                      navigation.navigate("mood", data);
-                    }}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity>
+                <Text
+                  style={{
+                    color: "#043953",
+                    fontSize: wp(4),
+                    fontFamily: "Roboto",
+                    fontWeight: "700",
+                  }}
+                >
+                  How are you feeling today?
+                </Text>
+                <FeelBanner
+                  width={wp(85)}
+                  height={hp(9)}
+                  style={styles.feelBanner}
+                />
+                <View
+                  className="flex-row justify-between items-center"
+                  style={[
+                    {
+                      position: "absolute",
+                      bottom: 8,
+                      zIndex: 1,
+                      width: wp(78),
+                    },
+                  ]}
+                >
+                  <Emoji1 width={wp(8)} height={wp(8)} />
+                  <Emoji2 width={wp(8)} height={wp(8)} />
                   <Emoji3
                     style={{ marginHorizontal: wp(1.5) }}
                     width={wp(10)}
                     height={wp(10)}
-                    onPress={() => {
-                      navigation.navigate("mood", data);
-                    }}
                   />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Emoji4
-                    width={wp(8)}
-                    height={wp(8)}
-                    onPress={() => {
-                      navigation.navigate("mood", data);
-                    }}
-                  />
-                </TouchableOpacity>
-                <TouchableOpacity>
-                  <Emoji5
-                    width={wp(8)}
-                    height={wp(8)}
-                    onPress={() => {
-                      navigation.navigate("mood", data);
-                    }}
-                  />
-                </TouchableOpacity>
+                  <Emoji4 width={wp(8)} height={wp(8)} />
+                  <Emoji5 width={wp(8)} height={wp(8)} />
+                </View>
               </View>
-            </View>
+            </TouchableOpacity>
           </>
         ) : (
           <>
-            <View
-              className="flex-col justify-between items-center"
-              style={[styles.cardContainer, { marginTop: hp(3) }]}
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("moodInsights", data);
+              }}
             >
-              <Home2 width={"100%"} height={hp(13)} />
               <View
-                style={{
-                  position: "absolute",
-                  // left: wp(43),
-                  right: wp(11),
-                  top: hp(2.4),
-                  zIndex: 2,
-                  display: "flex",
-                  alignItems: "center",
-                }}
+                className="flex-col justify-between items-center"
+                style={[styles.cardContainer, { marginTop: hp(3) }]}
               >
-                <Text
+                <Home2 width={"100%"} height={hp(13)} />
+                <View
                   style={{
-                    color: "#455a64",
-                    fontSize: wp(4),
-                    fontFamily: "Roboto",
-                    fontWeight: "800",
-                  }}
-                >
-                  Understanding You
-                </Text>
-                <TouchableOpacity
-                  activeOpacity={0.8}
-                  style={{
-                    marginTop: hp(1.2),
-                    width: wp(43),
-                    height: hp(3.5),
-                    backgroundColor: "#01818c",
-                    borderRadius: wp(8),
-                    justifyContent: "center",
+                    position: "absolute",
+                    // left: wp(43),
+                    right: wp(11),
+                    top: hp(2.4),
+                    zIndex: 2,
+                    display: "flex",
                     alignItems: "center",
-                    flexDirection: "row",
-                  }}
-                  onPress={() => {
-                    navigation.navigate("moodInsights", data);
                   }}
                 >
+                  <Text
+                    style={{
+                      color: "#455a64",
+                      fontSize: wp(4),
+                      fontFamily: "Roboto",
+                      fontWeight: "800",
+                    }}
+                  >
+                    Understanding You
+                  </Text>
                   <Text
                     style={{
                       textAlign: "center",
@@ -770,13 +729,19 @@ export default function HomeScreen(props) {
                       fontSize: wp(4),
                       fontFamily: "Roboto",
                       fontWeight: "600",
+                      marginTop: hp(1.2),
+                      width: wp(43),
+                      height: hp(3),
+                      backgroundColor: "#01818c",
+                      borderRadius: wp(8),
+                      flexDirection: "row",
                     }}
                   >
                     View mood insights
                   </Text>
-                </TouchableOpacity>
+                </View>
               </View>
-            </View>
+            </TouchableOpacity>
           </>
         )}
 
@@ -849,9 +814,9 @@ export default function HomeScreen(props) {
                 <View
                   // activeOpacity={0.5}
                   style={styles.Btn}
-                // onPress={() => {
-                //   outLink(packages);
-                // }}
+                  // onPress={() => {
+                  //   outLink(packages);
+                  // }}
                 >
                   <Text style={styles.btnText2}>Explore Packages</Text>
                 </View>

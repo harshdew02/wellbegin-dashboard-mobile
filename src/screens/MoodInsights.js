@@ -5,7 +5,7 @@ import {
   ScrollView,
   useWindowDimensions,
   TouchableOpacity,
-  ActivityIndicator
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -122,6 +122,25 @@ const DateTimeComponent = (rdate) => {
   };
 };
 
+function compareDates(date1, date2) {
+  const millisecondsPerDay = 24 * 60 * 60 * 1000;
+  const futureDate = new Date(date1);
+  const pastDate = new Date(date2);
+
+  const date1Time = futureDate.getTime();
+  const date2Time = pastDate.getTime();
+
+  const differenceInDays = (date2Time - date1Time) / millisecondsPerDay;
+
+  if (differenceInDays === 0) {
+    return true;
+  } else if (differenceInDays > 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
 const getCurrentDate = () => {
   const date = new Date();
   return {
@@ -131,8 +150,6 @@ const getCurrentDate = () => {
   };
 };
 
-let maxii = 0;
-let temp_data = [];
 let mood_percent = [];
 let mood_value = [0, 0, 0, 0, 0, 0];
 let show_mood = {
@@ -143,8 +160,9 @@ let show_mood = {
   fear: 0,
   angry: 0,
 };
-let upcomingdate = 0;
-let index = 0;
+
+let temp_data = [];
+
 
 const MoodInsights = (props) => {
   const navigation = useNavigation();
@@ -162,13 +180,12 @@ const MoodInsights = (props) => {
   const [day6, setDay6] = useState(-1);
   const [day7, setDay7] = useState(-1);
   const [select, setSelect] = useState(0);
-  const [ind, setInd] = useState(3);
+  const [ind, setInd] = useState(1);
   const Logo = habbit[ind].logo;
-  const data = props.route.params;
   const [date, setDate] = useState(getCurrentDate());
-  const [curDate, setCurDate] = useState(date.dates);
   const [longest, setLongest] = useState(0);
   const [loading, setLoading] = useState(true);
+  let [curr, setCurr] = useState(0);
   const [showMood, setShowMood] = useState({
     happy: 0,
     surprised: 0,
@@ -180,58 +197,93 @@ const MoodInsights = (props) => {
 
   let payload = props.route.params;
   useEffect(() => {
-    payload.week = 0;
+    let ahead = false;
+    payload.week = curr;
     const url = "https://n8n.heartitout.in/webhook/api/mt-weekly-streak";
     axios
       .post(url, payload)
       .then((res) => {
-        // console.log(res.data);
+        console.log(res.data);
         temp_data = res.data.data;
       })
       .catch((err) => {
         console.log(err);
       })
       .finally(() => {
-        // console.log(mood_data);
-        // console.log(temp_data);
-        upcomingdate = DateTimeComponent(temp_data[0].calendar_date).dates;
-        upcomingdate <= curDate
+        let temp_date = getCurrentDate();
+        ahead = compareDates(
+          temp_data[0].calendar_date,
+          `${temp_date.year}-${(temp_date.monthIndex + 1)
+            .toString()
+            .padStart(2, "0")}-${temp_date.dates}`
+        );
+        ahead
           ? temp_data[0].is_filled === "Filled"
             ? setDay1(1)
             : setDay1(0)
           : setDay1(-1);
-        upcomingdate = DateTimeComponent(temp_data[1].calendar_date).dates;
-        upcomingdate <= curDate
+        ahead = compareDates(
+          temp_data[1].calendar_date,
+          `${temp_date.year}-${(temp_date.monthIndex + 1)
+            .toString()
+            .padStart(2, "0")}-${temp_date.dates}`
+        );
+        ahead
           ? temp_data[1].is_filled === "Filled"
             ? setDay2(1)
             : setDay2(0)
           : setDay2(-1);
-        upcomingdate = DateTimeComponent(temp_data[2].calendar_date).dates;
-        upcomingdate <= curDate
+        ahead = compareDates(
+          temp_data[2].calendar_date,
+          `${temp_date.year}-${(temp_date.monthIndex + 1)
+            .toString()
+            .padStart(2, "0")}-${temp_date.dates}`
+        );
+        ahead
           ? temp_data[2].is_filled === "Filled"
             ? setDay3(1)
             : setDay3(0)
           : setDay3(-1);
-        upcomingdate = DateTimeComponent(temp_data[3].calendar_date).dates;
-        upcomingdate <= curDate
+        ahead = compareDates(
+          temp_data[3].calendar_date,
+          `${temp_date.year}-${(temp_date.monthIndex + 1)
+            .toString()
+            .padStart(2, "0")}-${temp_date.dates}`
+        );
+        ahead
           ? temp_data[3].is_filled === "Filled"
             ? setDay4(1)
             : setDay4(0)
           : setDay4(-1);
-        upcomingdate = DateTimeComponent(temp_data[4].calendar_date).dates;
-        upcomingdate <= curDate
+        ahead = compareDates(
+          temp_data[4].calendar_date,
+          `${temp_date.year}-${(temp_date.monthIndex + 1)
+            .toString()
+            .padStart(2, "0")}-${temp_date.dates}`
+        );
+        ahead
           ? temp_data[4].is_filled === "Filled"
             ? setDay5(1)
             : setDay5(0)
           : setDay5(-1);
-        upcomingdate = DateTimeComponent(temp_data[5].calendar_date).dates;
-        upcomingdate <= curDate
+        ahead = compareDates(
+          temp_data[5].calendar_date,
+          `${temp_date.year}-${(temp_date.monthIndex + 1)
+            .toString()
+            .padStart(2, "0")}-${temp_date.dates}`
+        );
+        ahead
           ? temp_data[5].is_filled === "Filled"
             ? setDay6(1)
             : setDay6(0)
           : setDay6(-1);
-        upcomingdate = DateTimeComponent(temp_data[6].calendar_date).dates;
-        upcomingdate <= curDate
+        ahead = compareDates(
+          temp_data[6].calendar_date,
+          `${temp_date.year}-${(temp_date.monthIndex + 1)
+            .toString()
+            .padStart(2, "0")}-${temp_date.dates}`
+        );
+        ahead
           ? temp_data[6].is_filled === "Filled"
             ? setDay7(1)
             : setDay7(0)
@@ -250,10 +302,12 @@ const MoodInsights = (props) => {
         }
         setLongest(max);
       });
-  }, []);
+  }, [curr]);
 
   useEffect(() => {
-    payload.week = 0;
+    let index = 0;
+    let maxii = 0;
+    payload.week = curr;
     const url = "https://n8n.heartitout.in/webhook/api/mt-percentage";
     axios
       .post(url, payload)
@@ -285,7 +339,6 @@ const MoodInsights = (props) => {
             show_mood.angry = mood_percent[i].percentage;
             mood_value[5] = mood_percent[i].percentage;
           }
-
           maxii = Math.max(maxii, mood_percent[i].percentage);
         }
 
@@ -296,7 +349,24 @@ const MoodInsights = (props) => {
           }
         }
         setShowMood(show_mood);
-        setSelect(index);
+        if(index == 1) setInd(3)
+        else if(index == 2) setInd(0);
+        else if(index == 3) setInd(4);
+        else if(index == 4) setInd(6);
+        else if(index == 5) setInd(5);
+        else if(index == 6) setInd(7);
+        else
+        {
+          const numbers = [1, 2, 8];
+          const index = Math.floor(Math.random() * numbers.length);
+          setInd(numbers[index]);
+        }
+
+        if (maxii == 0) {
+          setSelect(-1);
+        } else {
+          setSelect(index);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -304,7 +374,7 @@ const MoodInsights = (props) => {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [curr]);
 
   return (
     <SafeAreaView style={{ backgroundColor: "#F5F5F5" }}>
@@ -319,13 +389,23 @@ const MoodInsights = (props) => {
         </TouchableOpacity>
 
         <View className="flex-row items-center">
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setLoading(true)
+              setCurr(++curr);
+            }}
+          >
             <LeftGo />
           </TouchableOpacity>
           <Text style={styles.HeadText}>{`${month[date.monthIndex]} ${
             date.year
           }`}</Text>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setLoading(true)
+              setCurr(--curr);
+            }}
+          >
             <RightGo />
           </TouchableOpacity>
         </View>
@@ -408,7 +488,7 @@ const MoodInsights = (props) => {
                   fontWeight: "500",
                 }}
               >
-                Consecutive Recording Days
+                Consecutive Recording Days {curr}
               </Text>
 
               <View
