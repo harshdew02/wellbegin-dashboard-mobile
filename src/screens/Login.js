@@ -151,12 +151,9 @@ const Login = () => {
   // const [isFocus, setIsFocus] = useState(false);
 
   return (
-    <KeyboardAvoidingView
-      behavior="height"
-      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 50}
-    >
+    <SafeAreaView>
       {/* <TopBar /> */}
-      <ScrollView>
+      <ScrollView keyboardShouldPersistTaps='always'>
         <StatusBar
           backgroundColor={"#eaf7fc"}
           barStyle={"dark-content"}
@@ -270,7 +267,7 @@ const Login = () => {
           </TouchableOpacity>
         </View>
       </ScrollView>
-    </KeyboardAvoidingView>
+      </SafeAreaView>
   );
 };
 

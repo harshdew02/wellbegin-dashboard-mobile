@@ -506,7 +506,7 @@ const MoodTracker = (props) => {
         display: "flex-1",
         flexDirection: "col",
         alignItems: "center",
-      }} style={{ width: wp(100) }}>
+      }} keyboardShouldPersistTaps='always' style={{ width: wp(100) }}>
 
         {(select == 0) ?
           <>

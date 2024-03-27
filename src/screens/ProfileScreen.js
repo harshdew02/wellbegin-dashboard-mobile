@@ -560,7 +560,6 @@ const Card = (props) => {
 export default function ProfileScreen(props) {
   const data = props.route.params.data;
   const navigation = useNavigation();
-  // const [firstTime, setFirstTime] = useState(true);
   const [name, setName] = useState("");
   const [mail, setMail] = useState("");
   const [code, setCode] = useState("");

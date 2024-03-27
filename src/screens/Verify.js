@@ -198,7 +198,7 @@ export default function Verify({ navigation, route }) {
         hidden={false}
       />
 
-      <ScrollView>
+      <ScrollView keyboardShouldPersistTaps='always'>
         <View style={styles.box}>
           <TouchableOpacity
             style={{ position: "absolute", left: wp(8) }}
