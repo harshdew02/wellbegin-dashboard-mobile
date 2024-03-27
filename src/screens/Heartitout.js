@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, StyleSheet, ActivityIndicator, BackHandler } from "react-native";
+import { View, StyleSheet, ActivityIndicator, BackHandler, ToastAndroid } from "react-native";
 // import WebView from "react-native-webview";
 import {
   widthPercentageToDP as wp,
@@ -11,6 +11,13 @@ let canGoBack = false;
 const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
 };
+
+function containsOrder(sentence) {
+  return sentence.includes('order-summary') || sentence.includes('order-received');
+}
+
+let current = 0;
+
 export default function Heartitout() {
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
@@ -19,12 +26,14 @@ export default function Heartitout() {
   const onNavigationStateChange = (navState) => {
     console.log("It is from nav change:", canGoBack, navState.url);
     canGoBack = navState.canGoBack;
-    if (
-      navState.url === "https://heartitout.in/services/order-summary" ||
-      navState.url === "https://heartitout.in/services/order-summary/"
-    ) {
-        showToast("Order, placed successfully")
-        navigation.navigate('Home_Tab')
+    if (containsOrder(navState.url) && (loading == false)) 
+    {
+      showToast("Order, placed successfully");
+      navigation.navigate("Home_Tab");
+    }
+    else
+    {
+      console.log("Not hit yet")
     }
   };
   //   const [goBack, setGoBack] = useState(false);
@@ -83,6 +92,7 @@ export default function Heartitout() {
         onError={() => {
           setLoading(false);
         }}
+        setSupportMultipleWindows={false}
         useWebView2={true}
         ref={webViewRef}
         source={{ uri: "https://heartitout.in/therapists" }} // Change the URL to test

@@ -38,6 +38,7 @@ import {
   Family,
   Leisure,
 } from "../components/spheres";
+import PTRView from "react-native-pull-to-refresh";
 
 const component = {
   Happy: <Happy />,
@@ -60,7 +61,6 @@ const SphereOfLife = {
 };
 
 const MoodCard = (props) => {
-  console.log("It is from mood card: ", props.props.mood);
   return (
     <View style={styles.CardStyle}>
       <Text style={{ width: wp(75), color: theme.black, fontSize: wp(3.2) }}>
@@ -256,11 +256,13 @@ const MoodLog = (props) => {
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
   const [datas, setData] = useState([]);
-  console.log("It is from mood logs: ", props.route.params);
+  const [refreshing, setRefreshing] = useState(false);
   let payload = props.route.params;
   useEffect(() => {
     payload.week = 0;
     const url = "https://n8n.heartitout.in/webhook/api/mt-weekly-mood";
+    if(loading){
+    
     axios
       .post(url, payload)
       .then((res) => {
@@ -278,7 +280,20 @@ const MoodLog = (props) => {
         // console.log(mood_data);
         setLoading(false);
       });
-  }, []);
+    }
+  }, [loading]);
+
+  const fetchData = () => {
+    setTimeout(() => {
+      setLoading(true)
+      setRefreshing(false);
+    }, 50); // Simulating 2 seconds delay
+  };
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchData();
+  };
 
   return (
     <SafeAreaView style={{ backgroundColor: "#F5F5F5" }}>
@@ -297,7 +312,8 @@ const MoodLog = (props) => {
         </View>
       </View>
 
-      <ScrollView
+      <PTRView
+        onRefresh={handleRefresh}
         contentContainerStyle={{
           display: "flex-1",
           flexDirection: "col",
@@ -355,8 +371,8 @@ const MoodLog = (props) => {
           </Text>
           <Signal width={wp(4.2)} height={wp(3.7)} />
         </TouchableOpacity>
-        <View style={{ height: hp(5) }} />
-      </ScrollView>
+        <View style={{height:hp(5)}} />
+      </PTRView>
     </SafeAreaView>
   );
 };
