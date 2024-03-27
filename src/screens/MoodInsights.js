@@ -42,6 +42,7 @@ import H8 from "../../assets/images/h8.svg";
 import H9 from "../../assets/images/h9.svg";
 import BottomQuote from "../components/BottomQuote";
 import axios from "axios";
+import PTRView from "react-native-pull-to-refresh";
 
 const Space = () => {
   return <View style={{ width: wp(8), height: wp(8) }}></View>;
@@ -186,6 +187,7 @@ const MoodInsights = (props) => {
   const [longest, setLongest] = useState(0);
   const [loading, setLoading] = useState(true);
   let [curr, setCurr] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
   const [showMood, setShowMood] = useState({
     happy: 0,
     surprised: 0,
@@ -194,6 +196,22 @@ const MoodInsights = (props) => {
     fear: 0,
     angry: 0,
   });
+
+  const fetchData = () => {
+    setTimeout(() => {
+      if(curr != 0)
+      {
+        setLoading(true)
+        setCurr(0);
+      }
+      setRefreshing(false);
+    }, 50); // Simulating 2 seconds delay
+  };
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchData();
+  };
 
   let payload = props.route.params;
   useEffect(() => {
@@ -411,7 +429,8 @@ const MoodInsights = (props) => {
         </View>
       </View>
 
-      <ScrollView
+      <PTRView
+        onRefresh={handleRefresh}
         contentContainerStyle={{
           display: "flex-1",
           flexDirection: "col",
@@ -887,7 +906,7 @@ const MoodInsights = (props) => {
             <BottomQuote />
           </>
         )}
-      </ScrollView>
+      </PTRView>
     </SafeAreaView>
   );
 };

@@ -27,6 +27,7 @@ import BookIcon from "../../assets/images/bookIcon.svg";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import axios from "axios";
+import PTRView from 'react-native-pull-to-refresh';
 import theme from "../theme";
 
 const gMeet = (link) => {
@@ -581,6 +582,8 @@ export default function ProfileScreen(props) {
   const [bannerH, setBannerH] = useState(false);
   const [banLinkH, setBanLinkH] = useState("");
   const [banClickH, setBanClickH] = useState("");
+  const [fetch, setFetch] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [statusColor, setStatusColor] = useState("green");
 
   const [routes] = React.useState([
@@ -653,6 +656,19 @@ export default function ProfileScreen(props) {
 
   }, [isSession])
 
+  const fetchData = () => {
+    setTimeout(() => {
+      setFetch(true)
+      console.log('Pull down event')
+      setRefreshing(false);
+    }, 2000); // Simulating 2 seconds delay
+  };
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchData();
+  };
+
 
   const renderScene = ({ route }) => {
     switch (route.key) {
@@ -688,6 +704,7 @@ export default function ProfileScreen(props) {
   };
   return (
     <SafeAreaView>
+      
       {/* <StatusBar
         // backgroundColor={statusColor}
         translucent backgroundColor="transparent"
@@ -705,7 +722,8 @@ export default function ProfileScreen(props) {
           zIndex: 4,
         }}
       ></View>
-      <ScrollView style={{ backgroundColor: "#fff", height: hp(100) }}>
+      <PTRView onRefresh={handleRefresh} style={{ backgroundColor: "#fff", height: hp(100) }}>
+      
         <View style={{}}>
           <ProfileBg width={wp(100)} height={wp(58.4)} />
           <View style={styles.banner}>
@@ -848,7 +866,7 @@ export default function ProfileScreen(props) {
           <BottomQuote width={wp(71)} height={hp(15)} />
         </View>
         <View style={{ width: wp(100), height: hp(6), marginTop: hp(3) }} />
-      </ScrollView>
+      </PTRView>
     </SafeAreaView>
   );
 }
