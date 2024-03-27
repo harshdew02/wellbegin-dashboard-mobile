@@ -228,7 +228,6 @@ const FirstRoute = (props) => {
       axios
         .post(url, payload)
         .then((res) => {
-          console.log(res.data);
           if (res.data.has_upc === "yes") {
             sethasApp(true);
             setData(res.data.upc_data);
@@ -368,7 +367,6 @@ const SecondRoute = (props) => {
               ? res.data.btn_dat["btn2-url"]
               : "https://heartitout.in";
         }
-        // console.log(res.data);
         passDataToParent(parentData);
         renderSecondElement();
       })
@@ -562,7 +560,6 @@ const Card = (props) => {
 export default function ProfileScreen(props) {
   const data = props.route.params.data;
   const navigation = useNavigation();
-  // const [firstTime, setFirstTime] = useState(true);
   const [name, setName] = useState("");
   const [mail, setMail] = useState("");
   const [code, setCode] = useState("");
@@ -624,7 +621,6 @@ export default function ProfileScreen(props) {
 
   const handleDataFromChild = (data) => {
     // Do something with the received data, such as updating state
-    console.log("It is from upcoming: ", data);
     setSession(data.has_ban);
     setBut1(data.btn_data["btn1-text"]);
     setBut2(data.btn_data["btn2-text"]);
@@ -637,7 +633,6 @@ export default function ProfileScreen(props) {
 
   const handleDataFromChild2 = (data) => {
     // Do something with the received data, such as updating state
-    console.log("It is from history: ", data);
     setSessionH(data.has_ban);
     setBut1H(data.btn_data["btn1-text"]);
     setBut2H(data.btn_data["btn2-text"]);
@@ -708,11 +703,9 @@ export default function ProfileScreen(props) {
   const [timer, setTimer] = useState(true);
   React.useEffect(() => {
     if (timer) {
-      console.log("Reset the timer");
       clearInterval(idleTimer);
     } else {
       clearInterval(idleTimer);
-      console.log("Performing logic every 2 minutes...");
       setIdleTimer(
         setInterval(() => {
           setRefresh(true);
