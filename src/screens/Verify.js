@@ -9,6 +9,8 @@ import {
   TouchableOpacity,
   ScrollView,
   ToastAndroid,
+  KeyboardAvoidingView,
+  Platform
 } from "react-native";
 import React, { useState } from "react";
 import SInfo from "react-native-encrypted-storage";
@@ -189,7 +191,11 @@ export default function Verify({ navigation, route }) {
   const [number, onChangeNumber] = React.useState("");
 
   return (
-    <SafeAreaView>
+    <KeyboardAvoidingView
+    behavior="padding"
+    keyboardVerticalOffset={-225}
+    style={{ flex: 1 }}
+    >
       {/* <TopBar /> */}
 
       <StatusBar
@@ -226,12 +232,12 @@ export default function Verify({ navigation, route }) {
 
           <TextInput
             className="rounded-lg"
-            style={[styles.input , {textAlign: 'center'}]}
+            style={[styles.input, { textAlign: 'center', fontSize: wp(5) }]}
             onChangeText={onChangeNumber}
             value={number}
             placeholder="Enter OTP"
             keyboardType="numeric"
-            onSubmitEditing={()=>{
+            onSubmitEditing={() => {
               setLoading(true);
               setShowErrorMessage(null);
               verifyOTP(
@@ -321,7 +327,7 @@ export default function Verify({ navigation, route }) {
           </View>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 }
 
