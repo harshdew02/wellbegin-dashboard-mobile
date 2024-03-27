@@ -9,6 +9,9 @@ import {
   ActivityIndicator,
   ScrollView,
   ToastAndroid,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
 } from "react-native";
 import React, { useState } from "react";
 import SInfo from "react-native-encrypted-storage";
@@ -137,10 +140,21 @@ const Login = () => {
     setLoading(false);
   });
 
+  const handleKeyPress = (event) => {
+    console.log(event.nativeEvent);
+    if (event.nativeEvent.key === "Enter") {
+      // Do something when Enter key is pressed
+      console.log("Enter key pressed!");
+    }
+  };
+
   // const [isFocus, setIsFocus] = useState(false);
 
   return (
-    <SafeAreaView>
+    <KeyboardAvoidingView
+      behavior="height"
+      keyboardVerticalOffset={Platform.OS === "ios" ? 100 : 50}
+    >
       {/* <TopBar /> */}
       <ScrollView>
         <StatusBar
@@ -219,12 +233,26 @@ const Login = () => {
               value={number}
               // placeholder="6266019364"
               keyboardType="numeric"
+              onSubmitEditing={() => {
+                setLoading(true);
+                requestOTP(codes[value], number, navigation, [
+                  loading,
+                  setLoading,
+                ]);
+                mixpanel.track("OTP Request done by", {
+                  "Phone ": codes[value] + number,
+                });
+              }}
+              onKeyPress={handleKeyPress}
             />
           </View>
 
           <ActivityIndicator animating={loading} size="large" />
 
           <TouchableOpacity
+            onPressIn={() => {
+              console.log("pressed");
+            }}
             style={styles.button}
             onPress={() => {
               setLoading(true);
@@ -236,16 +264,13 @@ const Login = () => {
               mixpanel.track("OTP Request done by", {
                 "Phone ": codes[value] + number,
               });
-              // Sentry.captureException(
-              //   new Error("Someone clicked the otp request button.")
-              // );
             }}
           >
             <Text style={styles.textStyle}>Get OTP</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 

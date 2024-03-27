@@ -646,6 +646,16 @@ const MoodTracker = (props) => {
               style={{
                 marginTop: hp(2), borderWidth: wp(0.4), width: wp(84), height: hp(10), alignItems: 'flex-start', padding: wp(3), borderColor: '#96a1a7', borderRadius: wp(2), fontSize: wp(3.7), color: '#455A64',
               }}
+              onSubmitEditing={() => {
+                extraPayloadandLaunch(
+                  mood,
+                  mood_array[0],
+                  mood_array[1],
+                  mood_array[2],
+                  text,
+                  component[value]
+                );
+              }}
             />
 
             <View style={[{ marginTop: hp(1) }, styles.cardContainer]}>
