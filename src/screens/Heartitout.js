@@ -84,7 +84,11 @@ export default function Heartitout(props) {
         <>
         </>
       )}
-      <TouchableOpacity onPress={()=>{navigation.goBack()}} activeOpacity={0.8} style={{ width: wp(16), height: hp(8), backgroundColor: '#fff', position: 'absolute', zIndex: 2, left: 0, top: 0, justifyContent: 'center', alignItems: 'center' }} >
+      <TouchableOpacity onPress={() => { navigation.goBack() }} activeOpacity={0.8} style={{
+        width: wp(14), height: hp(6), backgroundColor: '#fff', position: 'absolute', zIndex: 2,
+        left: 0, top: 12, justifyContent: 'center', alignItems: 'center',
+        borderRadius:wp(10)
+      }} >
         <Back color={"#455A64"} />
       </TouchableOpacity>
       <WebView
