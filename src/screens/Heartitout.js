@@ -59,6 +59,8 @@ export default function Heartitout() {
             width: "100%",
             justifyContent: "center",
             alignItems: "center",
+            position:'absolute',
+            zIndex: 2
           }}
         >
           <ActivityIndicator
@@ -68,7 +70,8 @@ export default function Heartitout() {
           />
         </View>
       ) : (
-        <></>
+        <>
+        </>
       )}
       <WebView
         onLoadStart={() => {
