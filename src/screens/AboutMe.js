@@ -76,7 +76,7 @@ export default function AboutMe(props) {
   return (
     <GestureHandlerRootView>
       <SafeAreaView>
-        <ScrollView style={{ backgroundColor: "#fff", height: hp(100) }}>
+        <ScrollView keyboardShouldPersistTaps='always' style={{ backgroundColor: "#fff", height: hp(100) }}>
           <View
             style={[
               styles.cardContainer,
