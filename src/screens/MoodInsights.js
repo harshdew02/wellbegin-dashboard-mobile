@@ -306,17 +306,17 @@ const MoodInsights = (props) => {
             ? setDay7(1)
             : setDay7(0)
           : setDay7(-1);
-        setDate(DateTimeComponent(temp_data[0].calendar_date));
+        curr != 0 ? setDate(DateTimeComponent(temp_data[0].calendar_date)) : setDate(getCurrentDate());
 
         //DSA is here
-        let curr = 0;
+        let current = 0;
         let max = 0;
         for (let i = 0; i < 7; i++) {
           if (temp_data[i].is_filled === "Filled") curr++;
           else {
-            curr = 0;
+            current = 0;
           }
-          max = Math.max(max, curr);
+          max = Math.max(max, current);
         }
         setLongest(max);
       });
@@ -415,7 +415,7 @@ const MoodInsights = (props) => {
           >
             <LeftGo />
           </TouchableOpacity>
-          <Text style={styles.HeadText}>{`${month[date.monthIndex]} ${
+          <Text style={styles.HeadText}>{`${date.dates} ${month[date.monthIndex]} ${
             date.year
           }`}</Text>
           <TouchableOpacity
@@ -507,7 +507,7 @@ const MoodInsights = (props) => {
                   fontWeight: "500",
                 }}
               >
-                Consecutive Recording Days {curr}
+                Consecutive Recording Days
               </Text>
 
               <View

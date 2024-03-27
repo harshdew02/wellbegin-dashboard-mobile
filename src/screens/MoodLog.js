@@ -18,7 +18,6 @@ import Back from "../components/Back";
 import { theme } from "../theme";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
-import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import {
   Angry,
   Happy,

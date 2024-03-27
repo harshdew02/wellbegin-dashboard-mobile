@@ -28,56 +28,10 @@ import {
 import BottomQuote from "../components/BottomQuote";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
-import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import Share from "react-native-share";
 import RNFetchBlob from "rn-fetch-blob";
 import FileViewer from "react-native-file-viewer";
 import PTRView from "react-native-pull-to-refresh";
-
-const outLink = async (link) => {
-  try {
-    const url = link;
-    if (await InAppBrowser.isAvailable()) {
-      const result = await InAppBrowser.open(url, {
-        // // iOS Properties
-        // dismissButtonStyle: 'cancel',
-        // preferredBarTintColor: '#453AA4',
-        // preferredControlTintColor: 'white',
-        // readerMode: false,
-        // animated: true,
-        // modalPresentationStyle: 'fullScreen',
-        // modalTransitionStyle: 'coverVertical',
-        // modalEnabled: true,
-        // enableBarCollapsing: false,
-        // Android Properties
-        showTitle: true,
-        toolbarColor: "#01818C",
-        secondaryToolbarColor: "red",
-        navigationBarColor: "white",
-        navigationBarDividerColor: "white",
-        enableUrlBarHiding: true,
-        enableDefaultShare: false,
-        forceCloseOnRedirection: false,
-        hasBackButton: true,
-
-        // Specify full animation resource identifier(package:anim/name)
-        // or only resource name(in case of animation bundled with app).
-        animations: {
-          startEnter: "slide_in_right",
-        },
-        headers: {
-          "my-custom-header": "my custom header value",
-        },
-      });
-      // console.log(result);
-    } else Linking.openURL(url);
-  } catch (error) {
-    console.log(error);
-  }
-  // Linking.canOpenURL(link).then((supported)=>{
-  //   if(supported) Linking.openURL(link); else console.log('error')
-  // });
-};
 
 const NoSessions = () => {
   return (
@@ -189,7 +143,6 @@ const CardDetails = (props) => {
             alignItems: "center",
           }}
           onPress={() => {
-            // outLink(props.props.report_url);
             downloadFile(
               props.props.report_url,
               props.props.phone_no,
@@ -377,7 +330,7 @@ const renderTabBar = (props) => (
 
 const GeneralCard = (props) => {
   const [colors, setColor] = useState(props.colors);
-
+  const navigation = useNavigation();
   // console.log("Is this refreshing")
 
   const containsWord = (sentence, word) => {
@@ -422,7 +375,7 @@ const GeneralCard = (props) => {
         <TouchableOpacity
           style={styles.btnStyle}
           onPress={() => {
-            outLink(props.props.url);
+            navigation.navigate('webview',props.props.url)
           }}
         >
           <Text style={{ color: "#fff", fontSize: wp(3.4) }}>Take Test</Text>

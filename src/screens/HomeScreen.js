@@ -34,7 +34,6 @@ import Emoji3 from "../../assets/images/emoji3.svg";
 import Emoji4 from "../../assets/images/emoji4.svg";
 import Emoji5 from "../../assets/images/emoji5.svg";
 import Home2 from "../../assets/images/home2.svg";
-import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import SInfo from "react-native-encrypted-storage";
 import { theme } from "../theme";
 import TopBell from "../components/TopBell";
@@ -44,6 +43,10 @@ import Gift from "../../assets/images/Gift.svg";
 import axios from "axios";
 import PTRView from "react-native-pull-to-refresh";
 // F:\HIO\Progress\hio_UI\hio\assets\images\
+
+const showToast = (message) => {
+  ToastAndroid.show(message, ToastAndroid.SHORT);
+};
 
 const gMeet = (link) => {
   if (link == "" || link == null || link == undefined)
@@ -55,57 +58,16 @@ const gMeet = (link) => {
     .catch((err) => console.log(err));
 };
 
-const outLink = async (link) => {
-  try {
-    const url = link;
-    if (await InAppBrowser.isAvailable()) {
-      const result = await InAppBrowser.open(url, {
-        // // iOS Properties
-        // dismissButtonStyle: 'cancel',
-        // preferredBarTintColor: '#453AA4',
-        // preferredControlTintColor: 'white',
-        // readerMode: false,
-        // animated: true,
-        // modalPresentationStyle: 'fullScreen',
-        // modalTransitionStyle: 'coverVertical',
-        // modalEnabled: true,
-        // enableBarCollapsing: false,
-        // Android Properties
-        showTitle: true,
-        toolbarColor: "#01818C",
-        secondaryToolbarColor: "red",
-        navigationBarColor: "white",
-        navigationBarDividerColor: "white",
-        enableUrlBarHiding: true,
-        enableDefaultShare: false,
-        forceCloseOnRedirection: false,
-        hasBackButton: true,
-
-        // Specify full animation resource identifier(package:anim/name)
-        // or only resource name(in case of animation bundled with app).
-        animations: {
-          startEnter: "slide_in_right",
-        },
-        headers: {
-          "my-custom-header": "my custom header value",
-        },
-      });
-      console.log(result);
-    } else Linking.openURL(url);
-  } catch (error) {
-    console.log(error);
-  }
-};
-
 const Btn = (props) => {
   // console.log("It is from btn: ",props)
+  const navigation = useNavigation()
   return (
     <TouchableOpacity
       activeOpacity={0.8}
       style={styles.BookBtn}
       onPress={() => {
         // Checking if the link is supported for links with custom URL scheme.
-        outLink(props.props);
+        navigation.navigate('webview',props.props)
       }}
     >
       <Text style={styles.btnText}>Book a Session</Text>
@@ -115,7 +77,7 @@ const Btn = (props) => {
 
 const Bookbtn = (props) => {
   // console.log("It is from bookbtn: ",props)
-
+  const navigation = useNavigation();
   const ishour = props.props.is2hour;
   return (
     // <></>
@@ -137,7 +99,7 @@ const Bookbtn = (props) => {
             }}
             onPress={() => {
               // Checking if the link is supported for links with custom URL scheme.
-              outLink(props.props.booking);
+              navigation.navigate('webview',props.props.booking)
             }}
           >
             <Text
@@ -172,7 +134,7 @@ const Bookbtn = (props) => {
           style={[styles.BookBtn]}
           onPress={() => {
             // Checking if the link is supported for links with custom URL scheme.
-            outLink("https://heartitout.in/therapists/");
+            navigation.navigate('webview',props.props.booking)
           }}
         >
           <Text style={[styles.btnText]}>Book another Session</Text>
@@ -183,7 +145,8 @@ const Bookbtn = (props) => {
 };
 
 export default function HomeScreen(props) {
-  const data = props.route.params.data.route.params;
+  let data = props.route.params.data.route.params;
+  const payload = props.route.params.data.route.params;
   const navigation = useNavigation();
   const [isBooked, setBooked] = useState(false);
   const [is2hour, setIs2hour] = useState(false);
@@ -222,28 +185,6 @@ export default function HomeScreen(props) {
     BackHandler.removeEventListener("hardwareBackPress", backHandler);
   });
 
-  useEffect(() => {
-    if (moodcheck) {
-      const apiUrl3 = "https://n8n.heartitout.in/webhook/api/home-page-details";
-      axios
-        .post(apiUrl3, data)
-        .then(async (res) => {
-          console.log(res.data.mood_tacker);
-          if (res.data.status === "1") {
-            res.data.mood_tacker === "yes" ? setMood(true) : setMood(false);
-          } else if (res.data.status === "10") {
-            res.data.mood_tacker === "yes" ? setMood(true) : setMood(false);
-          } else {
-            throw new Error("User credentails expired");
-          }
-          // console.log(res.data.show_sub)
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    }
-  }, [moodcheck]);
-
   const appointment = {
     appointment: data.app_det,
     has_appointment: data.has_appointment,
@@ -259,6 +200,129 @@ export default function HomeScreen(props) {
     //   app_session_link: "https://meet.google.com/pgx-mwxa-jdj",
     // },
   };
+
+  useEffect(() => {
+    if (moodcheck) {
+      const apiUrl2 =
+        "https://n8n.heartitout.in/webhook/api/fetch-session-details";
+      axios
+        .post(apiUrl2, payload)
+        .then(async (res) => {
+          if (res.data.status === "0") {
+            // await AsyncStorage.setItem("token", Token);
+            SInfo.removeItem("token");
+            showToast("User credentials expired, please login again.");
+            navigation.navigate("LoginPage");
+            console.log("User invalid");
+          } else {
+            if (res.data.has_appointment === "no") setBooked(false);
+            else {
+              const apiDate = res.data.app_det.app_session_date;
+              const apiTime = res.data.app_det.app_session_time;
+
+              // Extracting date components from api
+              let timestamp = new Date(apiDate);
+              let year = timestamp.getFullYear();
+              let month = String(timestamp.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
+              let date = String(timestamp.getDate()).padStart(2, "0");
+              let [part1, part2, part3] = apiTime.split(":");
+              let hours = part1;
+              let minutes = part2;
+              let seconds = part3;
+              let period = "AM";
+              if (hours >= 12) {
+                hours -= 12;
+                period = "PM";
+              }
+              if (hours === 0) {
+                hours = 12;
+              }
+              let showTime = `${hours}:${minutes} ${period}`;
+              let showDate = `${date}/${month}/${year}`;
+              let finalAPITime = `${year}-${month}-${date}T${apiTime}Z`;
+
+              // Extracting date components from system
+              timestamp = new Date();
+              year = timestamp.getFullYear();
+              month = String(timestamp.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
+              date = String(timestamp.getDate()).padStart(2, "0");
+              hours = String(timestamp.getHours()).padStart(2, "0");
+              minutes = String(timestamp.getMinutes()).padStart(2, "0");
+              seconds = String(timestamp.getSeconds()).padStart(2, "0");
+              let finalSystemTime = `${year}-${month}-${date}T${hours}:${minutes}:${seconds}Z`;
+              setLink(res.data.app_det.app_session_link);
+
+              // Parse the API datetime string
+              const apiDateTime = new Date(finalAPITime);
+
+              // Parse the system datetime string
+              const systemDateTime = new Date(finalSystemTime);
+
+              // Calculate the time difference in milliseconds
+              const timeDifference = apiDateTime - systemDateTime;
+
+              // Convert milliseconds to hours
+              const timeDifferenceHours = Math.abs(
+                timeDifference / (1000 * 60 * 60)
+              );
+
+              // Define a threshold for 2 hours
+              const twoHours = 2;
+
+              // Compare the time difference with the threshold and whether it's negative
+              if (timeDifference < 0) {
+                setBooked(false);
+              } else if (timeDifferenceHours >= twoHours) {
+                setBooked(true);
+                setIs2hour(false);
+              } else if (timeDifferenceHours < twoHours) {
+                setBooked(true);
+                setIs2hour(true);
+                setTime(showTime);
+                setDate(showDate);
+              }
+            }
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          setMoodCheck(false);
+        });
+
+      const apiUrl3 = "https://n8n.heartitout.in/webhook/api/home-page-details";
+      axios
+        .post(apiUrl3, payload)
+        .then(async (res) => {
+          if (res.data.status === "1" || res.data.status === "10") {
+            res.data.mood_tacker === "yes" ? setMood(true) : setMood(false);
+            if (res.data.has_banner == "yes") {
+              setBanner(true);
+              setBanLink(res.data.banner_link);
+              setCBanLink(res.data.on_click);
+            } else {
+              setBanner(false);
+            }
+            setWhatsnew(res.data.whats_new_onclick);
+            setProduct(res.data.product_onclick);
+            setBooking(res.data.booking_link);
+            if (res.data.subs_det === "yes") setSubsdet(true);
+            else setSubsdet(false);
+          } else {
+            throw new Error("User credentails expired");
+          }
+          // console.log(res.data.show_sub)
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          setMoodCheck(false);
+        });
+    }
+  }, [moodcheck]);
+
   React.useEffect(() => {
     setName(data.usr_fullname);
     data.has_mood == "no" ? setMood(false) : setMood(true);
@@ -356,32 +420,28 @@ export default function HomeScreen(props) {
 
   const fetchData = () => {
     setTimeout(() => {
-      // setLoading(true);
+      setMoodCheck(true);
       setRefreshing(false);
     }, 50); // Simulating 2 seconds delay
   };
 
   const handleRefresh = () => {
-    console.log("Event triggered")
     setRefreshing(true);
     fetchData();
   };
-
 
   const [idleTimer, setIdleTimer] = useState(null);
   const [timer, setTimer] = useState(true);
 
   React.useEffect(() => {
     if (timer) {
-      console.log("Reset the timer");
       clearInterval(idleTimer);
     } else {
       clearInterval(idleTimer);
-      console.log("Performing logic every 1 minute...");
       setIdleTimer(
         setInterval(() => {
-          // setLoading(true);
-        }, 90000)
+          setMoodCheck(true);
+        }, 180000)
       );
     }
 
@@ -414,7 +474,6 @@ export default function HomeScreen(props) {
 
       <PTRView
         onRefresh={handleRefresh}
-        onTouchStart={()=>{setTimer(true); console.log("reset")}}
         scrollEventThrottle={1}
         contentContainerStyle={{ flexGrow: 1 }}
         style={{ backgroundColor: "#fff", height: hp(100) }}
@@ -431,7 +490,7 @@ export default function HomeScreen(props) {
               top: 0,
             }}
             onPress={() => {
-              outLink(cbanLink);
+              navigation.navigate('webview',cbanLink)
             }}
           >
             <Image
@@ -643,7 +702,7 @@ export default function HomeScreen(props) {
           <TouchableOpacity
             style={[styles.card, { backgroundColor: "#EAF7FC" }]}
             onPress={() => {
-              outLink(whatsnew);
+              navigation.navigate('webview',whatsnew)
             }}
           >
             <Text style={styles.cardText}>What's {"\n"}New?</Text>
@@ -765,8 +824,7 @@ export default function HomeScreen(props) {
         {showsub ? (
           <TouchableOpacity
             onPress={() => {
-              // navigation.navigate('mood');
-              outLink(sub);
+              navigation.navigate('webview',sub)
             }}
             className="flex-col items-center"
             style={[
@@ -797,22 +855,17 @@ export default function HomeScreen(props) {
                 Your Whole Hearted Subscription is Active
               </Text>
               <View
-                // onPress={() => {
-                //   // navigation.navigate('mood');
-                //   outLink(sub);
-                // }}
                 activeOpacity={0.5}
                 style={[styles.Btn, { marginTop: hp(0.8) }]}
               >
                 <Text style={styles.btnText2}>See Details </Text>
               </View>
             </View>
-            {/* <Gift width={wp(25)} height={hp(9)} /> */}
           </TouchableOpacity>
         ) : (
           <TouchableOpacity
             onPress={() => {
-              outLink(packages);
+              navigation.navigate('webview',packages)
             }}
             className="flex-col items-center"
             style={[
@@ -829,9 +882,6 @@ export default function HomeScreen(props) {
                 <View
                   // activeOpacity={0.5}
                   style={styles.Btn}
-                  // onPress={() => {
-                  //   outLink(packages);
-                  // }}
                 >
                   <Text style={styles.btnText2}>Explore Packages</Text>
                 </View>
@@ -844,7 +894,7 @@ export default function HomeScreen(props) {
 
         <TouchableOpacity
           onPress={() => {
-            outLink(product);
+            navigation.navigate('webview',product)
           }}
           className="flex-col items-center"
           style={[styles.cardContainer, { height: hp(15.8), marginTop: hp(4) }]}
@@ -856,10 +906,6 @@ export default function HomeScreen(props) {
             >
               <Text style={styles.cardText}>Self-care Tools for you</Text>
               <View
-                // onPress={() => {
-                //   outLink(product);
-                // }}
-                // activeOpacity={0.5}
                 style={styles.Btn}
               >
                 <Text style={styles.btnText2}>Discover Now</Text>

@@ -11,6 +11,7 @@ import {
   Image,
   BackHandler,
   ToastAndroid,
+  RefreshControl,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { ScrollView } from "react-native-gesture-handler";
@@ -25,7 +26,6 @@ import ProfileDisplay from "../../assets/images/ProfileDisplay.svg";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
 import BookIcon from "../../assets/images/bookIcon.svg";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
-import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import axios from "axios";
 import PTRView from "react-native-pull-to-refresh";
 import theme from "../theme";
@@ -38,51 +38,6 @@ const gMeet = (link) => {
       console.log(responsive);
     })
     .catch((err) => console.log(err));
-};
-
-const outLink = async (link) => {
-  try {
-    const url = link;
-    if (await InAppBrowser.isAvailable()) {
-      const result = await InAppBrowser.open(url, {
-        // // iOS Properties
-        // dismissButtonStyle: 'cancel',
-        // preferredBarTintColor: '#453AA4',
-        // preferredControlTintColor: 'white',
-        // readerMode: false,
-        // animated: true,
-        // modalPresentationStyle: 'fullScreen',
-        // modalTransitionStyle: 'coverVertical',
-        // modalEnabled: true,
-        // enableBarCollapsing: false,
-        // Android Properties
-        showTitle: true,
-        toolbarColor: "#01818C",
-        secondaryToolbarColor: "red",
-        navigationBarColor: "white",
-        navigationBarDividerColor: "white",
-        enableUrlBarHiding: true,
-        enableDefaultShare: false,
-        forceCloseOnRedirection: false,
-        hasBackButton: true,
-
-        // Specify full animation resource identifier(package:anim/name)
-        // or only resource name(in case of animation bundled with app).
-        animations: {
-          startEnter: "slide_in_right",
-        },
-        headers: {
-          "my-custom-header": "my custom header value",
-        },
-      });
-      // console.log(result);
-    } else Linking.openURL(url);
-  } catch (error) {
-    console.log(error);
-  }
-  // Linking.canOpenURL(link).then((supported)=>{
-  //   if(supported) Linking.openURL(link); else console.log('error')
-  // });
 };
 
 const NoSessions = () => {
@@ -265,102 +220,75 @@ const FirstRoute = (props) => {
     props.onRender(true);
   };
 
-  const fetchData = () => {
-    setTimeout(() => {
-      setLoading(true);
-      setRefreshing(false);
-    }, 50); // Simulating 2 seconds delay
-  };
-
-  const handleRefresh = () => {
-    setRefreshing(true);
-    fetchData();
-  };
-
-  const [idleTimer, setIdleTimer] = useState(null);
-  const [timer, setTimer] = useState(true);
-
-  React.useEffect(() => {
-    if (timer) {
-      console.log("Reset the timer");
-      clearInterval(idleTimer);
-    } else {
-      clearInterval(idleTimer);
-      console.log("Performing logic every 1 minute...");
-      setIdleTimer(
-        setInterval(() => {
-          setLoading(true);
-        }, 90000)
-      );
-    }
-
-    setTimer(false);
-  }, [timer]);
-
   useEffect(() => {
     const url = "https://n8n.heartitout.in/webhook/api/fetch-session-history";
     const payload = props.data;
     payload.data = "upcoming";
-    if(loading)
-    {
-    axios
-      .post(url, payload)
-      .then((res) => {
-        console.log(res.data);
-        if (res.data.has_upc === "yes") {
-          sethasApp(true);
-          setData(res.data.upc_data);
-          parentData.has_ban = true;
-          parentData.banner_link = res.data.banner_link;
-          parentData.on_click = res.data.on_click;
-        } else {
-          sethasApp(false);
-          parentData.has_ban = false;
-          parentData.btn_data["btn1-text"] =
-            res.data.btn_dat["btn1-text"] != (null || undefined)
-              ? res.data.btn_dat["btn1-text"]
-              : "Book a Session";
-          parentData.btn_data["btn2-text"] =
-            res.data.btn_dat["btn2-text"] != (null || undefined)
-              ? res.data.btn_dat["btn2-text"]
-              : "Continue your journey";
-          parentData.btn_data["btn1-url"] =
-            res.data.btn_dat["btn1-url"] != (null || undefined)
-              ? res.data.btn_dat["btn1-url"]
-              : "https://heartitout.in";
-          parentData.btn_data["btn2-url"] =
-            res.data.btn_dat["btn2-url"] != (null || undefined)
-              ? res.data.btn_dat["btn2-url"]
-              : "https://heartitout.in";
-        }
-        passDataToParent(parentData);
-        renderSecondElement();
-      })
-      .catch((err) => {
-        console.log("error is here:", err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    if (loading) {
+      axios
+        .post(url, payload)
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.has_upc === "yes") {
+            sethasApp(true);
+            setData(res.data.upc_data);
+            parentData.has_ban = true;
+            parentData.banner_link = res.data.banner_link;
+            parentData.on_click = res.data.on_click;
+          } else {
+            sethasApp(false);
+            parentData.has_ban = false;
+            parentData.btn_data["btn1-text"] =
+              res.data.btn_dat["btn1-text"] != (null || undefined)
+                ? res.data.btn_dat["btn1-text"]
+                : "Book a Session";
+            parentData.btn_data["btn2-text"] =
+              res.data.btn_dat["btn2-text"] != (null || undefined)
+                ? res.data.btn_dat["btn2-text"]
+                : "Continue your journey";
+            parentData.btn_data["btn1-url"] =
+              res.data.btn_dat["btn1-url"] != (null || undefined)
+                ? res.data.btn_dat["btn1-url"]
+                : "https://heartitout.in";
+            parentData.btn_data["btn2-url"] =
+              res.data.btn_dat["btn2-url"] != (null || undefined)
+                ? res.data.btn_dat["btn2-url"]
+                : "https://heartitout.in";
+          }
+          passDataToParent(parentData);
+          renderSecondElement();
+        })
+        .catch((err) => {
+          console.log("error is here:", err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
     }
   }, [loading]);
 
   return (
     <View style={styles.scrollContainer}>
-      {loading ? (
-        <View
-          style={{
-            height: hp(15),
-            width: "100%",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <ActivityIndicator color="#01818C" animating={loading} size={wp(6)} />
-        </View>
-      ) : (
-        <>
-          <PTRView onRefresh={handleRefresh} style={{ width: "100%", paddingLeft: wp(3.5) }}>
+      <ScrollView        
+        style={{ width: "100%", paddingLeft: wp(3.5) }}
+      >
+        {loading ? (
+          <View
+            style={{
+              height: hp(15),
+              width: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <ActivityIndicator
+              color="#01818C"
+              animating={loading}
+              size={wp(6)}
+            />
+          </View>
+        ) : (
+          <>
             {hasApp ? (
               <>
                 {data.map((item, index) => (
@@ -372,9 +300,9 @@ const FirstRoute = (props) => {
                 <NoSessions />
               </>
             )}
-          </PTRView>
-        </>
-      )}
+          </>
+        )}
+      </ScrollView>
     </View>
   );
 };
@@ -533,7 +461,7 @@ const renderTabBar = (props) => (
 
 const Buttons = (props) => {
   // console.log("It is from button in history: ", props);
-
+  const navigation = useNavigation()
   return (
     <>
       <View
@@ -544,7 +472,7 @@ const Buttons = (props) => {
           activeOpacity={0.8}
           style={styles.BookBtn2}
           onPress={() => {
-            outLink(props.props.but1URL);
+            navigation.navigate('webview',props.props.but1URL)
           }}
         >
           <Text style={styles.btnText2}>{props.props.but1}</Text>
@@ -578,7 +506,7 @@ const Buttons = (props) => {
           activeOpacity={0.8}
           style={styles.BookBtn3}
           onPress={() => {
-            outLink(props.props.but2URL);
+            navigation.navigate('webview',props.props.but2URL)
           }}
         >
           <Text style={styles.btnText3}>{props.props.but2}</Text>
@@ -591,6 +519,7 @@ const Buttons = (props) => {
 const Card = (props) => {
   // console.log("It is from card in history: ", props);
   const [imageError, setImageError] = useState(false);
+  const navigation = useNavigation();
   const passDataToParent = (data) => {
     // Call the function passed from the parent component
     props.handleCard(data);
@@ -602,7 +531,7 @@ const Card = (props) => {
     >
       <TouchableOpacity
         onPress={() => {
-          outLink(props.props.banClick);
+          navigation.navigate('webview',props.props.banClick)
         }}
       >
         {!imageError ? (
@@ -660,7 +589,6 @@ export default function ProfileScreen(props) {
   const [banLinkH, setBanLinkH] = useState("");
   const [banClickH, setBanClickH] = useState("");
   const [fetch, setFetch] = useState(false);
-  const [refreshing, setRefreshing] = useState(false);
   const [statusColor, setStatusColor] = useState("green");
 
   const [routes] = React.useState([
@@ -686,6 +614,7 @@ export default function ProfileScreen(props) {
   };
 
   navigation.addListener("focus", () => {
+    setRefresh(true)
     BackHandler.addEventListener("hardwareBackPress", backHandler);
   });
 
@@ -729,24 +658,12 @@ export default function ProfileScreen(props) {
 
   useEffect(() => {}, [isSession]);
 
-  const fetchData = () => {
-    setTimeout(() => {
-      setFetch(true);
-      console.log("Pull down event");
-      setRefreshing(false);
-    }, 2000); // Simulating 2 seconds delay
-  };
-
-  const handleRefresh = () => {
-    setRefreshing(true);
-    fetchData();
-  };
-
   const renderScene = ({ route }) => {
+    setRefresh(false)
     switch (route.key) {
       case "first":
         return (
-          <FirstRoute
+          !refresh && <FirstRoute
             data={data}
             onDataReceived={handleDataFromChild}
             onRender={handleChild1Render}
@@ -754,7 +671,7 @@ export default function ProfileScreen(props) {
         );
       case "second":
         return (
-          <SecondRoute
+          !refresh && <SecondRoute
             data={data}
             onDataReceived={handleDataFromChild2}
             onRender={handleChild2Render}
@@ -772,6 +689,40 @@ export default function ProfileScreen(props) {
   const handleChild2Render = () => {
     setIsChild2Rendered(true);
   };
+  const [refresh, setRefresh] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+  const fetchData = () => {
+    setTimeout(() => {
+      setRefresh(false)
+      setRefreshing(false);
+    }, 50); // Simulating 2 seconds delay
+  };
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    setRefresh(true)
+    fetchData();
+  };
+
+  const [idleTimer, setIdleTimer] = useState(null);
+  const [timer, setTimer] = useState(true);
+  React.useEffect(() => {
+    if (timer) {
+      console.log("Reset the timer");
+      clearInterval(idleTimer);
+    } else {
+      clearInterval(idleTimer);
+      console.log("Performing logic every 2 minutes...");
+      setIdleTimer(
+        setInterval(() => {
+          setRefresh(true);
+        }, 120000)
+      );
+    }
+    setTimer(false);
+  }, [timer]);
+  
+  
   return (
     <SafeAreaView>
       {/* <StatusBar
@@ -782,6 +733,7 @@ export default function ProfileScreen(props) {
       /> */}
       {/* <TopBarMain /> */}
       <View
+      
         style={{
           backgroundColor: "#01818C",
           width: wp(100),
@@ -791,8 +743,8 @@ export default function ProfileScreen(props) {
           zIndex: 4,
         }}
       ></View>
-      <ScrollView style={{ backgroundColor: "#fff", height: hp(100) }}>
-        <View style={{}}>
+      <PTRView  onRefresh={handleRefresh} style={{ backgroundColor: "#fff", height: hp(100) }}>
+        <View style={{}} >
           <ProfileBg width={wp(100)} height={wp(58.4)} />
           <View style={styles.banner}>
             <Text
@@ -858,7 +810,7 @@ export default function ProfileScreen(props) {
             </View>
           </View>
         </View>
-        <View style={[styles.cardContainer, { marginTop: hp(3) }]}>
+        <View style={[styles.cardContainer, { marginTop: hp(3) }]} >
           <TabView
             navigationState={{ index, routes }}
             renderScene={renderScene}
@@ -867,7 +819,7 @@ export default function ProfileScreen(props) {
             animationEnabled={true}
             style={{
               width: "100%",
-              backgroundColor: "#f8f7fc",
+              backgroundColor: "#fff",
               borderRadius: wp(2.5),
               height:
                 index == 0
@@ -881,6 +833,7 @@ export default function ProfileScreen(props) {
             renderTabBar={renderTabBar}
             initialParams={{ det }}
           ></TabView>
+          
         </View>
 
         {index == 0 ? (
@@ -937,7 +890,7 @@ export default function ProfileScreen(props) {
           <BottomQuote width={wp(71)} height={hp(15)} />
         </View>
         <View style={{ width: wp(100), height: hp(6), marginTop: hp(3) }} />
-      </ScrollView>
+      </PTRView>
     </SafeAreaView>
   );
 }
