@@ -28,7 +28,7 @@ const Card = (props) => {
   const navigation = useNavigation()
   return (
     <TouchableOpacity
-      onPress={() => {navigation.navigate('webview',data.on_click)  }}
+      onPress={() => { navigation.navigate('webview', data.on_click) }}
       className="flex-row justify-between items-center"
       style={styles.container}
     >
@@ -40,10 +40,10 @@ const Card = (props) => {
           position: "absolute",
           left: wp(2),
         }}
-      ></View>
+      />
       <View
         className="flex-col justify-between"
-        style={{ marginLeft: wp(6), marginRight: wp(1), width: wp(64) }}
+        style={{ marginLeft: wp(6), marginRight: wp(1), width: wp(84) }}
       >
         <Text
           style={{
@@ -81,21 +81,20 @@ export default function ReminderScreen({ navigation, route }) {
   });
   useEffect(() => {
     const url = "https://n8n.heartitout.in/webhook/api/notifications";
-    if(loading)
-    {
-    axios
-      .post(url, route.params)
-      .then((res) => {
-        console.log(res.data);
-        if (res.data.has_notif === "yes") setIfReminder(true);
-        else setIfReminder(false);
-        setData(res.data.data);
-      })
-      .catch((err) => {
-        console.log("error is here:", err);
-      }).finally(() => {
-        setLoading(false);
-      });
+    if (loading) {
+      axios
+        .post(url, route.params)
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.has_notif === "yes") setIfReminder(true);
+          else setIfReminder(false);
+          setData(res.data.data);
+        })
+        .catch((err) => {
+          console.log("error is here:", err);
+        }).finally(() => {
+          setLoading(false);
+        });
     }
   }, [loading]);
 
@@ -140,34 +139,48 @@ export default function ReminderScreen({ navigation, route }) {
   return (
     <SafeAreaView>
       {/* <TopBarMain /> */}
-      <PTRView style={{height:hp(84), backgroundColor:'red'}} onRefresh={handleRefresh} onTouchStart={()=>{setTimer(true); console.log("reset")}}>
-        <View
+      <View
+        style={{
+          backgroundColor: "#fff",
+          height: hp(6),
+          justifyContent: "center",
+          alignItems: "center",
+          top: hp(1),
+          marginTop: hp(0),
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={{ position: "absolute", left: wp(8) }}
+        >
+          <Back width={wp(8)} height={wp(8)} />
+        </TouchableOpacity>
+        <Text
           style={{
-            backgroundColor: "#fff",
-            height: hp(6),
-            justifyContent: "center",
-            alignItems: "center",
-            top: hp(1),
-            marginTop: hp(0),
+            color: "#043953",
+            fontSize: wp(5.5),
+            fontFamily: "Roboto",
+            fontWeight: "600",
           }}
         >
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={{ position: "absolute", left: wp(8) }}
-          >
-            <Back width={wp(8)} height={wp(8)} />
-          </TouchableOpacity>
-          <Text
-            style={{
-              color: "#043953",
-              fontSize: wp(5.5),
-              fontFamily: "Roboto",
-              fontWeight: "600",
-            }}
-          >
-            Your Reminders
-          </Text>
-        </View>
+          Your Reminders
+        </Text>
+      </View>
+
+      <PTRView
+        contentContainerStyle={{
+          display: "flex-1",
+          flexDirection: "col",
+          alignItems: "center",
+        }}
+        style={{
+          height: hp(94),
+          marginTop:hp(1)
+        }}
+        onRefresh={handleRefresh}
+        onTouchStart={() => { setTimer(true); console.log("reset") }}
+      >
+
         {/* loading */}
         {/* <ActivityIndicator animating={loading} size="large" style={{}} /> */}
         {loading ? (
@@ -176,42 +189,43 @@ export default function ReminderScreen({ navigation, route }) {
           </View>
         ) : (
           <>
-            <View
+            {/* <View
               className="flex-col items-center"
               style={{ marginTop: hp(2) }}
-            >
-              {ifReminder ? (
-                <>
-                  {datas.map((item, index) => (
-                    <Card props={{ item }} key={index} />
-                  ))}
-                </>
-              ) : (
-                <View className="flex-col items-center">
-                  <Image
-                    className="mr-8"
-                    source={require("../../assets/images/noReminders.gif")}
-                    style={{
-                      height: hp(28),
-                      width: wp(100),
-                      marginTop: hp(24),
-                    }}
-                  />
-                  <Text
-                    style={{
-                      color: "#043953",
-                      fontSize: wp(5.5),
-                      fontFamily: "Roboto",
-                      fontWeight: "600",
-                    }}
-                  >
-                    You have no reminders.
-                  </Text>
-                </View>
-              )}
-            </View>
+            > */}
+            {ifReminder ? (
+              <>
+                {datas.map((item, index) => (
+                  <Card props={{ item }} key={index} />
+                ))}
+              </>
+            ) : (
+              // <View className="flex-col items-center">
+              <>
+                <Image
+                  // className="mr-8"
+                  source={require("../../assets/images/noReminders.gif")}
+                  style={{
+                    height: hp(28),
+                    width: wp(100),
+                    marginTop: hp(24),
+                  }}
+                />
+                <Text
+                  style={{
+                    color: "#043953",
+                    fontSize: wp(5.5),
+                    fontFamily: "Roboto",
+                    fontWeight: "600",
+                  }}
+                >
+                  You have no reminders.
+                </Text>
+              </>
+              // </View>
+            )}
+            {/* </View> */}
           </>
-
         )}
         {/* this is for example for correct style --Anuj */}
       </PTRView>
@@ -229,10 +243,7 @@ const styles = StyleSheet.create({
     // NOTE: boxShadow is not directly supported in React Native.
     // You might need to use elevation for shadow effects on Android.
     elevation: 5,
-    marginTop: hp(2),
-    marginBottom: hp(0.5),
-    // padding: wp(1),
-    // paddingVertical: wp(1),
+    marginVertical: hp(1),
     paddingRight: wp(3.2),
   },
 
