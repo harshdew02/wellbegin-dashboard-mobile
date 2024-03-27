@@ -29,6 +29,7 @@ import ProductsSvg from "../../assets/images/ProductsSvg.svg";
 import Gradient from "../../assets/images/Gradient.svg";
 import ReferIcon from "../../assets/images/ReferIcon.svg";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
+import { WebView } from 'react-native-webview';
 
 const outLink = async (link) => {
     try {
@@ -94,6 +95,8 @@ export default function DiscoverScreen(props) {
 
   return (
     <SafeAreaView>
+      {/* <MyWebComponent /> */}
+      
       {/* <TopBarMain /> */}
       <ScrollView style={{ backgroundColor: "#fff", height: hp(100) }}>
         <Text
@@ -117,7 +120,8 @@ export default function DiscoverScreen(props) {
             <TouchableOpacity
              onPress={() => {
                 // Checking if the link is supported for links with custom URL scheme.
-                outLink('https://heartitout.in/therapists/')
+                // outLink('https://heartitout.in/therapists/')
+                navigation.navigate('webview')
               }}
               style={[
                 styles.packageCard,

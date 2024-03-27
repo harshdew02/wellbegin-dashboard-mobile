@@ -38,12 +38,13 @@ import {
   Family,
   Leisure,
 } from "../components/spheres";
+import PTRView from "react-native-pull-to-refresh";
 
 const component = {
   Happy: <Happy />,
   Sad: <Sad />,
   Fear: <Fear />,
-  Angry: <Angry />,
+  Anger: <Angry />,
   Surprised: <Surprised />,
   Disgust: <Disgust />,
 };
@@ -60,7 +61,6 @@ const SphereOfLife = {
 };
 
 const MoodCard = (props) => {
-  console.log("It is from mood card: ",props.props.sphere_of_life.toUpperCase());
   return (
     <View style={styles.CardStyle}>
       <Text style={{ width: wp(75), color: theme.black, fontSize: wp(3.2) }}>
@@ -112,6 +112,8 @@ const MoodCard = (props) => {
             fontSize: wp(3.7),
             fontWeight: "normal",
             textAlign: "left",
+            height: hp(5),
+            overflow: 'scroll'
           }}
         >
           {props.props.notes}
@@ -121,7 +123,9 @@ const MoodCard = (props) => {
         style={{
           display: "flex",
           flexDirection: "row",
-          marginTop: hp(1.4),
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+          // marginTop: hp(1.4),
           width: "100%",
         }}
       >
@@ -136,6 +140,7 @@ const MoodCard = (props) => {
             alignItems: "center",
             justifyContent: "space-between",
             borderRadius: wp(2.6),
+            marginTop: hp(0.4)
           }}
         >
           {/* <Work w={3.7} h={3.1} isClicked={true} /> */}
@@ -151,9 +156,10 @@ const MoodCard = (props) => {
             }}
           >
             {" "}
-            {props.props.sphere_of_life.charAt(0).toUpperCase() +props.props.sphere_of_life.slice(1)}
+            {props.props.sphere_of_life.charAt(0).toUpperCase() + props.props.sphere_of_life.slice(1)}
           </Text>
         </View>
+
         {props.props.emotion_1 != (null || undefined) ? (
           <View
             style={{
@@ -164,6 +170,7 @@ const MoodCard = (props) => {
               alignItems: "center",
               justifyContent: "space-between",
               borderRadius: wp(2.6),
+              marginTop: hp(0.4)
             }}
           >
             <Text
@@ -192,6 +199,7 @@ const MoodCard = (props) => {
               alignItems: "center",
               justifyContent: "space-between",
               borderRadius: wp(2.6),
+              marginTop: hp(0.4)
             }}
           >
             <Text
@@ -210,29 +218,32 @@ const MoodCard = (props) => {
           <></>
         )}
         {props.props.emotion_3 != (null || undefined) ? (
-          <View
-            style={{
-              height: hp(2.5),
-              paddingHorizontal: wp(1.6),
-              backgroundColor: "#fceecb",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              borderRadius: wp(2.6),
-            }}
-          >
-            <Text
+          <>
+            <View
               style={{
-                marginLeft: wp(0.2),
-                color: theme.black,
-                fontSize: wp(3.2),
-                fontWeight: "normal",
-                textAlign: "left",
+                height: hp(2.5),
+                paddingHorizontal: wp(1.6),
+                backgroundColor: "#fceecb",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                borderRadius: wp(2.6),
+                marginTop: hp(0.4)
               }}
             >
-              {props.props.emotion_3.charAt(0).toUpperCase() + props.props.emotion_3.slice(1)}
-            </Text>
-          </View>
+              <Text
+                style={{
+                  marginLeft: wp(0.2),
+                  color: theme.black,
+                  fontSize: wp(3.2),
+                  fontWeight: "normal",
+                  textAlign: "left",
+                }}
+              >
+                {props.props.emotion_3.charAt(0).toUpperCase() + props.props.emotion_3.slice(1)}
+              </Text>
+            </View>
+          </>
         ) : (
           <></>
         )}
@@ -245,19 +256,21 @@ const MoodLog = (props) => {
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
   const [datas, setData] = useState([]);
-  console.log("It is from mood logs: ", props.route.params);
+  const [refreshing, setRefreshing] = useState(false);
   let payload = props.route.params;
   useEffect(() => {
     payload.week = 0;
     const url = "https://n8n.heartitout.in/webhook/api/mt-weekly-mood";
+    if(loading){
+    
     axios
       .post(url, payload)
       .then((res) => {
         console.log(res.data);
-        if(res.data.has_res === "yes"){
-          if(res.data.data != (undefined || null))
+        if (res.data.has_res === "yes") {
+          if (res.data.data != (undefined || null))
             setData(res.data.data);
-        } 
+        }
         // setData(res.data.data);
       })
       .catch((err) => {
@@ -267,7 +280,20 @@ const MoodLog = (props) => {
         // console.log(mood_data);
         setLoading(false);
       });
-  }, []);
+    }
+  }, [loading]);
+
+  const fetchData = () => {
+    setTimeout(() => {
+      setLoading(true)
+      setRefreshing(false);
+    }, 50); // Simulating 2 seconds delay
+  };
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchData();
+  };
 
   return (
     <SafeAreaView style={{ backgroundColor: "#F5F5F5" }}>
@@ -286,7 +312,8 @@ const MoodLog = (props) => {
         </View>
       </View>
 
-      <ScrollView
+      <PTRView
+        onRefresh={handleRefresh}
         contentContainerStyle={{
           display: "flex-1",
           flexDirection: "col",
@@ -295,10 +322,10 @@ const MoodLog = (props) => {
         style={{ width: wp(100), marginTop: hp(1), height: hp(90) }}
       >
         {loading ? (
-        <View style={{ height: hp(30), width: '100%', justifyContent: 'center', alignItems: 'center' }} >
-          <ActivityIndicator color="#01818C" animating={loading} size={wp(10)} />
-        </View>
-      ) : (datas.map((item, index) => (
+          <View style={{ height: hp(30), width: '100%', justifyContent: 'center', alignItems: 'center' }} >
+            <ActivityIndicator color="#01818C" animating={loading} size={wp(10)} />
+          </View>
+        ) : (datas.map((item, index) => (
           <MoodCard key={index} props={item} />
         )))}
         <Text
@@ -345,7 +372,7 @@ const MoodLog = (props) => {
           <Signal width={wp(4.2)} height={wp(3.7)} />
         </TouchableOpacity>
         <View style={{height:hp(5)}} />
-      </ScrollView>
+      </PTRView>
     </SafeAreaView>
   );
 };
@@ -373,7 +400,7 @@ const styles = StyleSheet.create({
     width: wp(84),
     height: hp(21),
     backgroundColor: "#fff",
-    paddingBottom: wp(4.2),
+    paddingBottom: wp(3.5),
     paddingHorizontal: wp(4.2),
     paddingTop: wp(2),
     marginTop: hp(2),

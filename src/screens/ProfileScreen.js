@@ -27,6 +27,7 @@ import BookIcon from "../../assets/images/bookIcon.svg";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import axios from "axios";
+import PTRView from "react-native-pull-to-refresh";
 import theme from "../theme";
 
 const gMeet = (link) => {
@@ -107,8 +108,11 @@ const DateTimeComponent = (rtime, rdate) => {
   const dateTime = new Date(dateTimeString);
 
   // Extracting date in DD/MM/YYYY format
-  const formattedDate = `${dateTime.getDate().toString().padStart(2, "0")}/${(dateTime.getMonth() + 1).toString().padStart(2, "0")
-    }/${dateTime.getFullYear()}`;
+  const formattedDate = `${dateTime.getDate().toString().padStart(2, "0")}/${(
+    dateTime.getMonth() + 1
+  )
+    .toString()
+    .padStart(2, "0")}/${dateTime.getFullYear()}`;
 
   // Extracting time in HH:MM:SS AM/PM format
   const timeString = rtime; // Example time string in the format HH:MM:SS
@@ -261,14 +265,48 @@ const FirstRoute = (props) => {
     props.onRender(true);
   };
 
+  const fetchData = () => {
+    setTimeout(() => {
+      setLoading(true);
+      setRefreshing(false);
+    }, 50); // Simulating 2 seconds delay
+  };
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchData();
+  };
+
+  const [idleTimer, setIdleTimer] = useState(null);
+  const [timer, setTimer] = useState(true);
+
+  React.useEffect(() => {
+    if (timer) {
+      console.log("Reset the timer");
+      clearInterval(idleTimer);
+    } else {
+      clearInterval(idleTimer);
+      console.log("Performing logic every 1 minute...");
+      setIdleTimer(
+        setInterval(() => {
+          setLoading(true);
+        }, 90000)
+      );
+    }
+
+    setTimer(false);
+  }, [timer]);
+
   useEffect(() => {
     const url = "https://n8n.heartitout.in/webhook/api/fetch-session-history";
     const payload = props.data;
     payload.data = "upcoming";
+    if(loading)
+    {
     axios
       .post(url, payload)
       .then((res) => {
-        console.log(res.data)
+        console.log(res.data);
         if (res.data.has_upc === "yes") {
           sethasApp(true);
           setData(res.data.upc_data);
@@ -278,48 +316,65 @@ const FirstRoute = (props) => {
         } else {
           sethasApp(false);
           parentData.has_ban = false;
-          parentData.btn_data["btn1-text"] = res.data.btn_dat["btn1-text"] != (null || undefined) ? res.data.btn_dat['btn1-text'] : "Book a Session";
-          parentData.btn_data["btn2-text"] = res.data.btn_dat["btn2-text"] != (null || undefined) ? res.data.btn_dat['btn2-text'] : "Continue your journey";
-          parentData.btn_data["btn1-url"] = res.data.btn_dat["btn1-url"] != (null || undefined) ? res.data.btn_dat['btn1-url'] : "https://heartitout.in";
-          parentData.btn_data["btn2-url"] = res.data.btn_dat["btn2-url"] != (null || undefined) ? res.data.btn_dat['btn2-url'] : "https://heartitout.in";
+          parentData.btn_data["btn1-text"] =
+            res.data.btn_dat["btn1-text"] != (null || undefined)
+              ? res.data.btn_dat["btn1-text"]
+              : "Book a Session";
+          parentData.btn_data["btn2-text"] =
+            res.data.btn_dat["btn2-text"] != (null || undefined)
+              ? res.data.btn_dat["btn2-text"]
+              : "Continue your journey";
+          parentData.btn_data["btn1-url"] =
+            res.data.btn_dat["btn1-url"] != (null || undefined)
+              ? res.data.btn_dat["btn1-url"]
+              : "https://heartitout.in";
+          parentData.btn_data["btn2-url"] =
+            res.data.btn_dat["btn2-url"] != (null || undefined)
+              ? res.data.btn_dat["btn2-url"]
+              : "https://heartitout.in";
         }
         passDataToParent(parentData);
         renderSecondElement();
       })
       .catch((err) => {
         console.log("error is here:", err);
-      }).finally(()=>{
+      })
+      .finally(() => {
         setLoading(false);
       });
-  }, []);
-
-  const temp = true;
+    }
+  }, [loading]);
 
   return (
     <View style={styles.scrollContainer}>
-      <ScrollView style={{ width: "100%", paddingLeft: wp(3.5) }}>
-        {loading ? (
-          <View style={{ height: hp(15), width: '100%', justifyContent: 'center', alignItems: 'center' }} >
-            <ActivityIndicator color="#01818C" animating={loading} size={wp(6)} />
-          </View>
-          // <ActivityIndicator animating={loading} size="large" />
-        ) : (
-          <>
+      {loading ? (
+        <View
+          style={{
+            height: hp(15),
+            width: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <ActivityIndicator color="#01818C" animating={loading} size={wp(6)} />
+        </View>
+      ) : (
+        <>
+          <PTRView onRefresh={handleRefresh} style={{ width: "100%", paddingLeft: wp(3.5) }}>
             {hasApp ? (
               <>
                 {data.map((item, index) => (
                   <CardDetails key={index} props={item} />
                 ))}
-                {/* <CardDetails props={data} /> */}
               </>
             ) : (
               <>
                 <NoSessions />
               </>
             )}
-          </>
-        )}
-      </ScrollView>
+          </PTRView>
+        </>
+      )}
     </View>
   );
 };
@@ -368,10 +423,22 @@ const SecondRoute = (props) => {
         } else {
           sethasApp(false);
           parentData.has_ban = false;
-          parentData.btn_data["btn1-text"] = res.data.btn_dat["btn1-text"] != (null || undefined) ? res.data.btn_dat['btn1-text'] : "Book a Session";
-          parentData.btn_data["btn2-text"] = res.data.btn_dat["btn2-text"] != (null || undefined) ? res.data.btn_dat['btn2-text'] : "Continue your journey";
-          parentData.btn_data["btn1-url"] = res.data.btn_dat["btn1-url"] != (null || undefined) ? res.data.btn_dat['btn1-url'] : "https://heartitout.in";
-          parentData.btn_data["btn2-url"] = res.data.btn_dat["btn2-url"] != (null || undefined) ? res.data.btn_dat['btn2-url'] : "https://heartitout.in";
+          parentData.btn_data["btn1-text"] =
+            res.data.btn_dat["btn1-text"] != (null || undefined)
+              ? res.data.btn_dat["btn1-text"]
+              : "Book a Session";
+          parentData.btn_data["btn2-text"] =
+            res.data.btn_dat["btn2-text"] != (null || undefined)
+              ? res.data.btn_dat["btn2-text"]
+              : "Continue your journey";
+          parentData.btn_data["btn1-url"] =
+            res.data.btn_dat["btn1-url"] != (null || undefined)
+              ? res.data.btn_dat["btn1-url"]
+              : "https://heartitout.in";
+          parentData.btn_data["btn2-url"] =
+            res.data.btn_dat["btn2-url"] != (null || undefined)
+              ? res.data.btn_dat["btn2-url"]
+              : "https://heartitout.in";
         }
         // console.log(res.data);
         passDataToParent(parentData);
@@ -379,7 +446,8 @@ const SecondRoute = (props) => {
       })
       .catch((err) => {
         console.log(err);
-      }).finally(()=>{
+      })
+      .finally(() => {
         setLoading(false);
       });
   }, []);
@@ -388,8 +456,19 @@ const SecondRoute = (props) => {
     <View className="flex-col items-center " style={styles.scrollContainer}>
       <ScrollView style={{ width: "100%", paddingLeft: wp(3.5) }}>
         {loading ? (
-          <View style={{ height: hp(15), width: '100%', justifyContent: 'center', alignItems: 'center' }} >
-            <ActivityIndicator color="#01818C" animating={loading} size={wp(6)} />
+          <View
+            style={{
+              height: hp(15),
+              width: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <ActivityIndicator
+              color="#01818C"
+              animating={loading}
+              size={wp(6)}
+            />
           </View>
         ) : (
           <>
@@ -533,14 +612,13 @@ const Card = (props) => {
                 setImageError(true);
                 passDataToParent({ state: false, type: props.props.type });
                 console.log(true);
-
               }}
               resizeMode="stretch"
               style={{ width: wp(84), height: hp(18), borderRadius: wp(2) }}
               source={{
                 uri: props.props.banLink,
               }}
-            // alt={''}
+              // alt={''}
             />
           </>
         ) : (
@@ -581,6 +659,8 @@ export default function ProfileScreen(props) {
   const [bannerH, setBannerH] = useState(false);
   const [banLinkH, setBanLinkH] = useState("");
   const [banClickH, setBanClickH] = useState("");
+  const [fetch, setFetch] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [statusColor, setStatusColor] = useState("green");
 
   const [routes] = React.useState([
@@ -645,14 +725,22 @@ export default function ProfileScreen(props) {
     if (data.type == "U") setSession(false);
   };
 
-  useEffect(() => {
+  useEffect(() => {}, [isSessionH]);
 
-  }, [isSessionH])
+  useEffect(() => {}, [isSession]);
 
-  useEffect(() => {
+  const fetchData = () => {
+    setTimeout(() => {
+      setFetch(true);
+      console.log("Pull down event");
+      setRefreshing(false);
+    }, 2000); // Simulating 2 seconds delay
+  };
 
-  }, [isSession])
-
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchData();
+  };
 
   const renderScene = ({ route }) => {
     switch (route.key) {
@@ -676,8 +764,6 @@ export default function ProfileScreen(props) {
         return null;
     }
   };
-
-
 
   // Function to update isChild1Rendered state
   const handleChild1Render = () => {
@@ -789,8 +875,8 @@ export default function ProfileScreen(props) {
                     ? hp(40)
                     : hp(22)
                   : isSessionH
-                    ? hp(40)
-                    : hp(22),
+                  ? hp(40)
+                  : hp(22),
             }}
             renderTabBar={renderTabBar}
             initialParams={{ det }}
@@ -802,7 +888,10 @@ export default function ProfileScreen(props) {
             {isChild1Rendered && (
               <>
                 {isSession ? (
-                  <Card props={{ banner, banLink, banClick, type: "U" }} handleCard={handleCard} />
+                  <Card
+                    props={{ banner, banLink, banClick, type: "U" }}
+                    handleCard={handleCard}
+                  />
                 ) : (
                   <Buttons props={{ but1, but1URL, but2, but2URL }} />
                 )}

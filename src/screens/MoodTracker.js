@@ -9,6 +9,7 @@ import {
   ScrollView,
   ToastAndroid,
   TextInput,
+  ActivityIndicator
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import TopBarMain from "../components/TopBarMain";
@@ -294,7 +295,8 @@ const MoodTracker = (props) => {
   // console.log(props.route.params)
   const navigation = useNavigation();
   const payload = props.route.params;
-
+  const [loading, setLoading] = useState(false);
+  
   const extraPayloadandLaunch = (
     mood,
     emotion1,
@@ -317,6 +319,7 @@ const MoodTracker = (props) => {
     else if (sphere == undefined || sphere == null) showToast("Please select your sphere of life.")
     else if (mood == undefined || mood == null) showToast("Please select mood.")
     else {
+      setLoading(true)
       saveMood(payload)
       // payload.successful = true;
     }
@@ -339,6 +342,8 @@ const MoodTracker = (props) => {
       .catch((err) => {
         showToast("Some error occurred.");
         console.log(err);
+      }).finally(()=>{
+        setLoading(false);
       });
   };
 
@@ -368,6 +373,9 @@ const MoodTracker = (props) => {
 
   return (
     <SafeAreaView>
+      {loading ? (<View style={{ height: hp(80), width: '100%', justifyContent: 'center', alignItems: 'center', position: 'absolute', zIndex:5}} >
+        <ActivityIndicator color="#01818C" animating={loading} size={wp(14)} />
+      </View>) : (<></>)}
       <View
         style={[
           styles.cardContainer,
@@ -651,7 +659,7 @@ const MoodTracker = (props) => {
                     mood_array[0],
                     mood_array[1],
                     mood_array[2],
-                    "abc",
+                    text,
                     component[value]
                   );
                 }}

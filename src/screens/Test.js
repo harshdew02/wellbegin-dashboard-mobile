@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ToastAndroid,
+  TouchableWithoutFeedback,
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -31,6 +32,7 @@ import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import Share from "react-native-share";
 import RNFetchBlob from "rn-fetch-blob";
 import FileViewer from "react-native-file-viewer";
+import PTRView from "react-native-pull-to-refresh";
 
 const outLink = async (link) => {
   try {
@@ -111,7 +113,6 @@ const DateTimeComponent = (rdate) => {
 const CardDetails = (props) => {
   const [sdate, setSDate] = useState(DateTimeComponent(props.props.ts_));
   const [edate, setEDate] = useState(DateTimeComponent(props.props.ts__));
-  console.log("It is from cards in discover: ", props.props);
   return (
     <View
       style={{
@@ -209,6 +210,7 @@ const FirstRoute = (props) => {
   const [hasApp, sethasApp] = useState(false);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const passDataToParent = (data) => {
     // Call the function passed from the parent component
@@ -216,30 +218,83 @@ const FirstRoute = (props) => {
   };
 
   React.useEffect(() => {
-    const url = "https://n8n.heartitout.in/webhook/api/fetch-diag-res";
-    axios
-      .post(url, props.props)
-      .then((res) => {
-        console.log("It is from first route in discover: ", res.data);
-        if (res.data.has_res === "yes") {
-          sethasApp(true);
-          setData(res.data.res_data);
-        } else {
-          sethasApp(false);
-        }
-        passDataToParent(res.data.rec_test);
-      })
-      .catch((err) => {
-        console.log("error is here:", err);
-      }).finally(()=>{
-        setLoading(false);
-      });
-  }, []);
+    if (loading) {
+      const url = "https://n8n.heartitout.in/webhook/api/fetch-diag-res";
+      axios
+        .post(url, props.props)
+        .then((res) => {
+          console.log("It is from first route in discover: ", res.data);
+          if (res.data.has_res === "yes") {
+            sethasApp(true);
+            setData(res.data.res_data);
+          } else {
+            sethasApp(false);
+          }
+          passDataToParent(res.data.rec_test);
+        })
+        .catch((err) => {
+          console.log("error is here:", err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [loading]);
+
+  const fetchData = () => {
+    setTimeout(() => {
+      setLoading(true);
+      setRefreshing(false);
+    }, 50); // Simulating 2 seconds delay
+  };
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchData();
+  };
+
+  const [idleTimer, setIdleTimer] = useState(null);
+  const [timer, setTimer] = useState(true);
+
+  React.useEffect(() => {
+    if (timer) {
+      console.log("Reset the timer");
+      clearInterval(idleTimer);
+    } else {
+      clearInterval(idleTimer);
+      console.log("Performing logic every 1 minute...");
+      setIdleTimer(
+        setInterval(() => {
+          setLoading(true);
+        }, 90000)
+      );
+    }
+
+    setTimer(false);
+  }, [timer]);
+
   return (
-    <View style={styles.scrollContainer}>
+    <View
+      style={styles.scrollContainer}
+      onTouchStart={() => {
+        setTimer(true);
+        console.log("reset");
+      }}
+    >
       {loading ? (
-        <View style={{ height: hp(30), width: '100%', justifyContent: 'center', alignItems: 'center' }} >
-          <ActivityIndicator color="#01818C" animating={loading} size={wp(10)} />
+        <View
+          style={{
+            height: hp(30),
+            width: "100%",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <ActivityIndicator
+            color="#01818C"
+            animating={loading}
+            size={wp(10)}
+          />
         </View>
       ) : (
         <>
@@ -247,7 +302,8 @@ const FirstRoute = (props) => {
             <>
               {
                 <>
-                  <ScrollView
+                  <PTRView
+                    onRefresh={handleRefresh}
                     style={{ width: "100%", height: "100%" }}
                     contentContainerStyle={{
                       display: "flex",
@@ -269,7 +325,7 @@ const FirstRoute = (props) => {
                     {data.map((item, index) => (
                       <CardDetails key={index} props={item} />
                     ))}
-                  </ScrollView>
+                  </PTRView>
                 </>
               }
             </>
@@ -322,10 +378,11 @@ const renderTabBar = (props) => (
 const GeneralCard = (props) => {
   const [colors, setColor] = useState(props.colors);
 
+  // console.log("Is this refreshing")
+
   const containsWord = (sentence, word) => {
     return sentence.toLowerCase().includes(word.toLowerCase());
   };
-  console.log(props);
   return (
     <View
       style={[
@@ -442,7 +499,6 @@ const Test = (props) => {
   const layout = useWindowDimensions();
   const navigation = useNavigation();
   const [test, setTest] = React.useState([]);
-  const [colors, setColors] = useState(false);
 
   const renderScene = ({ route }) => {
     switch (route.key) {
@@ -455,7 +511,6 @@ const Test = (props) => {
 
   const handleDataFromChild = (data) => {
     // Do something with the received data, such as updating state
-    console.log("It is from upcoming: ", data);
     setTest(data);
   };
 
