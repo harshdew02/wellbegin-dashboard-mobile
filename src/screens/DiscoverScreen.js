@@ -20,8 +20,6 @@ import {
 import { useNavigation } from "@react-navigation/native";
 // import LinearGradient from 'react-native-linear-gradient';
 // import { LinearGradient } from "expo-linear-gradient";
-import { InAppBrowser } from 'react-native-inappbrowser-reborn'
-
 import SeekIcon from "../../assets/images/SeekIcon.svg";
 import HappeningIcon from "../../assets/images/HappeningIcon.svg";
 import ExploreIcon from "../../assets/images/ExploreIcon.svg";

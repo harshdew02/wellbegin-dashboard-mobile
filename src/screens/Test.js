@@ -28,7 +28,6 @@ import {
 import BottomQuote from "../components/BottomQuote";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
-import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import Share from "react-native-share";
 import RNFetchBlob from "rn-fetch-blob";
 import FileViewer from "react-native-file-viewer";

@@ -34,7 +34,6 @@ import Emoji3 from "../../assets/images/emoji3.svg";
 import Emoji4 from "../../assets/images/emoji4.svg";
 import Emoji5 from "../../assets/images/emoji5.svg";
 import Home2 from "../../assets/images/home2.svg";
-import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import SInfo from "react-native-encrypted-storage";
 import { theme } from "../theme";
 import TopBell from "../components/TopBell";
@@ -209,7 +208,6 @@ export default function HomeScreen(props) {
       axios
         .post(apiUrl2, payload)
         .then(async (res) => {
-          console.log(res.data);
           if (res.data.status === "0") {
             // await AsyncStorage.setItem("token", Token);
             SInfo.removeItem("token");
@@ -297,7 +295,6 @@ export default function HomeScreen(props) {
       axios
         .post(apiUrl3, payload)
         .then(async (res) => {
-          console.log(res.data.mood_tacker);
           if (res.data.status === "1" || res.data.status === "10") {
             res.data.mood_tacker === "yes" ? setMood(true) : setMood(false);
             if (res.data.has_banner == "yes") {
@@ -429,7 +426,6 @@ export default function HomeScreen(props) {
   };
 
   const handleRefresh = () => {
-    console.log("Event triggered");
     setRefreshing(true);
     fetchData();
   };
