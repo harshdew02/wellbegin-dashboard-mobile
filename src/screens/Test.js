@@ -217,18 +217,6 @@ const FirstRoute = (props) => {
     props.onDataReceived(data);
   };
 
-  const fetchData = () => {
-    setTimeout(() => {
-      setLoading(true);
-      setRefreshing(false);
-    }, 50); // Simulating 2 seconds delay
-  };
-
-  const handleRefresh = () => {
-    setRefreshing(true);
-    fetchData();
-  };
-
   React.useEffect(() => {
     if (loading) {
       const url = "https://n8n.heartitout.in/webhook/api/fetch-diag-res";
@@ -252,6 +240,18 @@ const FirstRoute = (props) => {
         });
     }
   }, [loading]);
+
+  const fetchData = () => {
+    setTimeout(() => {
+      setLoading(true);
+      setRefreshing(false);
+    }, 50); // Simulating 2 seconds delay
+  };
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchData();
+  };
 
   const [idleTimer, setIdleTimer] = useState(null);
   const [timer, setTimer] = useState(true);
