@@ -29,53 +29,6 @@ import ProductsSvg from "../../assets/images/ProductsSvg.svg";
 import Gradient from "../../assets/images/Gradient.svg";
 import ReferIcon from "../../assets/images/ReferIcon.svg";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
-import { WebView } from 'react-native-webview';
-
-const outLink = async (link) => {
-    try {
-      const url = link
-      if (await InAppBrowser.isAvailable()) {
-        const result = await InAppBrowser.open(url, {
-          // // iOS Properties
-          // dismissButtonStyle: 'cancel',
-          // preferredBarTintColor: '#453AA4',
-          // preferredControlTintColor: 'white',
-          // readerMode: false,
-          // animated: true,
-          // modalPresentationStyle: 'fullScreen',
-          // modalTransitionStyle: 'coverVertical',
-          // modalEnabled: true,
-          // enableBarCollapsing: false,
-          // Android Properties
-          showTitle: true,
-          toolbarColor: '#01818C',
-          secondaryToolbarColor: 'red',
-          navigationBarColor: 'white',
-          navigationBarDividerColor: 'white',
-          enableUrlBarHiding: true,
-          enableDefaultShare: false,
-          forceCloseOnRedirection: false,
-          hasBackButton: true,
-          
-          // Specify full animation resource identifier(package:anim/name)
-          // or only resource name(in case of animation bundled with app).
-          animations: {
-            startEnter: 'slide_in_right',
-          },
-          headers: {
-            'my-custom-header': 'my custom header value'
-          }
-        })
-        console.log(result)
-      }
-      else Linking.openURL(url)
-    } catch (error) {
-      console.log(error)
-    }
-  // Linking.canOpenURL(link).then((supported)=>{
-  //   if(supported) Linking.openURL(link); else console.log('error')
-  // });
-}
 
 export default function DiscoverScreen(props) {
   const data = props.route.params.data.route.params;
@@ -120,8 +73,7 @@ export default function DiscoverScreen(props) {
             <TouchableOpacity
              onPress={() => {
                 // Checking if the link is supported for links with custom URL scheme.
-                // outLink('https://heartitout.in/therapists/')
-                navigation.navigate('webview')
+                navigation.navigate('webview','https://heartitout.in/therapists/')
               }}
               style={[
                 styles.packageCard,
@@ -141,7 +93,7 @@ export default function DiscoverScreen(props) {
               ]}
               onPress={() => {
                 // Checking if the link is supported for links with custom URL scheme.
-                outLink('https://heartitout.in/events/')
+                navigation.navigate('webview','https://heartitout.in/events/')
               }}
             >
               <HappeningIcon width={wp(20)} height={hp(12)} />
@@ -176,7 +128,7 @@ export default function DiscoverScreen(props) {
               ]}
               onPress={() => {
                 // Checking if the link is supported for links with custom URL scheme.
-                outLink('https://heartitout.in/products/')
+                navigation.navigate('webview','https://heartitout.in/products/')
               }}
             >
               <ProductsSvg width={wp(33)} height={hp(9)} />
