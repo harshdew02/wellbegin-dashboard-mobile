@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { View, StyleSheet, ActivityIndicator, BackHandler, ToastAndroid } from "react-native";
+import { View, StyleSheet, ActivityIndicator, BackHandler, ToastAndroid, TouchableOpacity } from "react-native";
 // import WebView from "react-native-webview";
 import {
   widthPercentageToDP as wp,
@@ -7,6 +7,7 @@ import {
 } from "react-native-responsive-screen";
 import WebView from "react-native-webview";
 import { useNavigation } from "@react-navigation/native";
+import Back from "../components/Back";
 let canGoBack = false;
 const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
@@ -27,15 +28,13 @@ export default function Heartitout(props) {
   const onNavigationStateChange = (navState) => {
     console.log("It is from nav change:", canGoBack, navState.url);
     canGoBack = navState.canGoBack;
-    if (containsOrder(navState.url) && (loading == false)) 
-    {
+    if (containsOrder(navState.url) && (loading == false)) {
       showToast("Order, placed successfully");
       setTimeout(() => {
         navigation.navigate("Home_Tab");
       }, 10000);
     }
-    else
-    {
+    else {
       console.log("Not hit yet")
     }
   };
@@ -71,6 +70,8 @@ export default function Heartitout(props) {
             width: "100%",
             justifyContent: "center",
             alignItems: "center",
+            position: 'absolute',
+            zIndex: 2
           }}
         >
           <ActivityIndicator
@@ -80,8 +81,12 @@ export default function Heartitout(props) {
           />
         </View>
       ) : (
-        <></>
+        <>
+        </>
       )}
+      <TouchableOpacity onPress={()=>{navigation.goBack()}} activeOpacity={0.8} style={{ width: wp(16), height: hp(8), backgroundColor: '#fff', position: 'absolute', zIndex: 2, left: 0, top: 0, justifyContent: 'center', alignItems: 'center' }} >
+        <Back color={"#455A64"} />
+      </TouchableOpacity>
       <WebView
         onLoadStart={() => {
           setLoading(true);
