@@ -18,7 +18,8 @@ function containsOrder(sentence) {
 
 let current = 0;
 
-export default function Heartitout() {
+export default function Heartitout(props) {
+  console.log(props.route.params)
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
   //   const [canGoBack, setCanGoBack] = useState(false);
@@ -29,7 +30,9 @@ export default function Heartitout() {
     if (containsOrder(navState.url) && (loading == false)) 
     {
       showToast("Order, placed successfully");
-      navigation.navigate("Home_Tab");
+      setTimeout(() => {
+        navigation.navigate("Home_Tab");
+      }, 10000);
     }
     else
     {
@@ -41,7 +44,7 @@ export default function Heartitout() {
   const backHandler = () => {
     console.log("It is can go back", canGoBack);
     if (canGoBack) goBack();
-    else navigation.navigate("Home_Tab");
+    else navigation.goBack();
     return true;
   };
 
@@ -92,7 +95,7 @@ export default function Heartitout() {
         setSupportMultipleWindows={false}
         useWebView2={true}
         ref={webViewRef}
-        source={{ uri: "https://heartitout.in/therapists" }} // Change the URL to test
+        source={{ uri: props.route.params }} // Change the URL to test
         style={styles.webview}
         onNavigationStateChange={onNavigationStateChange}
       />

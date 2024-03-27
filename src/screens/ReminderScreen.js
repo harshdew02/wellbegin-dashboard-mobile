@@ -18,48 +18,7 @@ import RingIcon from "../components/RingIcon";
 import axios from "axios";
 import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import PTRView from "react-native-pull-to-refresh";
-
-const outLink = async (link) => {
-  try {
-    const url = link;
-    if (await InAppBrowser.isAvailable()) {
-      const result = await InAppBrowser.open(url, {
-        // // iOS Properties
-        // dismissButtonStyle: 'cancel',
-        // preferredBarTintColor: '#453AA4',
-        // preferredControlTintColor: 'white',
-        // readerMode: false,
-        // animated: true,
-        // modalPresentationStyle: 'fullScreen',
-        // modalTransitionStyle: 'coverVertical',
-        // modalEnabled: true,
-        // enableBarCollapsing: false,
-        // Android Properties
-        showTitle: true,
-        toolbarColor: "#01818C",
-        secondaryToolbarColor: "red",
-        navigationBarColor: "white",
-        navigationBarDividerColor: "white",
-        enableUrlBarHiding: true,
-        enableDefaultShare: false,
-        forceCloseOnRedirection: false,
-        hasBackButton: true,
-
-        // Specify full animation resource identifier(package:anim/name)
-        // or only resource name(in case of animation bundled with app).
-        animations: {
-          startEnter: "slide_in_right",
-        },
-        headers: {
-          "my-custom-header": "my custom header value",
-        },
-      });
-      console.log(result);
-    } else Linking.openURL(url);
-  } catch (error) {
-    console.log(error);
-  }
-};
+import { useNavigation } from "@react-navigation/native";
 
 const Card = (props) => {
   // console.log(props)
@@ -67,10 +26,10 @@ const Card = (props) => {
   // console.log("It is from card: ", data)
   // Anuj ise props ke according set kar dena to fir ho jayega shyad
   const [isTick, setTick] = useState(false);
-
+  const navigation = useNavigation()
   return (
     <TouchableOpacity
-      onPress={() => { setTick(true); outLink(data.on_click) }}
+      onPress={() => { setTick(true); navigation.navigate('webview',data.on_click)  }}
       className="flex-row justify-between items-center"
       style={styles.container}
     >
