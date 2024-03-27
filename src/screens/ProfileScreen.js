@@ -26,7 +26,6 @@ import ProfileDisplay from "../../assets/images/ProfileDisplay.svg";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
 import BookIcon from "../../assets/images/bookIcon.svg";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
-import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import axios from "axios";
 import PTRView from "react-native-pull-to-refresh";
 import theme from "../theme";

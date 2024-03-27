@@ -16,7 +16,6 @@ import {
 import Back from "../../assets/images/arrow.svg";
 import RingIcon from "../components/RingIcon";
 import axios from "axios";
-import { InAppBrowser } from "react-native-inappbrowser-reborn";
 import PTRView from "react-native-pull-to-refresh";
 import { useNavigation } from "@react-navigation/native";
 
@@ -29,7 +28,7 @@ const Card = (props) => {
   const navigation = useNavigation()
   return (
     <TouchableOpacity
-      onPress={() => { setTick(true); navigation.navigate('webview',data.on_click)  }}
+      onPress={() => {navigation.navigate('webview',data.on_click)  }}
       className="flex-row justify-between items-center"
       style={styles.container}
     >
@@ -68,30 +67,8 @@ const Card = (props) => {
           {data.notif_body}
         </Text>
       </View>
-
-      <View
-        className="flex-col items-center justify-between"
-        style={{ height: hp(6), width: wp(18) }}
-      >
-        <Text style={{ fontSize: wp(3.2) }}>18 mins ago</Text>
-        <RingIcon active={isTick} />
-      </View>
     </TouchableOpacity>
   );
-};
-
-const Banners = (props) => {
-  return (
-    <Image
-      resizeMode="stretch"
-      style={{
-        width: wp(100),
-        height: wp(24.66),
-        marginTop: hp(8)
-      }}
-      source={{ uri: 'https://heartitout.in/links/wp-content/uploads/2024/03/TryDoodling.png' }}
-    />
-  )
 };
 
 export default function ReminderScreen({ navigation, route }) {
@@ -99,11 +76,9 @@ export default function ReminderScreen({ navigation, route }) {
   const [ifReminder, setIfReminder] = useState(false);
   const [datas, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-
-  const [banner, setBanner] = useState(false);
-  const [banLink, setBanLink] = useState("");
-  const [cbanLink, setCBanLink] = useState("");
-
+  navigation.addListener("focus", () => {
+    setLoading(true)
+  });
   useEffect(() => {
     const url = "https://n8n.heartitout.in/webhook/api/notifications";
     if(loading)
@@ -111,14 +86,9 @@ export default function ReminderScreen({ navigation, route }) {
     axios
       .post(url, route.params)
       .then((res) => {
-        // console.log(res.data);
+        console.log(res.data);
         if (res.data.has_notif === "yes") setIfReminder(true);
         else setIfReminder(false);
-        if (res.data.has_banner === "yes") {
-          setBanner(true);
-          setBanLink(res.data.banner_link);
-          setCBanLink(res.data.on_click);
-        } else setBanner(false);
         setData(res.data.data);
       })
       .catch((err) => {
@@ -170,7 +140,7 @@ export default function ReminderScreen({ navigation, route }) {
   return (
     <SafeAreaView>
       {/* <TopBarMain /> */}
-      <PTRView onRefresh={handleRefresh} onTouchStart={()=>{setTimer(true); console.log("reset")}}>
+      <PTRView style={{height:hp(84), backgroundColor:'red'}} onRefresh={handleRefresh} onTouchStart={()=>{setTimer(true); console.log("reset")}}>
         <View
           style={{
             backgroundColor: "#fff",
@@ -239,19 +209,11 @@ export default function ReminderScreen({ navigation, route }) {
                   </Text>
                 </View>
               )}
-              {1 ? (
-                <>
-                  <Banners props={{ banLink, cbanLink }} />
-                </>
-              ) : (
-                <></>
-              )}
             </View>
           </>
 
         )}
         {/* this is for example for correct style --Anuj */}
-        {/* <Banners /> */}
       </PTRView>
     </SafeAreaView>
   );
@@ -267,7 +229,8 @@ const styles = StyleSheet.create({
     // NOTE: boxShadow is not directly supported in React Native.
     // You might need to use elevation for shadow effects on Android.
     elevation: 5,
-    // marginTop: hp(2),
+    marginTop: hp(2),
+    marginBottom: hp(0.5),
     // padding: wp(1),
     // paddingVertical: wp(1),
     paddingRight: wp(3.2),

@@ -51,6 +51,7 @@ const Card = (props) => {
   const [value, setValue] = useState(item.homework_done_or_not);
   const [date, setDate] = useState(DateTimeComponent(item.due));
   const [updated, setUpdated] = useState(false);
+  const navigation = useNavigation()
 
   React.useEffect(() => {
     if (item.homework_done_or_not === "Yes" || updated == true) setValue(true);
@@ -142,6 +143,7 @@ const Card = (props) => {
             <TouchableOpacity
               onPress={() => {
                 homework();
+                navigation.navigate('webview',item.stage)
               }}
             >
               <Text
@@ -167,8 +169,11 @@ const HomeWork = (route) => {
   const [loading, setLoading] = useState(true);
   const data = route.route.params;
   const [datas, setData] = useState({});
+
+  navigation.addListener('focus',()=>{
+    setLoading(true)
+  })
   React.useEffect(() => {
-    // console.log(data);
     const url = "https://n8n.heartitout.in/webhook/api/fetch-user-homework";
     if(loading){
     axios
@@ -205,11 +210,9 @@ const HomeWork = (route) => {
 
   React.useEffect(() => {
     if (timer) {
-      console.log("Reset the timer");
       clearInterval(idleTimer);
     } else {
       clearInterval(idleTimer);
-      console.log("Performing logic every 1 minute...");
       setIdleTimer(
         setInterval(() => {
           setLoading(true);
@@ -254,7 +257,7 @@ const HomeWork = (route) => {
       </View>
 
       <PTRView
-        onTouchStart={()=>{setTimer(true); console.log("reset")}}
+        onTouchStart={()=>{setTimer(true);}}
         onRefresh={handleRefresh}
         contentContainerStyle={{
           display: "flex-1",
