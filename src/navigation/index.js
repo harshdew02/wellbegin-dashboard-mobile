@@ -23,12 +23,19 @@ import Progress from "../screens/Progress";
 import Heartitout from "../screens/Heartitout";
 
 
+
 const Stack = createNativeStackNavigator();
+  const linking = {
+    prefixes: ['heartitout://']
+  };
 
 export default function AppNavigation() {
 
+
   return (
-    <NavigationContainer>
+    <NavigationContainer
+    linking={linking}
+    >
       <Stack.Navigator
         screenOptions={{
           contentStyle: {

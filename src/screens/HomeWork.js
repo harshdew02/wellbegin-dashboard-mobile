@@ -27,6 +27,7 @@ import { useNavigation } from "@react-navigation/native";
 import Pending from "../components/HomeComp/Pending";
 import Done from "../components/HomeComp/Done";
 import axios from "axios";
+import PTRView from "react-native-pull-to-refresh";
 
 
 const DateTimeComponent = (rdate) => {
@@ -164,16 +165,16 @@ const Card = (props) => {
 const HomeWork = (route) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
-  // console.log(route.route.params)
   const data = route.route.params;
   const [datas, setData] = useState({});
   React.useEffect(() => {
     // console.log(data);
     const url = "https://n8n.heartitout.in/webhook/api/fetch-user-homework";
+    if(loading){
     axios
       .post(url, data)
       .then((res) => {
-        // console.log(res.data);
+        console.log(res.data);
         setData(res.data);
       })
       .catch((err) => {
@@ -181,10 +182,49 @@ const HomeWork = (route) => {
       }).finally(()=>{
         setLoading(false);
       });
-  }, []);
+    }
+  }, [loading]);
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchData = () => {
+    setTimeout(() => {
+      setLoading(true);
+      setRefreshing(false);
+    }, 50); // Simulating 2 seconds delay
+  };
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchData();
+  };
+
+
+  const [idleTimer, setIdleTimer] = useState(null);
+  const [timer, setTimer] = useState(true);
+
+  React.useEffect(() => {
+    if (timer) {
+      console.log("Reset the timer");
+      clearInterval(idleTimer);
+    } else {
+      clearInterval(idleTimer);
+      console.log("Performing logic every 1 minute...");
+      setIdleTimer(
+        setInterval(() => {
+          setLoading(true);
+        }, 90000)
+      );
+    }
+
+    setTimer(false);
+  }, [timer]);
+
+
   return (
     <SafeAreaView style={{ backgroundColor: "#fff" }}>
       <View
+        
         style={{
           height: hp(6),
           width: wp(100),
@@ -213,7 +253,9 @@ const HomeWork = (route) => {
         </Text>
       </View>
 
-      <ScrollView
+      <PTRView
+        onTouchStart={()=>{setTimer(true); console.log("reset")}}
+        onRefresh={handleRefresh}
         contentContainerStyle={{
           display: "flex-1",
           flexDirection: "col",
@@ -238,7 +280,7 @@ const HomeWork = (route) => {
             )}
           </>
         )}
-      </ScrollView>
+      </PTRView>
       <View
         style={{ position: "absolute", bottom: 0, backgroundColor: "#fff" }}
       >

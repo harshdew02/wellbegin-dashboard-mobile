@@ -42,6 +42,7 @@ import HomePageBanner from "../components/HomePageBanner";
 import { Svg } from "react-native-svg";
 import Gift from "../../assets/images/Gift.svg";
 import axios from "axios";
+import PTRView from "react-native-pull-to-refresh";
 // F:\HIO\Progress\hio_UI\hio\assets\images\
 
 const gMeet = (link) => {
@@ -204,6 +205,7 @@ export default function HomeScreen(props) {
   const [subsdet, setSubsdet] = useState(false);
   const [subdays, setSubdays] = useState(0);
   const [bell, setBell] = useState(true);
+  const [loaded, setLoaded] = useState(false);
 
   const backHandler = () => {
     BackHandler.exitApp();
@@ -350,29 +352,42 @@ export default function HomeScreen(props) {
     }
   }, []);
 
-  const [scrollPercentage, setScrollPercentage] = useState(0);
-  const animatedColor = new Animated.Value(0);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const statusBarColor = animatedColor.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["rgb(0, 0, 255)", "rgb(255, 0, 0)"],
-    extrapolate: "clamp",
-  });
-
-  const scrollViewRef = useRef(null);
-  const [scrollOffset, setScrollOffset] = useState(0);
-
-  const handleScroll = (event) => {
-    const { y } = event.nativeEvent.contentOffset;
-    if (y < 0) {
-      scrollViewRef.current.scrollTo({ y: 0, animated: false });
-    } else {
-      setScrollOffset(y);
-    }
-    // console.log(y);
+  const fetchData = () => {
+    setTimeout(() => {
+      // setLoading(true);
+      setRefreshing(false);
+    }, 50); // Simulating 2 seconds delay
   };
 
-  const [loaded, setLoaded] = useState(false);
+  const handleRefresh = () => {
+    console.log("Event triggered")
+    setRefreshing(true);
+    fetchData();
+  };
+
+
+  const [idleTimer, setIdleTimer] = useState(null);
+  const [timer, setTimer] = useState(true);
+
+  React.useEffect(() => {
+    if (timer) {
+      console.log("Reset the timer");
+      clearInterval(idleTimer);
+    } else {
+      clearInterval(idleTimer);
+      console.log("Performing logic every 1 minute...");
+      setIdleTimer(
+        setInterval(() => {
+          // setLoading(true);
+        }, 90000)
+      );
+    }
+
+    setTimer(false);
+  }, [timer]);
+
   return (
     <SafeAreaView>
       {/* <TopBarMain /> */}
@@ -397,9 +412,9 @@ export default function HomeScreen(props) {
         <></>
       )}
 
-      <ScrollView
-        ref={scrollViewRef}
-        onScroll={handleScroll}
+      <PTRView
+        onRefresh={handleRefresh}
+        onTouchStart={()=>{setTimer(true); console.log("reset")}}
         scrollEventThrottle={1}
         contentContainerStyle={{ flexGrow: 1 }}
         style={{ backgroundColor: "#fff", height: hp(100) }}
@@ -868,7 +883,7 @@ export default function HomeScreen(props) {
         </View>
 
         <View style={{ width: wp(100), height: hp(6), marginTop: hp(3) }} />
-      </ScrollView>
+      </PTRView>
     </SafeAreaView>
   );
 }

@@ -17,6 +17,7 @@ import Back from "../../assets/images/arrow.svg";
 import RingIcon from "../components/RingIcon";
 import axios from "axios";
 import { InAppBrowser } from "react-native-inappbrowser-reborn";
+import PTRView from "react-native-pull-to-refresh";
 
 const outLink = async (link) => {
   try {
@@ -63,7 +64,7 @@ const outLink = async (link) => {
 const Card = (props) => {
   // console.log(props)
   const data = props.props.item;
-  console.log("It is from card: ", data)
+  // console.log("It is from card: ", data)
   // Anuj ise props ke according set kar dena to fir ho jayega shyad
   const [isTick, setTick] = useState(false);
 
@@ -146,6 +147,8 @@ export default function ReminderScreen({ navigation, route }) {
 
   useEffect(() => {
     const url = "https://n8n.heartitout.in/webhook/api/notifications";
+    if(loading)
+    {
     axios
       .post(url, route.params)
       .then((res) => {
@@ -164,14 +167,51 @@ export default function ReminderScreen({ navigation, route }) {
       }).finally(() => {
         setLoading(false);
       });
-  }, []);
+    }
+  }, [loading]);
+
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchData = () => {
+    setTimeout(() => {
+      setLoading(true);
+      setRefreshing(false);
+    }, 50); // Simulating 2 seconds delay
+  };
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchData();
+  };
+
+
+  const [idleTimer, setIdleTimer] = useState(null);
+  const [timer, setTimer] = useState(true);
+
+  React.useEffect(() => {
+    if (timer) {
+      console.log("Reset the timer");
+      clearInterval(idleTimer);
+    } else {
+      clearInterval(idleTimer);
+      console.log("Performing logic every 1 minute...");
+      setIdleTimer(
+        setInterval(() => {
+          setLoading(true);
+        }, 90000)
+      );
+    }
+
+    setTimer(false);
+  }, [timer]);
 
   console.log(datas);
 
   return (
     <SafeAreaView>
       {/* <TopBarMain /> */}
-      <ScrollView>
+      <PTRView onRefresh={handleRefresh} onTouchStart={()=>{setTimer(true); console.log("reset")}}>
         <View
           style={{
             backgroundColor: "#fff",
@@ -253,7 +293,7 @@ export default function ReminderScreen({ navigation, route }) {
         )}
         {/* this is for example for correct style --Anuj */}
         {/* <Banners /> */}
-      </ScrollView>
+      </PTRView>
     </SafeAreaView>
   );
 }
