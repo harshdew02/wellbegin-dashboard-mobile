@@ -1,6 +1,5 @@
 // import { StatusBar } from "expo-status-bar";
 import * as React from "react";
-import { StyleSheet, Text, View, StatusBar } from "react-native";
 import AppNavigation from "./src/navigation";
 import AppNavigation2 from "./src/navigation/index2";
 import SInfo from "react-native-encrypted-storage";
@@ -15,10 +14,12 @@ Sentry.init({
 export default function App() {
   const [token, setToken] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
+
   React.useEffect(()=>{
     requestUserPermission();
     NotificationListner();
   })
+
   React.useEffect(() => {
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
@@ -26,6 +27,7 @@ export default function App() {
 
     return unsubscribe;
   }, []);
+
   React.useEffect(() => {
     const isLogin = async () => {
       try {
@@ -49,6 +51,7 @@ export default function App() {
 
     isLogin();
   }, []);
+
   if (loading) {
   } else {
     return <>
@@ -62,13 +65,5 @@ export default function App() {
       {token ? <AppNavigation /> : <AppNavigation2 />}
     </>;
   }
-}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+}
