@@ -25,16 +25,34 @@ import Heartitout from "../screens/Heartitout";
 
 
 const Stack = createNativeStackNavigator();
-  const linking = {
-    prefixes: ['heartitout://']
-  };
+
+const config = {
+  screens:{
+    LoaderEffect: "loader",
+    MoodInsights: "moodInsights",
+    MoodLog: "moodLog",
+    Progress: "progress",
+    RightDrawer: "main",
+    MoodTracker: "mood",
+    Login: "LoginPage",
+    Verify: "verifyPage",
+    AboutMe: "aboutMe",
+    Test: "test",
+    HomeWork: "homework",
+    Heartitout: "webview",
+    ReminderScreen: "reminder"
+  }
+}
 
 export default function AppNavigation() {
 
 
   return (
     <NavigationContainer
-    linking={linking}
+    linking={{
+      prefixes:["heartitout://app"],
+      config
+    }}
     >
       <Stack.Navigator
         screenOptions={{
