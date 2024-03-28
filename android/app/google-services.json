@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "87847447432",
-    "project_id": "wellbeing-dashboard-mobile",
-    "storage_bucket": "wellbeing-dashboard-mobile.appspot.com"
+    "project_number": "259530425894",
+    "project_id": "wellbeing-dashboard",
+    "storage_bucket": "wellbeing-dashboard.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:87847447432:android:34575c2cab1541ea8a283d",
+        "mobilesdk_app_id": "1:259530425894:android:47608bf5b511eb3b36c8e7",
         "android_client_info": {
           "package_name": "com.as828.hio"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDv7xfM3f5Xu4_r0FkbplzK5N20T3i0WlM"
+          "current_key": "AIzaSyDJgvWZ85SafKrx1L4Vs94ACE1JA1jQGZc"
         }
       ],
       "services": {
