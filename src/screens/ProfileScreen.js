@@ -585,7 +585,6 @@ export default function ProfileScreen(props) {
   const [bannerH, setBannerH] = useState(false);
   const [banLinkH, setBanLinkH] = useState("");
   const [banClickH, setBanClickH] = useState("");
-  const [fetch, setFetch] = useState(false);
   const [statusColor, setStatusColor] = useState("green");
 
   const [routes] = React.useState([
@@ -611,11 +610,11 @@ export default function ProfileScreen(props) {
   };
 
   navigation.addListener("focus", () => {
-    setRefresh(true)
     BackHandler.addEventListener("hardwareBackPress", backHandler);
   });
 
   navigation.addListener("blur", () => {
+    setRefresh(true)
     BackHandler.removeEventListener("hardwareBackPress", backHandler);
   });
 
@@ -648,10 +647,6 @@ export default function ProfileScreen(props) {
     if (data.type == "H") setSessionH(false);
     if (data.type == "U") setSession(false);
   };
-
-  useEffect(() => {}, [isSessionH]);
-
-  useEffect(() => {}, [isSession]);
 
   const renderScene = ({ route }) => {
     setRefresh(false)
