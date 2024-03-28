@@ -199,8 +199,7 @@ const MoodInsights = (props) => {
 
   const fetchData = () => {
     setTimeout(() => {
-      if(curr != 0)
-      {
+      if (curr != 0) {
         setLoading(true)
         setCurr(0);
       }
@@ -367,14 +366,13 @@ const MoodInsights = (props) => {
           }
         }
         setShowMood(show_mood);
-        if(index == 1) setInd(3)
-        else if(index == 2) setInd(0);
-        else if(index == 3) setInd(4);
-        else if(index == 4) setInd(6);
-        else if(index == 5) setInd(5);
-        else if(index == 6) setInd(7);
-        else
-        {
+        if (index == 1) setInd(3)
+        else if (index == 2) setInd(0);
+        else if (index == 3) setInd(4);
+        else if (index == 4) setInd(6);
+        else if (index == 5) setInd(5);
+        else if (index == 6) setInd(7);
+        else {
           const numbers = [1, 2, 8];
           const index = Math.floor(Math.random() * numbers.length);
           setInd(numbers[index]);
@@ -415,9 +413,8 @@ const MoodInsights = (props) => {
           >
             <LeftGo />
           </TouchableOpacity>
-          <Text style={styles.HeadText}>{`${date.dates} ${month[date.monthIndex]} ${
-            date.year
-          }`}</Text>
+          <Text style={styles.HeadText}>{`${date.dates} ${month[date.monthIndex]} ${date.year
+            }`}</Text>
           <TouchableOpacity
             onPress={() => {
               setLoading(true)
@@ -723,42 +720,42 @@ const MoodInsights = (props) => {
                 <View
                   style={{
                     height: "100%",
-                    backgroundColor: select == 1 ? "#D2A100" : "#fddf7a",
+                    backgroundColor: select == 1 ? "rgba(210, 161, 0, 1)" : "rgba(210, 161, 0, 0.3)",
                     width: wp(p1),
                   }}
                 />
                 <View
                   style={{
                     height: "100%",
-                    backgroundColor: select == 2 ? "#007BB7" : "#d2e7f2",
+                    backgroundColor: select == 2 ? "rgba(0, 123, 183, 1)" : "rgba(0, 123, 183, 0.3)",
                     width: wp(p2),
                   }}
                 />
                 <View
                   style={{
                     height: "100%",
-                    backgroundColor: select == 3 ? "#0F435C" : "#aed5e8",
+                    backgroundColor: select == 3 ? "rgba(15, 67, 92, 1)" : "rgba(15, 67, 92, 0.3)",
                     width: wp(p3),
                   }}
                 />
                 <View
                   style={{
                     height: "100%",
-                    backgroundColor: select == 4 ? "#723F2D" : "#f0d3ca",
+                    backgroundColor: select == 4 ? "rgba(114, 63, 45, 1)" : "rgba(114, 63, 45, 0.3)",
                     width: wp(p4),
                   }}
                 />
                 <View
                   style={{
                     height: "100%",
-                    backgroundColor: select == 5 ? "#01818C" : "#7bbdc4",
+                    backgroundColor: select == 5 ? "rgba(1, 129, 140, 1)" : "rgba(1, 129, 140, 0.3)",
                     width: wp(p5),
                   }}
                 />
                 <View
                   style={{
                     height: "100%",
-                    backgroundColor: select == 6 ? "#BB6345" : "#e8b19e",
+                    backgroundColor: select == 6 ? "rgba(187, 99, 69, 1)" : "rgba(187, 99, 69, 0.3)",
                     width: wp(p6),
                   }}
                 />
@@ -774,7 +771,13 @@ const MoodInsights = (props) => {
                 }}
               >
                 <View className="items-center">
-                  <Happy h={7.4} w={7.4} isSelect={select == 1 ? -1 : 1} />
+                  <View style={{
+                    height: wp(7.4), width: wp(7.4), backgroundColor: (select==1)?'rgba(255,255,255,0)':'rgba(255,255,255,0.7)', position: 'absolute',
+                    zIndex: 1,
+                    borderRadius:wp(5)
+                  }}
+                  />
+                  <Happy h={7.4} w={7.4} isSelect={select == 1 ? 1 : 1} />
                   <Text
                     style={{
                       fontSize: wp(3),
@@ -786,7 +789,13 @@ const MoodInsights = (props) => {
                   </Text>
                 </View>
                 <View className="items-center">
-                  <Surprised h={7.4} w={7.4} isSelect={select == 2 ? -1 : 2} />
+                <View style={{
+                    height: wp(7.4), width: wp(7.4), backgroundColor: (select==2)?'rgba(255,255,255,0)':'rgba(255,255,255,0.7)', position: 'absolute',
+                    zIndex: 1,
+                    borderRadius:wp(5)
+                  }}
+                  />
+                  <Surprised h={7.4} w={7.4} isSelect={select == 2 ? 2 : 2} />
                   <Text
                     style={{
                       fontSize: wp(3),
@@ -798,7 +807,13 @@ const MoodInsights = (props) => {
                   </Text>
                 </View>
                 <View className="items-center">
-                  <Sad h={7.4} w={7.4} isSelect={select == 3 ? -1 : 3} />
+                <View style={{
+                    height: wp(7.4), width: wp(7.4), backgroundColor: (select==3)?'rgba(255,255,255,0)':'rgba(255,255,255,0.7)', position: 'absolute',
+                    zIndex: 1,
+                    borderRadius:wp(5)
+                  }}
+                  />
+                  <Sad h={7.4} w={7.4} isSelect={select == 3 ? 3 : 3} />
                   <Text
                     style={{
                       fontSize: wp(3),
@@ -810,7 +825,13 @@ const MoodInsights = (props) => {
                   </Text>
                 </View>
                 <View className="items-center">
-                  <Disgust h={7.4} w={7.4} isSelect={select == 4 ? -1 : 4} />
+                <View style={{
+                    height: wp(7.4), width: wp(7.4), backgroundColor: (select==4)?'rgba(255,255,255,0)':'rgba(255,255,255,0.7)', position: 'absolute',
+                    zIndex: 1,
+                    borderRadius:wp(5)
+                  }}
+                  />
+                  <Disgust h={7.4} w={7.4} isSelect={select == 4 ? 4 : 4} />
 
                   <Text
                     style={{
@@ -823,7 +844,13 @@ const MoodInsights = (props) => {
                   </Text>
                 </View>
                 <View className="items-center">
-                  <Fear h={7.4} w={7.4} isSelect={select == 5 ? -1 : 5} />
+                <View style={{
+                    height: wp(7.4), width: wp(7.4), backgroundColor: (select==5)?'rgba(255,255,255,0)':'rgba(255,255,255,0.7)', position: 'absolute',
+                    zIndex: 1,
+                    borderRadius:wp(5)
+                  }}
+                  />
+                  <Fear h={7.4} w={7.4} isSelect={select == 5 ? 5 : 5} />
 
                   <Text
                     style={{
@@ -836,7 +863,13 @@ const MoodInsights = (props) => {
                   </Text>
                 </View>
                 <View className="items-center">
-                  <Angry h={7.4} w={7.4} isSelect={select == 6 ? -1 : 6} />
+                <View style={{
+                    height: wp(7.4), width: wp(7.4), backgroundColor: (select==6)?'rgba(255,255,255,0)':'rgba(255,255,255,0.7)', position: 'absolute',
+                    zIndex: 1,
+                    borderRadius:wp(5)
+                  }}
+                  />
+                  <Angry h={7.4} w={7.4} isSelect={select == 6 ? 6 : 6} />
                   <Text
                     style={{
                       fontSize: wp(3),

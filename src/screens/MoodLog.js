@@ -60,6 +60,7 @@ const SphereOfLife = {
 };
 
 const MoodCard = (props) => {
+  console.log('fhome herer :' + props.props.emotion_3)
   return (
     <View style={styles.CardStyle}>
       <Text style={{ width: wp(75), color: theme.black, fontSize: wp(3.2) }}>
@@ -70,7 +71,10 @@ const MoodCard = (props) => {
           display: "flex",
           flexDirection: "row",
           width: "100%",
+          height: hp(6),
           alignItems: "center",
+          // backgroundColor: 'yellow'
+          marginTop: hp(1.4)
         }}
       >
         {component[props.props.mood]}
@@ -96,41 +100,48 @@ const MoodCard = (props) => {
           {props.props.sub_time.toUpperCase()}
         </Text>
       </View>
-      <View
+      {/* <View
+        style={{
+
+          // marginTop: hp(0),
+          // overflow: 'scroll',
+          // height: hp(6),
+
+        }}
+      > */}
+      <Text
         style={{
           width: "100%",
           borderTopWidth: wp(0.2),
           borderColor: theme.black,
           paddingTop: hp(1),
-          marginTop: hp(0),
+          color: "#6a7b83",
+          fontSize: wp(3.7),
+          fontWeight: "normal",
+          textAlign: "left",
+          marginTop: hp(1.4)
+          // backgroundColor: 'red',
+          // overflow: 'scroll',
+          // height: hp(6),
         }}
       >
-        <Text
-          style={{
-            color: "#6a7b83",
-            fontSize: wp(3.7),
-            fontWeight: "normal",
-            textAlign: "left",
-            height: hp(5),
-            overflow: 'scroll'
-          }}
-        >
-          {props.props.notes}
-        </Text>
-      </View>
+        {props.props.notes}
+      </Text>
+      {/* </View> */}
       <View
         style={{
           display: "flex",
           flexDirection: "row",
           flexWrap: 'wrap',
-          justifyContent: 'space-between',
-          // marginTop: hp(1.4),
+          justifyContent: 'left',
+          alignItems: 'center',
+          marginTop: hp(1.4),
           width: "100%",
         }}
       >
         <View
           style={{
-            marginRight: wp(1),
+            marginRight:wp(2),
             height: hp(2.5),
             paddingHorizontal: wp(1.6),
             backgroundColor: "#dbf2f2",
@@ -139,7 +150,7 @@ const MoodCard = (props) => {
             alignItems: "center",
             justifyContent: "space-between",
             borderRadius: wp(2.6),
-            marginTop: hp(0.4)
+            marginTop: hp(0.5)
           }}
         >
           {/* <Work w={3.7} h={3.1} isClicked={true} /> */}
@@ -159,36 +170,40 @@ const MoodCard = (props) => {
           </Text>
         </View>
 
-        {props.props.emotion_1 != (null || undefined) ? (
-          <View
-            style={{
-              height: hp(2.5),
-              paddingHorizontal: wp(1.6),
-              backgroundColor: "#fceecb",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              borderRadius: wp(2.6),
-              marginTop: hp(0.4)
-            }}
-          >
-            <Text
+        {props.props.emotion_1 != (null || undefined || "") ? (
+
+          <>
+            <View
               style={{
-                marginLeft: wp(0.2),
-                color: theme.black,
-                fontSize: wp(3.2),
-                fontWeight: "normal",
-                textAlign: "left",
+                height: hp(2.5),
+                paddingHorizontal: wp(1.6),
+                backgroundColor: "#fceecb",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+                borderRadius: wp(2.6),
+                marginTop: hp(0.5),
+                marginRight:wp(2)
               }}
             >
-              {props.props.emotion_1.charAt(0).toUpperCase() + props.props.emotion_1.slice(1)}
-            </Text>
-          </View>
+              <Text
+                style={{
+                  marginLeft: wp(0.2),
+                  color: theme.black,
+                  fontSize: wp(3.2),
+                  fontWeight: "normal",
+                  textAlign: "left",
+                }}
+              >
+                {props.props.emotion_1.charAt(0).toUpperCase() + props.props.emotion_1.slice(1)}
+              </Text>
+            </View>
+          </>
         ) : (
           <></>
         )}
 
-        {props.props.emotion_2 != (null || undefined) ? (
+        {props.props.emotion_2 != (null || undefined || "") ? (
           <View
             style={{
               height: hp(2.5),
@@ -198,7 +213,8 @@ const MoodCard = (props) => {
               alignItems: "center",
               justifyContent: "space-between",
               borderRadius: wp(2.6),
-              marginTop: hp(0.4)
+              marginTop: hp(0.5),
+              marginRight:wp(2)
             }}
           >
             <Text
@@ -216,7 +232,8 @@ const MoodCard = (props) => {
         ) : (
           <></>
         )}
-        {props.props.emotion_3 != (null || undefined) ? (
+
+        {props.props.emotion_3 != (null || undefined || "") ? (
           <>
             <View
               style={{
@@ -227,7 +244,8 @@ const MoodCard = (props) => {
                 alignItems: "center",
                 justifyContent: "space-between",
                 borderRadius: wp(2.6),
-                marginTop: hp(0.4)
+                marginTop: hp(0.5),
+                marginRight:wp(2)
               }}
             >
               <Text
@@ -260,25 +278,25 @@ const MoodLog = (props) => {
   useEffect(() => {
     payload.week = 0;
     const url = "https://n8n.heartitout.in/webhook/api/mt-weekly-mood";
-    if(loading){
-    
-    axios
-      .post(url, payload)
-      .then((res) => {
-        console.log(res.data);
-        if (res.data.has_res === "yes") {
-          if (res.data.data != (undefined || null))
-            setData(res.data.data);
-        }
-        // setData(res.data.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        // console.log(mood_data);
-        setLoading(false);
-      });
+    if (loading) {
+
+      axios
+        .post(url, payload)
+        .then((res) => {
+          console.log(res.data);
+          if (res.data.has_res === "yes") {
+            if (res.data.data != (undefined || null))
+              setData(res.data.data);
+          }
+          // setData(res.data.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => {
+          // console.log(mood_data);
+          setLoading(false);
+        });
     }
   }, [loading]);
 
@@ -352,7 +370,7 @@ const MoodLog = (props) => {
             borderRadius: wp(8),
             width: wp(42.4),
             height: hp(6),
-            display: "flex",
+            // display: "flex",
             justifyContent: "center",
             alignItems: "center",
             flexDirection: "row",
@@ -363,14 +381,14 @@ const MoodLog = (props) => {
               color: theme.maincolor,
               fontSize: wp(4),
               fontWeight: "500",
-              marginLeft: wp(4.2),
+              marginRight: wp(1.5),
             }}
           >
             View Insights
           </Text>
           <Signal width={wp(4.2)} height={wp(3.7)} />
         </TouchableOpacity>
-        <View style={{height:hp(5)}} />
+        <View style={{ height: hp(5) }} />
       </PTRView>
     </SafeAreaView>
   );
@@ -397,11 +415,12 @@ const styles = StyleSheet.create({
   },
   CardStyle: {
     width: wp(84),
-    height: hp(21),
+    // height: hp(25),
     backgroundColor: "#fff",
-    paddingBottom: wp(3.5),
+    // paddingBottom: wp(3.5),
     paddingHorizontal: wp(4.2),
-    paddingTop: wp(2),
+    paddingVertical: hp(1),
+    // paddingTop: wp(2),
     marginTop: hp(2),
     borderRadius: wp(2.6),
     display: "flex",
