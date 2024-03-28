@@ -720,14 +720,14 @@ const MoodInsights = (props) => {
                 <View
                   style={{
                     height: "100%",
-                    backgroundColor: select == 1 ? "rgba(210, 161, 0, 1)" : "rgba(210, 161, 0, 0.3)",
+                    backgroundColor: select == 1 ? "rgba(255, 214, 79, 1)" : "rgba(255, 214, 79, 0.3)",
                     width: wp(p1),
                   }}
                 />
                 <View
                   style={{
                     height: "100%",
-                    backgroundColor: select == 2 ? "rgba(0, 123, 183, 1)" : "rgba(0, 123, 183, 0.3)",
+                    backgroundColor: select == 2 ? "rgba(174, 213, 232, 1)" : "rgba(174, 213, 232, 0.3)",
                     width: wp(p2),
                   }}
                 />
