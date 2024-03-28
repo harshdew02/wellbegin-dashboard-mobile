@@ -49,10 +49,10 @@ export default function AppNavigation() {
 
   return (
     <NavigationContainer
-    linking={{
-      prefixes:["heartitout://app"],
-      config
-    }}
+    // linking={{
+    //   prefixes:["heartitout://app"],
+    //   // config
+    // }}
     >
       <Stack.Navigator
         screenOptions={{
@@ -62,16 +62,11 @@ export default function AppNavigation() {
           headerShown: false
         }}
         initialRouteName={'loader'}
-        // initialRouteName={'LoginPage'}
-        // initialRouteName={'main'}
-        // initialRouteName={'about'}
-        // initialRouteName={'verifyPage'}
       >
         <Stack.Screen name="loader" component={LoaderEffect} />
         <Stack.Screen name="moodInsights" component={MoodInsights} />
         <Stack.Screen name="moodLog" component={MoodLog} />
         <Stack.Screen name="progress" component={Progress} />
-        {/* <Stack.Screen name="about" component={ProfileNavigator} /> */}
         <Stack.Screen name="main" component={RightDrawer} />
         <Stack.Screen name="mood" component={MoodTracker} />
         <Stack.Screen name="LoginPage" component={Login} />
@@ -81,17 +76,12 @@ export default function AppNavigation() {
         <Stack.Screen name="homework" component={HomeWork}/>
         <Stack.Screen name='webview' component={Heartitout}/>
         <Stack.Screen name="reminder" component={ReminderScreen}
-
           options={{
             headerShown: false,
             presentation: 'modal',
             animationTypeForReplace:'push',
-            // animation: 'slide_from_right'
-            // animation: 'flip'
-            // animation: 'none'
             animation: 'slide_from_right'
           }}
-
         />
       </Stack.Navigator>
     </NavigationContainer>
