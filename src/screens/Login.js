@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ScrollView,
-  ToastAndroid
+  ToastAndroid,
+  KeyboardAvoidingView
 } from "react-native";
 import React, { useState } from "react";
 import SInfo from "react-native-encrypted-storage";
