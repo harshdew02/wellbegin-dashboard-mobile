@@ -311,7 +311,7 @@ const MoodInsights = (props) => {
         let current = 0;
         let max = 0;
         for (let i = 0; i < 7; i++) {
-          if (temp_data[i].is_filled === "Filled") curr++;
+          if (temp_data[i].is_filled === "Filled") current++;
           else {
             current = 0;
           }
