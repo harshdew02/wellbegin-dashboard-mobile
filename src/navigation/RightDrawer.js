@@ -15,8 +15,7 @@ import CustomDrawer from "../components/CustomDrawer";
 const Drawer = createDrawerNavigator();
 
 export default function RightDrawer({ navigation, route }) {
-  // const nav = useNavigation()
-  navigation.addListener("focus", async (ref) => {
+  async function isFirstTime() {
     let token = await SInfo.getItem("token");
     let data = JSON.parse(token);
     // console.log("Rightdrawr: ",route.params)
@@ -37,7 +36,11 @@ export default function RightDrawer({ navigation, route }) {
       data.user_email = userDet.user_email;
       SInfo.setItem('token',JSON.stringify(data));
     }
-  });
+  }
+  React.useEffect(() => {
+    isFirstTime();
+  }, [])
+  
 
   return (
     <>
