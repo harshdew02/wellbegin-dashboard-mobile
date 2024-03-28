@@ -155,9 +155,7 @@ export default function HomeScreen(props) {
   const [mood, setMood] = useState(false);
   const [time, setTime] = useState("");
   const [date, setDate] = useState("");
-  const [banner, setBanner] = useState(false);
-  const [banLink, setBanLink] = useState("");
-  const [cbanLink, setCBanLink] = useState("");
+  const [banner, setBanner] = useState({avail: false});
   const [whatsnew, setWhatsnew] = useState("");
   const [product, setProduct] = useState("");
   const [booking, setBooking] = useState("");
@@ -290,34 +288,37 @@ export default function HomeScreen(props) {
         .finally(() => {
           setMoodCheck(false);
         });
-
+      
+      let realTimeData = null;
       const apiUrl3 = "https://n8n.heartitout.in/webhook/api/home-page-details";
       axios
         .post(apiUrl3, payload)
         .then(async (res) => {
-          if (res.data.status === "1" || res.data.status === "10") {
-            res.data.mood_tacker === "yes" ? setMood(true) : setMood(false);
-            if (res.data.has_banner == "yes") {
-              setBanner(true);
-              setBanLink(res.data.banner_link);
-              setCBanLink(res.data.on_click);
-            } else {
-              setBanner(false);
-            }
-            setWhatsnew(res.data.whats_new_onclick);
-            setProduct(res.data.product_onclick);
-            setBooking(res.data.booking_link);
-            if (res.data.subs_det === "yes") setSubsdet(true);
-            else setSubsdet(false);
-          } else {
-            throw new Error("User credentails expired");
-          }
-          // console.log(res.data.show_sub)
+           realTimeData = await res.data;
         })
         .catch((err) => {
           console.log(err);
         })
         .finally(() => {
+          if(realTimeData != null)
+          {
+            console.log(realTimeData)
+            if (realTimeData.status === "1" || realTimeData.status === "10") {
+              realTimeData.mood_tacker === "yes" ? setMood(true) : setMood(false);
+              if (realTimeData.has_banner === "yes") {
+                setBanner({avail: true, ban_link: data.banner_link, cban_link: data.on_click})
+              } else {
+                setBanner({avail:false});
+              }
+              setWhatsnew(realTimeData.whats_new_onclick);
+              setProduct(realTimeData.product_onclick);
+              setBooking(realTimeData.booking_link);
+              if (realTimeData.subs_det === "yes") setSubsdet(true);
+              else setSubsdet(false);
+            } else {
+              throw new Error("User credentails expired");
+            }
+          }
           setMoodCheck(false);
         });
     }
@@ -327,16 +328,13 @@ export default function HomeScreen(props) {
     setName(data.usr_fullname);
     data.has_mood == "no" ? setMood(false) : setMood(true);
     if (data.has_banner == "yes") {
-      setBanner(true);
-      setBanLink(data.banner_link);
-      setCBanLink(data.on_click);
+      setBanner({avail: true, ban_link: data.banner_link, cban_link: data.on_click})
     } else {
-      setBanner(false);
+      setBanner({avail: false});
     }
     setWhatsnew(data.whats_new_onclick);
     setProduct(data.product_onclick);
     setBooking(data.booking_link);
-    // console.log(data.show_sub)
     if (data.show_sub === "yes") {
       setShowsub(true);
       setSub(data.sub_onclick);
@@ -347,7 +345,6 @@ export default function HomeScreen(props) {
     if (data.subs_det === "yes") setSubsdet(true);
     else setSubsdet(false);
     setSubdays(Number.parseInt(data.subs_no_of_days));
-    // console.log("It is coming from home screen: ", data);
     if (appointment.has_appointment === "no") setBooked(false);
     else {
       const apiDate = appointment.appointment.app_session_date;
@@ -450,14 +447,12 @@ export default function HomeScreen(props) {
 
   return (
     <SafeAreaView>
-      {/* <TopBarMain /> */}
       <StatusBar
         backgroundColor={theme.maincolor}
-        // backgroundColor={(scrollPercentage>84)?'#fff':theme.maincolor}
         barStyle={"light-content"}
         hidden={false}
       />
-      {!banner ? (
+      {!banner.avail ? (
         <View
           style={{
             backgroundColor: theme.maincolor,
@@ -479,18 +474,16 @@ export default function HomeScreen(props) {
         style={{ backgroundColor: "#fff", height: hp(100) }}
       >
         {/* Banner */}
-        {banner ? (
+        {banner.avail ? (
           <TouchableOpacity
             activeOpacity={1}
             style={{
-              // width: wp(100),
-              // height: hp(10),
               position: "absolute",
               zIndex: 2,
               top: 0,
             }}
             onPress={() => {
-              navigation.navigate('webview',cbanLink)
+              navigation.navigate('webview',banner.cban_link)
             }}
           >
             <Image
@@ -508,18 +501,15 @@ export default function HomeScreen(props) {
                 zIndex: 5,
               }}
               source={{
-                uri: banLink,
+                uri: banner.ban_link,
               }}
             />
-            <></>
           </TouchableOpacity>
-        ) : (
-          <></>
-        )}
+        ) : (<></>)}
 
         <View
           style={
-            banner
+            banner.avail
               ? { marginTop: loaded ? wp(22.66) : hp(-0.05) }
               : { marginTop: hp(0) }
           }
@@ -531,13 +521,7 @@ export default function HomeScreen(props) {
               className="flex-row justify-center items-center "
               style={{
                 backgroundColor: theme.maincolor,
-                // width: wp(100),
-                // height: hp(),
-                // marginB: hp(2),
                 width: wp(84),
-                // height: hp(6),
-                // backgroundColor: "white",
-                // borderRadius: wp(8),
                 justifyContent: "center",
                 alignItems: "center",
                 flexDirection: "row",
@@ -819,7 +803,6 @@ export default function HomeScreen(props) {
           </>
         )}
 
-        {/* Package */}
 
         {showsub ? (
           <TouchableOpacity
@@ -890,7 +873,6 @@ export default function HomeScreen(props) {
             </View>
           </TouchableOpacity>
         )}
-        {/* Package */}
 
         <TouchableOpacity
           onPress={() => {
