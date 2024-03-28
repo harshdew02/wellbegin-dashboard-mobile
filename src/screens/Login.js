@@ -144,9 +144,14 @@ const Login = () => {
   };
 
   // const [isFocus, setIsFocus] = useState(false);
+  
 
   return (
-    <SafeAreaView>
+    <KeyboardAvoidingView
+    behavior="padding"
+    keyboardVerticalOffset={-210}
+    style={{ flex: 1 }}
+    >
       {/* <TopBar /> */}
       <ScrollView keyboardShouldPersistTaps='always'>
         <StatusBar
@@ -262,7 +267,7 @@ const Login = () => {
           </TouchableOpacity>
         </View>
       </ScrollView>
-      </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
