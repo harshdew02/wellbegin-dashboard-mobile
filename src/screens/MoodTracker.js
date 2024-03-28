@@ -9,7 +9,8 @@ import {
   ScrollView,
   ToastAndroid,
   TextInput,
-  ActivityIndicator
+  ActivityIndicator,
+  KeyboardAvoidingView
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import TopBarMain from "../components/TopBarMain";
@@ -372,7 +373,11 @@ const MoodTracker = (props) => {
   const [text, onChangeText] = React.useState('');
 
   return (
-    <SafeAreaView>
+    <KeyboardAvoidingView
+    behavior="padding"
+    keyboardVerticalOffset={-260}
+    style={{ flex: 1 }}
+    >
       {loading ? (<View style={{ height: hp(80), width: '100%', justifyContent: 'center', alignItems: 'center', position: 'absolute', zIndex:5}} >
         <ActivityIndicator color="#01818C" animating={loading} size={wp(14)} />
       </View>) : (<></>)}
@@ -697,7 +702,7 @@ const MoodTracker = (props) => {
         }
         <View style={{ height: hp(20) }} />
       </ScrollView>
-    </SafeAreaView>
+    </KeyboardAvoidingView>
   );
 };
 
