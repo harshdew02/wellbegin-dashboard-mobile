@@ -33,8 +33,7 @@ const verifyOTP = async (
   date,
   navigation,
   [loading, setLoading],
-  [error, setError],
-  diversion
+  [error, setError]
 ) => {
   const apiUrl = "https://n8n.heartitout.in/webhook/api/auth";
   try {
@@ -71,7 +70,7 @@ const verifyOTP = async (
             })
           );
           // setCounter(0);
-          navigation.navigate("loader",{navigation:diversion});
+          navigation.navigate("loader");
         } else {
           console.log("wrong otp received");
           setError("You entered the wrong code. Please try again.");
@@ -168,7 +167,6 @@ export default function Verify({ navigation, route }) {
   const [otp, setOtp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState(null);
-  const [diversion, setDiversion] = useState(route.params.diversion);
   const {connect} = useAuth();
 
   // console.log(diversion)
@@ -250,8 +248,8 @@ export default function Verify({ navigation, route }) {
                 route.params.date,
                 navigation,
                 [loading, setLoading],
-                [showErrorMessage, setShowErrorMessage],
-                diversion)
+                [showErrorMessage, setShowErrorMessage]
+                )
             }}
           />
 
@@ -275,7 +273,6 @@ export default function Verify({ navigation, route }) {
                 navigation,
                 [loading, setLoading],
                 [showErrorMessage, setShowErrorMessage],
-                diversion
               );
             }}
           >

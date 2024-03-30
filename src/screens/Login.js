@@ -32,9 +32,8 @@ const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
 };
 
-const requestOTP = async (code, number, navigation, [, setLoading], diversion) => {
+const requestOTP = async (code, number, navigation, [, setLoading]) => {
   const apiUrl = "https://n8n.heartitout.in/webhook/api/auth";
-  console.log(diversion) 
   let date = new Date();
   let formattedDate = date.toISOString().split("T")[0];
   if (date.getDate() > 15) {
@@ -70,8 +69,6 @@ const requestOTP = async (code, number, navigation, [, setLoading], diversion) =
             // showToast("Mobile number is too short")
           });
           let datas = res.data;
-          datas.diversion = diversion;
-          console.log(datas);
         navigation.navigate("verifyPage", datas);
       })
       .catch((err) => {
@@ -88,8 +85,8 @@ const requestOTP = async (code, number, navigation, [, setLoading], diversion) =
 import Loginbg from "../components/Loginbg";
 
 const Login = ({route}) => {
-  const {connect} = useAuth();
-  const [nav_data, setNavData] = useState(route.params != (null || undefined) ? route.params.navigation : "main")
+  const {connect, Diversion} = useAuth();
+  // const [nav_data, setNavData] = useState(route.params != (null || undefined) ? route.params.navigation : "main")
   
   const trackAutomaticEvents = true;
   const mixpanel = new Mixpanel(
@@ -117,7 +114,7 @@ const Login = ({route}) => {
           // console.log(data)
           if (data.status !== "true"){}
           else {
-            navigation.navigate('loader',{navigation:nav_data})
+            navigation.navigate('loader')
           }
         }
       } catch (error) {
@@ -127,6 +124,7 @@ const Login = ({route}) => {
       }
     };
 
+    if(route.params != null && route.params != undefined) Diversion(route.params.navigation);
     isLogin();
   });
   
@@ -220,7 +218,7 @@ const Login = ({route}) => {
                 requestOTP(codes[value], number, navigation, [
                   loading,
                   setLoading,
-                ], nav_data);
+                ]);
                 mixpanel.track("OTP Request done by", {
                   "Phone ": codes[value] + number,
                 });
@@ -238,7 +236,7 @@ const Login = ({route}) => {
               requestOTP(codes[value], number, navigation, [
                 loading,
                 setLoading,
-              ], nav_data);
+              ]);
               // predefinedEvent();
               mixpanel.track("OTP Request done by", {
                 "Phone ": codes[value] + number,

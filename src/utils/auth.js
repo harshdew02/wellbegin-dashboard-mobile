@@ -16,6 +16,11 @@ export const AuthProvider = ({ children }) => {
   const setHomes = (paths) => {
     setHome(paths);
   };
+  const [divert, setDiversion] = useState("main");
+
+  const Diversion = (screen) => {
+    setDiversion(screen);
+  }
 
   const connect = () => {
     let connect = true;
@@ -29,7 +34,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ pathing, path, setHomes, home, connect }}>
+    <AuthContext.Provider value={{ pathing, path, setHomes, home, connect, Diversion, divert }}>
       {children}
     </AuthContext.Provider>
   );
