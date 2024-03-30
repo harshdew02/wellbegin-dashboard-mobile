@@ -704,7 +704,7 @@ export default function ProfileScreen(props) {
       setIdleTimer(
         setInterval(() => {
           setRefresh(true);
-        }, 120000)
+        }, 180000)
       );
     }
     setTimer(false);

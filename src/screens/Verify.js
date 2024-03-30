@@ -35,7 +35,8 @@ const verifyOTP = async (
   date,
   navigation,
   [loading, setLoading],
-  [error, setError]
+  [error, setError],
+  diversion
 ) => {
   const apiUrl = "https://n8n.heartitout.in/webhook/api/auth";
   try {
@@ -50,7 +51,6 @@ const verifyOTP = async (
       date: data.date,
       type: "verfiy_otp",
     };
-
     axios
       .post(apiUrl, requestData)
       .then(async (res) => {
@@ -73,7 +73,7 @@ const verifyOTP = async (
             })
           );
           // setCounter(0);
-          navigation.navigate("loader");
+          navigation.navigate("loader",{navigation:diversion});
         } else {
           console.log("wrong otp received");
           setError("You entered the wrong code. Please try again.");
@@ -170,7 +170,9 @@ export default function Verify({ navigation, route }) {
   const [otp, setOtp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState(null);
+  const [diversion, setDiversion] = useState(route.params.diversion);
 
+  // console.log(diversion)
   navigation.addListener("focus", (ref) => {
     resendOTPT([, setTimer]);
     setLoading(false);
@@ -248,7 +250,8 @@ export default function Verify({ navigation, route }) {
                 route.params.date,
                 navigation,
                 [loading, setLoading],
-                [showErrorMessage, setShowErrorMessage])
+                [showErrorMessage, setShowErrorMessage],
+                diversion)
             }}
           />
 
@@ -270,7 +273,8 @@ export default function Verify({ navigation, route }) {
                 route.params.date,
                 navigation,
                 [loading, setLoading],
-                [showErrorMessage, setShowErrorMessage]
+                [showErrorMessage, setShowErrorMessage],
+                diversion
               );
             }}
           >

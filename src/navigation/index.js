@@ -22,46 +22,28 @@ import MoodLog from "../screens/MoodLog";
 import Progress from "../screens/Progress";
 import Heartitout from "../screens/Heartitout";
 
-
-
 const Stack = createNativeStackNavigator();
 
-const config = {
-  screens:{
-    LoaderEffect: "loader",
-    MoodInsights: "moodInsights",
-    MoodLog: "moodLog",
-    Progress: "progress",
-    RightDrawer: "main",
-    MoodTracker: "mood",
-    Login: "LoginPage",
-    Verify: "verifyPage",
-    AboutMe: "aboutMe",
-    Test: "test",
-    HomeWork: "homework",
-    Heartitout: "webview",
-    ReminderScreen: "reminder"
-  }
-}
-
 export default function AppNavigation() {
-
-
   return (
     <NavigationContainer
-    // linking={{
-    //   prefixes:["heartitout://app"],
-    //   // config
-    // }}
+      linking={{
+        prefixes: ["https://hio-test-swart.vercel.app/"],
+        config: {
+          screens: {
+            loader: "app/:navigation",
+          },
+        },
+      }}
     >
       <Stack.Navigator
         screenOptions={{
           contentStyle: {
-            backgroundColor: '#FFF'
+            backgroundColor: "#FFF",
           },
-          headerShown: false
+          headerShown: false,
         }}
-        initialRouteName={'loader'}
+        initialRouteName={"loader"}
       >
         <Stack.Screen name="loader" component={LoaderEffect} />
         <Stack.Screen name="moodInsights" component={MoodInsights} />
@@ -71,16 +53,18 @@ export default function AppNavigation() {
         <Stack.Screen name="mood" component={MoodTracker} />
         <Stack.Screen name="LoginPage" component={Login} />
         <Stack.Screen name="verifyPage" component={Verify} />
-        <Stack.Screen name="aboutMe" component={AboutMe}/>
-        <Stack.Screen name="test" component={Test}/>
-        <Stack.Screen name="homework" component={HomeWork}/>
-        <Stack.Screen name='webview' component={Heartitout}/>
-        <Stack.Screen name="reminder" component={ReminderScreen}
+        <Stack.Screen name="aboutMe" component={AboutMe} />
+        <Stack.Screen name="test" component={Test} />
+        <Stack.Screen name="homework" component={HomeWork} />
+        <Stack.Screen name="webview" component={Heartitout} />
+        <Stack.Screen
+          name="reminder"
+          component={ReminderScreen}
           options={{
             headerShown: false,
-            presentation: 'modal',
-            animationTypeForReplace:'push',
-            animation: 'slide_from_right'
+            presentation: "modal",
+            animationTypeForReplace: "push",
+            animation: "slide_from_right",
           }}
         />
       </Stack.Navigator>

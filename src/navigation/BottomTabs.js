@@ -20,6 +20,7 @@ import ProfileIcon from "../components/Profile.js";
 import TopBarMain from "../components/TopBarMain.js";
 import ProfileNavigator from "./ProfileNavigator.js";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { request, PERMISSIONS, check, RESULTS } from "react-native-permissions";
 
 const { width, height } = Dimensions.get("window");
 
@@ -55,13 +56,77 @@ const screenOptions = {
 };
 
 export default function BottomTabs(props) {
-  const [visible, setVisible] = React.useState(false);
-
   const navigation = useNavigation();
 
   const data = props.route.params;
 
   const Tab = createBottomTabNavigator();
+
+  React.useEffect(() => {
+    try {
+      const navigate = data.route.params.navigate;
+      const payload = data.route.params;
+      console.log(navigate, payload);
+      switch (navigate) {
+        case "reminder":
+          navigation.navigate("reminder", payload);
+          break;
+        case "homework":
+          navigation.navigate("homework", payload);
+          break;
+        case "todaymood":
+          navigation.navigate("mood", payload);
+          break;
+        case "diagnostic":
+          navigation.navigate("test", payload);
+          break;
+        case "myprogress":
+          navigation.navigate("progress", payload);
+          break;
+        case "moodinsights":
+          navigation.navigate("moodInsights", payload);
+          break;
+        case "aboutme":
+          navigation.navigate("aboutMe", payload);
+          break;
+        case "profile":
+          navigation.navigate("Profile_Tab", payload);
+          break;
+        case "discover":
+          navigation.navigate("Discover_Tab", payload);
+          break;
+        default:
+          navigation.navigate("Home_Tab", payload);
+          break;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
+  const requestNotificationPermission = async () => {
+    const result = await request(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
+    return result;
+  };
+
+  const checkNotificationPermission = async () => {
+    const result = await check(PERMISSIONS.ANDROID.POST_NOTIFICATIONS);
+    return result;
+  };
+
+  const requestPermission = async () => {
+    const checkPermission = await checkNotificationPermission();
+    if (checkPermission !== RESULTS.GRANTED) {
+      const request = await requestNotificationPermission();
+      if (request !== RESULTS.GRANTED) {
+        console.log("Permission denied");
+      }
+    }
+  };
+
+  React.useEffect(() => {
+    requestPermission();
+  }, []);
 
   return (
     <View

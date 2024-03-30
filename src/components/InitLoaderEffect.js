@@ -21,7 +21,9 @@ const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
 };
 
-export default function InitLoaderEffect({ navigation }) {
+export default function InitLoaderEffect( {route}) {
+  const navigation = useNavigation();
+  
   const backHandler = () => {
     BackHandler.exitApp();
     return true;
@@ -35,8 +37,9 @@ export default function InitLoaderEffect({ navigation }) {
     BackHandler.removeEventListener("hardwareBackPress", backHandler);
   });
 
-  navigation.addListener("focus", async (ref) => {
+  const initializer = async ()=> {
     try {
+      const nav_data = route.params != (null || undefined) ? route.params.navigation : "main";
       let token = await SInfo.getItem("token");
       if (token == null || token == undefined) navigation.navigate("LoginPage");
       else {
@@ -83,6 +86,9 @@ export default function InitLoaderEffect({ navigation }) {
             has_banner: "no",
             banner_link: "",
             on_click: "",
+
+            //This is where we tell where the page to be navigated
+            navigate: nav_data
           };
 
           //This the first call from the flowchart (and it is done)
@@ -178,15 +184,18 @@ export default function InitLoaderEffect({ navigation }) {
             .catch((err) => {
               console.log(err);
             });
-
-          navigation.navigate("main", finalDetails);
+            navigation.navigate("main", finalDetails);
         }
       }
     } catch (error) {
       navigation.navigate("LoginPage");
       console.log(error);
     }
-  });
+  }
+
+  React.useEffect(() => {
+    initializer();
+  })
 
   return (
     <SafeAreaView className="bg-white" style={{ height: hp(100) }}>

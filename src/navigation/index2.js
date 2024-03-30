@@ -24,17 +24,23 @@ import Heartitout from "../screens/Heartitout";
 const Stack = createNativeStackNavigator();
 
 export default function AppNavigation2() {
-
   return (
-    <NavigationContainer>
+    <NavigationContainer
+      linking={{
+        prefixes: ["https://hio-test-swart.vercel.app/"],
+        config: {
+          screens: { LoginPage: "app/:navigation" },
+        },
+      }}
+    >
       <Stack.Navigator
         screenOptions={{
           contentStyle: {
-            backgroundColor: '#FFF'
+            backgroundColor: "#FFF",
           },
-          headerShown: false
+          headerShown: false,
         }}
-        initialRouteName={'LoginPage'}
+        initialRouteName={"LoginPage"}
       >
         <Stack.Screen name="loader" component={LoaderEffect} />
         <Stack.Screen name="moodInsights" component={MoodInsights} />
@@ -44,16 +50,18 @@ export default function AppNavigation2() {
         <Stack.Screen name="mood" component={MoodTracker} />
         <Stack.Screen name="LoginPage" component={Login} />
         <Stack.Screen name="verifyPage" component={Verify} />
-        <Stack.Screen name="test" component={Test}/>
-        <Stack.Screen name="aboutMe" component={AboutMe}/>
-        <Stack.Screen name="homework" component={HomeWork}/>
-        <Stack.Screen name='webview' component={Heartitout}/>
-        <Stack.Screen name="reminder" component={ReminderScreen}
+        <Stack.Screen name="test" component={Test} />
+        <Stack.Screen name="aboutMe" component={AboutMe} />
+        <Stack.Screen name="homework" component={HomeWork} />
+        <Stack.Screen name="webview" component={Heartitout} />
+        <Stack.Screen
+          name="reminder"
+          component={ReminderScreen}
           options={{
             headerShown: false,
-            presentation: 'modal',
-            animationTypeForReplace:'push',
-            animation: 'slide_from_right'
+            presentation: "modal",
+            animationTypeForReplace: "push",
+            animation: "slide_from_right",
           }}
         />
       </Stack.Navigator>

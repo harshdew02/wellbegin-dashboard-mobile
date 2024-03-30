@@ -32,7 +32,7 @@ export default function Heartitout(props) {
       showToast("Order, placed successfully");
       setTimeout(() => {
         navigation.navigate("Home_Tab");
-      }, 30000);
+      }, 10000);
     }
     else {
       console.log("Not hit yet")

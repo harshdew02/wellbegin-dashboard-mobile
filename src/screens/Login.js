@@ -36,9 +36,9 @@ const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
 };
 
-const requestOTP = async (code, number, navigation, [, setLoading]) => {
+const requestOTP = async (code, number, navigation, [, setLoading], diversion) => {
   const apiUrl = "https://n8n.heartitout.in/webhook/api/auth";
-
+  console.log(diversion) 
   let date = new Date();
   let formattedDate = date.toISOString().split("T")[0];
   if (date.getDate() > 15) {
@@ -73,7 +73,10 @@ const requestOTP = async (code, number, navigation, [, setLoading]) => {
             console.log("Error: ", error);
             // showToast("Mobile number is too short")
           });
-        navigation.navigate("verifyPage", res.data);
+          let datas = res.data;
+          datas.diversion = diversion;
+          console.log(datas);
+        navigation.navigate("verifyPage", datas);
       })
       .catch((err) => {
         console.log(err);
@@ -88,45 +91,15 @@ const requestOTP = async (code, number, navigation, [, setLoading]) => {
 
 import Loginbg from "../components/Loginbg";
 
-const Login = () => {
+const Login = ({route}) => {
+  const [nav_data, setNavData] = useState(route.params != (null || undefined) ? route.params.navigation : "main")
+  
   const trackAutomaticEvents = true;
   const mixpanel = new Mixpanel(
     "f0f7cc32e3642946a8622275a4ec22c8",
     trackAutomaticEvents
   );
   mixpanel.init();
-  // React.useEffect(() => {
-  //   if (!firebase.apps.length) {
-  //     firebase.initializeApp({
-  //       // Paste your Firebase config object here
-  //       apiKey: "AIzaSyDv7xfM3f5Xu4_r0FkbplzK5N20T3i0WlM",
-  //       authDomain: "wellbeing-dashboard-mobile.firebaseapp.com",
-  //       projectId: "wellbeing-dashboard-mobile",
-  //       storageBucket: "wellbeing-dashboard-mobile.appspot.com",
-  //       messagingSenderId: "87847447432",
-  //       appId: "1:87847447432:android:34575c2cab1541ea8a283d",
-  //       measurementId: "", // Leave this blank if you don't use Analytics
-  //       databaseURL: "",
-  //     });
-  //   }
-  // }, []);
-
-  // const predefinedEvent = async () => {
-  //   console.log("Predefined event");
-  //   await analytics().logLogin({
-  //     method: "facebook",
-  //   });
-  // };
-
-  // const customEvent = async () => {
-  //   console.log("Predefined custom event");
-  //   await analytics().logEvent("bicket", {
-  //     id: 3745092,
-  //     item: "mens grey t-shirt",
-  //     description: ["round neck", "long sleeved"],
-  //     size: "L",
-  //   });
-  // };
 
   const [value, setValue] = useState("IN");
   const [loading, setLoading] = useState(false);
@@ -136,17 +109,30 @@ const Login = () => {
     setLoading(false);
   });
 
-  const handleKeyPress = (event) => {
-    console.log(event.nativeEvent);
-    if (event.nativeEvent.key === "Enter") {
-      // Do something when Enter key is pressed
-      console.log("Enter key pressed!");
-    }
-  };
+  React.useEffect(() => {
+    const isLogin = async () => {
+      try {
+        const storedToken = await SInfo.getItem("token");
+        if (storedToken == null || storedToken === undefined) {
 
-  // const [isFocus, setIsFocus] = useState(false);
+        } else {
+          const data = JSON.parse(storedToken);
+          // console.log(data)
+          if (data.status !== "true") setToken(false);
+          else {
+            navigation.navigate('loader',{navigation:nav_data})
+          }
+        }
+      } catch (error) {
+        console.error("Error while fetching token:", error);
+        // Handle error, you might want to set token to false or do something else
+      } finally {
+      }
+    };
+
+    isLogin();
+  });
   
-
   return (
     <KeyboardAvoidingView
     behavior="padding"
@@ -236,28 +222,24 @@ const Login = () => {
                 requestOTP(codes[value], number, navigation, [
                   loading,
                   setLoading,
-                ]);
+                ], nav_data);
                 mixpanel.track("OTP Request done by", {
                   "Phone ": codes[value] + number,
                 });
               }}
-              onKeyPress={handleKeyPress}
             />
           </View>
 
           <ActivityIndicator animating={loading} size="large" />
 
           <TouchableOpacity
-            onPressIn={() => {
-              console.log("pressed");
-            }}
             style={styles.button}
             onPress={() => {
               setLoading(true);
               requestOTP(codes[value], number, navigation, [
                 loading,
                 setLoading,
-              ]);
+              ], nav_data);
               // predefinedEvent();
               mixpanel.track("OTP Request done by", {
                 "Phone ": codes[value] + number,
