@@ -690,7 +690,7 @@ export default function HomeScreen(props) {
           </TouchableOpacity>
         </View>
 
-        {mood ? (
+        {!mood ? (
           <>
             <TouchableOpacity
               onPress={() => {

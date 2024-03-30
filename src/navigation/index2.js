@@ -27,9 +27,9 @@ export default function AppNavigation2() {
   return (
     <NavigationContainer
       linking={{
-        prefixes: ["https://hio-test-swart.vercel.app/"],
+        prefixes: ["https://heartitout.in/"],
         config: {
-          screens: { LoginPage: "app/:navigation" },
+          screens: { LoginPage: ":navigation" },
         },
       }}
     >

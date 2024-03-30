@@ -1,5 +1,12 @@
 import React, { useState, useRef } from "react";
-import { View, StyleSheet, ActivityIndicator, BackHandler, ToastAndroid, TouchableOpacity } from "react-native";
+import {
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  BackHandler,
+  ToastAndroid,
+  TouchableOpacity,
+} from "react-native";
 // import WebView from "react-native-webview";
 import {
   widthPercentageToDP as wp,
@@ -8,7 +15,7 @@ import {
 import WebView from "react-native-webview";
 import { useNavigation } from "@react-navigation/native";
 import Back from "../components/Back";
-import Cross from "../components/moods/Cross"
+import Cross from "../components/moods/Cross";
 import { useAuth } from "../utils/auth";
 let canGoBack = false;
 const showToast = (message) => {
@@ -16,13 +23,15 @@ const showToast = (message) => {
 };
 
 function containsOrder(sentence) {
-  return sentence.includes('order-summary') || sentence.includes('order-received');
+  return (
+    sentence.includes("order-summary") || sentence.includes("order-received")
+  );
 }
 
 let current = 0;
 
 export default function Heartitout(props) {
-  console.log(props.route.params)
+  console.log(props.route.params);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
   const { pathing, setHomes } = useAuth();
@@ -30,16 +39,15 @@ export default function Heartitout(props) {
   const onNavigationStateChange = (navState) => {
     console.log("It is from nav change:", canGoBack, navState.url);
     canGoBack = navState.canGoBack;
-    if (containsOrder(navState.url) && (loading == false)) {
+    if (containsOrder(navState.url) && loading == false) {
       showToast("Order, placed successfully");
-      pathing('webview');
-      setHomes('webview')
+      pathing("webview");
+      setHomes("webview");
       setTimeout(() => {
         navigation.navigate("Home_Tab");
       }, 10000);
-    }
-    else {
-      console.log("Not hit yet")
+    } else {
+      console.log("Not hit yet");
     }
   };
   //   const [goBack, setGoBack] = useState(false);
@@ -76,8 +84,8 @@ export default function Heartitout(props) {
             width: "100%",
             justifyContent: "center",
             alignItems: "center",
-            position: 'absolute',
-            zIndex: 2
+            position: "absolute",
+            zIndex: 2,
           }}
         >
           <ActivityIndicator
@@ -87,14 +95,32 @@ export default function Heartitout(props) {
           />
         </View>
       ) : (
-        <>
-        </>
+        <></>
       )}
-      <TouchableOpacity onPress={() => { navigation.goBack() }} activeOpacity={0.8} style={{
-        width: wp(14), height: hp(6), backgroundColor: '#fff', position: 'absolute', zIndex: 2,
-        left: 0, top: 12, justifyContent: 'center', alignItems: 'center',
-        borderRadius: wp(10)
-      }} >
+      <TouchableOpacity
+        onPress={() => {
+          if (cross) {
+            pathing("webview");
+            setHomes("webview");
+            navigation.navigate("Home_Tab");
+          } else {
+            navigation.goBack();
+          }
+        }}
+        activeOpacity={0.8}
+        style={{
+          width: wp(14),
+          height: hp(6),
+          backgroundColor: "#fff",
+          position: "absolute",
+          zIndex: 2,
+          left: 0,
+          top: 12,
+          justifyContent: "center",
+          alignItems: "center",
+          borderRadius: wp(10),
+        }}
+      >
         {cross ? <Cross simple={true} /> : <Back color={"#455A64"} />}
       </TouchableOpacity>
       <WebView
