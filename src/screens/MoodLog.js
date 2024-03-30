@@ -2,8 +2,6 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
-  useWindowDimensions,
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
@@ -13,7 +11,6 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import Back from "../components/Back";
 import { theme } from "../theme";
 import { useNavigation } from "@react-navigation/native";

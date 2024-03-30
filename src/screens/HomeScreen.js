@@ -7,22 +7,14 @@ import {
   Linking,
   StyleSheet,
   TouchableOpacity,
-  Animated,
   BackHandler,
 } from "react-native";
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useFocusEffect,
-  useCallback,
-} from "react";
-import { ScrollView } from "react-native-gesture-handler";
+import React, { useState, useEffect } from "react";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { Link, useNavigation, useNavigationState } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import TasksIcon from "../../assets/images/TasksIcon.svg";
 import NewIcon from "../../assets/images/NewIcon.svg";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
@@ -38,11 +30,10 @@ import SInfo from "react-native-encrypted-storage";
 import { theme } from "../theme";
 import TopBell from "../components/TopBell";
 import HomePageBanner from "../components/HomePageBanner";
-import { Svg } from "react-native-svg";
 import Gift from "../../assets/images/Gift.svg";
 import axios from "axios";
 import PTRView from "react-native-pull-to-refresh";
-// F:\HIO\Progress\hio_UI\hio\assets\images\
+import { useAuth } from "../utils/auth";
 
 const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
@@ -168,18 +159,26 @@ export default function HomeScreen(props) {
   const [bell, setBell] = useState(true);
   const [loaded, setLoaded] = useState(false);
 
+  const { setHomes, home } = useAuth();
+  useEffect(() => {
+    console.log(home)
+    if(home === 'webview' || home === 'moodset')
+    {
+      setMoodCheck(true);
+    }
+    setHomes('App')
+  }, [home])
+  
   const backHandler = () => {
     BackHandler.exitApp();
     return true;
   };
 
   navigation.addListener("focus", () => {
-    setMoodCheck(true);
     BackHandler.addEventListener("hardwareBackPress", backHandler);
   });
 
   navigation.addListener("blur", () => {
-    setMoodCheck(false);
     BackHandler.removeEventListener("hardwareBackPress", backHandler);
   });
 
@@ -434,24 +433,6 @@ export default function HomeScreen(props) {
     setRefreshing(true);
     fetchData();
   };
-
-  const [idleTimer, setIdleTimer] = useState(null);
-  const [timer, setTimer] = useState(true);
-
-  // React.useEffect(() => {
-  //   if (timer) {
-  //     clearInterval(idleTimer);
-  //   } else {
-  //     clearInterval(idleTimer);
-  //     setIdleTimer(
-  //       setInterval(() => {
-  //         setMoodCheck(true);
-  //       }, 180000)
-  //     );
-  //   }
-
-  //   setTimer(false);
-  // }, [timer]);
 
   return (
     <SafeAreaView>

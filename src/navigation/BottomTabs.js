@@ -1,25 +1,17 @@
 import * as React from "react";
-import { View, StyleSheet, Text, Dimensions, BackHandler } from "react-native";
+import { View, StyleSheet, Text, Dimensions } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-
-// Icons
-
-// Screens
 import DiscoverScreen from "../screens/DiscoverScreen";
 import HomeScreen from "../screens/HomeScreen";
-
-// Navigator
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
 import SVGComponent from "../components/SVGcom";
 import HomeIcon from "../components/HomeIcon.js";
 import ProfileIcon from "../components/Profile.js";
-import TopBarMain from "../components/TopBarMain.js";
 import ProfileNavigator from "./ProfileNavigator.js";
-import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { request, PERMISSIONS, check, RESULTS } from "react-native-permissions";
 
 const { width, height } = Dimensions.get("window");

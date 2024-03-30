@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  SafeAreaView,
   StyleSheet,
   StatusBar,
   TextInput,
@@ -10,11 +9,9 @@ import {
   ScrollView,
   ToastAndroid,
   KeyboardAvoidingView,
-  Platform
 } from "react-native";
 import React, { useState } from "react";
 import SInfo from "react-native-encrypted-storage";
-import TopBar from "../components/TopBar";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,

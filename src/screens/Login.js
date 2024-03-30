@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  SafeAreaView,
   StatusBar,
   StyleSheet,
   TextInput,
@@ -20,12 +19,8 @@ import {
 import { Dropdown } from "react-native-element-dropdown";
 import axios from "axios";
 import { Mixpanel } from "mixpanel-react-native";
-// import crashlytics from '@react-native-firebase/crashlytics';
-
 import { useNavigation } from "@react-navigation/native";
-
 import { data, codes } from "../constants";
-
 import * as Sentry from "@sentry/react-native";
 
 Sentry.init({

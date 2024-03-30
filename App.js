@@ -4,8 +4,12 @@ import AppNavigation from "./src/navigation";
 import AppNavigation2 from "./src/navigation/index2";
 import SInfo from "react-native-encrypted-storage";
 import * as Sentry from "@sentry/react-native";
-import { requestUserPermission, NotificationListner } from "./src/utils/pushnotification_helper";
-import messaging from '@react-native-firebase/messaging';
+import {
+  requestUserPermission,
+  NotificationListner,
+} from "./src/utils/pushnotification_helper";
+import messaging from "@react-native-firebase/messaging";
+import { AuthProvider } from "./src/utils/auth";
 
 Sentry.init({
   dsn: "https://e5adfef643df1d558d810f49f20e22a9@o4506911526813696.ingest.us.sentry.io/4506911552569344",
@@ -15,14 +19,14 @@ export default function App() {
   const [token, setToken] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
 
-  React.useEffect(()=>{
+  React.useEffect(() => {
     requestUserPermission();
     NotificationListner();
-  })
+  });
 
   React.useEffect(() => {
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      console.log('A new FCM message arrived!', JSON.stringify(remoteMessage));
+    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
+      console.log("A new FCM message arrived!", JSON.stringify(remoteMessage));
     });
 
     return unsubscribe;
@@ -54,16 +58,10 @@ export default function App() {
 
   if (loading) {
   } else {
-    return <>
-      {/* <StatusBar
-        // backgroundColor={theme.maincolor}
-        barStyle={"light-content"}
-        hidden={false}
-        translucent backgroundColor="transparent"
-      /> */}
-
-      {token ? <AppNavigation /> : <AppNavigation2 />}
-    </>;
+    return (
+      <AuthProvider>
+        {token ? <AppNavigation /> : <AppNavigation2 />}
+      </AuthProvider>
+    );
   }
-
 }

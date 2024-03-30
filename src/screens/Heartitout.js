@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { View, StyleSheet, ActivityIndicator, BackHandler, ToastAndroid, TouchableOpacity } from "react-native";
 // import WebView from "react-native-webview";
 import {
@@ -8,6 +8,7 @@ import {
 import WebView from "react-native-webview";
 import { useNavigation } from "@react-navigation/native";
 import Back from "../components/Back";
+import { useAuth } from "../utils/auth";
 let canGoBack = false;
 const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
@@ -23,7 +24,7 @@ export default function Heartitout(props) {
   console.log(props.route.params)
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
-  //   const [canGoBack, setCanGoBack] = useState(false);
+  const { pathing, setHomes } = useAuth();
 
   const onNavigationStateChange = (navState) => {
     console.log("It is from nav change:", canGoBack, navState.url);
@@ -52,6 +53,8 @@ export default function Heartitout(props) {
   });
 
   navigation.addListener("blur", () => {
+    pathing("webview");
+    setHomes('webview');
     BackHandler.removeEventListener("hardwareBackPress", backHandler);
   });
 

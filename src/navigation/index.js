@@ -13,7 +13,6 @@ import Verify from "../screens/Verify";
 import LoaderEffect from "../components/InitLoaderEffect";
 import AboutMe from "../screens/AboutMe";
 import ReminderScreen from "../screens/ReminderScreen";
-import ProfileNavigator from "./ProfileNavigator";
 import MoodTracker from "../screens/MoodTracker";
 import Test from "../screens/Test";
 import HomeWork from "../screens/HomeWork";

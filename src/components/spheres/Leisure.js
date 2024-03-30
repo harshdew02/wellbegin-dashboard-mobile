@@ -11,7 +11,6 @@ const Leisure = ({isClicked , w = 10.6 , h = 10.4}) => (
     viewBox="0 0 40 39"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    // {...props}
   >
     <Path
       d="M1.56421 23.4841L27.3859 27.9815L8.13938 8.73419C4.2857 12.7275 1.95819 17.9486 1.56421 23.4841Z"
