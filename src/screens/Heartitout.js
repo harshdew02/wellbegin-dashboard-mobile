@@ -7,7 +7,6 @@ import {
   ToastAndroid,
   TouchableOpacity,
 } from "react-native";
-// import WebView from "react-native-webview";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -35,17 +34,21 @@ export default function Heartitout(props) {
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
   const { pathing, setHomes } = useAuth();
+  const [timeout, setTime] = useState(null);
 
   const onNavigationStateChange = (navState) => {
     console.log("It is from nav change:", canGoBack, navState.url);
     canGoBack = navState.canGoBack;
     if (containsOrder(navState.url) && loading == false) {
       showToast("Order, placed successfully");
-      pathing("webview");
-      setHomes("webview");
-      setTimeout(() => {
-        navigation.navigate("Home_Tab");
-      }, 10000);
+      setCross(true);
+      setTime(
+        setTimeout(() => {
+          setHomes("webview");
+          pathing("webview");
+          navigation.navigate("Home_Tab");
+        }, 10000)
+      );
     } else {
       console.log("Not hit yet");
     }
@@ -100,6 +103,7 @@ export default function Heartitout(props) {
       <TouchableOpacity
         onPress={() => {
           if (cross) {
+            clearInterval(timeout);
             pathing("webview");
             setHomes("webview");
             navigation.navigate("Home_Tab");
