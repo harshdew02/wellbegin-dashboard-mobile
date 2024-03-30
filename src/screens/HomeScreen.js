@@ -441,20 +441,21 @@ export default function HomeScreen(props) {
         barStyle={"light-content"}
         hidden={false}
       />
-      {!banner.avail ? (
-        <View
+      {/* {banner.avail ? (
+        
+      ) : (
+        <></>
+      )} */}
+      <View
           style={{
             backgroundColor: theme.maincolor,
             width: wp(100),
-            height: hp(1),
+            height: hp(0.8),
             position: "absolute",
             top: 0,
             zIndex: 4,
           }}
-        ></View>
-      ) : (
-        <></>
-      )}
+        />
 
       <PTRView
         onRefresh={handleRefresh}
