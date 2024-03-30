@@ -29,7 +29,7 @@ async function GetFCMToke() {
             console.log(error, "error in fcmtoken")
         }
     }
-    console.log(fcmtoken)
+    // console.log(fcmtoken)
 }
 
 export const NotificationListner = ()=> {

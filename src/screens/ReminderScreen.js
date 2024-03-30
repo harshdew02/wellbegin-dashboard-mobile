@@ -5,8 +5,8 @@ import {
   View,
   TouchableOpacity,
   Image,
-  ScrollView,
   ActivityIndicator,
+  BackHandler,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import {
@@ -14,7 +14,6 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import Back from "../../assets/images/arrow.svg";
-import RingIcon from "../components/RingIcon";
 import axios from "axios";
 import PTRView from "react-native-pull-to-refresh";
 import { useNavigation } from "@react-navigation/native";
@@ -25,17 +24,19 @@ const Card = (props) => {
   // console.log("It is from card: ", data)
   // Anuj ise props ke according set kar dena to fir ho jayega shyad
   const [isTick, setTick] = useState(false);
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   return (
     <TouchableOpacity
-      onPress={() => { navigation.navigate('webview', data.on_click) }}
+      onPress={() => {
+        navigation.navigate("webview", data.on_click);
+      }}
       className="flex-row justify-between items-center"
       style={styles.container}
     >
       <View
         style={{
           height: "100%",
-          backgroundColor: isTick ? '#455A64' : '#01818C',
+          backgroundColor: isTick ? "#455A64" : "#01818C",
           width: wp(1),
           position: "absolute",
           left: wp(2),
@@ -47,7 +48,7 @@ const Card = (props) => {
       >
         <Text
           style={{
-            color: isTick ? '#455A64' : '#01818C',
+            color: isTick ? "#455A64" : "#01818C",
             fontSize: wp(4.2),
             fontFamily: "Roboto",
             fontWeight: "800",
@@ -76,9 +77,23 @@ export default function ReminderScreen({ navigation, route }) {
   const [ifReminder, setIfReminder] = useState(false);
   const [datas, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const backHandler = () => {
+    navigation.goBack();
+    return true;
+  };
+
   navigation.addListener("focus", () => {
-    setLoading(true)
+    BackHandler.addEventListener("hardwareBackPress", backHandler);
   });
+
+  navigation.addListener("blur", () => {
+    BackHandler.removeEventListener("hardwareBackPress", backHandler);
+  });
+
+  navigation.addListener("focus", () => {
+    setLoading(true);
+  });
+
   useEffect(() => {
     const url = "https://n8n.heartitout.in/webhook/api/notifications";
     if (loading) {
@@ -92,12 +107,12 @@ export default function ReminderScreen({ navigation, route }) {
         })
         .catch((err) => {
           console.log("error is here:", err);
-        }).finally(() => {
+        })
+        .finally(() => {
           setLoading(false);
         });
     }
   }, [loading]);
-
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -112,7 +127,6 @@ export default function ReminderScreen({ navigation, route }) {
     setRefreshing(true);
     fetchData();
   };
-
 
   const [idleTimer, setIdleTimer] = useState(null);
   const [timer, setTimer] = useState(true);
@@ -175,17 +189,30 @@ export default function ReminderScreen({ navigation, route }) {
         }}
         style={{
           height: hp(94),
-          marginTop:hp(1)
+          marginTop: hp(1),
         }}
         onRefresh={handleRefresh}
-        onTouchStart={() => { setTimer(true); console.log("reset") }}
+        onTouchStart={() => {
+          setTimer(true);
+          console.log("reset");
+        }}
       >
-
         {/* loading */}
         {/* <ActivityIndicator animating={loading} size="large" style={{}} /> */}
         {loading ? (
-          <View style={{ height: hp(80), width: '100%', justifyContent: 'center', alignItems: 'center' }} >
-            <ActivityIndicator color="#01818C" animating={loading} size={wp(14)} />
+          <View
+            style={{
+              height: hp(80),
+              width: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <ActivityIndicator
+              color="#01818C"
+              animating={loading}
+              size={wp(14)}
+            />
           </View>
         ) : (
           <>

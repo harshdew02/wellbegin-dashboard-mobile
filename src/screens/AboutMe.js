@@ -7,6 +7,7 @@ import {
   TextInput,
   ActivityIndicator,
   ToastAndroid,
+  BackHandler
 } from "react-native";
 import React, { useState } from "react";
 import {
@@ -73,6 +74,19 @@ export default function AboutMe(props) {
   const [code, setCode] = useState(data.code);
   const [phone, setPhone] = useState(data.phone);
   const [loading, setLoading] = useState(false);
+  
+  const backHandler = () => {
+    navigation.goBack();
+    return true;
+  };
+
+  navigation.addListener("focus", () => {
+    BackHandler.addEventListener("hardwareBackPress", backHandler);
+  });
+
+  navigation.addListener("blur", () => {
+    BackHandler.removeEventListener("hardwareBackPress", backHandler);
+  });
   return (
     <GestureHandlerRootView>
       <SafeAreaView>

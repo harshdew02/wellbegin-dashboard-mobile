@@ -1,12 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-
 import { createStackNavigator } from '@react-navigation/stack';
-const ProfileStack = createStackNavigator();
-
 import ProfileScreen from '../screens/ProfileScreen';
 import AboutMe from '../screens/AboutMe';
 
+const ProfileStack = createStackNavigator();
 
 export default function ProfileNavigator(props) {
     const data = props.route.params.data.route.params;

@@ -3,10 +3,10 @@ import {
   Text,
   View,
   ScrollView,
-  useWindowDimensions,
   TouchableOpacity,
   Image,
   ActivityIndicator,
+  BackHandler
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -14,20 +14,10 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import Back from "../components/Back";
 import { theme } from "../theme";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
-import {
-  Angry,
-  Happy,
-  Sad,
-  Fear,
-  Surprised,
-  Disgust,
-} from "../components/moods";
-import Share from "../../assets/images/share.svg";
 import ProgressMen from "../../assets/images/progressMen.svg";
 import BottomQuote from "../components/BottomQuote";
 
@@ -35,6 +25,20 @@ const Progress = (props) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState("");
+
+  const backHandler = () => {
+    navigation.goBack();
+    return true;
+  };
+
+  navigation.addListener("focus", () => {
+    BackHandler.addEventListener("hardwareBackPress", backHandler);
+  });
+
+  navigation.addListener("blur", () => {
+    BackHandler.removeEventListener("hardwareBackPress", backHandler);
+  });
+
   useEffect(() => {
     const url = "https://n8n.heartitout.in/webhook/api/get-my-progress";
     axios

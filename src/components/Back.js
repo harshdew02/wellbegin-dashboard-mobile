@@ -8,7 +8,6 @@ const Back = ({color}) => (
     viewBox="0 0 28 22"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    // {...props}
   >
     <Path
       d="M2 10.9997L26 10.9997M11.3333 20.333L2 10.9997L11.3333 20.333ZM2 10.9997L11.3333 1.66634L2 10.9997Z"

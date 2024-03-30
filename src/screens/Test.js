@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ToastAndroid,
-  TouchableWithoutFeedback,
+  BackHandler,
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,7 +15,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { TabView, SceneMap, TabBar } from "react-native-tab-view";
+import { TabView, TabBar } from "react-native-tab-view";
 import Back from "../components/Back";
 import { theme } from "../theme";
 import Check from "../components/Check";
@@ -25,7 +25,6 @@ import {
   Attachment,
   HelpFriend,
 } from "../components/TestComp";
-import BottomQuote from "../components/BottomQuote";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import Share from "react-native-share";
@@ -452,6 +451,19 @@ const Test = (props) => {
   const layout = useWindowDimensions();
   const navigation = useNavigation();
   const [test, setTest] = React.useState([]);
+
+  const backHandler = () => {
+    navigation.goBack();
+    return true;
+  };
+
+  navigation.addListener("focus", () => {
+    BackHandler.addEventListener("hardwareBackPress", backHandler);
+  });
+
+  navigation.addListener("blur", () => {
+    BackHandler.removeEventListener("hardwareBackPress", backHandler);
+  });
 
   const renderScene = ({ route }) => {
     switch (route.key) {

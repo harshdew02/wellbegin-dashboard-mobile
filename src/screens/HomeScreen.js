@@ -7,22 +7,14 @@ import {
   Linking,
   StyleSheet,
   TouchableOpacity,
-  Animated,
   BackHandler,
 } from "react-native";
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useFocusEffect,
-  useCallback,
-} from "react";
-import { ScrollView } from "react-native-gesture-handler";
+import React, { useState, useEffect } from "react";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { Link, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import TasksIcon from "../../assets/images/TasksIcon.svg";
 import NewIcon from "../../assets/images/NewIcon.svg";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
@@ -38,11 +30,10 @@ import SInfo from "react-native-encrypted-storage";
 import { theme } from "../theme";
 import TopBell from "../components/TopBell";
 import HomePageBanner from "../components/HomePageBanner";
-import { Svg } from "react-native-svg";
 import Gift from "../../assets/images/Gift.svg";
 import axios from "axios";
 import PTRView from "react-native-pull-to-refresh";
-// F:\HIO\Progress\hio_UI\hio\assets\images\
+import { useAuth } from "../utils/auth";
 
 const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
@@ -60,14 +51,14 @@ const gMeet = (link) => {
 
 const Btn = (props) => {
   // console.log("It is from btn: ",props)
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   return (
     <TouchableOpacity
       activeOpacity={0.8}
       style={styles.BookBtn}
       onPress={() => {
         // Checking if the link is supported for links with custom URL scheme.
-        navigation.navigate('webview',props.props)
+        navigation.navigate("webview", props.props);
       }}
     >
       <Text style={styles.btnText}>Book a Session</Text>
@@ -99,7 +90,7 @@ const Bookbtn = (props) => {
             }}
             onPress={() => {
               // Checking if the link is supported for links with custom URL scheme.
-              navigation.navigate('webview',props.props.booking)
+              navigation.navigate("webview", props.props.booking);
             }}
           >
             <Text
@@ -134,7 +125,7 @@ const Bookbtn = (props) => {
           style={[styles.BookBtn]}
           onPress={() => {
             // Checking if the link is supported for links with custom URL scheme.
-            navigation.navigate('webview',props.props.booking)
+            navigation.navigate("webview", props.props.booking);
           }}
         >
           <Text style={[styles.btnText]}>Book another Session</Text>
@@ -155,7 +146,7 @@ export default function HomeScreen(props) {
   const [mood, setMood] = useState(false);
   const [time, setTime] = useState("");
   const [date, setDate] = useState("");
-  const [banner, setBanner] = useState({avail: false});
+  const [banner, setBanner] = useState({ avail: false });
   const [whatsnew, setWhatsnew] = useState("");
   const [product, setProduct] = useState("");
   const [booking, setBooking] = useState("");
@@ -168,18 +159,26 @@ export default function HomeScreen(props) {
   const [bell, setBell] = useState(true);
   const [loaded, setLoaded] = useState(false);
 
+  const { setHomes, home } = useAuth();
+  useEffect(() => {
+    console.log(home)
+    if(home === 'webview' || home === 'moodset')
+    {
+      setMoodCheck(true);
+    }
+    setHomes('App')
+  }, [home])
+  
   const backHandler = () => {
     BackHandler.exitApp();
     return true;
   };
 
   navigation.addListener("focus", () => {
-    setMoodCheck(true);
     BackHandler.addEventListener("hardwareBackPress", backHandler);
   });
 
   navigation.addListener("blur", () => {
-    setMoodCheck(false);
     BackHandler.removeEventListener("hardwareBackPress", backHandler);
   });
 
@@ -288,27 +287,31 @@ export default function HomeScreen(props) {
         .finally(() => {
           setMoodCheck(false);
         });
-      
+
       let realTimeData = null;
       const apiUrl3 = "https://n8n.heartitout.in/webhook/api/home-page-details";
       axios
         .post(apiUrl3, payload)
         .then(async (res) => {
-           realTimeData = await res.data;
+          realTimeData = await res.data;
         })
         .catch((err) => {
           console.log(err);
         })
         .finally(() => {
-          if(realTimeData != null)
-          {
-            console.log(realTimeData)
+          if (realTimeData != null) {
             if (realTimeData.status === "1" || realTimeData.status === "10") {
-              realTimeData.mood_tacker === "yes" ? setMood(true) : setMood(false);
+              realTimeData.mood_tacker === "yes"
+                ? setMood(true)
+                : setMood(false);
               if (realTimeData.has_banner === "yes") {
-                setBanner({avail: true, ban_link: data.banner_link, cban_link: data.on_click})
+                setBanner({
+                  avail: true,
+                  ban_link: data.banner_link,
+                  cban_link: data.on_click,
+                });
               } else {
-                setBanner({avail:false});
+                setBanner({ avail: false });
               }
               setWhatsnew(realTimeData.whats_new_onclick);
               setProduct(realTimeData.product_onclick);
@@ -324,13 +327,17 @@ export default function HomeScreen(props) {
     }
   }, [moodcheck]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setName(data.usr_fullname);
     data.has_mood == "no" ? setMood(false) : setMood(true);
     if (data.has_banner == "yes") {
-      setBanner({avail: true, ban_link: data.banner_link, cban_link: data.on_click})
+      setBanner({
+        avail: true,
+        ban_link: data.banner_link,
+        cban_link: data.on_click,
+      });
     } else {
-      setBanner({avail: false});
+      setBanner({ avail: false });
     }
     setWhatsnew(data.whats_new_onclick);
     setProduct(data.product_onclick);
@@ -427,24 +434,6 @@ export default function HomeScreen(props) {
     fetchData();
   };
 
-  const [idleTimer, setIdleTimer] = useState(null);
-  const [timer, setTimer] = useState(true);
-
-  React.useEffect(() => {
-    if (timer) {
-      clearInterval(idleTimer);
-    } else {
-      clearInterval(idleTimer);
-      setIdleTimer(
-        setInterval(() => {
-          setMoodCheck(true);
-        }, 180000)
-      );
-    }
-
-    setTimer(false);
-  }, [timer]);
-
   return (
     <SafeAreaView>
       <StatusBar
@@ -484,7 +473,7 @@ export default function HomeScreen(props) {
               top: 0,
             }}
             onPress={() => {
-              navigation.navigate('webview',banner.cban_link)
+              navigation.navigate("webview", banner.cban_link);
             }}
           >
             <Image
@@ -506,7 +495,9 @@ export default function HomeScreen(props) {
               }}
             />
           </TouchableOpacity>
-        ) : (<></>)}
+        ) : (
+          <></>
+        )}
 
         <View
           style={
@@ -687,7 +678,7 @@ export default function HomeScreen(props) {
           <TouchableOpacity
             style={[styles.card, { backgroundColor: "#EAF7FC" }]}
             onPress={() => {
-              navigation.navigate('webview',whatsnew)
+              navigation.navigate("webview", whatsnew);
             }}
           >
             <Text style={styles.cardText}>What's {"\n"}New?</Text>
@@ -804,11 +795,10 @@ export default function HomeScreen(props) {
           </>
         )}
 
-
         {showsub ? (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('webview',sub)
+              navigation.navigate("webview", sub);
             }}
             className="flex-col items-center"
             style={[
@@ -849,7 +839,7 @@ export default function HomeScreen(props) {
         ) : (
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate('webview',packages)
+              navigation.navigate("webview", packages);
             }}
             className="flex-col items-center"
             style={[
@@ -877,7 +867,7 @@ export default function HomeScreen(props) {
 
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate('webview',product)
+            navigation.navigate("webview", product);
           }}
           className="flex-col items-center"
           style={[styles.cardContainer, { height: hp(15.8), marginTop: hp(4) }]}
@@ -888,9 +878,7 @@ export default function HomeScreen(props) {
               style={{ height: hp(9) }}
             >
               <Text style={styles.cardText}>Self-care Tools for you</Text>
-              <View
-                style={styles.Btn}
-              >
+              <View style={styles.Btn}>
                 <Text style={styles.btnText2}>Discover Now</Text>
               </View>
             </View>

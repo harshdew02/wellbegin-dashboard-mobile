@@ -5,13 +5,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   useWindowDimensions,
-  StatusBar,
   ActivityIndicator,
   Linking,
   Image,
   BackHandler,
-  ToastAndroid,
-  RefreshControl,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { ScrollView } from "react-native-gesture-handler";
@@ -24,11 +21,10 @@ import ProfileBg from "../../assets/images/ProfileBg.svg";
 import EditIcon from "../../assets/images/editIcon.svg";
 import ProfileDisplay from "../../assets/images/ProfileDisplay.svg";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
-import BookIcon from "../../assets/images/bookIcon.svg";
-import { TabView, SceneMap, TabBar } from "react-native-tab-view";
+import { TabView, TabBar } from "react-native-tab-view";
 import axios from "axios";
 import PTRView from "react-native-pull-to-refresh";
-import theme from "../theme";
+import { useAuth } from "../utils/auth";
 
 const gMeet = (link) => {
   if (link == "" || link == null || link == undefined)
@@ -586,12 +582,23 @@ export default function ProfileScreen(props) {
   const [banLinkH, setBanLinkH] = useState("");
   const [banClickH, setBanClickH] = useState("");
   const [statusColor, setStatusColor] = useState("green");
+  const { pathing, path } = useAuth();
 
   const [routes] = React.useState([
     { key: "first", title: "Upcoming" },
     { key: "second", title: "History" },
   ]);
 
+  useEffect(() => {
+    console.log("It is context API system in Profile Screen: ",path);
+    if(path === "webview")
+    {
+      setRefresh(true);
+      console.log("Refreshing or not");
+    }
+    pathing("App");
+  },[path])
+  
   useEffect(() => {
     setDet(data);
     setName(data.usr_fullname);
@@ -614,7 +621,6 @@ export default function ProfileScreen(props) {
   });
 
   navigation.addListener("blur", () => {
-    setRefresh(true)
     BackHandler.removeEventListener("hardwareBackPress", backHandler);
   });
 
@@ -704,7 +710,7 @@ export default function ProfileScreen(props) {
       setIdleTimer(
         setInterval(() => {
           setRefresh(true);
-        }, 120000)
+        }, 360000)
       );
     }
     setTimer(false);
@@ -713,15 +719,7 @@ export default function ProfileScreen(props) {
   
   return (
     <SafeAreaView>
-      {/* <StatusBar
-        // backgroundColor={statusColor}
-        translucent backgroundColor="transparent"
-        barStyle={'light-content'}
-        hidden={false}
-      /> */}
-      {/* <TopBarMain /> */}
       <View
-      
         style={{
           backgroundColor: "#01818C",
           width: wp(100),
@@ -731,7 +729,7 @@ export default function ProfileScreen(props) {
           zIndex: 4,
         }}
       ></View>
-      <PTRView  onRefresh={handleRefresh} style={{ backgroundColor: "#fff", height: hp(100) }}>
+      <PTRView onRefresh={handleRefresh} style={{ backgroundColor: "#fff", height: hp(100) }}>
         <View style={{}} >
           <ProfileBg width={wp(100)} height={wp(58.4)} />
           <View style={styles.banner}>

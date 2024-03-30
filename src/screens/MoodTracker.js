@@ -1,19 +1,16 @@
 import {
   View,
   Text,
-  SafeAreaView,
-  Image,
   StyleSheet,
   TouchableOpacity,
-  Button,
   ScrollView,
   ToastAndroid,
   TextInput,
   ActivityIndicator,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  BackHandler
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import TopBarMain from "../components/TopBarMain";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -41,7 +38,8 @@ import {
 import { ArrowRightIcon } from "react-native-heroicons/solid";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
 import axios from "axios";
-import { theme } from "../theme";
+import { useAuth } from "../utils/auth";
+
 const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
 };
@@ -239,6 +237,7 @@ const getCurrentDate = () => {
   return `${year}-${month}-${day}`;
 };
 
+
 let mood_array = [];
 
 const Moods = (props) => {
@@ -297,6 +296,7 @@ const MoodTracker = (props) => {
   const navigation = useNavigation();
   const payload = props.route.params;
   const [loading, setLoading] = useState(false);
+  const { setHomes } = useAuth();
   
   const extraPayloadandLaunch = (
     mood,
@@ -335,6 +335,7 @@ const MoodTracker = (props) => {
         if (res.data.status === "1") {
           if (res.data.success === "true") showToast("Mood set");
           else showToast("Mood already set for today");
+          setHomes('moodset')
           navigation.navigate("main", { mood_set: true })
         } else {
           showToast("Some error occurred.");
@@ -365,6 +366,19 @@ const MoodTracker = (props) => {
     }
     console.log("It is from tracker: ", mood_array, mood_array.length);
   };
+
+  const backHandler = () => {
+    navigation.goBack();
+    return true;
+  };
+
+  navigation.addListener("focus", () => {
+    BackHandler.addEventListener("hardwareBackPress", backHandler);
+  });
+
+  navigation.addListener("blur", () => {
+    BackHandler.removeEventListener("hardwareBackPress", backHandler);
+  });
 
   useEffect(() => {
     mood_array = [];
