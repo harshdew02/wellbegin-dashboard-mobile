@@ -20,8 +20,11 @@ import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import ProgressMen from "../../assets/images/progressMen.svg";
 import BottomQuote from "../components/BottomQuote";
+import { useAuth } from "../utils/auth";
+import PTRView from "react-native-pull-to-refresh";
 
 const Progress = (props) => {
+  const {connect} = useAuth()
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState("");
@@ -40,6 +43,9 @@ const Progress = (props) => {
   });
 
   useEffect(() => {
+    const connection = connect()
+    if(!connection) {setLoading(false)}
+    else{
     const url = "https://n8n.heartitout.in/webhook/api/get-my-progress";
     axios
       .post(url, props.route.params)
@@ -52,8 +58,23 @@ const Progress = (props) => {
       })
       .finally(() => {
         setLoading(false);
-      });
-  }, []);
+      });}
+  }, [loading]);
+
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchData = () => {
+    setTimeout(() => {
+      setLoading(true);
+      setRefreshing(false);
+    }, 50); // Simulating 2 seconds delay
+  };
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchData();
+  };
+
   return (
     <SafeAreaView style={{ backgroundColor: "#fff" }}>
       <View style={styles.HeadContainer}>
@@ -76,12 +97,13 @@ const Progress = (props) => {
         /> */}
       </View>
 
-      <ScrollView
+      <PTRView
         contentContainerStyle={{
           display: "flex-1",
           flexDirection: "col",
           alignItems: "center",
         }}
+        onRefresh={handleRefresh}
         style={{ width: wp(100), marginTop: hp(1), height: hp(92) }}
       >
         <View
@@ -150,7 +172,7 @@ const Progress = (props) => {
 
         <BottomQuote />
         <View style={{ height: hp(2) }} />
-      </ScrollView>
+      </PTRView>
     </SafeAreaView>
   );
 };

@@ -1,19 +1,35 @@
 import React, { createContext, useContext, useState } from "react";
+import { ToastAndroid } from "react-native";
+import NetInfo from "@react-native-community/netinfo";
 export const AuthContext = createContext();
+
+const showToast = (message) => {
+  ToastAndroid.show(message, ToastAndroid.SHORT);
+};
 
 export const AuthProvider = ({ children }) => {
   const [path, setPath] = useState("App");
   const pathing = (paths) => {
     setPath(paths);
   };
-
   const [home, setHome] = useState("App");
   const setHomes = (paths) => {
-    setHome(paths)
-  }
+    setHome(paths);
+  };
+
+  const connect = () => {
+    let connect = true;
+    NetInfo.addEventListener((state) => {
+      connect = state.isConnected;
+    });
+    if (!connect) {
+      showToast("It seems like you are not connected to HIO");
+    }
+    return connect;
+  };
 
   return (
-    <AuthContext.Provider value={{pathing, path, setHomes, home}}>
+    <AuthContext.Provider value={{ pathing, path, setHomes, home, connect }}>
       {children}
     </AuthContext.Provider>
   );

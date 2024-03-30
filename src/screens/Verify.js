@@ -19,6 +19,7 @@ import {
 import axios from "axios";
 import Logo4 from "../../assets/images/verifyDisplay.svg";
 import Back from "../../assets/images/arrow.svg";
+import { useAuth } from "../utils/auth";
 
 const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
@@ -168,6 +169,7 @@ export default function Verify({ navigation, route }) {
   const [loading, setLoading] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState(null);
   const [diversion, setDiversion] = useState(route.params.diversion);
+  const {connect} = useAuth();
 
   // console.log(diversion)
   navigation.addListener("focus", (ref) => {
@@ -237,6 +239,7 @@ export default function Verify({ navigation, route }) {
             placeholder="Enter OTP"
             keyboardType="numeric"
             onSubmitEditing={() => {
+              connect()
               setLoading(true);
               setShowErrorMessage(null);
               verifyOTP(
@@ -260,6 +263,7 @@ export default function Verify({ navigation, route }) {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
+              connect()
               setLoading(true);
               setShowErrorMessage(null);
               verifyOTP(
