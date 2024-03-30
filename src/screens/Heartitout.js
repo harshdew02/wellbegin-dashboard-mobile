@@ -8,6 +8,7 @@ import {
 import WebView from "react-native-webview";
 import { useNavigation } from "@react-navigation/native";
 import Back from "../components/Back";
+import Cross from "../components/moods/Cross"
 import { useAuth } from "../utils/auth";
 let canGoBack = false;
 const showToast = (message) => {
@@ -64,6 +65,8 @@ export default function Heartitout(props) {
     }
   };
 
+  const [cross, setCross] = useState(false);
+
   return (
     <View style={styles.container}>
       {loading ? (
@@ -90,9 +93,9 @@ export default function Heartitout(props) {
       <TouchableOpacity onPress={() => { navigation.goBack() }} activeOpacity={0.8} style={{
         width: wp(14), height: hp(6), backgroundColor: '#fff', position: 'absolute', zIndex: 2,
         left: 0, top: 12, justifyContent: 'center', alignItems: 'center',
-        borderRadius:wp(10)
+        borderRadius: wp(10)
       }} >
-        <Back color={"#455A64"} />
+        {cross ? <Cross simple={true} /> : <Back color={"#455A64"} />}
       </TouchableOpacity>
       <WebView
         onLoadStart={() => {
