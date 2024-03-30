@@ -35,6 +35,7 @@ import {
   Leisure,
 } from "../components/spheres";
 import PTRView from "react-native-pull-to-refresh";
+import { useAuth } from "../utils/auth";
 
 const component = {
   Happy: <Happy />,
@@ -271,12 +272,16 @@ const MoodLog = (props) => {
   const navigation = useNavigation();
   const [datas, setData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const {connect} = useAuth();
   let payload = props.route.params;
   useEffect(() => {
     payload.week = 0;
     const url = "https://n8n.heartitout.in/webhook/api/mt-weekly-mood";
+    const connection = connect();
+    if(!connection) {setLoading(false)}
+    else
+    {
     if (loading) {
-
       axios
         .post(url, payload)
         .then((res) => {
@@ -294,7 +299,7 @@ const MoodLog = (props) => {
           // console.log(mood_data);
           setLoading(false);
         });
-    }
+    }}
   }, [loading]);
 
   const fetchData = () => {

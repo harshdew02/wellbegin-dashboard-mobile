@@ -15,6 +15,7 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import SInfo from "react-native-encrypted-storage";
 import axios from "axios";
+import { useAuth } from "../utils/auth";
 
 const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
@@ -22,7 +23,7 @@ const showToast = (message) => {
 
 export default function InitLoaderEffect( {route}) {
   const navigation = useNavigation();
-  
+  const {connect} = useAuth();
   const backHandler = () => {
     BackHandler.exitApp();
     return true;
@@ -38,8 +39,10 @@ export default function InitLoaderEffect( {route}) {
 
   const initializer = async ()=> {
     try {
+      connect();
       const nav_data = route.params != (null || undefined) ? route.params.navigation : "main";
       let token = await SInfo.getItem("token");
+      console.log(token);
       if (token == null || token == undefined) navigation.navigate("LoginPage");
       else {
         const data = JSON.parse(token);
@@ -108,6 +111,7 @@ export default function InitLoaderEffect( {route}) {
               }
             })
             .catch((err) => {
+              showToast("It seems like you are not connected to HIO")
               console.log(err);
             });
 
@@ -142,6 +146,7 @@ export default function InitLoaderEffect( {route}) {
               }
             })
             .catch((err) => {
+              showToast("It seems like you are not connected to HIO")
               console.log(err);
             });
 
@@ -181,12 +186,15 @@ export default function InitLoaderEffect( {route}) {
               // console.log(res.data.show_sub)
             })
             .catch((err) => {
+              showToast("It seems like you are not connected to HIO")
               console.log(err);
             });
             navigation.navigate("main", finalDetails);
         }
       }
     } catch (error) {
+      SInfo.removeItem("token");
+      showToast("User credentials expired, please login again.");
       navigation.navigate("LoginPage");
       console.log(error);
     }

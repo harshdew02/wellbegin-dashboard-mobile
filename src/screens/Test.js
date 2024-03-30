@@ -31,6 +31,7 @@ import Share from "react-native-share";
 import RNFetchBlob from "rn-fetch-blob";
 import FileViewer from "react-native-file-viewer";
 import PTRView from "react-native-pull-to-refresh";
+import { useAuth } from "../utils/auth";
 
 const NoSessions = () => {
   return (
@@ -163,6 +164,7 @@ const FirstRoute = (props) => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const { connect } = useAuth();
 
   const passDataToParent = (data) => {
     // Call the function passed from the parent component
@@ -170,27 +172,29 @@ const FirstRoute = (props) => {
   };
 
   React.useEffect(() => {
-    if (loading) {
-      const url = "https://n8n.heartitout.in/webhook/api/fetch-diag-res";
-      axios
-        .post(url, props.props)
-        .then((res) => {
-          console.log("It is from first route in discover: ", res.data);
-          if (res.data.has_res === "yes") {
-            sethasApp(true);
-            setData(res.data.res_data);
-          } else {
-            sethasApp(false);
-          }
-          passDataToParent(res.data.rec_test);
-        })
-        .catch((err) => {
-          console.log("error is here:", err);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
-    }
+    if (connect()) {
+      if (loading) {
+        const url = "https://n8n.heartitout.in/webhook/api/fetch-diag-res";
+        axios
+          .post(url, props.props)
+          .then((res) => {
+            console.log("It is from first route in discover: ", res.data);
+            if (res.data.has_res === "yes") {
+              sethasApp(true);
+              setData(res.data.res_data);
+            } else {
+              sethasApp(false);
+            }
+            passDataToParent(res.data.rec_test);
+          })
+          .catch((err) => {
+            console.log("error is here:", err);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
+    } else setLoading(false);
   }, [loading]);
 
   const fetchData = () => {
@@ -249,44 +253,38 @@ const FirstRoute = (props) => {
           />
         </View>
       ) : (
-        <>
+        <PTRView
+          onRefresh={handleRefresh}
+          style={{ width: "100%", height: "100%" }}
+          contentContainerStyle={{
+            display: "flex",
+            flexDirection: "column",
+            paddingLeft: wp(6),
+            paddingBottom: hp(1),
+          }}
+        >
           {hasApp ? (
             <>
-              {
-                <>
-                  <PTRView
-                    onRefresh={handleRefresh}
-                    style={{ width: "100%", height: "100%" }}
-                    contentContainerStyle={{
-                      display: "flex",
-                      flexDirection: "column",
-                      paddingLeft: wp(6),
-                      paddingBottom: hp(1),
-                    }}
-                  >
-                    <View
-                      style={{
-                        height: "100%",
-                        width: wp(1),
-                        backgroundColor: "#455A64",
-                        position: "absolute",
-                        left: wp(10),
-                        zIndex: -2,
-                      }}
-                    />
-                    {data.map((item, index) => (
-                      <CardDetails key={index} props={item} />
-                    ))}
-                  </PTRView>
-                </>
-              }
+              <View
+                style={{
+                  height: "100%",
+                  width: wp(1),
+                  backgroundColor: "#455A64",
+                  position: "absolute",
+                  left: wp(10),
+                  zIndex: -2,
+                }}
+              />
+              {data.map((item, index) => (
+                <CardDetails key={index} props={item} />
+              ))}
             </>
           ) : (
             <>
               <NoSessions />
             </>
           )}
-        </>
+        </PTRView>
       )}
     </View>
   );
@@ -374,7 +372,7 @@ const GeneralCard = (props) => {
         <TouchableOpacity
           style={styles.btnStyle}
           onPress={() => {
-            navigation.navigate('webview',props.props.url)
+            navigation.navigate("webview", props.props.url);
           }}
         >
           <Text style={{ color: "#fff", fontSize: wp(3.4) }}>Take Test</Text>

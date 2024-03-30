@@ -32,7 +32,7 @@
         <category android:name="android.intent.category.BROWSABLE" />
         <data android:scheme="http" />
         <data android:scheme="https" />
-        <data android:host="hio-test-swart.vercel.app" android:pathPrefix="/app" />
+        <data android:host="heartitout.in" />
     </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>

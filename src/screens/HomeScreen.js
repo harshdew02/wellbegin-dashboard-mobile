@@ -35,10 +35,6 @@ import axios from "axios";
 import PTRView from "react-native-pull-to-refresh";
 import { useAuth } from "../utils/auth";
 
-const showToast = (message) => {
-  ToastAndroid.show(message, ToastAndroid.SHORT);
-};
-
 const gMeet = (link) => {
   if (link == "" || link == null || link == undefined)
     link = "https://meet.google.com";
@@ -159,16 +155,15 @@ export default function HomeScreen(props) {
   const [bell, setBell] = useState(true);
   const [loaded, setLoaded] = useState(false);
 
-  const { setHomes, home } = useAuth();
+  const { setHomes, home, connect } = useAuth();
   useEffect(() => {
-    console.log(home)
-    if(home === 'webview' || home === 'moodset')
-    {
+    console.log(home);
+    if (home === "webview" || home === "moodset") {
       setMoodCheck(true);
     }
-    setHomes('App')
-  }, [home])
-  
+    setHomes("App");
+  }, [home]);
+
   const backHandler = () => {
     BackHandler.exitApp();
     return true;
@@ -199,6 +194,9 @@ export default function HomeScreen(props) {
   };
 
   useEffect(() => {
+    const isConnected = connect();
+    if(!isConnected) {setMoodCheck(false)}
+    else{
     if (moodcheck) {
       const apiUrl2 =
         "https://n8n.heartitout.in/webhook/api/fetch-session-details";
@@ -206,11 +204,7 @@ export default function HomeScreen(props) {
         .post(apiUrl2, payload)
         .then(async (res) => {
           if (res.data.status === "0") {
-            // await AsyncStorage.setItem("token", Token);
-            SInfo.removeItem("token");
-            showToast("User credentials expired, please login again.");
-            navigation.navigate("LoginPage");
-            console.log("User invalid");
+            // userInvalid();
           } else {
             if (res.data.has_appointment === "no") setBooked(false);
             else {
@@ -294,6 +288,11 @@ export default function HomeScreen(props) {
         .post(apiUrl3, payload)
         .then(async (res) => {
           realTimeData = await res.data;
+          if (realTimeData != null) {
+            if (realTimeData.status !== "1" || realTimeData.status !== "10") {
+              // userInvalid();
+            }
+          }
         })
         .catch((err) => {
           console.log(err);
@@ -307,8 +306,8 @@ export default function HomeScreen(props) {
               if (realTimeData.has_banner === "yes") {
                 setBanner({
                   avail: true,
-                  ban_link: data.banner_link,
-                  cban_link: data.on_click,
+                  ban_link: realTimeData.banner,
+                  cban_link: realTimeData.ban_on_click,
                 });
               } else {
                 setBanner({ avail: false });
@@ -316,21 +315,25 @@ export default function HomeScreen(props) {
               setWhatsnew(realTimeData.whats_new_onclick);
               setProduct(realTimeData.product_onclick);
               setBooking(realTimeData.booking_link);
+              setPackage(realTimeData.packages_onclick);
               if (realTimeData.subs_det === "yes") setSubsdet(true);
               else setSubsdet(false);
-            } else {
-              throw new Error("User credentails expired");
             }
           }
           setMoodCheck(false);
         });
+      }
     }
   }, [moodcheck]);
 
   useEffect(() => {
     setName(data.usr_fullname);
     data.has_mood == "no" ? setMood(false) : setMood(true);
-    if (data.has_banner == "yes") {
+    if (
+      data.has_banner == "yes" &&
+      data.banner_link !== "" &&
+      data.on_click !== ""
+    ) {
       setBanner({
         avail: true,
         ban_link: data.banner_link,
@@ -481,6 +484,7 @@ export default function HomeScreen(props) {
                 setLoaded(true);
               }}
               onError={() => {
+                setLoaded(false);
                 console.log("failed");
               }}
               resizeMode="stretch"

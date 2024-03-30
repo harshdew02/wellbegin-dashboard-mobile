@@ -22,6 +22,7 @@ import { Mixpanel } from "mixpanel-react-native";
 import { useNavigation } from "@react-navigation/native";
 import { data, codes } from "../constants";
 import * as Sentry from "@sentry/react-native";
+import { useAuth } from "../utils/auth";
 
 Sentry.init({
   dsn: "https://e5adfef643df1d558d810f49f20e22a9@o4506911526813696.ingest.us.sentry.io/4506911552569344",
@@ -87,6 +88,7 @@ const requestOTP = async (code, number, navigation, [, setLoading], diversion) =
 import Loginbg from "../components/Loginbg";
 
 const Login = ({route}) => {
+  const {connect} = useAuth();
   const [nav_data, setNavData] = useState(route.params != (null || undefined) ? route.params.navigation : "main")
   
   const trackAutomaticEvents = true;
@@ -113,7 +115,7 @@ const Login = ({route}) => {
         } else {
           const data = JSON.parse(storedToken);
           // console.log(data)
-          if (data.status !== "true") setToken(false);
+          if (data.status !== "true"){}
           else {
             navigation.navigate('loader',{navigation:nav_data})
           }
@@ -213,6 +215,7 @@ const Login = ({route}) => {
               // placeholder="6266019364"
               keyboardType="numeric"
               onSubmitEditing={() => {
+                connect()
                 setLoading(true);
                 requestOTP(codes[value], number, navigation, [
                   loading,
@@ -230,6 +233,7 @@ const Login = ({route}) => {
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
+              connect()
               setLoading(true);
               requestOTP(codes[value], number, navigation, [
                 loading,

@@ -593,7 +593,9 @@ export default function ProfileScreen(props) {
     console.log("It is context API system in Profile Screen: ",path);
     if(path === "webview")
     {
-      setRefresh(true);
+      const connection = connect()
+      if(connection)
+        setRefresh(true);
       console.log("Refreshing or not");
     }
     pathing("App");
@@ -696,7 +698,9 @@ export default function ProfileScreen(props) {
 
   const handleRefresh = () => {
     setRefreshing(true);
-    setRefresh(true)
+    const connection = connect()
+    if(connection)
+      setRefresh(true);
     fetchData();
   };
 
@@ -709,12 +713,16 @@ export default function ProfileScreen(props) {
       clearInterval(idleTimer);
       setIdleTimer(
         setInterval(() => {
-          setRefresh(true);
+          const connection = connect()
+          if(connection)
+            setRefresh(true);
         }, 360000)
       );
     }
     setTimer(false);
   }, [timer]);
+
+  const {connect} = useAuth();
   
   
   return (
