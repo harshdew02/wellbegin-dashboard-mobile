@@ -31,6 +31,8 @@ export default function Heartitout(props) {
     canGoBack = navState.canGoBack;
     if (containsOrder(navState.url) && (loading == false)) {
       showToast("Order, placed successfully");
+      pathing('webview');
+      setHomes('webview')
       setTimeout(() => {
         navigation.navigate("Home_Tab");
       }, 10000);
@@ -53,8 +55,6 @@ export default function Heartitout(props) {
   });
 
   navigation.addListener("blur", () => {
-    pathing("webview");
-    setHomes('webview');
     BackHandler.removeEventListener("hardwareBackPress", backHandler);
   });
 

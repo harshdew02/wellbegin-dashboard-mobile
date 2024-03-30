@@ -25,6 +25,7 @@ import BottomQuote from "../../assets/images/BottomQuote.svg";
 import axios from "axios";
 import SInfo from "react-native-encrypted-storage";
 import { theme } from "../theme";
+import { useAuth } from "../utils/auth";
 
 const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
@@ -68,6 +69,7 @@ const fillDetails = (details, [loading, setLoading], navigation) => {
 
 export default function AboutMe(props) {
   const navigation = useNavigation();
+  const {connect} = useAuth();
   let data = props.route.params;
   const [name, setName] = useState(data.usr_fullname);
   const [mail, setMail] = useState(data.user_email);
@@ -176,6 +178,7 @@ export default function AboutMe(props) {
               <TouchableOpacity
                 activeOpacity={0.8}
                 onPress={() => {
+                  connect();
                   data.usr_fullname = name;
                   data.user_email = mail;
                   data.insert_details = "true";
@@ -193,7 +196,7 @@ export default function AboutMe(props) {
             <View style={{ width: wp(100), alignItems: 'center', position: 'absolute', bottom: hp(3) }} >
               <TouchableOpacity onPress={() => {
                 SInfo.removeItem('token').then(() => {
-                  navigation.navigate('loader');
+                  navigation.navigate('LoginPage');
                   showToast('User logout successfully.')
                 }).catch((err) => {
                   showToast('Something went wrong.')

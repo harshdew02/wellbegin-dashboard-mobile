@@ -6,7 +6,7 @@ import {
   useWindowDimensions,
   TouchableOpacity,
   ActivityIndicator,
-  BackHandler
+  BackHandler,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -45,6 +45,7 @@ import H9 from "../../assets/images/h9.svg";
 import BottomQuote from "../components/BottomQuote";
 import axios from "axios";
 import PTRView from "react-native-pull-to-refresh";
+import { useAuth } from "../utils/auth";
 
 const Space = () => {
   return <View style={{ width: wp(8), height: wp(8) }}></View>;
@@ -166,7 +167,6 @@ let show_mood = {
 
 let temp_data = [];
 
-
 const MoodInsights = (props) => {
   const navigation = useNavigation();
   const [p1, setp1] = useState(0 * 0.75);
@@ -198,12 +198,17 @@ const MoodInsights = (props) => {
     fear: 0,
     angry: 0,
   });
+  const { connect } = useAuth();
 
   const fetchData = () => {
     setTimeout(() => {
       if (curr != 0) {
-        setLoading(true)
-        setCurr(0);
+        if (connect()) {
+          setLoading(true);
+          setCurr(0);
+        } else {
+          setLoading(false);
+        }
       }
       setRefreshing(false);
     }, 50); // Simulating 2 seconds delay
@@ -229,6 +234,7 @@ const MoodInsights = (props) => {
 
   let payload = props.route.params;
   useEffect(() => {
+    connect();
     let ahead = false;
     payload.week = curr;
     const url = "https://n8n.heartitout.in/webhook/api/mt-weekly-streak";
@@ -320,7 +326,9 @@ const MoodInsights = (props) => {
             ? setDay7(1)
             : setDay7(0)
           : setDay7(-1);
-        curr != 0 ? setDate(DateTimeComponent(temp_data[0].calendar_date)) : setDate(getCurrentDate());
+        curr != 0
+          ? setDate(DateTimeComponent(temp_data[0].calendar_date))
+          : setDate(getCurrentDate());
 
         //DSA is here
         let current = 0;
@@ -381,7 +389,7 @@ const MoodInsights = (props) => {
           }
         }
         setShowMood(show_mood);
-        if (index == 1) setInd(3)
+        if (index == 1) setInd(3);
         else if (index == 2) setInd(0);
         else if (index == 3) setInd(4);
         else if (index == 4) setInd(6);
@@ -422,18 +430,27 @@ const MoodInsights = (props) => {
         <View className="flex-row items-center">
           <TouchableOpacity
             onPress={() => {
-              setLoading(true)
-              setCurr(++curr);
+              if (connect()) {
+                setLoading(true);
+                setCurr(++curr);
+              } else {
+                setLoading(false);
+              }
             }}
           >
             <LeftGo />
           </TouchableOpacity>
-          <Text style={styles.HeadText}>{`${date.dates} ${month[date.monthIndex]} ${date.year
-            }`}</Text>
+          <Text style={styles.HeadText}>{`${date.dates} ${
+            month[date.monthIndex]
+          } ${date.year}`}</Text>
           <TouchableOpacity
             onPress={() => {
-              setLoading(true)
-              setCurr(--curr);
+              if (connect()) {
+                setLoading(true);
+                setCurr(--curr);
+              } else {
+                setLoading(false);
+              }
             }}
           >
             <RightGo />
@@ -735,42 +752,60 @@ const MoodInsights = (props) => {
                 <View
                   style={{
                     height: "100%",
-                    backgroundColor: select == 1 ? "rgba(255, 214, 79, 1)" : "rgba(255, 214, 79, 0.3)",
+                    backgroundColor:
+                      select == 1
+                        ? "rgba(255, 214, 79, 1)"
+                        : "rgba(255, 214, 79, 0.3)",
                     width: wp(p1),
                   }}
                 />
                 <View
                   style={{
                     height: "100%",
-                    backgroundColor: select == 2 ? "rgba(174, 213, 232, 1)" : "rgba(174, 213, 232, 0.3)",
+                    backgroundColor:
+                      select == 2
+                        ? "rgba(174, 213, 232, 1)"
+                        : "rgba(174, 213, 232, 0.3)",
                     width: wp(p2),
                   }}
                 />
                 <View
                   style={{
                     height: "100%",
-                    backgroundColor: select == 3 ? "rgba(15, 67, 92, 1)" : "rgba(15, 67, 92, 0.3)",
+                    backgroundColor:
+                      select == 3
+                        ? "rgba(15, 67, 92, 1)"
+                        : "rgba(15, 67, 92, 0.3)",
                     width: wp(p3),
                   }}
                 />
                 <View
                   style={{
                     height: "100%",
-                    backgroundColor: select == 4 ? "rgba(114, 63, 45, 1)" : "rgba(114, 63, 45, 0.3)",
+                    backgroundColor:
+                      select == 4
+                        ? "rgba(114, 63, 45, 1)"
+                        : "rgba(114, 63, 45, 0.3)",
                     width: wp(p4),
                   }}
                 />
                 <View
                   style={{
                     height: "100%",
-                    backgroundColor: select == 5 ? "rgba(1, 129, 140, 1)" : "rgba(1, 129, 140, 0.3)",
+                    backgroundColor:
+                      select == 5
+                        ? "rgba(1, 129, 140, 1)"
+                        : "rgba(1, 129, 140, 0.3)",
                     width: wp(p5),
                   }}
                 />
                 <View
                   style={{
                     height: "100%",
-                    backgroundColor: select == 6 ? "rgba(187, 99, 69, 1)" : "rgba(187, 99, 69, 0.3)",
+                    backgroundColor:
+                      select == 6
+                        ? "rgba(187, 99, 69, 1)"
+                        : "rgba(187, 99, 69, 0.3)",
                     width: wp(p6),
                   }}
                 />
@@ -786,11 +821,18 @@ const MoodInsights = (props) => {
                 }}
               >
                 <View className="items-center">
-                  <View style={{
-                    height: wp(7.4), width: wp(7.4), backgroundColor: (select==1)?'rgba(255,255,255,0)':'rgba(255,255,255,0.7)', position: 'absolute',
-                    zIndex: 1,
-                    borderRadius:wp(5)
-                  }}
+                  <View
+                    style={{
+                      height: wp(7.4),
+                      width: wp(7.4),
+                      backgroundColor:
+                        select == 1
+                          ? "rgba(255,255,255,0)"
+                          : "rgba(255,255,255,0.7)",
+                      position: "absolute",
+                      zIndex: 1,
+                      borderRadius: wp(5),
+                    }}
                   />
                   <Happy h={7.4} w={7.4} isSelect={select == 1 ? 1 : 1} />
                   <Text
@@ -804,11 +846,18 @@ const MoodInsights = (props) => {
                   </Text>
                 </View>
                 <View className="items-center">
-                <View style={{
-                    height: wp(7.4), width: wp(7.4), backgroundColor: (select==2)?'rgba(255,255,255,0)':'rgba(255,255,255,0.7)', position: 'absolute',
-                    zIndex: 1,
-                    borderRadius:wp(5)
-                  }}
+                  <View
+                    style={{
+                      height: wp(7.4),
+                      width: wp(7.4),
+                      backgroundColor:
+                        select == 2
+                          ? "rgba(255,255,255,0)"
+                          : "rgba(255,255,255,0.7)",
+                      position: "absolute",
+                      zIndex: 1,
+                      borderRadius: wp(5),
+                    }}
                   />
                   <Surprised h={7.4} w={7.4} isSelect={select == 2 ? 2 : 2} />
                   <Text
@@ -822,11 +871,18 @@ const MoodInsights = (props) => {
                   </Text>
                 </View>
                 <View className="items-center">
-                <View style={{
-                    height: wp(7.4), width: wp(7.4), backgroundColor: (select==3)?'rgba(255,255,255,0)':'rgba(255,255,255,0.7)', position: 'absolute',
-                    zIndex: 1,
-                    borderRadius:wp(5)
-                  }}
+                  <View
+                    style={{
+                      height: wp(7.4),
+                      width: wp(7.4),
+                      backgroundColor:
+                        select == 3
+                          ? "rgba(255,255,255,0)"
+                          : "rgba(255,255,255,0.7)",
+                      position: "absolute",
+                      zIndex: 1,
+                      borderRadius: wp(5),
+                    }}
                   />
                   <Sad h={7.4} w={7.4} isSelect={select == 3 ? 3 : 3} />
                   <Text
@@ -840,11 +896,18 @@ const MoodInsights = (props) => {
                   </Text>
                 </View>
                 <View className="items-center">
-                <View style={{
-                    height: wp(7.4), width: wp(7.4), backgroundColor: (select==4)?'rgba(255,255,255,0)':'rgba(255,255,255,0.7)', position: 'absolute',
-                    zIndex: 1,
-                    borderRadius:wp(5)
-                  }}
+                  <View
+                    style={{
+                      height: wp(7.4),
+                      width: wp(7.4),
+                      backgroundColor:
+                        select == 4
+                          ? "rgba(255,255,255,0)"
+                          : "rgba(255,255,255,0.7)",
+                      position: "absolute",
+                      zIndex: 1,
+                      borderRadius: wp(5),
+                    }}
                   />
                   <Disgust h={7.4} w={7.4} isSelect={select == 4 ? 4 : 4} />
 
@@ -859,11 +922,18 @@ const MoodInsights = (props) => {
                   </Text>
                 </View>
                 <View className="items-center">
-                <View style={{
-                    height: wp(7.4), width: wp(7.4), backgroundColor: (select==5)?'rgba(255,255,255,0)':'rgba(255,255,255,0.7)', position: 'absolute',
-                    zIndex: 1,
-                    borderRadius:wp(5)
-                  }}
+                  <View
+                    style={{
+                      height: wp(7.4),
+                      width: wp(7.4),
+                      backgroundColor:
+                        select == 5
+                          ? "rgba(255,255,255,0)"
+                          : "rgba(255,255,255,0.7)",
+                      position: "absolute",
+                      zIndex: 1,
+                      borderRadius: wp(5),
+                    }}
                   />
                   <Fear h={7.4} w={7.4} isSelect={select == 5 ? 5 : 5} />
 
@@ -878,11 +948,18 @@ const MoodInsights = (props) => {
                   </Text>
                 </View>
                 <View className="items-center">
-                <View style={{
-                    height: wp(7.4), width: wp(7.4), backgroundColor: (select==6)?'rgba(255,255,255,0)':'rgba(255,255,255,0.7)', position: 'absolute',
-                    zIndex: 1,
-                    borderRadius:wp(5)
-                  }}
+                  <View
+                    style={{
+                      height: wp(7.4),
+                      width: wp(7.4),
+                      backgroundColor:
+                        select == 6
+                          ? "rgba(255,255,255,0)"
+                          : "rgba(255,255,255,0.7)",
+                      position: "absolute",
+                      zIndex: 1,
+                      borderRadius: wp(5),
+                    }}
                   />
                   <Angry h={7.4} w={7.4} isSelect={select == 6 ? 6 : 6} />
                   <Text

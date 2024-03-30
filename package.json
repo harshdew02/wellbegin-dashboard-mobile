@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.21.0",
+    "@react-native-community/netinfo": "^11.3.1",
     "@react-native-firebase/app": "^19.1.1",
     "@react-native-firebase/dynamic-links": "^19.1.1",
     "@react-native-firebase/messaging": "^19.1.1",

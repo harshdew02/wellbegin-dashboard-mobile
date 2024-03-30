@@ -4,7 +4,7 @@ import {
   View,
   TouchableOpacity,
   ActivityIndicator,
-  BackHandler
+  BackHandler,
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -20,6 +20,7 @@ import Pending from "../components/HomeComp/Pending";
 import Done from "../components/HomeComp/Done";
 import axios from "axios";
 import PTRView from "react-native-pull-to-refresh";
+import { useAuth } from "../utils/auth";
 
 const DateTimeComponent = (rdate) => {
   const dateTimeString = rdate;
@@ -42,7 +43,7 @@ const Card = (props) => {
   const [value, setValue] = useState(item.homework_done_or_not);
   const [date, setDate] = useState(DateTimeComponent(item.due));
   const [updated, setUpdated] = useState(false);
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   React.useEffect(() => {
     if (item.homework_done_or_not === "Yes" || updated == true) setValue(true);
@@ -103,7 +104,9 @@ const Card = (props) => {
               fontWeight: "500",
             }}
           >
-            {value ? `${item.stage.charAt(0).toUpperCase() + item.stage.slice(1)}` : `Due by ${date}`}
+            {value
+              ? `${item.stage.charAt(0).toUpperCase() + item.stage.slice(1)}`
+              : `Due by ${date}`}
           </Text>
         </View>
         <View className="items-center">
@@ -134,7 +137,7 @@ const Card = (props) => {
             <TouchableOpacity
               onPress={() => {
                 homework();
-                navigation.navigate('webview',item.stage)
+                navigation.navigate("webview", item.stage);
               }}
             >
               <Text
@@ -160,6 +163,7 @@ const HomeWork = (route) => {
   const [loading, setLoading] = useState(true);
   const data = route.route.params;
   const [datas, setData] = useState({});
+  const { connect } = useAuth();
 
   const backHandler = () => {
     navigation.goBack();
@@ -174,23 +178,31 @@ const HomeWork = (route) => {
     BackHandler.removeEventListener("hardwareBackPress", backHandler);
   });
 
-  navigation.addListener('focus',()=>{
-    setLoading(true)
-  })
+  navigation.addListener("focus", () => {
+    setLoading(true);
+  });
   React.useEffect(() => {
     const url = "https://n8n.heartitout.in/webhook/api/fetch-user-homework";
-    if(loading){
-    axios
-      .post(url, data)
-      .then((res) => {
-        console.log(res.data);
-        setData(res.data);
-      })
-      .catch((err) => {
-        console.log("error is here:", err);
-      }).finally(()=>{
-        setLoading(false);
-      });
+    const connection = connect();
+    if (!connection) {
+      setLoading(false);
+    }
+    else
+    {
+      if (loading) {
+        axios
+          .post(url, data)
+          .then((res) => {
+            console.log(res.data);
+            setData(res.data);
+          })
+          .catch((err) => {
+            console.log("error is here:", err);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
     }
   }, [loading]);
 
@@ -207,7 +219,6 @@ const HomeWork = (route) => {
     setRefreshing(true);
     fetchData();
   };
-
 
   const [idleTimer, setIdleTimer] = useState(null);
   const [timer, setTimer] = useState(true);
@@ -227,11 +238,9 @@ const HomeWork = (route) => {
     setTimer(false);
   }, [timer]);
 
-
   return (
     <SafeAreaView style={{ backgroundColor: "#fff" }}>
       <View
-        
         style={{
           height: hp(6),
           width: wp(100),
@@ -261,7 +270,9 @@ const HomeWork = (route) => {
       </View>
 
       <PTRView
-        onTouchStart={()=>{setTimer(true);}}
+        onTouchStart={() => {
+          setTimer(true);
+        }}
         onRefresh={handleRefresh}
         contentContainerStyle={{
           display: "flex-1",
@@ -271,8 +282,19 @@ const HomeWork = (route) => {
         style={{ width: wp(100), height: hp(92) }}
       >
         {loading ? (
-          <View style={{ height: hp(60), width: '100%', justifyContent: 'center', alignItems: 'center' }} >
-            <ActivityIndicator color="#01818C" animating={loading} size={wp(10)} />
+          <View
+            style={{
+              height: hp(60),
+              width: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <ActivityIndicator
+              color="#01818C"
+              animating={loading}
+              size={wp(10)}
+            />
           </View>
         ) : (
           <>
@@ -283,7 +305,17 @@ const HomeWork = (route) => {
                 ))}
               </>
             ) : (
-              <><Text style={{ marginTop: hp(30), fontSize:wp(5), color:theme.black }}>Yay! You are all set!</Text></>
+              <>
+                <Text
+                  style={{
+                    marginTop: hp(30),
+                    fontSize: wp(5),
+                    color: theme.black,
+                  }}
+                >
+                  Yay! You are all set!
+                </Text>
+              </>
             )}
           </>
         )}
