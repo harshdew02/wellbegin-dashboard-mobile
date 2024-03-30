@@ -2,30 +2,21 @@ import {
   View,
   Text,
   SafeAreaView,
-  Image,
   StyleSheet,
   TouchableOpacity,
-  Linking,
-  Button,
-  TextComponent,
   BackHandler,
 } from "react-native";
 import React from "react";
-import TopBarMain from "../components/TopBarMain";
 import { ScrollView } from "react-native-gesture-handler";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { useNavigation } from "@react-navigation/native";
-// import LinearGradient from 'react-native-linear-gradient';
-// import { LinearGradient } from "expo-linear-gradient";
 import SeekIcon from "../../assets/images/SeekIcon.svg";
 import HappeningIcon from "../../assets/images/HappeningIcon.svg";
 import ExploreIcon from "../../assets/images/ExploreIcon.svg";
 import ProductsSvg from "../../assets/images/ProductsSvg.svg";
-import Gradient from "../../assets/images/Gradient.svg";
-import ReferIcon from "../../assets/images/ReferIcon.svg";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
 
 export default function DiscoverScreen(props) {

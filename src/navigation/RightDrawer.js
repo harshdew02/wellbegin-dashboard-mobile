@@ -5,11 +5,8 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { useNavigation } from "@react-navigation/native";
 import SInfo from 'react-native-encrypted-storage';
-// Drawer
 import BottomTabs from "./BottomTabs";
-// import { Help, Profile, SelectLang, Settings } from "../drawer";
 import CustomDrawer from "../components/CustomDrawer";
 
 const Drawer = createDrawerNavigator();

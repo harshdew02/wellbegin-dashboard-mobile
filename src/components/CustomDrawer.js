@@ -2,18 +2,13 @@ import React from 'react';
 import {
     View,
     Text,
-    ImageBackground,
-    Image,
     StyleSheet,
-    TouchableOpacity,
 } from 'react-native';
 import {
     DrawerContentScrollView,
     DrawerItemList,
 } from '@react-navigation/drawer';
 
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-native-responsive-screen';
 
 

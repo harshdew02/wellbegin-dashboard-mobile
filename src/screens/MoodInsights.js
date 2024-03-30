@@ -6,6 +6,7 @@ import {
   useWindowDimensions,
   TouchableOpacity,
   ActivityIndicator,
+  BackHandler
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -23,6 +24,7 @@ import RightNav from "../components/moods/RightNav";
 import Cross from "../components/moods/Cross";
 import Tick from "../components/moods/Tick";
 import Cup from "../../assets/images/cup.svg";
+
 import {
   Happy,
   Surprised,
@@ -211,6 +213,19 @@ const MoodInsights = (props) => {
     setRefreshing(true);
     fetchData();
   };
+
+  const backHandler = () => {
+    navigation.goBack();
+    return true;
+  };
+
+  navigation.addListener("focus", () => {
+    BackHandler.addEventListener("hardwareBackPress", backHandler);
+  });
+
+  navigation.addListener("blur", () => {
+    BackHandler.removeEventListener("hardwareBackPress", backHandler);
+  });
 
   let payload = props.route.params;
   useEffect(() => {

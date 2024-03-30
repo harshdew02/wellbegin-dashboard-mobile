@@ -2,10 +2,9 @@ import {
   StyleSheet,
   Text,
   View,
-  ScrollView,
-  useWindowDimensions,
   TouchableOpacity,
-  ActivityIndicator
+  ActivityIndicator,
+  BackHandler
 } from "react-native";
 import React, { useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -15,20 +14,12 @@ import {
 } from "react-native-responsive-screen";
 import Back from "../components/Back";
 import { theme } from "../theme";
-import Check from "../components/Check";
-import {
-  Depression,
-  Anxiety,
-  Attachment,
-  HelpFriend,
-} from "../components/TestComp";
 import BottomQuote from "../components/BottomQuote";
 import { useNavigation } from "@react-navigation/native";
 import Pending from "../components/HomeComp/Pending";
 import Done from "../components/HomeComp/Done";
 import axios from "axios";
 import PTRView from "react-native-pull-to-refresh";
-
 
 const DateTimeComponent = (rdate) => {
   const dateTimeString = rdate;
@@ -169,6 +160,19 @@ const HomeWork = (route) => {
   const [loading, setLoading] = useState(true);
   const data = route.route.params;
   const [datas, setData] = useState({});
+
+  const backHandler = () => {
+    navigation.goBack();
+    return true;
+  };
+
+  navigation.addListener("focus", () => {
+    BackHandler.addEventListener("hardwareBackPress", backHandler);
+  });
+
+  navigation.addListener("blur", () => {
+    BackHandler.removeEventListener("hardwareBackPress", backHandler);
+  });
 
   navigation.addListener('focus',()=>{
     setLoading(true)
