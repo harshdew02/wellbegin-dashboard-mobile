@@ -54,12 +54,12 @@ export default function BottomTabs(props) {
   const data = props.route.params;
 
   const Tab = createBottomTabNavigator();
-  const {divert} = useAuth();
+  const {getDiversion} = useAuth();
   React.useEffect(() => {
     try {
       const payload = data.route.params;
-      console.log("It is from bottoms tabs: ",divert);
-      switch (divert) {
+      console.log("It is from bottoms tabs: ",getDiversion());
+      switch (getDiversion()) {
         case "reminder":
           navigation.navigate("reminder", payload);
           break;

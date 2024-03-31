@@ -16,11 +16,28 @@ export const AuthProvider = ({ children }) => {
   const setHomes = (paths) => {
     setHome(paths);
   };
-  const [divert, setDiversion] = useState("main");
+  let divert = "main";
 
   const Diversion = (screen) => {
-    setDiversion(screen);
+    if (
+      screen === "moodinsights" ||
+      screen === "todaymood" ||
+      screen === "diagnostic" ||
+      screen === "profile" ||
+      screen === "aboutme" ||
+      screen === "discover" ||
+      screen === "homework" ||
+      screen === "myprogress" ||
+      screen === "reminder"
+    )
+      divert = screen;
+  };
+
+  const getDiversion = () => {
+    return divert;
   }
+
+  
 
   const connect = () => {
     let connect = true;
@@ -34,7 +51,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ pathing, path, setHomes, home, connect, Diversion, divert }}>
+    <AuthContext.Provider
+      value={{ pathing, path, setHomes, home, connect, Diversion, getDiversion }}
+    >
       {children}
     </AuthContext.Provider>
   );
