@@ -62,7 +62,8 @@ export default function DiscoverScreen(props) {
             <TouchableOpacity
              onPress={() => {
                 // Checking if the link is supported for links with custom URL scheme.
-                navigation.navigate('webview','https://heartitout.in/therapists/')
+                // navigation.navigate('webview','https://heartitout.in/therapists/')
+                navigation.navigate('onboarding')
               }}
               style={[
                 styles.packageCard,
