@@ -557,14 +557,6 @@ const Test = (props) => {
         </Text>
 
         <ScrollView
-          showsHorizontalScrollIndicator={false}
-          horizontal={true}
-          contentContainerStyle={{
-            display: "flex",
-            flexDirection: "row",
-            borderRadius: wp(2),
-          }}
-          style={{ width: wp(86), height: hp(12.8), marginTop: hp(2) }}
         >
           {test.map((item, index) => (
             <GeneralCard key={index} props={item} colors={index % 2} />

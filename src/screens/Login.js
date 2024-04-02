@@ -68,7 +68,7 @@ const requestOTP = async (code, number, navigation, [, setLoading]) => {
             console.log("Error: ", error);
             // showToast("Mobile number is too short")
           });
-          let datas = res.data;
+        let datas = res.data;
         navigation.navigate("verifyPage", datas);
       })
       .catch((err) => {
@@ -83,11 +83,12 @@ const requestOTP = async (code, number, navigation, [, setLoading]) => {
 };
 
 import Loginbg from "../components/Loginbg";
+import LoginNew from "../../assets/images/LoginNew.svg"
 
-const Login = ({route}) => {
-  const {connect, Diversion} = useAuth();
+const Login = ({ route }) => {
+  const { connect, Diversion } = useAuth();
   // const [nav_data, setNavData] = useState(route.params != (null || undefined) ? route.params.navigation : "main")
-  
+
   const trackAutomaticEvents = true;
   const mixpanel = new Mixpanel(
     "f0f7cc32e3642946a8622275a4ec22c8",
@@ -124,7 +125,7 @@ const Login = ({route}) => {
         } else {
           const data = JSON.parse(storedToken);
           // console.log(data)
-          if (data.status !== "true"){}
+          if (data.status !== "true") { }
           else {
             navigation.navigate('loader')
           }
@@ -136,128 +137,118 @@ const Login = ({route}) => {
       }
     };
 
-    if(route.params != null && route.params != undefined) Diversion(route.params.navigation);
+    if (route.params != null && route.params != undefined) Diversion(route.params.navigation);
     isLogin();
   });
-  
+
   return (
     <KeyboardAvoidingView
-    behavior="padding"
-    keyboardVerticalOffset={-210}
-    style={{ flex: 1 }}
+      behavior="padding"
+      keyboardVerticalOffset={-260}
+      style={{ flex: 1 }}
     >
+      <StatusBar
+        backgroundColor={'#fff'}
+        barStyle={"dark-content"}
+        hidden={false}
+      />
       {/* <TopBar /> */}
-      <ScrollView keyboardShouldPersistTaps='always'>
-        <StatusBar
-          backgroundColor={"#eaf7fc"}
-          barStyle={"dark-content"}
-          hidden={false}
-        />
+      <ScrollView
+        contentContainerStyle={{
+          display: "flex-1",
+          flexDirection: "col",
+          alignItems: "center",
+        }}
+        style={{ width: wp(100), height: hp(92) }}
+        keyboardShouldPersistTaps='always'
+      >
+
+        <LoginNew width={wp(100)} height={wp(81.6)} />
+
+        {/* <View className="flex-col items-center" style={{ marginTop: hp(3) }}> */}
+        <Text style={styles.well}>It's time to take a leap towards a healthier mind</Text>
+
+        <Text style={styles.getinstant}>Sign up so we can personalise your journey</Text>
+
+        <ActivityIndicator style={{marginTop:hp(2)}} animating={loading} size="large" />
 
         <View
-          style={{
-            width: wp(100),
-            justifyContent: "center",
-            alignItems: "center",
-          }}
+          className="flex-row items-center"
+          style={{ width: wp(82), marginTop: hp(2) }}
         >
-          <View
-            style={{
-              backgroundColor: "#eaf7fc",
-              width: wp(100),
-              height: hp(6),
+          <Dropdown
+            style={[styles.dropdown]}
+            placeholderStyle={styles.placeholderStyle}
+            selectedTextStyle={styles.selectedTextStyle}
+            inputSearchStyle={styles.inputSearchStyle}
+            containerStyle={styles.containerStyle}
+            iconStyle={styles.iconStyle}
+            itemTextStyle={{ fontSize: wp(4) }}
+            data={data}
+            search={false}
+            dropdownPosition="top"
+            inverted={false}
+            showsVerticalScrollIndicator={true}
+            iconColor="#455A64"
+            mode="auto"
+            maxHeight={400}
+            autoScroll={false}
+            // onFocus={() => setIsFocus(true)}
+            // onBlur={() => setIsFocus(false)}
+            labelField="show"
+            // alwaysRenderSelectedItem = {false}
+            valueField="code"
+            placeholder="IN(+91)"
+            searchPlaceholder="Search..."
+            value={value}
+            onChange={(item) => {
+              setValue(item.code);
+              console.log(item);
+              customEvent();
             }}
           />
-          <Loginbg />
-        </View>
 
-        <View className="flex-col items-center" style={{ marginTop: hp(3) }}>
-          <Text style={styles.well}>Your Wellbeing Comes First!</Text>
-
-          <Text style={styles.getinstant}>
-            Get instant one-click appointments, track your wellbeing journey,
-            access session notes, and more.
-          </Text>
-          <Text style={styles.allinone}>All in one place!</Text>
-
-          <Text style={styles.enterphone}>Enter your Phone Number</Text>
-
-          <View
-            className="flex-row items-center"
-            style={{ width: wp(82), marginTop: hp(3) }}
-          >
-            <Dropdown
-              style={[styles.dropdown]}
-              placeholderStyle={styles.placeholderStyle}
-              selectedTextStyle={styles.selectedTextStyle}
-              inputSearchStyle={styles.inputSearchStyle}
-              containerStyle={styles.containerStyle}
-              iconStyle={styles.iconStyle}
-              itemTextStyle={{ fontSize: wp(4) }}
-              data={data}
-              search={false}
-              dropdownPosition="top"
-              inverted={false}
-              showsVerticalScrollIndicator={true}
-              iconColor="#455A64"
-              mode="auto"
-              maxHeight={400}
-              autoScroll={false}
-              // onFocus={() => setIsFocus(true)}
-              // onBlur={() => setIsFocus(false)}
-              labelField="show"
-              // alwaysRenderSelectedItem = {false}
-              valueField="code"
-              placeholder="IN(+91)"
-              searchPlaceholder="Search..."
-              value={value}
-              onChange={(item) => {
-                setValue(item.code);
-                console.log(item);
-                customEvent();
-              }}
-            />
-
-            <TextInput
-              style={styles.input}
-              onChangeText={onChangeNumber}
-              value={number}
-              // placeholder="6266019364"
-              keyboardType="numeric"
-              onSubmitEditing={() => {
-                connect()
-                setLoading(true);
-                requestOTP(codes[value], number, navigation, [
-                  loading,
-                  setLoading,
-                ]);
-                mixpanel.track("OTP Request done by", {
-                  "Phone ": codes[value] + number,
-                });
-              }}
-            />
-          </View>
-
-          <ActivityIndicator animating={loading} size="large" />
-
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
+          <TextInput
+            style={styles.input}
+            onChangeText={onChangeNumber}
+            value={number}
+            // placeholder="6266019364"
+            keyboardType="numeric"
+            placeholder="Enter your Phone Number"
+            onSubmitEditing={() => {
               connect()
               setLoading(true);
               requestOTP(codes[value], number, navigation, [
                 loading,
                 setLoading,
               ]);
-              // predefinedEvent();
               mixpanel.track("OTP Request done by", {
                 "Phone ": codes[value] + number,
               });
             }}
-          >
-            <Text style={styles.textStyle}>Get OTP</Text>
-          </TouchableOpacity>
+          />
         </View>
+
+
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            connect()
+            setLoading(true);
+            requestOTP(codes[value], number, navigation, [
+              loading,
+              setLoading,
+            ]);
+            // predefinedEvent();
+            mixpanel.track("OTP Request done by", {
+              "Phone ": codes[value] + number,
+            });
+          }}
+        >
+          <Text style={styles.textStyle}>Get OTP</Text>
+        </TouchableOpacity>
+        {/* </View> */}
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -268,21 +259,23 @@ export default Login;
 const styles = StyleSheet.create({
   well: {
     // Your Wellbeing Comes First!
+    textAlign: 'center',
     color: "#01818C",
-    fontSize: wp(6),
-    fontFamily: "Roboto",
+    width: wp(82),
+    fontSize: wp(6.4),
     fontWeight: "700",
+    marginTop: hp(3),
   },
 
   getinstant: {
     color: "#455A64",
-    fontSize: wp(4.2),
+    fontSize: wp(4.8),
     fontFamily: "Roboto",
     fontWeight: "400",
     lineHeight: wp(6),
     width: wp(75),
     textAlign: "center",
-    marginTop: wp(0.5),
+    marginTop: hp(0.9),
   },
   allinone: {
     color: "#455A64",
@@ -322,7 +315,7 @@ const styles = StyleSheet.create({
     height: wp(61),
   },
   input: {
-    height: hp(7),
+    height: hp(7.2),
     width: wp(83),
     backgroundColor: "white",
     borderRadius: wp(3),
@@ -330,13 +323,13 @@ const styles = StyleSheet.create({
     borderColor: "rgba(69, 90, 100, 0.30)",
     borderStyle: "solid",
     color: "#455A64",
-    fontWeight: "600",
+    fontWeight: "500",
     paddingLeft: wp(25),
-    fontSize: wp(4),
+    fontSize: wp(4.2),
   },
   dropdown: {
     // marginTop: 7,
-    height: hp(7),
+    height: hp(7.2),
     width: wp(23),
     backgroundColor: "white",
     borderRadius: wp(3),
@@ -403,7 +396,7 @@ const styles = StyleSheet.create({
   button: {
     height: hp(7.3),
     width: wp(82),
-    marginTop: hp(1),
+    marginTop: hp(3),
     backgroundColor: "#32959D",
     borderRadius: wp(10),
     justifyContent: "center",

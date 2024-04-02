@@ -10,7 +10,7 @@ import {
   ToastAndroid,
   KeyboardAvoidingView,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SInfo from "react-native-encrypted-storage";
 import {
   widthPercentageToDP as wp,
@@ -21,6 +21,7 @@ import Logo4 from "../../assets/images/verifyDisplay.svg";
 import Back from "../../assets/images/arrow.svg";
 import { useAuth } from "../utils/auth";
 import { LogLevel, OneSignal } from "react-native-onesignal";
+import { useIsFocused } from '@react-navigation/native'
 
 const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
@@ -179,7 +180,7 @@ export default function Verify({ navigation, route }) {
   const [otp, setOtp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState(null);
-  const {connect} = useAuth();
+  const { connect } = useAuth();
 
   // console.log(diversion)
   navigation.addListener("focus", (ref) => {
@@ -200,16 +201,22 @@ export default function Verify({ navigation, route }) {
 
   const [number, onChangeNumber] = React.useState("");
 
+  const isFocused = useIsFocused()
+
+  useEffect(() => {
+    if (isFocused) {
+    }
+  }, [isFocused])
+
   return (
     <KeyboardAvoidingView
-    behavior="padding"
-    keyboardVerticalOffset={-225}
-    style={{ flex: 1 }}
+      behavior="padding"
+      keyboardVerticalOffset={-225}
+      style={{ flex: 1 }}
     >
       {/* <TopBar /> */}
-
       <StatusBar
-        backgroundColor={"#fff"}
+        backgroundColor={'red'}
         barStyle={"dark-content"}
         hidden={false}
       />
@@ -260,7 +267,7 @@ export default function Verify({ navigation, route }) {
                 navigation,
                 [loading, setLoading],
                 [showErrorMessage, setShowErrorMessage]
-                )
+              )
             }}
           />
 
