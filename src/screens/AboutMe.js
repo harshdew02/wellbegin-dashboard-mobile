@@ -26,8 +26,8 @@ import axios from "axios";
 import SInfo from "react-native-encrypted-storage";
 import { theme } from "../theme";
 import { useAuth } from "../utils/auth";
-import { LogLevel, OneSignal } from "react-native-onesignal";
-
+import AboutBg from "../../assets/images/aboutBg.svg"
+import Cross from "../components/moods/Cross";
 const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
 }
@@ -100,151 +100,101 @@ export default function AboutMe(props) {
             alignItems: "center",
           }}
           keyboardShouldPersistTaps='always' style={{ backgroundColor: "#fff", height: hp(100) }}>
+          <AboutBg width={wp(100)} height={wp(57)} />
           <View
-            style={[
-              styles.cardContainer,
-              { height: hp(66), backgroundColor: "#32959d" },
-            ]}
+            style={{
+              height: hp(6),
+              width: wp(100),
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: hp(2),
+              position: "absolute",
+              zIndex: 2,
+            }}
           >
-            <View
-              style={{
-                height: hp(6),
-                width: wp(100),
-                justifyContent: "center",
-                alignItems: "center",
-                marginTop: hp(2),
+            <TouchableOpacity
+              onPress={() => {
+                navigation.goBack();
               }}
+              style={{ position: "absolute", left: wp(8) }}
             >
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.goBack();
-                }}
-                style={{ position: "absolute", left: wp(8) }}
-              >
-             <Back width={wp(8)} height={wp(8)} />
-              </TouchableOpacity>
-              <Text
-                style={{
-                  color: '#fff',
-                  fontSize: wp(5.5),
-                  fontFamily: "Roboto",
-                  fontWeight: "bold",
-                }}
-              >
-                About Me
-              </Text>
-            </View>
-            <View
-              style={{
-                // backgroundColor: "#fff",
-                height: hp(6),
-                justifyContent: "center",
-                alignItems: "center",
-                top: hp(1),
-                marginTop: hp(2),
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => navigation.goBack()}
-                style={{ position: "absolute", left: 0 }}
-              >
-                <Back width={wp(8)} height={wp(8)} />
-              </TouchableOpacity>
-
-              <Text
-                style={{
-                  color: "#fff",
-                  fontSize: wp(5.5),
-                  fontFamily: "Roboto",
-                  fontWeight: "bold",
-                }}
-              >
-                About Me
-              </Text>
-            </View>
-
+              <Back width={wp(8)} height={wp(8)} />
+            </TouchableOpacity>
             <Text
               style={{
-                color: "#fff",
-                fontSize: wp(3.7),
-                width: wp(84),
-                textAlign: 'center',
+                color: '#fff',
+                fontSize: wp(5.5),
                 fontWeight: "500",
-                marginTop: hp(3)
               }}
-            >Please add a few more details to continue😊
-            </Text>
-
-            <View
-              className="flex-col justify-between items-center "
-              style={{ height: hp(45), marginTop: hp(0.5) }}
             >
-              <TextInput
-                style={[{ marginTop: hp(2) }, styles.input]}
-                // onChangeText={onChangeNumber}
-                value={name}
-                onChangeText={setName}
-                placeholder="Enter your Name"
-                inputMode="text"
-              />
-
-              <TextInput
-                style={[styles.input, { backgroundColor: '#cde3e9' }]}
-                // editable={false}
-                // onChangeText={onChangeNumber}
-                value={`+${code}-${phone}`}
-                // placeholder="+91-9480052103"
-                inputMode="tel"
-                editable={false}
-              />
-
-              <TextInput
-                style={styles.input}
-                // onChangeText={onChangeNumber}
-                // value={number}
-                value={mail}
-                onChangeText={setMail}
-                placeholder="Enter your email"
-                inputMode="email"
-              />
-
-              <ActivityIndicator animating={loading} size='small' />
-
-              <TouchableOpacity
-                activeOpacity={0.8}
-                onPress={() => {
-                  connect();
-                  data.usr_fullname = name;
-                  data.user_email = mail;
-                  data.insert_details = "true";
-                  setLoading(true)
-                  // console.log(data)
-                  fillDetails(data, [loading, setLoading], navigation);
-                }}
-                style={[styles.BookBtn3, { marginBottom: hp(4) }]}
-              >
-                <Text style={styles.btnText3}>Save My Details</Text>
-              </TouchableOpacity>
-
-
-            </View>
-            <View style={{ width: wp(100), alignItems: 'center', position: 'absolute', bottom: hp(3) }} >
-              <TouchableOpacity onPress={() => {
-                SInfo.removeItem('token').then(() => {
-                  navigation.navigate('LoginPage');
-                  OneSignal.logout();
-                  showToast('User logout successfully.')
-                }).catch((err) => {
-                  showToast('Something went wrong.')
-                  console.log('Error from logout system: ', err)
-                });
-              }} style={{ width: wp(20), backgroundColor: theme.grey, height: hp(4), justifyContent: 'center', alignItems: 'center', borderRadius: wp(40) }} >
-                <Text style={{ color: '#fff' }} >Logout</Text>
-              </TouchableOpacity>
-            </View>
-
+              My Wellbeing Tests
+            </Text>
           </View>
 
+          <Text
+            style={{ fontSize: wp(6.4), fontWeight: '500', color: theme.black, marginTop: hp(3) }}
+          >Edit Profile</Text>
+
+          <View style={{ height: hp(25), justifyContent: 'space-between' }}>
+            <TextInput
+              style={[{ marginTop: hp(2.5) }, styles.input]}
+              // onChangeText={onChangeNumber}
+              value={name}
+              onChangeText={setName}
+              placeholder="Enter your Name"
+              inputMode="text"
+            />
+            <TextInput
+              style={[styles.input, { backgroundColor: '#cde3e9' }]}
+              // editable={false}
+              // onChangeText={onChangeNumber}
+              value={`+${code}-${phone}`}
+              // placeholder="+91-9480052103"
+              inputMode="tel"
+              editable={false}
+            />
+            <TextInput
+              style={styles.input}
+              // onChangeText={onChangeNumber}
+              // value={number}
+              value={mail}
+              onChangeText={setMail}
+              placeholder="Enter your email"
+              inputMode="email"
+            />
+          </View>
+
+          <ActivityIndicator animating={loading} size='small' />
+
+          <View style={{ width: wp(87), flexDirection: 'row', justifyContent: 'space-between' }} >
+            <TouchableOpacity onPress={() => {
+              SInfo.removeItem('token').then(() => {
+                navigation.navigate('LoginPage');
+                showToast('User logout successfully.')
+              }).catch((err) => {
+                showToast('Something went wrong.')
+                console.log('Error from logout system: ', err)
+              });
+            }} style={{ width: wp(40), height: hp(5), justifyContent: 'center', alignItems: 'center', borderRadius: wp(40), flexDirection: 'row', borderWidth: wp(0.3) }} >
+              <Text style={{ color: theme.black }} >Logout</Text>
+              <Cross simple={true} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => {
+                connect();
+                data.usr_fullname = name;
+                data.user_email = mail;
+                data.insert_details = "true";
+                setLoading(true)
+                // console.log(data)
+                fillDetails(data, [loading, setLoading], navigation);
+              }}
+              style={[styles.BookBtn3, { marginBottom: hp(4) }]}
+            >
+              <Text style={styles.btnText3}>Save My Details</Text>
+            </TouchableOpacity>
+          </View>
           <View
             className="flex-row items-center"
             style={[
@@ -268,14 +218,14 @@ export default function AboutMe(props) {
 const styles = StyleSheet.create({
   input: {
     height: hp(5.7),
-    width: "100%",
+    width: wp(87),
     backgroundColor: "white",
     borderRadius: wp(6),
-    borderWidth: wp(0.5),
+    borderWidth: wp(0.3),
     borderColor: "#455a64",
     borderStyle: "solid",
     color: "#455A64",
-    fontWeight: "600",
+    fontWeight: "500",
     paddingHorizontal: wp(4),
     fontSize: wp(4),
   },
@@ -342,13 +292,13 @@ const styles = StyleSheet.create({
   },
 
   BookBtn3: {
-    width: wp(48),
-    height: hp(6),
+    width: wp(42),
+    height: hp(5),
     borderRadius: wp(8),
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
-    backgroundColor: "#455a64",
+    backgroundColor: theme.maincolor,
     borderStyle: "solid",
     borderWidth: 1,
     borderColor: "#455a64",
