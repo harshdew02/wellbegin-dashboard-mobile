@@ -557,6 +557,7 @@ const Test = (props) => {
         </Text>
 
         <ScrollView
+          showsHorizontalScrollIndicator={true}
         >
           {test.map((item, index) => (
             <GeneralCard key={index} props={item} colors={index % 2} />
