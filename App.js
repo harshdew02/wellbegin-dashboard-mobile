@@ -16,27 +16,6 @@ Sentry.init({
   dsn: "https://e5adfef643df1d558d810f49f20e22a9@o4506911526813696.ingest.us.sentry.io/4506911552569344",
 });
 
-import { LogLevel, OneSignal } from "react-native-onesignal";
-
-// Add OneSignal within your App's root component
-const AppInitializer = () => {
-  console.log("App initializing");
-  // Remove this method to stop OneSignal Debugging
-  OneSignal.Debug.setLogLevel(LogLevel.Verbose);
-
-  // OneSignal Initialization
-  OneSignal.initialize("3a865120-5f7d-41a2-b5b3-5bb205884c50");
-
-  // requestPermission will show the native iOS or Android notification permission prompt.
-  // We recommend removing the following code and instead using an In-App Message to prompt for notification permission
-  OneSignal.Notifications.requestPermission(true);
-
-  // Method for listening for notification clicks
-  OneSignal.Notifications.addEventListener("click", (event) => {
-    console.log("OneSignal: notification clicked:", event);
-  });
-};
-
 export default function App() {
   const [token, setToken] = React.useState(false);
   const [welcome, setWelcome] = React.useState(false);
@@ -56,7 +35,6 @@ export default function App() {
   }, []);
 
   React.useEffect(() => {
-    AppInitializer();
     const isLogin = async () => {
       try {
         const storedToken = await SInfo.getItem("token");
