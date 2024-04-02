@@ -38,17 +38,17 @@ export default function App() {
     const isLogin = async () => {
       try {
         const storedToken = await SInfo.getItem("token");
-        if (storedToken == null || storedToken === undefined) {
+        if (storedToken == null || storedToken == undefined) {
           setToken(false);
+          const wel = await SInfo.getItem("welcome");
+          console.log(wel);
+          if (wel == undefined || wel == null) {
+            setWelcome(true);
+          }
         } else {
           const data = JSON.parse(storedToken);
-          // console.log(data)
           if (data.status !== "true") {
             setToken(false);
-            const wel = await SInfo.getItem("token");
-            if (wel == undefined || wel == null) {
-              setWelcome(true);
-            }
           } else setToken(true);
         }
       } catch (error) {
