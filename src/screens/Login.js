@@ -103,6 +103,18 @@ const Login = ({route}) => {
     setLoading(false);
   });
 
+  const welcome = async () => {
+    const welcome = await SInfo.getItem("welcome");
+    if(welcome == null || welcome == undefined){
+      await SInfo.setItem("welcome","false");
+    }
+  }
+
+  useEffect(() => {
+    welcome();
+  }, [])
+  
+
   React.useEffect(() => {
     const isLogin = async () => {
       try {

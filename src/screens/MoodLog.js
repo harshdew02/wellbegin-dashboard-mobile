@@ -275,7 +275,7 @@ const MoodLog = (props) => {
   const {connect} = useAuth();
   let payload = props.route.params;
   useEffect(() => {
-    payload.week = 0;
+    payload.week = payload.curr;
     const url = "https://n8n.heartitout.in/webhook/api/mt-weekly-mood";
     const connection = connect();
     if(!connection) {setLoading(false)}
