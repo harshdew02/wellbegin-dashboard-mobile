@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     SafeAreaView,
     Image,
@@ -27,6 +27,7 @@ import C3 from "../../assets/images/c3.svg"
 import C4 from "../../assets/images/c4.svg"
 import C5 from "../../assets/images/c5.svg"
 import C6 from "../../assets/images/c6.svg"
+import { useNavigation } from "@react-navigation/native";
 const COLORS = { primary: '#282534', white: '#fff' };
 const { width, height } = Dimensions.get('window');
 import AutoScrollingList from '../components/AutoRotatedScrollview';
@@ -124,6 +125,7 @@ const Slide = ({ item }) => {
 };
 
 const Onboarding = () => {
+    const navigation = useNavigation();
     const [currentSlideIndex, setCurrentSlideIndex] = React.useState(0);
     const ref = React.useRef();
     const updateCurrentSlideIndex = e => {
@@ -186,7 +188,7 @@ const Onboarding = () => {
                         <View style={{ height: 50, marginBottom: hp(3.5), display: 'flex', justifyContent: 'flex-end', flexDirection: 'row', width: wp(85) }}>
                             <TouchableOpacity
                                 style={styles.btn}
-                                onPress={() => navigation.replace('login')}>
+                                onPress={() =>{navigation.navigate('LoginPage')}}>
                                 <Text style={{ fontWeight: 'bold', fontSize: 15, color: '#fff' }}>
                                     You’re All Set!
                                 </Text>
@@ -219,7 +221,7 @@ const Onboarding = () => {
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: '#fff' }}>
-            <StatusBar translucent backgroundColor="transparent" />
+            <StatusBar barStyle={"dark-content"} translucent backgroundColor="transparent" />
             <FlatList
                 nestedScrollEnabled={true}
                 ref={ref}
