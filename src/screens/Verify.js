@@ -20,18 +20,35 @@ import axios from "axios";
 import Logo4 from "../../assets/images/verifyDisplay.svg";
 import Back from "../../assets/images/arrow.svg";
 import { useAuth } from "../utils/auth";
+import { LogLevel, OneSignal } from "react-native-onesignal";
 import { useIsFocused } from '@react-navigation/native'
 
 const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
 };
 
+// Add OneSignal within your App's root component
+const AppInitializer = (mobile) => {
+  console.log("App initializing");
+  // Remove this method to stop OneSignal Debugging
+  OneSignal.Debug.setLogLevel(LogLevel.Verbose);
+
+  // OneSignal Initialization
+  OneSignal.initialize("3a865120-5f7d-41a2-b5b3-5bb205884c50");
+
+  // requestPermission will show the native iOS or Android notification permission prompt.
+  // We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+  OneSignal.Notifications.requestPermission(true);
+
+  OneSignal.login(mobile)
+  // Method for listening for notification clicks
+  OneSignal.Notifications.addEventListener("click", (event) => {
+    console.log("OneSignal: notification clicked:", event);
+  });
+};
+
 const verifyOTP = async (
-  code,
-  mobile,
-  Token,
   otp,
-  date,
   navigation,
   [loading, setLoading],
   [error, setError]
@@ -40,7 +57,6 @@ const verifyOTP = async (
   try {
     const session = await SInfo.getItem("token");
     const data = JSON.parse(session);
-    // console.log("Parsed data",data);
     const requestData = {
       phone: data.phone,
       code: data.code,
@@ -55,7 +71,6 @@ const verifyOTP = async (
         console.log(res.data);
 
         if (res.data.status == "true") {
-          // await AsyncStorage.setItem("token", Token);
           await SInfo.setItem(
             "token",
             JSON.stringify({
@@ -70,25 +85,22 @@ const verifyOTP = async (
               user_email: "",
             })
           );
-          // setCounter(0);
+          AppInitializer(res.data.code+res.data.phone);
           navigation.navigate("loader");
         } else {
           console.log("wrong otp received");
           setError("You entered the wrong code. Please try again.");
-          // showToast("You entered the wrong code. Please try again.");
           setLoading(false);
         }
       })
       .catch((err) => {
         console.log(err);
         setError("Something went wrong. Please try again later.");
-        // showToast("Something went wrong. Please try again later.");
         setLoading(false);
       });
   } catch (error) {
     console.log("Error requesting OTP:", error.message);
     setError("Something went wrong. Please try again later.");
-    // showToast("Something went wrong. Please try again later.");
     setLoading(false);
   }
 };
@@ -178,7 +190,6 @@ export default function Verify({ navigation, route }) {
   });
 
   React.useEffect(() => {
-    // setBut(true)
     const interval = setInterval(() => {
       if (counter == 0) clearInterval(interval);
       else setCounter(counter - 1);
@@ -272,11 +283,7 @@ export default function Verify({ navigation, route }) {
               setLoading(true);
               setShowErrorMessage(null);
               verifyOTP(
-                route.params.code,
-                route.params.phone,
-                route.params.token,
                 number,
-                route.params.date,
                 navigation,
                 [loading, setLoading],
                 [showErrorMessage, setShowErrorMessage],

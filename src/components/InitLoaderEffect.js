@@ -23,7 +23,7 @@ const showToast = (message) => {
 
 export default function InitLoaderEffect( {route}) {
   const navigation = useNavigation();
-  const {connect, Diversion} = useAuth();
+  const {connect, Diversion, setUser} = useAuth();
   const backHandler = () => {
     BackHandler.exitApp();
     return true;
@@ -157,8 +157,8 @@ export default function InitLoaderEffect( {route}) {
           await axios
             .post(apiUrl3, userDetails)
             .then(async (res) => {
+              console.log("To render which screen",res.data)
               if (res.data.status === "1") {
-                // await AsyncStorage.setItem("token", Token);
                 (finalDetails.has_banner = res.data.has_banner),
                   (finalDetails.banner_link = res.data.banner),
                   (finalDetails.on_click = res.data.ban_on_click != (null || undefined) ? res.data.ban_on_click : "https://heartitout.in/"),
@@ -171,6 +171,7 @@ export default function InitLoaderEffect( {route}) {
                 finalDetails.product_onclick = res.data.product_onclick != (null || undefined) ? res.data.product_onclick : "https://heartitout.in/";
                 finalDetails.sub_onclick = res.data.sub_onclick != (null || undefined) ? res.data.sub_onclick : "https://heartitout.in/";
                 finalDetails.packages_onclick = res.data.packages_onclick != (null || undefined) ? res.data.packages_onclick : "https://heartitout.in/";
+                res.data.user_category === "regular" ? setUser(false) : setUser(true);
               } else if (res.data.status === "10") {
                 (finalDetails.has_mood = res.data.mood_tacker != (null || undefined) ? res.data.mood_tacker : "no");
                 finalDetails.show_sub = res.data.show_sub;
@@ -181,6 +182,7 @@ export default function InitLoaderEffect( {route}) {
                 finalDetails.product_onclick = res.data.product_onclick != (null || undefined) ? res.data.product_onclick : "https://heartitout.in/";
                 finalDetails.sub_onclick = res.data.sub_onclick != (null || undefined) ? res.data.sub_onclick : "https://heartitout.in/";
                 finalDetails.packages_onclick = res.data.packages_onclick != (null || undefined) ? res.data.packages_onclick : "https://heartitout.in/";
+                res.data.user_category === "regular" ? setUser(false) : setUser(true);
               } else {
                 throw new Error("User credentails expired");
               }
