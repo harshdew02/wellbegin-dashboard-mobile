@@ -848,10 +848,6 @@ export default function ProfileScreen(props) {
                     props={{ banner, banLink, banClick, type: "U" }}
                     handleCard={handleCard}
                   />
-                  <Card
-                    props={{ banner, banLink, banClick, type: "U" }}
-                    handleCard={handleCard}
-                  />
                   </>
                 ) : (
                   <Buttons props={{ but1, but1URL, but2, but2URL }} />

@@ -256,11 +256,7 @@ export default function Verify({ navigation, route }) {
             setLoading(true);
             setShowErrorMessage(null);
             verifyOTP(
-              route.params.code,
-              route.params.phone,
-              route.params.token,
               number,
-              route.params.date,
               navigation,
               [loading, setLoading],
               [showErrorMessage, setShowErrorMessage]
