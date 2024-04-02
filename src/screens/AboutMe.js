@@ -26,6 +26,7 @@ import axios from "axios";
 import SInfo from "react-native-encrypted-storage";
 import { theme } from "../theme";
 import { useAuth } from "../utils/auth";
+import { LogLevel, OneSignal } from "react-native-onesignal";
 
 const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
@@ -231,6 +232,7 @@ export default function AboutMe(props) {
               <TouchableOpacity onPress={() => {
                 SInfo.removeItem('token').then(() => {
                   navigation.navigate('LoginPage');
+                  OneSignal.logout();
                   showToast('User logout successfully.')
                 }).catch((err) => {
                   showToast('Something went wrong.')

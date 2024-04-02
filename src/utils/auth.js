@@ -37,6 +37,17 @@ export const AuthProvider = ({ children }) => {
     return divert;
   }
 
+  let new_user = false;
+
+  const setUser = (is_new)=>{
+    if(is_new)
+    new_user = true;
+    else new_user = false;
+  }
+
+  const getUser = ()=>{
+    return new_user;
+  }
   
 
   const connect = () => {
@@ -52,7 +63,7 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ pathing, path, setHomes, home, connect, Diversion, getDiversion }}
+      value={{ pathing, path, setHomes, home, connect, Diversion, getDiversion, getUser, setUser }}
     >
       {children}
     </AuthContext.Provider>
