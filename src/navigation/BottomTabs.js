@@ -6,6 +6,7 @@ import {
 } from "react-native-responsive-screen";
 import DiscoverScreen from "../screens/DiscoverScreen";
 import HomeScreen from "../screens/HomeScreen";
+import { HomescreenControl } from "../screens/HomeScreenController.js";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SVGComponent from "../components/SVGcom";
 import HomeIcon from "../components/HomeIcon.js";
@@ -164,7 +165,7 @@ export default function BottomTabs(props) {
 
         <Tab.Screen
           name="Home_Tab"
-          component={HomeScreen}
+          component={HomescreenControl}
           options={{
             tabBarIcon: ({ focused }) => {
               return (

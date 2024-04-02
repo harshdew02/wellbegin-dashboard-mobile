@@ -26,7 +26,6 @@ import Emoji3 from "../../assets/images/emoji3.svg";
 import Emoji4 from "../../assets/images/emoji4.svg";
 import Emoji5 from "../../assets/images/emoji5.svg";
 import Home2 from "../../assets/images/home2.svg";
-import SInfo from "react-native-encrypted-storage";
 import { theme } from "../theme";
 import TopBell from "../components/TopBell";
 import HomePageBanner from "../components/HomePageBanner";
@@ -132,8 +131,9 @@ const Bookbtn = (props) => {
 };
 
 export default function HomeScreen(props) {
-  let data = props.route.params.data.route.params;
-  const payload = props.route.params.data.route.params;
+  console.log("It is from home1")
+  let data = props.props;
+  const payload = props.props;
   const navigation = useNavigation();
   const [isBooked, setBooked] = useState(false);
   const [is2hour, setIs2hour] = useState(false);
@@ -649,7 +649,7 @@ export default function HomeScreen(props) {
         >
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("homework", data);
+              // navigation.navigate("homework", data);
             }}
             style={[styles.card, { backgroundColor: "#FEF8C8" }]}
           >

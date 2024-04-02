@@ -4,6 +4,7 @@ import {
   View,
   TouchableOpacity,
   ActivityIndicator,
+  BackHandler
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -274,6 +275,20 @@ const MoodLog = (props) => {
   const [refreshing, setRefreshing] = useState(false);
   const {connect} = useAuth();
   let payload = props.route.params;
+
+  const backHandler = () => {
+    navigation.goBack()
+    return true;
+  };
+
+  navigation.addListener("focus", () => {
+    BackHandler.addEventListener("hardwareBackPress", backHandler);
+  });
+
+  navigation.addListener("blur", () => {
+    BackHandler.removeEventListener("hardwareBackPress", backHandler);
+  });
+
   useEffect(() => {
     payload.week = payload.curr;
     const url = "https://n8n.heartitout.in/webhook/api/mt-weekly-mood";
