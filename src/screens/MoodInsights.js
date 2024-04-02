@@ -233,6 +233,7 @@ const MoodInsights = (props) => {
   });
 
   let payload = props.route.params;
+  payload.curr = curr;
   useEffect(() => {
     connect();
     let ahead = false;

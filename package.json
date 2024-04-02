@@ -37,6 +37,7 @@
     "react-native-fs": "^2.20.0",
     "react-native-gesture-handler": "^2.14.0",
     "react-native-heroicons": "^3.2.0",
+    "react-native-onesignal": "^5.1.0",
     "react-native-pager-view": "^6.2.3",
     "react-native-permissions": "^4.1.5",
     "react-native-pull-to-refresh": "^2.1.3",
