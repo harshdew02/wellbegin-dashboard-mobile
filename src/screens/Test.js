@@ -32,6 +32,7 @@ import RNFetchBlob from "rn-fetch-blob";
 import FileViewer from "react-native-file-viewer";
 import PTRView from "react-native-pull-to-refresh";
 import { useAuth } from "../utils/auth";
+import BottomQuote from "../components/BottomQuote"
 
 const NoSessions = () => {
   return (
@@ -480,6 +481,7 @@ const Test = (props) => {
   return (
     <SafeAreaView>
       <ScrollView
+        nestedScrollEnabled={true}
         contentContainerStyle={{
           display: "flex-1",
           flexDirection: "col",
@@ -522,8 +524,7 @@ const Test = (props) => {
             textAlign: "center",
           }}
         >
-          Access your test results below to get a better understanding of your
-          symptoms.
+          Take the test recommended for you today. Get insights to boost your mental health journey!
         </Text>
 
         <View style={[styles.cardContainer, { marginTop: hp(3) }]}>
@@ -556,8 +557,15 @@ const Test = (props) => {
           Recommended Diagnostics For You
         </Text>
 
-        <ScrollView
-          showsHorizontalScrollIndicator={true}
+        <ScrollView nestedScrollEnabled={true}
+          showsHorizontalScrollIndicator={false}
+          horizontal={true}
+          contentContainerStyle={{
+            display: "flex",
+            flexDirection: "row",
+            borderRadius: wp(2),
+          }}
+          style={{ width: wp(86), height: hp(12.8), marginTop: hp(2) }}
         >
           {test.map((item, index) => (
             <GeneralCard key={index} props={item} colors={index % 2} />
@@ -566,7 +574,6 @@ const Test = (props) => {
           <AttachmentTest /> */}
           {/* <GeneralCard /> */}
         </ScrollView>
-
         <View style={{ marginTop: hp(4), justifyContent: "center" }}>
           <HelpFriend />
           <View
@@ -611,7 +618,6 @@ const Test = (props) => {
             </TouchableOpacity>
           </View>
         </View>
-
         {/* <BottomQuote /> */}
       </ScrollView>
     </SafeAreaView>

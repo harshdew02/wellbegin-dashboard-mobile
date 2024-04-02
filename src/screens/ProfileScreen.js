@@ -25,7 +25,7 @@ import { TabView, TabBar } from "react-native-tab-view";
 import axios from "axios";
 import PTRView from "react-native-pull-to-refresh";
 import { useAuth } from "../utils/auth";
-
+import { useIsFocused } from '@react-navigation/native'
 const gMeet = (link) => {
   if (link == "" || link == null || link == undefined)
     link = "https://meet.google.com";
@@ -48,9 +48,7 @@ const NoSessions = () => {
         fontFamily: "Roboto",
         fontWeight: "normal",
       }}
-    >
-      Sorry! You have no sessions.
-    </Text>
+    >Oops! It looks like there are no sessions scheduled for you at the moment.</Text>
   );
 };
 
@@ -102,7 +100,7 @@ const CardDetails = (props) => {
         width: wp(76),
         height: hp(10),
         backgroundColor: "#ffffff",
-        marginTop: hp(2),
+        marginBottom: hp(2),
         borderWidth: wp(0.5),
         borderColor: "#32959d",
         paddingHorizontal: wp(3.5),
@@ -197,7 +195,7 @@ const FirstRoute = (props) => {
   const parentData = {
     has_ban: false,
     btn_data: {
-      "btn1-text": "Book A session",
+      "btn1-text": "Book Your Session",
       "btn1-url": "https://heartitout.in/",
       "btn2-text": "Continue your journey",
       "btn2-url": "https://heartitout.in/therapist",
@@ -236,7 +234,7 @@ const FirstRoute = (props) => {
             parentData.btn_data["btn1-text"] =
               res.data.btn_dat["btn1-text"] != (null || undefined)
                 ? res.data.btn_dat["btn1-text"]
-                : "Book a Session";
+                : "Book Your Session";
             parentData.btn_data["btn2-text"] =
               res.data.btn_dat["btn2-text"] != (null || undefined)
                 ? res.data.btn_dat["btn2-text"]
@@ -261,11 +259,10 @@ const FirstRoute = (props) => {
         });
     }
   }, [loading]);
-
   return (
     <View style={styles.scrollContainer}>
-      <ScrollView        
-        style={{ width: "100%", paddingLeft: wp(3.5) }}
+      <ScrollView
+        style={{ width: "100%", paddingLeft: wp(3.5),  marginTop:hp(1.5) }}
       >
         {loading ? (
           <View
@@ -311,7 +308,7 @@ const SecondRoute = (props) => {
   const parentData = {
     has_ban: false,
     btn_data: {
-      "btn1-text": "Book A session",
+      "btn1-text": "Book Your Session",
       "btn1-url": "https://heartitout.in/",
       "btn2-text": "Continue your journey",
       "btn2-url": "https://heartitout.in/therapist",
@@ -349,7 +346,7 @@ const SecondRoute = (props) => {
           parentData.btn_data["btn1-text"] =
             res.data.btn_dat["btn1-text"] != (null || undefined)
               ? res.data.btn_dat["btn1-text"]
-              : "Book a Session";
+              : "Book Your Session";
           parentData.btn_data["btn2-text"] =
             res.data.btn_dat["btn2-text"] != (null || undefined)
               ? res.data.btn_dat["btn2-text"]
@@ -376,7 +373,7 @@ const SecondRoute = (props) => {
 
   return (
     <View className="flex-col items-center " style={styles.scrollContainer}>
-      <ScrollView style={{ width: "100%", paddingLeft: wp(3.5) }}>
+      <ScrollView style={{ width: "100%", paddingLeft: wp(3.5), marginTop:hp(1.5) }}>
         {loading ? (
           <View
             style={{
@@ -398,7 +395,9 @@ const SecondRoute = (props) => {
               <>
                 {/* <CardDetails props={data} /> */}
                 {data.map((item, index) => (
+                  <>
                   <CardDetails key={index} props={item} />
+                  </>
                 ))}
               </>
             ) : (
@@ -458,21 +457,31 @@ const Buttons = (props) => {
   const navigation = useNavigation()
   return (
     <>
+
       <View
         className="flex-col items-center"
-        style={[styles.cardContainer, { marginTop: hp(4) }]}
+        style={[styles.cardContainer, { marginTop: hp(3) }]}
       >
+        <Text
+          style={{
+            width: "100%",
+            textAlign: "center",
+            color: "#455a64",
+            fontSize: wp(4),
+            fontWeight: "500",
+          }}
+        >Let's find the perfect slot for you</Text>
         <TouchableOpacity
           activeOpacity={0.8}
           style={styles.BookBtn2}
           onPress={() => {
-            navigation.navigate('webview',props.props.but1URL)
+            navigation.navigate('webview', props.props.but1URL)
           }}
         >
           <Text style={styles.btnText2}>{props.props.but1}</Text>
         </TouchableOpacity>
       </View>
-      <View
+      {/* <View
         className="flex-col items-center"
         style={[styles.cardContainer, { marginTop: hp(3) }]}
       >
@@ -491,8 +500,8 @@ const Buttons = (props) => {
           </Text>
           <View style={styles.container3}></View>
         </View>
-      </View>
-      <View
+      </View> */}
+      {/* <View
         className="flex-col items-center"
         style={[styles.cardContainer, { marginTop: hp(3) }]}
       >
@@ -500,12 +509,12 @@ const Buttons = (props) => {
           activeOpacity={0.8}
           style={styles.BookBtn3}
           onPress={() => {
-            navigation.navigate('webview',props.props.but2URL)
+            navigation.navigate('webview', props.props.but2URL)
           }}
         >
           <Text style={styles.btnText3}>{props.props.but2}</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </>
   );
 };
@@ -525,7 +534,7 @@ const Card = (props) => {
     >
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('webview',props.props.banClick)
+          navigation.navigate('webview', props.props.banClick)
         }}
       >
         {!imageError ? (
@@ -541,7 +550,7 @@ const Card = (props) => {
               source={{
                 uri: props.props.banLink,
               }}
-              // alt={''}
+            // alt={''}
             />
           </>
         ) : (
@@ -590,17 +599,16 @@ export default function ProfileScreen(props) {
   ]);
 
   useEffect(() => {
-    console.log("It is context API system in Profile Screen: ",path);
-    if(path === "webview")
-    {
+    console.log("It is context API system in Profile Screen: ", path);
+    if (path === "webview") {
       const connection = connect()
-      if(connection)
+      if (connection)
         setRefresh(true);
       console.log("Refreshing or not");
     }
     pathing("App");
-  },[path])
-  
+  }, [path])
+
   useEffect(() => {
     setDet(data);
     setName(data.usr_fullname);
@@ -699,7 +707,7 @@ export default function ProfileScreen(props) {
   const handleRefresh = () => {
     setRefreshing(true);
     const connection = connect()
-    if(connection)
+    if (connection)
       setRefresh(true);
     fetchData();
   };
@@ -714,7 +722,7 @@ export default function ProfileScreen(props) {
       setIdleTimer(
         setInterval(() => {
           const connection = connect()
-          if(connection)
+          if (connection)
             setRefresh(true);
         }, 360000)
       );
@@ -722,9 +730,9 @@ export default function ProfileScreen(props) {
     setTimer(false);
   }, [timer]);
 
-  const {connect} = useAuth();
-  
-  
+  const { connect } = useAuth();
+
+
   return (
     <SafeAreaView>
       <View
@@ -821,13 +829,13 @@ export default function ProfileScreen(props) {
                     ? hp(40)
                     : hp(22)
                   : isSessionH
-                  ? hp(40)
-                  : hp(22),
+                    ? hp(40)
+                    : hp(22),
             }}
             renderTabBar={renderTabBar}
             initialParams={{ det }}
           ></TabView>
-          
+
         </View>
 
         {index == 0 ? (
@@ -835,10 +843,16 @@ export default function ProfileScreen(props) {
             {isChild1Rendered && (
               <>
                 {isSession ? (
+                  <>
                   <Card
                     props={{ banner, banLink, banClick, type: "U" }}
                     handleCard={handleCard}
                   />
+                  <Card
+                    props={{ banner, banLink, banClick, type: "U" }}
+                    handleCard={handleCard}
+                  />
+                  </>
                 ) : (
                   <Buttons props={{ but1, but1URL, but2, but2URL }} />
                 )}
@@ -873,16 +887,41 @@ export default function ProfileScreen(props) {
             )}
           </>
         )}
-
-        <View
-          className="flex-row items-center"
-          style={[
-            styles.cardContainer,
-            { height: hp(20), marginTop: hp(5), backgroundColor: "#EBEFF2CC" },
-          ]}
-        >
-          <BottomQuote width={wp(71)} height={hp(15)} />
+        <View style={{ marginTop: hp(5) }} >
+          <View style={{
+            height: hp(7.2), width: wp(100), backgroundColor: 'rgba(247,207,106,0.25)',
+            paddingVertical: hp(1),
+            justifyContent: 'space-between', alignItems: 'center'
+          }} >
+            <Text
+              style={{
+                width: "100%",
+                textAlign: "center",
+                color: "#455a64",
+                fontSize: wp(3.3),
+                fontWeight: "500",
+              }}
+            >Can't find your booked session on the calendar?</Text>
+            <Text
+              style={{
+                width: "100%",
+                textAlign: "center",
+                color: "#455a64",
+                fontSize: wp(3.5),
+              }}
+            >Simply pull down to refresh your therapy calendar 🔄</Text>
+          </View>
+          <View
+            className="flex-row items-center"
+            style={[
+              styles.cardContainer,
+              { height: hp(20), backgroundColor: "#EBEFF2CC" },
+            ]}
+          >
+            <BottomQuote width={wp(71)} height={hp(15)} />
+          </View>
         </View>
+
         <View style={{ width: wp(100), height: hp(6), marginTop: hp(3) }} />
       </PTRView>
     </SafeAreaView>
@@ -953,6 +992,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
+    marginTop: hp(1.5)
   },
 
   btnText2: {

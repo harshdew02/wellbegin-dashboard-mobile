@@ -144,7 +144,7 @@ const Login = ({ route }) => {
   return (
     <KeyboardAvoidingView
       behavior="padding"
-      keyboardVerticalOffset={-260}
+      keyboardVerticalOffset={-220}
       style={{ flex: 1 }}
     >
       <StatusBar

@@ -17,12 +17,12 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import axios from "axios";
-import Logo4 from "../../assets/images/verifyDisplay.svg";
-import Back from "../../assets/images/arrow.svg";
 import { useAuth } from "../utils/auth";
 import { LogLevel, OneSignal } from "react-native-onesignal";
 import { useIsFocused } from '@react-navigation/native'
-
+import LoginNew from "../../assets/images/LoginNew.svg"
+import TurnBack from "../../assets/images/turnBack.svg"
+import { theme } from "../theme";
 const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
 };
@@ -202,7 +202,6 @@ export default function Verify({ navigation, route }) {
   const [number, onChangeNumber] = React.useState("");
 
   const isFocused = useIsFocused()
-
   useEffect(() => {
     if (isFocused) {
     }
@@ -216,66 +215,69 @@ export default function Verify({ navigation, route }) {
     >
       {/* <TopBar /> */}
       <StatusBar
-        backgroundColor={'red'}
+        backgroundColor={'#fff'}
         barStyle={"dark-content"}
         hidden={false}
       />
 
-      <ScrollView keyboardShouldPersistTaps='always'>
-        <View style={styles.box}>
-          <TouchableOpacity
-            style={{ position: "absolute", left: wp(8) }}
-            onPress={() => {
-              navigation.navigate("LoginPage");
-            }}
-          >
-            <Back width={wp(8.5)} height={wp(8.5)} />
+      <ScrollView contentContainerStyle={{
+        display: "flex-1",
+        flexDirection: "col",
+        alignItems: "center",
+      }}
+        style={{ width: wp(100), height: hp(50), }}
+        keyboardShouldPersistTaps='always'
+      >
+        <LoginNew width={wp(100)} height={wp(81.6)} />
+        {/* <View style={{ marginTop: hp(4) }} className="flex-col items-center"> */}
+        <Text style={styles.well}>It's time to take a leap towards a healthier mind</Text>
+
+        <Text style={styles.getinstant}>Sign up so we can personalise your journey</Text>
+        <Text style={{
+          color: '#01818C',
+          fontSize: wp(4),
+          fontFamily: "Roboto",
+          fontWeight: "700",
+          marginTop: hp(2),
+        }}>Enter OTP Sent to
+          +{route.params.code}
+          {route.params.phone}
+        </Text>
+        <ActivityIndicator animating={loading} size="large" style={{ position: 'absolute', zIndex: 2 }} />
+        <TextInput
+          className="rounded-lg"
+          style={[styles.input, { fontSize: wp(5) }]}
+          onChangeText={onChangeNumber}
+          value={number}
+          placeholder="Enter OTP"
+          keyboardType="numeric"
+          onSubmitEditing={() => {
+            connect()
+            setLoading(true);
+            setShowErrorMessage(null);
+            verifyOTP(
+              route.params.code,
+              route.params.phone,
+              route.params.token,
+              number,
+              route.params.date,
+              navigation,
+              [loading, setLoading],
+              [showErrorMessage, setShowErrorMessage]
+            )
+          }}
+        />
+
+        {showErrorMessage && (
+          <Text style={styles.wrong}>{showErrorMessage}</Text>
+        )}
+
+
+        <View style={{ width: wp(84), flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: hp(2.5) }} >
+          <TouchableOpacity onPress={() => { navigation.goBack() }} style={{ flexDirection: 'row', alignItems: 'center', }} >
+            <TurnBack />
+            <Text style={{ fontSize: wp(5.5), fontWeight: '500', color: '#455A64', marginLeft: wp(2) }}>Back</Text>
           </TouchableOpacity>
-          <Logo4 width={wp(46)} height={wp(37)} style={{ marginTop: hp(8) }} />
-        </View>
-
-        <View style={{ marginTop: hp(4) }} className="flex-col items-center">
-          <Text style={styles.enterphone}>Verification Code</Text>
-
-          <Text style={styles.getinstant}>
-            We have sent the code verification to your Phone Number
-          </Text>
-
-          {/* <Text style={styles.mob}>+{route.params.mobile}</Text> */}
-          <Text style={styles.mob}>
-            +{route.params.code}
-            {route.params.phone}
-          </Text>
-
-          <TextInput
-            className="rounded-lg"
-            style={[styles.input, { textAlign: 'center', fontSize: wp(5) }]}
-            onChangeText={onChangeNumber}
-            value={number}
-            placeholder="Enter OTP"
-            keyboardType="numeric"
-            onSubmitEditing={() => {
-              connect()
-              setLoading(true);
-              setShowErrorMessage(null);
-              verifyOTP(
-                route.params.code,
-                route.params.phone,
-                route.params.token,
-                number,
-                route.params.date,
-                navigation,
-                [loading, setLoading],
-                [showErrorMessage, setShowErrorMessage]
-              )
-            }}
-          />
-
-          {showErrorMessage && (
-            <Text style={styles.wrong}>{showErrorMessage}</Text>
-          )}
-          <ActivityIndicator animating={loading} size="large" />
-
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
@@ -292,56 +294,57 @@ export default function Verify({ navigation, route }) {
           >
             <Text style={styles.textStyle}>Verify OTP</Text>
           </TouchableOpacity>
-
-          <View className="flex-row" style={styles.resend}>
-            {counter > 0 ? (
-              <>
-                <Text style={styles.check}>
-                  Haven’t received an OTP? Resend OTP in{" "}
-                  {Math.floor(counter / 60)
-                    .toString()
-                    .padStart(2, "0")}
-                  :{(counter % 60).toString().padStart(2, "0")} seconds.{" "}
-                </Text>
-              </>
-            ) : (
-              <>
-                <Text style={styles.check}>Haven’t received an OTP? </Text>
-                <TouchableOpacity
-                  disabled={counter > 0}
-                  onPress={() => {
-                    if (timer == true) {
-                      setLoading(true);
-                      setShowErrorMessage(null);
-                      requestOTP(
-                        route.params.code,
-                        route.params.phone,
-                        [loading, setLoading],
-                        [counter, setCounter],
-                        [timer, setTimer],
-                        [mul, setMul]
-                      );
-                      // setTimer(false);
-                      // resendOTPT([, setTimer]);
-                    }
-                  }}
-                >
-                  <Text
-                    style={[
-                      {
-                        color: counter > 0 ? "#455A64" : "#32959D",
-                        fontWeight: counter > 0 ? "normal" : "700",
-                      },
-                      styles.check1,
-                    ]}
-                  >
-                    RESEND OTP
-                  </Text>
-                </TouchableOpacity>
-              </>
-            )}
-          </View>
         </View>
+        <View className="flex-row" style={styles.resend}>
+          {counter > 0 ? (
+            <>
+              <Text style={styles.check}>
+                Haven’t received an OTP? Resend OTP in{" "}
+                {Math.floor(counter / 60)
+                  .toString()
+                  .padStart(2, "0")}
+                :{(counter % 60).toString().padStart(2, "0")} seconds.{" "}
+              </Text>
+            </>
+          ) : (
+            <>
+              <Text style={styles.check}>Haven’t received an OTP? </Text>
+              <TouchableOpacity
+                disabled={counter > 0}
+                onPress={() => {
+                  if (timer == true) {
+                    setLoading(true);
+                    setShowErrorMessage(null);
+                    requestOTP(
+                      route.params.code,
+                      route.params.phone,
+                      [loading, setLoading],
+                      [counter, setCounter],
+                      [timer, setTimer],
+                      [mul, setMul]
+                    );
+                    // setTimer(false);
+                    // resendOTPT([, setTimer]);
+                  }
+                }}
+              >
+                <Text
+                  style={[
+                    {
+                      color: counter > 0 ? "#455A64" : "#32959D",
+                      fontWeight: counter > 0 ? "normal" : "700",
+                    },
+                    styles.check1,
+                  ]}
+                >
+                  RESEND OTP
+                </Text>
+              </TouchableOpacity>
+            </>
+          )}
+        </View>
+        <Text style={{ fontSize:wp(3), width:wp(60), textAlign:'center', marginTop:hp(6), color:'rgba(69, 90, 100, 0.5)'}} >Your information is 100% confidential and never shared with anyone (lock)</Text>
+        {/* </View> */}
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -356,32 +359,31 @@ const styles = StyleSheet.create({
     fontWeight: "400",
   },
 
+  well: {
+    // Your Wellbeing Comes First!
+    textAlign: 'center',
+    color: "#01818C",
+    width: wp(82),
+    fontSize: wp(6.4),
+    fontWeight: "700",
+    marginTop: hp(3),
+  },
+  getinstant: {
+    color: "#455A64",
+    fontSize: wp(4.8),
+    fontFamily: "Roboto",
+    fontWeight: "400",
+    lineHeight: wp(6),
+    width: wp(75),
+    textAlign: "center",
+    marginTop: hp(0.9),
+  },
   enterphone: {
     // Enter your Phone Number
     color: "#043953",
     fontSize: wp(5),
     fontFamily: "Roboto",
     fontWeight: "700",
-  },
-
-  getinstant: {
-    width: wp(84),
-    // hp(6)
-    color: "#455A64",
-    fontSize: wp(4),
-    fontFamily: "Roboto",
-    textAlign: "center",
-    fontWeight: "400",
-    lineHeight: wp(6),
-    marginTop: hp(2),
-  },
-
-  mob: {
-    color: "#043953",
-    fontSize: wp(4),
-    fontFamily: "Roboto",
-    fontWeight: "700",
-    marginTop: hp(2),
   },
 
   box: {
@@ -393,14 +395,16 @@ const styles = StyleSheet.create({
   input: {
     height: hp(7),
     width: wp(70),
-    borderWidth: 1,
-    padding: 10,
+    borderWidth: wp(0.3),
+    padding: wp(2.6),
+    paddingLeft: wp(5),
     marginTop: hp(3),
+    borderColor: 'rgba(69, 90, 100, 0.6)'
   },
 
   button: {
     height: hp(7.3),
-    width: wp(82),
+    width: wp(51),
     marginTop: hp(1),
     backgroundColor: "#32959D",
     borderRadius: wp(10),
@@ -419,7 +423,6 @@ const styles = StyleSheet.create({
 
   resend: {
     marginTop: hp(3),
-    marginBottom: hp(10),
   },
 
   check: {
