@@ -28,10 +28,10 @@ export default function AppNavigation() {
   return (
     <NavigationContainer
       linking={{
-        prefixes: ["https://hio-test-swart.vercel.app/"],
+        prefixes: ["https://heartitout.in/"],
         config: {
           screens: {
-            loader: "app/:navigation",
+            loader: ":navigation",
           },
         },
       }}

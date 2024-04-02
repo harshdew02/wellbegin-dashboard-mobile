@@ -17,6 +17,7 @@ import Back from "../../assets/images/arrow.svg";
 import axios from "axios";
 import PTRView from "react-native-pull-to-refresh";
 import { useNavigation } from "@react-navigation/native";
+import { useAuth } from "../utils/auth";
 
 const Card = (props) => {
   // console.log(props)
@@ -77,6 +78,7 @@ export default function ReminderScreen({ navigation, route }) {
   const [ifReminder, setIfReminder] = useState(false);
   const [datas, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { connect } = useAuth();
   const backHandler = () => {
     navigation.goBack();
     return true;
@@ -96,21 +98,28 @@ export default function ReminderScreen({ navigation, route }) {
 
   useEffect(() => {
     const url = "https://n8n.heartitout.in/webhook/api/notifications";
-    if (loading) {
-      axios
-        .post(url, route.params)
-        .then((res) => {
-          console.log(res.data);
-          if (res.data.has_notif === "yes") setIfReminder(true);
-          else setIfReminder(false);
-          setData(res.data.data);
-        })
-        .catch((err) => {
-          console.log("error is here:", err);
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+    const connection = connect();
+    if (!connection) {
+      setLoading(false);
+    }
+    else
+    {
+      if (loading) {
+        axios
+          .post(url, route.params)
+          .then((res) => {
+            console.log(res.data);
+            if (res.data.has_notif === "yes") setIfReminder(true);
+            else setIfReminder(false);
+            setData(res.data.data);
+          })
+          .catch((err) => {
+            console.log("error is here:", err);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
     }
   }, [loading]);
 

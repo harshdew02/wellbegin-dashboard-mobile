@@ -296,7 +296,7 @@ const MoodTracker = (props) => {
   const navigation = useNavigation();
   const payload = props.route.params;
   const [loading, setLoading] = useState(false);
-  const { setHomes } = useAuth();
+  const { setHomes, connect } = useAuth();
   
   const extraPayloadandLaunch = (
     mood,
@@ -319,6 +319,7 @@ const MoodTracker = (props) => {
     if (mood_array.length == 0) showToast("Please select atleast one feeling.");
     else if (sphere == undefined || sphere == null) showToast("Please select your sphere of life.")
     else if (mood == undefined || mood == null) showToast("Please select mood.")
+    else if(!connect()) {}
     else {
       setLoading(true)
       saveMood(payload)

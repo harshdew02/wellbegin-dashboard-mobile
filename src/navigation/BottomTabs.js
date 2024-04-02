@@ -13,6 +13,7 @@ import ProfileIcon from "../components/Profile.js";
 import ProfileNavigator from "./ProfileNavigator.js";
 import { useNavigation } from "@react-navigation/native";
 import { request, PERMISSIONS, check, RESULTS } from "react-native-permissions";
+import { useAuth } from "../utils/auth.js";
 
 const { width, height } = Dimensions.get("window");
 
@@ -53,13 +54,12 @@ export default function BottomTabs(props) {
   const data = props.route.params;
 
   const Tab = createBottomTabNavigator();
-
+  const {getDiversion} = useAuth();
   React.useEffect(() => {
     try {
-      const navigate = data.route.params.navigate;
       const payload = data.route.params;
-      console.log(navigate, payload);
-      switch (navigate) {
+      console.log("It is from bottoms tabs: ",getDiversion());
+      switch (getDiversion()) {
         case "reminder":
           navigation.navigate("reminder", payload);
           break;
