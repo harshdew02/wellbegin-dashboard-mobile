@@ -10,7 +10,7 @@ import {
   ToastAndroid,
   KeyboardAvoidingView
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SInfo from "react-native-encrypted-storage";
 import {
   widthPercentageToDP as wp,
@@ -144,7 +144,7 @@ const Login = ({ route }) => {
   return (
     <KeyboardAvoidingView
       behavior="padding"
-      keyboardVerticalOffset={-260}
+      keyboardVerticalOffset={-220}
       style={{ flex: 1 }}
     >
       <StatusBar

@@ -69,14 +69,14 @@ const fillDetails = (details, [loading, setLoading], navigation) => {
 
 export default function AboutMe(props) {
   const navigation = useNavigation();
-  const {connect} = useAuth();
+  const { connect } = useAuth();
   let data = props.route.params;
   const [name, setName] = useState(data.usr_fullname);
   const [mail, setMail] = useState(data.user_email);
   const [code, setCode] = useState(data.code);
   const [phone, setPhone] = useState(data.phone);
   const [loading, setLoading] = useState(false);
-  
+
   const backHandler = () => {
     navigation.goBack();
     return true;
@@ -92,13 +92,47 @@ export default function AboutMe(props) {
   return (
     <GestureHandlerRootView>
       <SafeAreaView>
-        <ScrollView keyboardShouldPersistTaps='always' style={{ backgroundColor: "#fff", height: hp(100) }}>
+        <ScrollView
+          contentContainerStyle={{
+            display: "flex-1",
+            flexDirection: "col",
+            alignItems: "center",
+          }}
+          keyboardShouldPersistTaps='always' style={{ backgroundColor: "#fff", height: hp(100) }}>
           <View
             style={[
               styles.cardContainer,
               { height: hp(66), backgroundColor: "#32959d" },
             ]}
           >
+            <View
+              style={{
+                height: hp(6),
+                width: wp(100),
+                justifyContent: "center",
+                alignItems: "center",
+                marginTop: hp(2),
+              }}
+            >
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.goBack();
+                }}
+                style={{ position: "absolute", left: wp(8) }}
+              >
+             <Back width={wp(8)} height={wp(8)} />
+              </TouchableOpacity>
+              <Text
+                style={{
+                  color: '#fff',
+                  fontSize: wp(5.5),
+                  fontFamily: "Roboto",
+                  fontWeight: "bold",
+                }}
+              >
+                About Me
+              </Text>
+            </View>
             <View
               style={{
                 // backgroundColor: "#fff",
@@ -129,20 +163,20 @@ export default function AboutMe(props) {
             </View>
 
             <Text
-                style={{
-                  color: "#fff",
-                  fontSize: wp(3.7),
-                  width:wp(84),
-                  textAlign:'center',
-                  fontWeight: "500",
-                  marginTop:hp(3)
-                }}
-              >Please add a few more details to continue😊
-              </Text>
+              style={{
+                color: "#fff",
+                fontSize: wp(3.7),
+                width: wp(84),
+                textAlign: 'center',
+                fontWeight: "500",
+                marginTop: hp(3)
+              }}
+            >Please add a few more details to continue😊
+            </Text>
 
             <View
               className="flex-col justify-between items-center "
-              style={{height: hp(45), marginTop: hp(0.5)}}
+              style={{ height: hp(45), marginTop: hp(0.5) }}
             >
               <TextInput
                 style={[{ marginTop: hp(2) }, styles.input]}

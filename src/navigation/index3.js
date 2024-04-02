@@ -20,6 +20,7 @@ import MoodInsights from "../screens/MoodInsights";
 import MoodLog from "../screens/MoodLog";
 import Progress from "../screens/Progress";
 import Heartitout from "../screens/Heartitout";
+import Onboarding from "../screens/Onboarding";
 
 const Stack = createNativeStackNavigator();
 

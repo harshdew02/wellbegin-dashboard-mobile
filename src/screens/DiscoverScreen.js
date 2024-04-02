@@ -18,6 +18,10 @@ import HappeningIcon from "../../assets/images/HappeningIcon.svg";
 import ExploreIcon from "../../assets/images/ExploreIcon.svg";
 import ProductsSvg from "../../assets/images/ProductsSvg.svg";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
+import D1 from "../../assets/images/Dis1.svg"
+import D2 from "../../assets/images/Dis2.svg"
+import D3 from "../../assets/images/Dis3.svg"
+import ReferIcon from "../../assets/images/ReferIcon.svg"
 
 export default function DiscoverScreen(props) {
   const data = props.route.params.data.route.params;
@@ -38,20 +42,24 @@ export default function DiscoverScreen(props) {
   return (
     <SafeAreaView>
       {/* <MyWebComponent /> */}
-      
+
       {/* <TopBarMain /> */}
-      <ScrollView style={{ backgroundColor: "#fff", height: hp(100) }}>
+      <ScrollView
+        contentContainerStyle={{
+          display: "flex-1",
+          flexDirection: "col",
+          alignItems: "center",
+        }}
+        style={{ backgroundColor: "#fff", height: hp(100) }}>
         <Text
           style={{
             marginTop: hp(4),
-            marginLeft: wp(8),
             color: "#043953",
             fontSize: wp(5),
             fontFamily: "Roboto",
             fontWeight: "700",
           }}
-        >
-          Discover Our Offerings Here 😍
+        >Wellbeing Offerings For You 💛
         </Text>
 
         <View style={[styles.cardContainer, { marginTop: hp(2) }]}>
@@ -60,36 +68,28 @@ export default function DiscoverScreen(props) {
             style={{ height: hp(25) }}
           >
             <TouchableOpacity
-             onPress={() => {
+              onPress={() => {
                 // Checking if the link is supported for links with custom URL scheme.
-                // navigation.navigate('webview','https://heartitout.in/therapists/')
-                navigation.navigate('onboarding')
+                navigation.navigate('webview', 'https://heartitout.in/therapists/')
+                // navigation.navigate('onboarding')
               }}
               style={[
-                styles.packageCard,
-                { width: wp(39), backgroundColor: "rgba(210, 184, 157, 0.15)" },
+                { width: wp(39), overflow: 'hidden', borderRadius: wp(4) },
               ]}
             >
-              <SeekIcon width={wp(25)} height={hp(10)} />
-              <Text style={[styles.cardText, { color: "#4D4C4C" }]}>
-                Seek Advanced Care
-              </Text>
+              <D1 width={wp(39.4)} height={wp(53.3)} />
             </TouchableOpacity>
 
             <TouchableOpacity
               style={[
-                styles.packageCard,
-                { width: wp(39), backgroundColor: "#EAF7FC" },
+                { width: wp(39), overflow: 'hidden', borderRadius: wp(4) },
               ]}
               onPress={() => {
                 // Checking if the link is supported for links with custom URL scheme.
-                navigation.navigate('webview','https://heartitout.in/events/')
+                navigation.navigate('webview', 'https://heartitout.in/events/')
               }}
             >
-              <HappeningIcon width={wp(20)} height={hp(12)} />
-              <Text style={[styles.cardText, { color: "#036696" }]}>
-                Happening Events
-              </Text>
+              <D2 width={wp(39.4)} height={wp(53.3)} />
             </TouchableOpacity>
           </View>
 
@@ -98,19 +98,14 @@ export default function DiscoverScreen(props) {
             style={{ height: hp(25), marginTop: hp(3) }}
           >
             <TouchableOpacity
-
-              onPress={()=>{ navigation.navigate('test', data) }}
-
+              onPress={() => { navigation.navigate('test', data) }}
               style={[
-                styles.packageCard,
-                { width: wp(39), backgroundColor: "rgba(4, 84, 123, 0.08)" },
+                { width: wp(39), overflow: 'hidden', borderRadius: wp(4) },
               ]}
             >
-              <ExploreIcon width={wp(20)} height={hp(11)} />
-              <Text style={[styles.cardText, { color: "#455A64" }]}>
-                Explore Diagnostics
-              </Text>
+              <D3 width={wp(39.4)} height={wp(53.3)} />
             </TouchableOpacity>
+
             <TouchableOpacity
               style={[
                 styles.packageCard,
@@ -118,53 +113,35 @@ export default function DiscoverScreen(props) {
               ]}
               onPress={() => {
                 // Checking if the link is supported for links with custom URL scheme.
-                navigation.navigate('webview','https://heartitout.in/products/')
+                navigation.navigate('webview', 'https://heartitout.in/products/')
               }}
             >
               <ProductsSvg width={wp(33)} height={hp(9)} />
               <Text
                 style={[
                   styles.cardText,
-                  { marginBottom: hp(2), color: "#765A5A" },
+                  { color: "#765A5A" },
                 ]}
               >
-                New Products
+                Self-care Tools For Effective Healing
               </Text>
             </TouchableOpacity>
           </View>
         </View>
 
-        {/* <TouchableOpacity style={[styles.cardContainer, { height: hp(16) }]}
-        onPress={() => {
-            // Checking if the link is supported for links with custom URL scheme.
-            outLink('https://heartitout.in/nudge-a-friend/')
+        <TouchableOpacity style={[styles.cardContainer, { height: hp(16), marginTop: hp(3.5) }]}
+          onPress={() => {
+            navigation.navigate('webview', 'https://heartitout.in/nudge-a-friend/')
           }}
         >
-          <Gradient width={"100%"} height={"100%"} />
-          <View
-            className="flex-row items-center justify-between"
-            style={{
-              position: "absolute",
-              zIndex: 1,
-              width: "100%",
-              height: "100%",
-              left: wp(8),
-              right: wp(8),
-              paddingHorizontal: wp(12),
-            }}
-          >
-            <Text style={[styles.cardText, { color: "white" }]}>
-              Refer & Earn Rewards
-            </Text>
-            <ReferIcon width={wp(11)} height={hp(7)} />
-          </View>
-        </TouchableOpacity> */}
+          <ReferIcon width={wp(84)} height={wp(30.13)} />
+        </TouchableOpacity>
 
         <View
           className="flex-row items-center"
           style={[
             styles.cardContainer,
-            { height: hp(20), marginTop: hp(8.75), backgroundColor: "#EBEFF2CC" },
+            { height: hp(20), marginTop: hp(1), backgroundColor: "#EBEFF2CC" },
           ]}
         >
           <BottomQuote width={wp(71)} height={hp(15)} />
@@ -195,10 +172,12 @@ const styles = StyleSheet.create({
   },
 
   cardText: {
+    width: wp(35),
     textAlign: "center",
-    fontSize: wp(4),
+    fontSize: wp(3.8),
     fontFamily: "Roboto",
     fontWeight: "800",
+    marginTop: hp(5)
   },
 
   // Feel Banne

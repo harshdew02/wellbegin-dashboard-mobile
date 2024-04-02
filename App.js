@@ -29,6 +29,8 @@ const AppInitializer = () => {
 
   // requestPermission will show the native iOS or Android notification permission prompt.
   // We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+
+  OneSignal.login('916266019364')
   OneSignal.Notifications.requestPermission(true);
 
   // Method for listening for notification clicks
