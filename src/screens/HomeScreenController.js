@@ -4,11 +4,13 @@ import HomeScreen from "../screens/HomeScreen";
 import HomeScreen2 from "../screens/HomeScreen2";
 
 export const HomescreenControl = (props) => {
-    console.log(props.route.params.data.route.params)
     const data = props.route.params.data.route.params;
-    const {getUser} = useAuth();
+    const { getUser } = useAuth();
     console.log("Homescreen controller: ", getUser())
+    data.category = getUser().category;
     return (
-        getUser() ? <HomeScreen2 props = {data} /> : <HomeScreen props = {data} />
+        <>
+            {getUser().type === "new" ? <HomeScreen2 props={data} /> : <HomeScreen props={data} />}
+        </>
     )
 }

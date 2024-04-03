@@ -37,12 +37,15 @@ export const AuthProvider = ({ children }) => {
     return divert;
   }
 
-  let new_user = false;
+  let new_user = {
+    category: "regular",
+    type:"new"
+  };
 
   const setUser = (is_new)=>{
-    if(is_new)
-    new_user = true;
-    else new_user = false;
+    console.log("New system: ",is_new)
+    new_user.category = is_new.category;
+    new_user.type = is_new.type;
   }
 
   const getUser = ()=>{

@@ -15,6 +15,7 @@ import ProfileNavigator from "./ProfileNavigator.js";
 import { useNavigation } from "@react-navigation/native";
 import { request, PERMISSIONS, check, RESULTS } from "react-native-permissions";
 import { useAuth } from "../utils/auth.js";
+import PingCard from "../components/PingCard.js";
 
 const { width, height } = Dimensions.get("window");
 
@@ -55,11 +56,11 @@ export default function BottomTabs(props) {
   const data = props.route.params;
 
   const Tab = createBottomTabNavigator();
-  const {getDiversion} = useAuth();
+  const { getDiversion } = useAuth();
   React.useEffect(() => {
     try {
       const payload = data.route.params;
-      console.log("It is from bottoms tabs: ",getDiversion());
+      console.log("It is from bottoms tabs: ", getDiversion());
       switch (getDiversion()) {
         case "reminder":
           navigation.navigate("reminder", payload);
@@ -129,6 +130,8 @@ export default function BottomTabs(props) {
       }}
     >
       {/* <TopBarMain/> */}
+      <PingCard done={true} />
+
       <Tab.Navigator initialRouteName="Home_Tab" screenOptions={screenOptions}>
         <Tab.Screen
           name="Discover_Tab"

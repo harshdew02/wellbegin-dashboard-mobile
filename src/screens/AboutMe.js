@@ -100,7 +100,7 @@ export default function AboutMe(props) {
             alignItems: "center",
           }}
           keyboardShouldPersistTaps='always' style={{ backgroundColor: "#fff", height: hp(100) }}>
-          <AboutBg width={wp(100)} height={wp(57)} />
+          <AboutBg width={wp(100)} height={wp(56.89)} />
           <View
             style={{
               height: hp(6),
@@ -127,7 +127,7 @@ export default function AboutMe(props) {
                 fontWeight: "500",
               }}
             >
-              My Wellbeing Tests
+              About Me
             </Text>
           </View>
 

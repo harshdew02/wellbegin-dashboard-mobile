@@ -61,9 +61,8 @@ const com = [
 ];
 
 const P4 = () => {
-  // const data = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
   const [activeIndex, setActiveIndex] = useState(0);
-  const translateX = new Animated.Value(-activeIndex * (Dimensions.get('window').width)/1);
+  const translateX = new Animated.Value(-activeIndex * (Dimensions.get('window').width) / 1);
   const cardComponents = [
     <C1 key={1} width={wp(79)} height={hp(40)} />,
     <C2 key={2} width={wp(79)} height={hp(40)} />,
@@ -76,53 +75,71 @@ const P4 = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setActiveIndex((prevIndex) => (prevIndex + 1) % cardComponents.length);
-    }, 2000);
+    }, 3000);
 
     // Clean up the interval when component unmounts or re-renders
     return () => clearInterval(intervalId);
-  }, [cardComponents.length]);
+  }, []);
 
   useEffect(() => {
     Animated.timing(translateX, {
-      toValue: -activeIndex * (Dimensions.get("window").width)/1,
+      toValue: -activeIndex * (Dimensions.get("window").width) / 1,
       duration: 2000,
       useNativeDriver: true,
     }).start();
-  }, [activeIndex]);
+
+    // Animated.timing().stop()
+
+    console.log(activeIndex)
+  }, []);
   return (
     <>
-      <View>
-      <Animated.View
-        style={{
-          flexDirection: 'row',
-          position: 'absolute',
-          width: Dimensions.get('window').width,
-          transform: [{ translateX }],
-        }}
-      >
-        {cardComponents.map((card, index) => (
-          <View key={index} style={{ width: Dimensions.get('window').width }}>
-            {card}
-          </View>
-        ))}
-        {/* <C5 key={5} width={wp(79)} height={hp(40)} /> */}
-      </Animated.View>
+      <View style={{ alignItems: 'center' }} >
+        <P3 width={wp(100)} height={wp(133)} />
+        <Animated.View
+          style={{
+            flexDirection: 'row',
+            position: 'absolute',
+            // width: Dimensions.get('window').width,
+            transform: [{ translateX }],
+            // backgroundColor:'red',
+            width: wp(80),
+            marginTop: hp(12),
+            justifyContent: 'space-between'
+          }}
+        >
+          {cardComponents.map((card, index) => (
+            <View key={index} style={{ width: Dimensions.get('window').width }}>
+              {card}
+            </View>
+          ))}
+          {/* <C5 key={5} width={wp(79)} height={hp(40)} /> */}
+        </Animated.View>
       </View>
     </>
   );
 };
 
+const Px = () => {
+  return (
+    <>
+    <Image style={{height: hp(7.8), width: wp(32.8), position:'absolute', zIndex:1, top:hp(6.8) }} source={require('../../assets/logo.png')}/>
+    <P1 width={wp(100)} height={wp(125)} />
+    </>
+  )
+};
+
 const slides = [
   {
     id: "1",
-    P: <P1 width={wp(100)} height={hp(58)} />,
+    P: <Px />,
     title: "Understanding Your Needs",
     subtitle:
       "Get clarity with scientifically backed tests covering depression, anxiety, relationships, ADHD, and more!",
   },
   {
     id: "2",
-    P: <P2 width={wp(100)} height={hp(56)} />,
+    P: <P2 width={wp(100)} height={wp(121)} />,
     title: "Meet Your Perfect Match",
     subtitle:
       "Connect with skilled therapists who understand your needs, offering tailored care plans and regular check-ins to guide your progress",
@@ -312,7 +329,7 @@ const Onboarding = ({ route }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <StatusBar
         barStyle={"dark-content"}
-        translucent
+        translucent = {true}
         backgroundColor="transparent"
       />
       <FlatList
@@ -346,7 +363,7 @@ const styles = StyleSheet.create({
     color: theme.maincolor,
     fontSize: wp(6),
     fontWeight: "bold",
-    marginTop: 20,
+    marginTop: hp(0.5),
     textAlign: "center",
   },
 
