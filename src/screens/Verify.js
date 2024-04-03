@@ -269,8 +269,8 @@ export default function Verify({ navigation, route }) {
         )}
 
 
-        <View style={{ width: wp(84), flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: hp(2.5) }} >
-          <TouchableOpacity onPress={() => { navigation.goBack() }} style={{ flexDirection: 'row', alignItems: 'center', }} >
+        <View style={{ width: wp(84), flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: hp(2.5)}} >
+          <TouchableOpacity onPress={() => { navigation.goBack() }} style={{ flexDirection: 'row', alignItems: 'center', height:hp(7.3), justifyContent:'center' }} >
             <TurnBack />
             <Text style={{ fontSize: wp(5.5), fontWeight: '500', color: '#455A64', marginLeft: wp(2) }}>Back</Text>
           </TouchableOpacity>
@@ -339,7 +339,7 @@ export default function Verify({ navigation, route }) {
             </>
           )}
         </View>
-        <Text style={{ fontSize:wp(3), width:wp(60), textAlign:'center', marginTop:hp(6), color:'rgba(69, 90, 100, 0.5)'}} >Your information is 100% confidential and never shared with anyone (lock)</Text>
+        <Text style={{ fontSize:wp(3), width:wp(60), textAlign:'center', marginTop:hp(6), color:'rgba(69, 90, 100, 0.5)'}} >🔒 Your information is 100% confidential and never shared with anyone</Text>
         {/* </View> */}
       </ScrollView>
     </KeyboardAvoidingView>
@@ -401,12 +401,10 @@ const styles = StyleSheet.create({
   button: {
     height: hp(7.3),
     width: wp(51),
-    marginTop: hp(1),
     backgroundColor: "#32959D",
     borderRadius: wp(10),
     justifyContent: "center",
     alignItems: "center",
-    flexDirection: "row",
   },
 
   textStyle: {
