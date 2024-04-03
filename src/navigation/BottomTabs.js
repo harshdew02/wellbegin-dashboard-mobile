@@ -54,11 +54,23 @@ const screenOptions = {
 
 export default function BottomTabs(props) {
   const navigation = useNavigation();
-
+  const [nick, setNick] = React.useState(false);
   const data = props.route.params;
 
   const Tab = createBottomTabNavigator();
-  const { getDiversion } = useAuth();
+  const { getDiversion, getAllowed } = useAuth();
+
+  function isFirstTime() {
+    if (data.get_details === "true") {
+      setNick(false)
+    } else {
+      setNick(true)
+    }
+  }
+
+  React.useEffect(() => {
+    isFirstTime();
+  }, [])
   React.useEffect(() => {
     try {
       const payload = data.route.params;
@@ -121,6 +133,7 @@ export default function BottomTabs(props) {
 
   React.useEffect(() => {
     requestPermission();
+    console.log("It is from bottoms tabs: ",getAllowed())
   }, []);
 
   return (
@@ -131,8 +144,7 @@ export default function BottomTabs(props) {
       }}
     >
       {/* <TopBarMain/> */}
-      <PingCard done={true} />
-
+      {nick ? (<></>) : (<PingCard />)}
       <Tab.Navigator initialRouteName="Home_Tab" screenOptions={screenOptions}>
         <Tab.Screen
           name="Discover_Tab"
