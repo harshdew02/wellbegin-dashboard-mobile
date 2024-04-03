@@ -154,6 +154,7 @@ export default function HomeScreen(props) {
   const [subdays, setSubdays] = useState(0);
   const [bell, setBell] = useState(true);
   const [loaded, setLoaded] = useState(false);
+  const [category, setCategory] = useState("regular");
 
   const { setHomes, home, connect } = useAuth();
   useEffect(() => {
@@ -195,133 +196,133 @@ export default function HomeScreen(props) {
 
   useEffect(() => {
     const isConnected = connect();
-    if(!isConnected) {setMoodCheck(false)}
-    else{
-    if (moodcheck) {
-      const apiUrl2 =
-        "https://n8n.heartitout.in/webhook/api/fetch-session-details";
-      axios
-        .post(apiUrl2, payload)
-        .then(async (res) => {
-          if (res.data.status === "0") {
-            // userInvalid();
-          } else {
-            if (res.data.has_appointment === "no") setBooked(false);
-            else {
-              const apiDate = res.data.app_det.app_session_date;
-              const apiTime = res.data.app_det.app_session_time;
-
-              // Extracting date components from api
-              let timestamp = new Date(apiDate);
-              let year = timestamp.getFullYear();
-              let month = String(timestamp.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
-              let date = String(timestamp.getDate()).padStart(2, "0");
-              let [part1, part2, part3] = apiTime.split(":");
-              let hours = part1;
-              let minutes = part2;
-              let seconds = part3;
-              let period = "AM";
-              if (hours >= 12) {
-                hours -= 12;
-                period = "PM";
-              }
-              if (hours === 0) {
-                hours = 12;
-              }
-              let showTime = `${hours}:${minutes} ${period}`;
-              let showDate = `${date}/${month}/${year}`;
-              let finalAPITime = `${year}-${month}-${date}T${apiTime}Z`;
-
-              // Extracting date components from system
-              timestamp = new Date();
-              year = timestamp.getFullYear();
-              month = String(timestamp.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
-              date = String(timestamp.getDate()).padStart(2, "0");
-              hours = String(timestamp.getHours()).padStart(2, "0");
-              minutes = String(timestamp.getMinutes()).padStart(2, "0");
-              seconds = String(timestamp.getSeconds()).padStart(2, "0");
-              let finalSystemTime = `${year}-${month}-${date}T${hours}:${minutes}:${seconds}Z`;
-              setLink(res.data.app_det.app_session_link);
-
-              // Parse the API datetime string
-              const apiDateTime = new Date(finalAPITime);
-
-              // Parse the system datetime string
-              const systemDateTime = new Date(finalSystemTime);
-
-              // Calculate the time difference in milliseconds
-              const timeDifference = apiDateTime - systemDateTime;
-
-              // Convert milliseconds to hours
-              const timeDifferenceHours = Math.abs(
-                timeDifference / (1000 * 60 * 60)
-              );
-
-              // Define a threshold for 2 hours
-              const twoHours = 2;
-
-              // Compare the time difference with the threshold and whether it's negative
-              if (timeDifference < 0) {
-                setBooked(false);
-              } else if (timeDifferenceHours >= twoHours) {
-                setBooked(true);
-                setIs2hour(false);
-              } else if (timeDifferenceHours < twoHours) {
-                setBooked(true);
-                setIs2hour(true);
-                setTime(showTime);
-                setDate(showDate);
-              }
-            }
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          setMoodCheck(false);
-        });
-
-      let realTimeData = null;
-      const apiUrl3 = "https://n8n.heartitout.in/webhook/api/home-page-details";
-      axios
-        .post(apiUrl3, payload)
-        .then(async (res) => {
-          realTimeData = await res.data;
-          if (realTimeData != null) {
-            if (realTimeData.status !== "1" || realTimeData.status !== "10") {
+    if (!isConnected) { setMoodCheck(false) }
+    else {
+      if (moodcheck) {
+        const apiUrl2 =
+          "https://n8n.heartitout.in/webhook/api/fetch-session-details";
+        axios
+          .post(apiUrl2, payload)
+          .then(async (res) => {
+            if (res.data.status === "0") {
               // userInvalid();
-            }
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          if (realTimeData != null) {
-            if (realTimeData.status === "1" || realTimeData.status === "10") {
-              realTimeData.mood_tacker === "yes"
-                ? setMood(true)
-                : setMood(false);
-              if (realTimeData.has_banner === "yes") {
-                setBanner({
-                  avail: true,
-                  ban_link: realTimeData.banner,
-                  cban_link: realTimeData.ban_on_click,
-                });
-              } else {
-                setBanner({ avail: false });
+            } else {
+              if (res.data.has_appointment === "no") setBooked(false);
+              else {
+                const apiDate = res.data.app_det.app_session_date;
+                const apiTime = res.data.app_det.app_session_time;
+
+                // Extracting date components from api
+                let timestamp = new Date(apiDate);
+                let year = timestamp.getFullYear();
+                let month = String(timestamp.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
+                let date = String(timestamp.getDate()).padStart(2, "0");
+                let [part1, part2, part3] = apiTime.split(":");
+                let hours = part1;
+                let minutes = part2;
+                let seconds = part3;
+                let period = "AM";
+                if (hours >= 12) {
+                  hours -= 12;
+                  period = "PM";
+                }
+                if (hours === 0) {
+                  hours = 12;
+                }
+                let showTime = `${hours}:${minutes} ${period}`;
+                let showDate = `${date}/${month}/${year}`;
+                let finalAPITime = `${year}-${month}-${date}T${apiTime}Z`;
+
+                // Extracting date components from system
+                timestamp = new Date();
+                year = timestamp.getFullYear();
+                month = String(timestamp.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
+                date = String(timestamp.getDate()).padStart(2, "0");
+                hours = String(timestamp.getHours()).padStart(2, "0");
+                minutes = String(timestamp.getMinutes()).padStart(2, "0");
+                seconds = String(timestamp.getSeconds()).padStart(2, "0");
+                let finalSystemTime = `${year}-${month}-${date}T${hours}:${minutes}:${seconds}Z`;
+                setLink(res.data.app_det.app_session_link);
+
+                // Parse the API datetime string
+                const apiDateTime = new Date(finalAPITime);
+
+                // Parse the system datetime string
+                const systemDateTime = new Date(finalSystemTime);
+
+                // Calculate the time difference in milliseconds
+                const timeDifference = apiDateTime - systemDateTime;
+
+                // Convert milliseconds to hours
+                const timeDifferenceHours = Math.abs(
+                  timeDifference / (1000 * 60 * 60)
+                );
+
+                // Define a threshold for 2 hours
+                const twoHours = 2;
+
+                // Compare the time difference with the threshold and whether it's negative
+                if (timeDifference < 0) {
+                  setBooked(false);
+                } else if (timeDifferenceHours >= twoHours) {
+                  setBooked(true);
+                  setIs2hour(false);
+                } else if (timeDifferenceHours < twoHours) {
+                  setBooked(true);
+                  setIs2hour(true);
+                  setTime(showTime);
+                  setDate(showDate);
+                }
               }
-              setWhatsnew(realTimeData.whats_new_onclick);
-              setProduct(realTimeData.product_onclick);
-              setBooking(realTimeData.booking_link);
-              setPackage(realTimeData.packages_onclick);
-              if (realTimeData.subs_det === "yes") setSubsdet(true);
-              else setSubsdet(false);
             }
-          }
-          setMoodCheck(false);
-        });
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+          .finally(() => {
+            setMoodCheck(false);
+          });
+
+        let realTimeData = null;
+        const apiUrl3 = "https://n8n.heartitout.in/webhook/api/home-page-details";
+        axios
+          .post(apiUrl3, payload)
+          .then(async (res) => {
+            realTimeData = await res.data;
+            if (realTimeData != null) {
+              if (realTimeData.status !== "1" || realTimeData.status !== "10") {
+                // userInvalid();
+              }
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+          .finally(() => {
+            if (realTimeData != null) {
+              if (realTimeData.status === "1" || realTimeData.status === "10") {
+                realTimeData.mood_tacker === "yes"
+                  ? setMood(true)
+                  : setMood(false);
+                if (realTimeData.has_banner === "yes") {
+                  setBanner({
+                    avail: true,
+                    ban_link: realTimeData.banner,
+                    cban_link: realTimeData.ban_on_click,
+                  });
+                } else {
+                  setBanner({ avail: false });
+                }
+                setWhatsnew(realTimeData.whats_new_onclick);
+                setProduct(realTimeData.product_onclick);
+                setBooking(realTimeData.booking_link);
+                setPackage(realTimeData.packages_onclick);
+                if (realTimeData.subs_det === "yes") setSubsdet(true);
+                else setSubsdet(false);
+              }
+            }
+            setMoodCheck(false);
+          });
       }
     }
   }, [moodcheck]);
@@ -342,6 +343,7 @@ export default function HomeScreen(props) {
     } else {
       setBanner({ avail: false });
     }
+    setCategory(data.category);
     setWhatsnew(data.whats_new_onclick);
     setProduct(data.product_onclick);
     setBooking(data.booking_link);
@@ -443,6 +445,7 @@ export default function HomeScreen(props) {
         backgroundColor={theme.maincolor}
         barStyle={"light-content"}
         hidden={false}
+        translucent={false}
       />
       {/* {banner.avail ? (
         
@@ -450,15 +453,15 @@ export default function HomeScreen(props) {
         <></>
       )} */}
       <View
-          style={{
-            backgroundColor: theme.maincolor,
-            width: wp(100),
-            height: hp(0.8),
-            position: "absolute",
-            top: 0,
-            zIndex: 4,
-          }}
-        />
+        style={{
+          backgroundColor: theme.maincolor,
+          width: wp(100),
+          height: hp(0.8),
+          position: "absolute",
+          top: 0,
+          zIndex: 4,
+        }}
+      />
 
       <PTRView
         onRefresh={handleRefresh}
@@ -799,74 +802,77 @@ export default function HomeScreen(props) {
           </>
         )}
 
-        {showsub ? (
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("webview", sub);
-            }}
-            className="flex-col items-center"
-            style={[
-              styles.cardContainer,
-              { height: hp(15.8), marginTop: hp(3) },
-            ]}
-          >
-            <Home1 width={"100%"} height={hp(17)} />
-            <View
-              style={{
-                position: "absolute",
-                left: wp(13),
-                top: hp(4),
-                zIndex: 2,
-              }}
-            >
-              <Text
-                style={{
-                  // textAlign: "center",
-                  color: "#455A64",
-                  fontSize: wp(3.8),
-                  width: wp(60),
-                  fontFamily: "Roboto",
-                  lineHeight: wp(6),
-                  fontWeight: "800",
+        {category === "cwp" ? null : (
+          <>
+            {showsub ? (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("webview", sub);
                 }}
+                style={[
+                  styles.cardContainer,
+                  { height: hp(15.8), marginTop: hp(3) },
+                ]}
               >
-                Your Whole Hearted Subscription is Active
-              </Text>
-              <View
-                activeOpacity={0.5}
-                style={[styles.Btn, { marginTop: hp(0.8) }]}
-              >
-                <Text style={styles.btnText2}>See Details </Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("webview", packages);
-            }}
-            className="flex-col items-center"
-            style={[
-              styles.cardContiner,
-              { height: hp(15.8), marginTop: hp(3) },
-            ]}
-          >
-            <View style={[styles.packageCard, {}]}>
-              <View
-                className="flex-col justify-between items-start "
-                style={{ height: hp(9) }}
-              >
-                <Text style={styles.cardText}>Session Packages</Text>
+                <Home1 width={"100%"} height={hp(17)} />
                 <View
-                  // activeOpacity={0.5}
-                  style={styles.Btn}
+                  style={{
+                    position: "absolute",
+                    left: wp(13),
+                    top: hp(4),
+                    zIndex: 2,
+                  }}
                 >
-                  <Text style={styles.btnText2}>Explore Packages</Text>
+                  <Text
+                    style={{
+                      color: "#455A64",
+                      fontSize: wp(3.8),
+                      width: wp(60),
+                      fontFamily: "Roboto",
+                      lineHeight: wp(6),
+                      fontWeight: "800",
+                    }}
+                  >
+                    Your Whole Hearted Subscription is Active
+                  </Text>
+                  <TouchableOpacity
+                    activeOpacity={0.5}
+                    style={[styles.Btn, { marginTop: hp(0.8) }]}
+                    onPress={() => {
+                      // Handle details press
+                    }}
+                  >
+                    <Text style={styles.btnText2}>See Details </Text>
+                  </TouchableOpacity>
                 </View>
-              </View>
-              <Gift width={wp(25)} height={hp(9)} />
-            </View>
-          </TouchableOpacity>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("webview", packages);
+                }}
+                style={[
+                  styles.cardContainer,
+                  { height: hp(15.8), marginTop: hp(3) },
+                ]}
+              >
+                <View style={styles.packageCard}>
+                  <View style={{ height: hp(9) }}>
+                    <Text style={styles.cardText}>Session Packages</Text>
+                    <TouchableOpacity
+                      style={styles.Btn}
+                      onPress={() => {
+                        // Handle explore packages press
+                      }}
+                    >
+                      <Text style={styles.btnText2}>Explore Packages</Text>
+                    </TouchableOpacity>
+                  </View>
+                  <Gift width={wp(25)} height={hp(9)} />
+                </View>
+              </TouchableOpacity>
+            )}
+          </>
         )}
 
         <TouchableOpacity

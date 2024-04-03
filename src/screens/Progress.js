@@ -58,7 +58,7 @@ const Progress = (props) => {
       })
       .finally(() => {
         setLoading(false);
-      });}
+      })}
   }, [loading]);
 
   const [refreshing, setRefreshing] = useState(false);

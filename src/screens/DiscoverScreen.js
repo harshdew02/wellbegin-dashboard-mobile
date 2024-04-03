@@ -68,11 +68,7 @@ export default function DiscoverScreen(props) {
             style={{ height: hp(25) }}
           >
             <TouchableOpacity
-              onPress={() => {
-                // Checking if the link is supported for links with custom URL scheme.
-                navigation.navigate('webview', 'https://heartitout.in/therapists/')
-                // navigation.navigate('onboarding')
-              }}
+            onPress={() => { navigation.navigate('test', data) }}
               style={[
                 { width: wp(39), overflow: 'hidden', borderRadius: wp(4) },
               ]}
@@ -98,7 +94,7 @@ export default function DiscoverScreen(props) {
             style={{ height: hp(25), marginTop: hp(3) }}
           >
             <TouchableOpacity
-              onPress={() => { navigation.navigate('test', data) }}
+              onPress={()=>{navigation.navigate('webview', 'https://heartitout.in/therapists/')}}
               style={[
                 { width: wp(39), overflow: 'hidden', borderRadius: wp(4) },
               ]}

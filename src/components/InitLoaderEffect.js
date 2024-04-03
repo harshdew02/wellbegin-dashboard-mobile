@@ -43,7 +43,6 @@ export default function InitLoaderEffect( {route}) {
       // const nav_data = route.params != (null || undefined) ? route.params.navigation : "main";
       if(route.params != null && route.params != undefined) Diversion(route.params.navigation);
       let token = await SInfo.getItem("token");
-      console.log(token);
       if (token == null || token == undefined) navigation.navigate("LoginPage");
       else {
         const data = JSON.parse(token);
@@ -89,9 +88,6 @@ export default function InitLoaderEffect( {route}) {
             has_banner: "no",
             banner_link: "",
             on_click: "",
-
-            //This is where we tell where the page to be navigated
-            // navigate: nav_data
           };
 
           //This the first call from the flowchart (and it is done)
@@ -100,19 +96,14 @@ export default function InitLoaderEffect( {route}) {
           await axios
             .post(apiUrl, userDetails)
             .then(async (res) => {
-              // console.log("It is from first call",res.data)
               if (res.data.success == 10) {
-                // await AsyncStorage.setItem("token", Token);
-                // console.log("It is sucess:" ,res.data.success);
                 finalDetails["get_details"] = "true";
               } else {
                 finalDetails["usr_fullname"] = res.data.user_name;
                 finalDetails["user_email"] = res.data.user_email;
-                // navigation.navigate('main');
               }
             })
             .catch((err) => {
-              showToast("It seems like you are not connected to HIO")
               console.log(err);
             });
 
@@ -122,32 +113,20 @@ export default function InitLoaderEffect( {route}) {
           await axios
             .post(apiUrl2, userDetails)
             .then(async (res) => {
-              //Needs to be enabled after
-
               if (res.data.status === "0") {
-                // await AsyncStorage.setItem("token", Token);
                 SInfo.removeItem("token");
                 showToast("User credentials expired, please login again.");
                 navigation.navigate("LoginPage");
                 console.log("User invalid");
               } else if (res.data.status === "10") {
-                // console.log("Show Book a Session");
                 finalDetails.has_appointment = "no";
                 finalDetails.booking_link = res.data.booking_link != (null || undefined) ? res.data.booking_link : "https://heartitout.in/therapists/";
-                // navigation.navigate('main');
               } else {
-                // console.log(res.data);
-                //If session is within 2 hours
-                //1. Book another session and Join your session
-
-                //If session is exists
-                //1. Book another session and Continue your well-being journey
                 finalDetails.has_appointment = "yes";
                 finalDetails.app_det = res.data.app_det;
               }
             })
             .catch((err) => {
-              showToast("It seems like you are not connected to HIO")
               console.log(err);
             });
 
@@ -157,7 +136,6 @@ export default function InitLoaderEffect( {route}) {
           await axios
             .post(apiUrl3, userDetails)
             .then(async (res) => {
-              console.log("To render which screen",res.data)
               if (res.data.status === "1") {
                 (finalDetails.has_banner = res.data.has_banner),
                   (finalDetails.banner_link = res.data.banner),
@@ -171,7 +149,7 @@ export default function InitLoaderEffect( {route}) {
                 finalDetails.product_onclick = res.data.product_onclick != (null || undefined) ? res.data.product_onclick : "https://heartitout.in/";
                 finalDetails.sub_onclick = res.data.sub_onclick != (null || undefined) ? res.data.sub_onclick : "https://heartitout.in/";
                 finalDetails.packages_onclick = res.data.packages_onclick != (null || undefined) ? res.data.packages_onclick : "https://heartitout.in/";
-                res.data.user_category === "regular" ? setUser(false) : setUser(true);
+                setUser({category:res.data.user_category, type: res.data.user_type})
               } else if (res.data.status === "10") {
                 (finalDetails.has_mood = res.data.mood_tacker != (null || undefined) ? res.data.mood_tacker : "no");
                 finalDetails.show_sub = res.data.show_sub;
@@ -182,23 +160,22 @@ export default function InitLoaderEffect( {route}) {
                 finalDetails.product_onclick = res.data.product_onclick != (null || undefined) ? res.data.product_onclick : "https://heartitout.in/";
                 finalDetails.sub_onclick = res.data.sub_onclick != (null || undefined) ? res.data.sub_onclick : "https://heartitout.in/";
                 finalDetails.packages_onclick = res.data.packages_onclick != (null || undefined) ? res.data.packages_onclick : "https://heartitout.in/";
-                res.data.user_category === "regular" ? setUser(false) : setUser(true);
+                setUser({category:res.data.user_category, type: res.data.user_type})
               } else {
                 throw new Error("User credentails expired");
               }
               // console.log(res.data.show_sub)
             })
             .catch((err) => {
-              showToast("It seems like you are not connected to HIO")
               console.log(err);
             });
             navigation.navigate("main", finalDetails);
         }
       }
     } catch (error) {
-      SInfo.removeItem("token");
-      showToast("User credentials expired, please login again.");
-      navigation.navigate("LoginPage");
+      // SInfo.removeItem("token");
+      // showToast("User credentials expired, please login again.");
+      // navigation.navigate("LoginPage");
       console.log(error);
     }
   }
