@@ -117,6 +117,7 @@ export default function DiscoverScreen(props) {
                 style={[
                   styles.cardText,
                   { color: "#765A5A" },
+                  {fontWeight:800}
                 ]}
               >
                 Self-care Tools For Effective Healing
@@ -125,19 +126,19 @@ export default function DiscoverScreen(props) {
           </View>
         </View>
 
-        <TouchableOpacity style={[styles.cardContainer, { height: hp(16), marginTop: hp(3.5) }]}
+        {/* <TouchableOpacity style={[styles.cardContainer, { height: hp(16), marginTop: hp(3.5) }]}
           onPress={() => {
             navigation.navigate('webview', 'https://heartitout.in/nudge-a-friend/')
           }}
         >
           <ReferIcon width={wp(84)} height={wp(30.13)} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <View
           className="flex-row items-center"
           style={[
             styles.cardContainer,
-            { height: hp(20), marginTop: hp(1), backgroundColor: "#EBEFF2CC" },
+            { height: hp(20), marginTop: hp(8.8), backgroundColor: "#EBEFF2CC" },
           ]}
         >
           <BottomQuote width={wp(71)} height={hp(15)} />

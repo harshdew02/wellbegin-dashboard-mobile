@@ -7,7 +7,7 @@ import {
   TextInput,
   ActivityIndicator,
   ToastAndroid,
-  BackHandler
+  BackHandler,
 } from "react-native";
 import React, { useState } from "react";
 import {
@@ -26,57 +26,85 @@ import axios from "axios";
 import SInfo from "react-native-encrypted-storage";
 import { theme } from "../theme";
 import { useAuth } from "../utils/auth";
-import AboutBg from "../../assets/images/aboutBg.svg"
+import AboutBg from "../../assets/images/aboutBg.svg";
 import Cross from "../components/moods/Cross";
 const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
-}
+};
 
-const fillDetails = (details, [loading, setLoading], navigation) => {
+const checker = (details, name, email) => {
+  console.log(details.usr_fullname, details.user_email, name, email);
+  if (details.usr_fullname === name && details.user_email === email) return -1;
+  else if (details.user_email === "" || details.usr_fullname === "") return 0;
+  else return 1;
+};
+
+const fillDetails = (
+  details,
+  prevName,
+  prevMail,
+  [loading, setLoading],
+  navigation
+) => {
   //This the first call from the flowchart
   const apiUrl = "https://n8n.heartitout.in/webhook/api/fetch-user-details";
-  axios
-    .post(apiUrl, details)
-    .then(async (res) => {
-      // console.log("It is from about me", res.data);
-      if (res.data.success == 1) {
-        let token = await SInfo.getItem("token");
-        let data = JSON.parse(token);
-        data.usr_fullname = res.data.user_name;
-        data.user_email = res.data.user_email;
-        data.get_details = res.data.get_details;
-        await SInfo.setItem("token", JSON.stringify(data));
-        // await AsyncStorage.setItem("token", Token);
-        //A message to be displayed as toast
-        showToast('User details updated, successfully')
-        navigation.navigate('loader')
-        // console.log("It is sucess from about me :", res.data, data);
-      } else {
-        //A message to be displayed as toast
-        showToast("An error occurred and we can't update")
-        // navigation.navigate('main');
-        // console.log(res.data)
-        console.log("Failed to save the details");
-      }
-    })
-    .catch((err) => {
-      showToast("An error occurred and we can't update")
-      //A message to be displayed as toast
-      console.log(err);
-    }).finally(() => {
+  try {
+    console.log(checker(details, prevName, prevMail));
+    if (checker(details, prevName, prevMail) == 0) {
+      showToast("Name or email can't be empty");
       setLoading(false);
-    });
+    } else if (checker(details, prevName, prevMail) == -1) {
+      setLoading(false);
+    } else {
+      axios
+        .post(apiUrl, details)
+        .then(async (res) => {
+          if (res.data.success == 1) {
+            let token = await SInfo.getItem("token");
+            let data = JSON.parse(token);
+            data.usr_fullname = res.data.user_name;
+            data.user_email = res.data.user_email;
+            data.get_details = res.data.get_details;
+            await SInfo.setItem("token", JSON.stringify(data));
+            showToast("User details updated, successfully");
+            navigation.navigate("loader");
+          } else {
+            showToast("An error occurred and we can't update");
+            console.log("Failed to save the details");
+          }
+        })
+        .catch((err) => {
+          showToast("An error occurred and we can't update");
+          console.log(err);
+        })
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  } catch (error) {
+    console.log("Error at saving details: ", error);
+  }
 };
 
 export default function AboutMe(props) {
   const navigation = useNavigation();
   const { connect } = useAuth();
   let data = props.route.params;
+  const prevName = data.usr_fullname;
+  const prevMail = data.user_email;
   const [name, setName] = useState(data.usr_fullname);
   const [mail, setMail] = useState(data.user_email);
   const [code, setCode] = useState(data.code);
   const [phone, setPhone] = useState(data.phone);
   const [loading, setLoading] = useState(false);
+
+  React.useEffect(() => {
+    SInfo.getItem("nick_name")
+      .then((res) => {
+        if (res != null && res != undefined) if (name === "") setName(res);
+      })
+      .catch((error) => console.log(error));
+  }, []);
 
   const backHandler = () => {
     navigation.goBack();
@@ -90,6 +118,7 @@ export default function AboutMe(props) {
   navigation.addListener("blur", () => {
     BackHandler.removeEventListener("hardwareBackPress", backHandler);
   });
+
   return (
     <GestureHandlerRootView>
       <SafeAreaView>
@@ -99,7 +128,9 @@ export default function AboutMe(props) {
             flexDirection: "col",
             alignItems: "center",
           }}
-          keyboardShouldPersistTaps='always' style={{ backgroundColor: "#fff", height: hp(100) }}>
+          keyboardShouldPersistTaps="always"
+          style={{ backgroundColor: "#fff", height: hp(100) }}
+        >
           <AboutBg width={wp(100)} height={wp(56.89)} />
           <View
             style={{
@@ -122,7 +153,7 @@ export default function AboutMe(props) {
             </TouchableOpacity>
             <Text
               style={{
-                color: '#fff',
+                color: "#fff",
                 fontSize: wp(5.5),
                 fontWeight: "500",
               }}
@@ -132,31 +163,32 @@ export default function AboutMe(props) {
           </View>
 
           <Text
-            style={{ fontSize: wp(6.4), fontWeight: '500', color: theme.black, marginTop: hp(3) }}
-          >Edit Profile</Text>
+            style={{
+              fontSize: wp(6.4),
+              fontWeight: "500",
+              color: theme.black,
+              marginTop: hp(3),
+            }}
+          >
+            Edit Profile
+          </Text>
 
-          <View style={{ height: hp(25), justifyContent: 'space-between' }}>
+          <View style={{ height: hp(25), justifyContent: "space-between" }}>
             <TextInput
               style={[{ marginTop: hp(2.5) }, styles.input]}
-              // onChangeText={onChangeNumber}
               value={name}
               onChangeText={setName}
               placeholder="Enter your Name"
               inputMode="text"
             />
             <TextInput
-              style={[styles.input, { backgroundColor: '#cde3e9' }]}
-              // editable={false}
-              // onChangeText={onChangeNumber}
+              style={[styles.input, { backgroundColor: "#cde3e9" }]}
               value={`+${code}-${phone}`}
-              // placeholder="+91-9480052103"
               inputMode="tel"
               editable={false}
             />
             <TextInput
               style={styles.input}
-              // onChangeText={onChangeNumber}
-              // value={number}
               value={mail}
               onChangeText={setMail}
               placeholder="Enter your email"
@@ -164,19 +196,38 @@ export default function AboutMe(props) {
             />
           </View>
 
-          <ActivityIndicator animating={loading} size='small' />
+          <ActivityIndicator animating={loading} size="small" />
 
-          <View style={{ width: wp(87), flexDirection: 'row', justifyContent: 'space-between' }} >
-            <TouchableOpacity onPress={() => {
-              SInfo.removeItem('token').then(() => {
-                navigation.navigate('LoginPage');
-                showToast('User logout successfully.')
-              }).catch((err) => {
-                showToast('Something went wrong.')
-                console.log('Error from logout system: ', err)
-              });
-            }} style={{ width: wp(40), height: hp(5), justifyContent: 'center', alignItems: 'center', borderRadius: wp(40), flexDirection: 'row', borderWidth: wp(0.3) }} >
-              <Text style={{ color: theme.black }} >Logout</Text>
+          <View
+            style={{
+              width: wp(87),
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <TouchableOpacity
+              onPress={() => {
+                SInfo.removeItem("token")
+                  .then(() => {
+                    navigation.navigate("LoginPage");
+                    showToast("User logout successfully.");
+                  })
+                  .catch((err) => {
+                    showToast("Something went wrong.");
+                    console.log("Error from logout system: ", err);
+                  });
+              }}
+              style={{
+                width: wp(40),
+                height: hp(5),
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: wp(40),
+                flexDirection: "row",
+                borderWidth: wp(0.3),
+              }}
+            >
+              <Text style={{ color: theme.black }}>Logout</Text>
               <Cross simple={true} />
             </TouchableOpacity>
             <TouchableOpacity
@@ -186,9 +237,14 @@ export default function AboutMe(props) {
                 data.usr_fullname = name;
                 data.user_email = mail;
                 data.insert_details = "true";
-                setLoading(true)
-                // console.log(data)
-                fillDetails(data, [loading, setLoading], navigation);
+                setLoading(true);
+                fillDetails(
+                  data,
+                  prevName,
+                  prevMail,
+                  [loading, setLoading],
+                  navigation
+                );
               }}
               style={[styles.BookBtn3, { marginBottom: hp(4) }]}
             >

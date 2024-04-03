@@ -11,7 +11,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SVGComponent from "../components/SVGcom";
 import HomeIcon from "../components/HomeIcon.js";
 import ProfileIcon from "../components/Profile.js";
+import AboutMe from "../screens/AboutMe.js";
 import ProfileNavigator from "./ProfileNavigator.js";
+import  {Profilecontroller}  from "../screens/ProfileController.js";
 import { useNavigation } from "@react-navigation/native";
 import { request, PERMISSIONS, check, RESULTS } from "react-native-permissions";
 import { useAuth } from "../utils/auth.js";
@@ -52,15 +54,26 @@ const screenOptions = {
 
 export default function BottomTabs(props) {
   const navigation = useNavigation();
-
+  const [nick, setNick] = React.useState(false);
   const data = props.route.params;
 
   const Tab = createBottomTabNavigator();
-  const { getDiversion } = useAuth();
+  const { getDiversion, getAllowed } = useAuth();
+
+  function isFirstTime() {
+    if (data.get_details === "true") {
+      setNick(false)
+    } else {
+      setNick(true)
+    }
+  }
+
+  React.useEffect(() => {
+    isFirstTime();
+  }, [])
   React.useEffect(() => {
     try {
       const payload = data.route.params;
-      console.log("It is from bottoms tabs: ", getDiversion());
       switch (getDiversion()) {
         case "reminder":
           navigation.navigate("reminder", payload);
@@ -120,6 +133,7 @@ export default function BottomTabs(props) {
 
   React.useEffect(() => {
     requestPermission();
+    console.log("It is from bottoms tabs: ",getAllowed())
   }, []);
 
   return (
@@ -130,8 +144,7 @@ export default function BottomTabs(props) {
       }}
     >
       {/* <TopBarMain/> */}
-      <PingCard done={true} />
-
+      {nick ? (<></>) : (<PingCard />)}
       <Tab.Navigator initialRouteName="Home_Tab" screenOptions={screenOptions}>
         <Tab.Screen
           name="Discover_Tab"
@@ -208,7 +221,7 @@ export default function BottomTabs(props) {
         />
         <Tab.Screen
           name="Profile_Tab"
-          component={ProfileNavigator}
+          component={Profilecontroller}
           options={{
             tabBarIcon: ({ focused }) => {
               return (

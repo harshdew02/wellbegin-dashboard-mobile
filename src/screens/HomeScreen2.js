@@ -28,7 +28,7 @@ import Emoji3 from "../../assets/images/emoji3.svg";
 import Emoji4 from "../../assets/images/emoji4.svg";
 import Emoji5 from "../../assets/images/emoji5.svg";
 import HomePing from "../../assets/images/homePing.svg";
-import NewHome from "../../assets/images/newHome.svg"
+import NewHome from "../../assets/images/newHome.svg";
 import Help from "../../assets/images/Help.svg";
 import Home2 from "../../assets/images/home2.svg";
 import { theme } from "../theme";
@@ -38,6 +38,11 @@ import Gift from "../../assets/images/Gift.svg";
 import axios from "axios";
 import PTRView from "react-native-pull-to-refresh";
 import { useAuth } from "../utils/auth";
+import {
+  CopilotProvider,
+  CopilotStep,
+  walkthroughable,
+} from "react-native-copilot";
 
 const gMeet = (link) => {
   if (link == "" || link == null || link == undefined)
@@ -50,15 +55,13 @@ const gMeet = (link) => {
 };
 
 const Btn = (props) => {
-  // console.log("It is from btn: ",props)
   const navigation = useNavigation();
   return (
     <TouchableOpacity
       activeOpacity={0.8}
       style={styles.BookBtn}
       onPress={() => {
-        // Checking if the link is supported for links with custom URL scheme.
-        navigation.navigate("webview", props.props);
+        navigation.navigate("test", props.props);
       }}
     >
       <Text style={styles.btnText}>Explore Wellbeing Tests</Text>
@@ -71,7 +74,6 @@ const Bookbtn = (props) => {
   const navigation = useNavigation();
   const ishour = props.props.is2hour;
   return (
-    // <></>
     <View className="flex-row justify-between">
       {ishour ? (
         <>
@@ -136,7 +138,6 @@ const Bookbtn = (props) => {
 };
 
 export default function HomeScreen2(props) {
-  console.log("It is from home2")
   let data = props.props;
   const payload = props.props;
   const navigation = useNavigation();
@@ -157,13 +158,14 @@ export default function HomeScreen2(props) {
   const [moodcheck, setMoodCheck] = useState(false);
   const [subsdet, setSubsdet] = useState(false);
   const [subdays, setSubdays] = useState(0);
+  const [wellbeing, setWellbeing] = useState("");
   const [bell, setBell] = useState(true);
   const [loaded, setLoaded] = useState(false);
   const [category, setCategory] = useState("regular");
+  const CopilotText = walkthroughable(Text);
 
   const { setHomes, home, connect } = useAuth();
   useEffect(() => {
-    console.log(home);
     if (home === "webview" || home === "moodset") {
       setMoodCheck(true);
     }
@@ -201,8 +203,9 @@ export default function HomeScreen2(props) {
 
   useEffect(() => {
     const isConnected = connect();
-    if (!isConnected) { setMoodCheck(false) }
-    else {
+    if (!isConnected) {
+      setMoodCheck(false);
+    } else {
       if (moodcheck) {
         const apiUrl2 =
           "https://n8n.heartitout.in/webhook/api/fetch-session-details";
@@ -289,7 +292,8 @@ export default function HomeScreen2(props) {
           });
 
         let realTimeData = null;
-        const apiUrl3 = "https://n8n.heartitout.in/webhook/api/home-page-details";
+        const apiUrl3 =
+          "https://n8n.heartitout.in/webhook/api/home-page-details";
         axios
           .post(apiUrl3, payload)
           .then(async (res) => {
@@ -322,6 +326,7 @@ export default function HomeScreen2(props) {
                 setProduct(realTimeData.product_onclick);
                 setBooking(realTimeData.booking_link);
                 setPackage(realTimeData.packages_onclick);
+                setWellbeing(realTimeData.welbeing_onclick);
                 if (realTimeData.subs_det === "yes") setSubsdet(true);
                 else setSubsdet(false);
               }
@@ -352,6 +357,7 @@ export default function HomeScreen2(props) {
     setWhatsnew(data.whats_new_onclick);
     setProduct(data.product_onclick);
     setBooking(data.booking_link);
+    setWellbeing(data.welbeing_onclick);
     if (data.show_sub === "yes") {
       setShowsub(true);
       setSub(data.sub_onclick);
@@ -445,382 +451,389 @@ export default function HomeScreen2(props) {
   };
   const [Nickname, onChangeNickname] = React.useState("");
 
-  const [nameDone, setNameDone] = React.useState(false)
+  const [nameDone, setNameDone] = React.useState(false);
 
   return (
-    <SafeAreaView>
-      <StatusBar
-        backgroundColor={theme.maincolor}
-        barStyle={"light-content"}
-        hidden={false}
-        translucent={false}
-      />
-      {/* {banner.avail ? (
+    <CopilotProvider>
+      <SafeAreaView>
+        <StatusBar
+          backgroundColor={theme.maincolor}
+          barStyle={"light-content"}
+          hidden={false}
+          translucent={false}
+        />
+        {/* {banner.avail ? (
           
         ) : (
           <></>
         )} */}
-      <View
-        style={{
-          backgroundColor: theme.maincolor,
-          width: wp(100),
-          height: hp(0.8),
-          position: "absolute",
-          top: 0,
-          zIndex: 4,
-        }}
-      />
-
-      
-
-      <PTRView
-        onRefresh={handleRefresh}
-        scrollEventThrottle={1}
-        contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }}
-        style={{ backgroundColor: "#fff", height: hp(100) }}
-      >
-        {/* Banner */}
-        {banner.avail ? (
-          <TouchableOpacity
-            activeOpacity={1}
-            style={{
-              position: "absolute",
-              zIndex: 2,
-              top: 0,
-              // backgroundColor:'red'
-            }}
-            onPress={() => {
-              navigation.navigate("webview", banner.cban_link);
-            }}
-          >
-            <Image
-              onLoad={() => {
-                setLoaded(true);
-              }}
-              onError={() => {
-                setLoaded(false);
-                console.log("failed");
-              }}
-              resizeMode="stretch"
-              style={{
-                width: wp(100),
-                height: wp(24.66),
-                // position: "absolute",
-                // zIndex: 5,
-              }}
-              source={{
-                uri: banner.ban_link,
-              }}
-            />
-          </TouchableOpacity>
-        ) : (
-          <></>
-        )}
-
         <View
-          style={
-            banner.avail
-              ? { marginTop: loaded ? wp(22.66) : hp(-0.05) }
-              : { marginTop: hp(0) }
-          }
+          style={{
+            backgroundColor: theme.maincolor,
+            width: wp(100),
+            height: hp(0.8),
+            position: "absolute",
+            top: 0,
+            zIndex: 4,
+          }}
+        />
+
+        <PTRView
+          onRefresh={handleRefresh}
+          scrollEventThrottle={1}
+          contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
+          style={{ backgroundColor: "#fff", height: hp(100) }}
         >
-          <HomePageBanner2 width={wp(100)} height={wp(78.9)} />
-
-          <View style={styles.banner}>
-            <View
-              className="flex-row items-center "
-              style={{
-                width: wp(84),
-                alignItems: "center",
-                flexDirection: "row",
-              }}
-            >
-              <Text
-                style={{
-                  color: "white",
-                  fontSize: wp(4.2),
-                  fontFamily: "Roboto",
-                  fontWeight: "700",
-                }}
-              >
-                Welcome {name.split(/\s+/).filter((word) => word !== "")[0]}{" "}👋
-              </Text>
-
-              <TouchableOpacity
-                onPress={() => {
-                  setBell(false);
-                  navigation.navigate("reminder", data);
-                }}
-                style={{ position: "absolute", right: wp(0) }}
-              >
-                <TopBell active={bell} />
-              </TouchableOpacity>
-            </View>
-            <Text
-              style={{
-                marginTop: hp(2.7),
-                color: "white",
-                fontSize: wp(4),
-                fontWeight: "500",
-              }}
-            >
-              Curious about your mental health?
-            </Text>
-            <View
-              className="flex-row justify-between items-center"
-              style={{ width: wp(90.6) }}
-            >
-              <Text
-                style={{
-                  color: "white",
-                  width: wp(61),
-                  fontSize: wp(3.8),
-                  fontFamily: "Roboto",
-                  fontWeight: "400",
-                  lineHeight: hp(3),
-                  marginTop: hp(1)
-                }}
-              >
-                Start your journey by exploring our range of quick diagnostic tests to gain insight into your symptoms
-              </Text>
-              <NewHome width={wp(29.6)} height={wp(25.6)} />
-            </View>
-            {isBooked ? (
-              <Bookbtn props={{ is2hour, link, booking }} />
-            ) : (
-              <Btn props={booking} />
-            )}
-          </View>
-        </View>
-
-        {/* Content */}
-        <View
-          className="flex-row justify-between"
-          style={[styles.cardContainer, { height: hp(15.8) }]}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("homework", data);
-            }}
-            style={[styles.card, { backgroundColor: "#FEF8C8" }]}
-          >
-            <Text style={styles.cardText}>Start {"\n"}Therapy</Text>
-
-            <TasksIcon2 width={wp(12.6)} height={wp(17.6)} />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            onPress={() => {
-              navigation.navigate("progress", data);
-            }}
-            style={[styles.card, { backgroundColor: "#EBF2F5" }]}
-          >
-            <Text style={styles.cardText}>Wellness {"\n"}Blog</Text>
-            <ProgressIcon2 width={wp(16.5)} height={wp(18.9)} />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.card, { backgroundColor: "#EAF7FC" }]}
-            onPress={() => {
-              navigation.navigate("webview", whatsnew);
-            }}
-          >
-            <Text style={styles.cardText}>What's {"\n"}New?</Text>
-            <NewIcon width={wp(20)} height={hp(5)} />
-          </TouchableOpacity>
-        </View>
-
-        {!mood ? (
-          <>
+          {/* Banner */}
+          {banner.avail ? (
             <TouchableOpacity
+              activeOpacity={1}
+              style={{
+                position: "absolute",
+                zIndex: 2,
+                top: 0,
+                // backgroundColor:'red'
+              }}
               onPress={() => {
-                navigation.navigate("mood", data);
+                navigation.navigate("webview", banner.cban_link);
               }}
             >
+              <Image
+                onLoad={() => {
+                  setLoaded(true);
+                }}
+                onError={() => {
+                  setLoaded(false);
+                  console.log("failed");
+                }}
+                resizeMode="stretch"
+                style={{
+                  width: wp(100),
+                  height: wp(24.66),
+                  // position: "absolute",
+                  // zIndex: 5,
+                }}
+                source={{
+                  uri: banner.ban_link,
+                }}
+              />
+            </TouchableOpacity>
+          ) : (
+            <></>
+          )}
+
+          <View
+            style={
+              banner.avail
+                ? { marginTop: loaded ? wp(22.66) : hp(-0.05) }
+                : { marginTop: hp(0) }
+            }
+          >
+            <CopilotStep
+              text="This is a hello world example!"
+              order={1}
+              name="hello"
+            >
+              <CopilotText>Hello world!</CopilotText>
+            </CopilotStep>
+            <HomePageBanner2 width={wp(100)} height={wp(78.9)} />
+
+            <View style={styles.banner}>
               <View
-                className="flex-col justify-between items-center"
-                style={[
-                  styles.cardContainer,
-                  { height: hp(12.5), marginTop: hp(3) },
-                ]}
+                className="flex-row items-center "
+                style={{
+                  width: wp(84),
+                  alignItems: "center",
+                  flexDirection: "row",
+                }}
               >
                 <Text
                   style={{
-                    color: "#043953",
-                    fontSize: wp(4),
+                    color: "white",
+                    fontSize: wp(4.2),
                     fontFamily: "Roboto",
                     fontWeight: "700",
                   }}
                 >
-                  How are you feeling today?
+                  Welcome {name.split(/\s+/).filter((word) => word !== "")[0]}{" "}
+                  👋
                 </Text>
-                <FeelBanner
-                  width={wp(85)}
-                  height={hp(9)}
-                  style={styles.feelBanner}
-                />
-                <View
-                  className="flex-row justify-between items-center"
-                  style={[
-                    {
-                      position: "absolute",
-                      bottom: 8,
-                      zIndex: 1,
-                      width: wp(78),
-                    },
-                  ]}
+
+                <TouchableOpacity
+                  onPress={() => {
+                    setBell(false);
+                    navigation.navigate("reminder", data);
+                  }}
+                  style={{ position: "absolute", right: wp(0) }}
                 >
-                  <Emoji1 width={wp(8)} height={wp(8)} />
-                  <Emoji2 width={wp(8)} height={wp(8)} />
-                  <Emoji3
-                    style={{ marginHorizontal: wp(1.5) }}
-                    width={wp(10)}
-                    height={wp(10)}
-                  />
-                  <Emoji4 width={wp(8)} height={wp(8)} />
-                  <Emoji5 width={wp(8)} height={wp(8)} />
-                </View>
+                  <TopBell active={bell} />
+                </TouchableOpacity>
               </View>
-            </TouchableOpacity>
-          </>
-        ) : (
-          <>
+              <Text
+                style={{
+                  marginTop: hp(2.7),
+                  color: "white",
+                  fontSize: wp(4),
+                  fontWeight: "500",
+                }}
+              >
+                Curious about your mental health?
+              </Text>
+              <View
+                className="flex-row justify-between items-center"
+                style={{ width: wp(90.6) }}
+              >
+                <Text
+                  style={{
+                    color: "white",
+                    width: wp(61),
+                    fontSize: wp(3.8),
+                    fontFamily: "Roboto",
+                    fontWeight: "400",
+                    lineHeight: hp(3),
+                    marginTop: hp(1),
+                  }}
+                >
+                  Start your journey by exploring our range of quick diagnostic
+                  tests to gain insight into your symptoms
+                </Text>
+                <NewHome width={wp(29.6)} height={wp(25.6)} />
+              </View>
+              {isBooked ? (
+                <Bookbtn props={{ is2hour, link, booking }} />
+              ) : (
+                <Btn props={payload} />
+              )}
+            </View>
+          </View>
+
+          {/* Content */}
+          <View
+            className="flex-row justify-between"
+            style={[styles.cardContainer, { height: hp(15.8) }]}
+          >
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate("moodInsights", data);
+                navigation.navigate("webview", booking);
+              }}
+              style={[styles.card, { backgroundColor: "#FEF8C8" }]}
+            >
+              <Text style={styles.cardText}>Start {"\n"}Therapy</Text>
+
+              <TasksIcon2 width={wp(12.6)} height={wp(17.6)} />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate("webview", wellbeing);
+              }}
+              style={[styles.card, { backgroundColor: "#EBF2F5" }]}
+            >
+              <Text style={styles.cardText}>Wellness {"\n"}Blog</Text>
+              <ProgressIcon2 width={wp(16.5)} height={wp(18.9)} />
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.card, { backgroundColor: "#EAF7FC" }]}
+              onPress={() => {
+                navigation.navigate("webview", whatsnew);
               }}
             >
-              <View
-                className="flex-col justify-between items-center"
-                style={[styles.cardContainer, { marginTop: hp(3) }]}
-              >
-                <Home2 width={"100%"} height={hp(13)} />
-                <View
-                  style={{
-                    position: "absolute",
-                    // left: wp(43),
-                    right: wp(11),
-                    top: hp(2.4),
-                    zIndex: 2,
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "#455a64",
-                      fontSize: wp(4),
-                      fontFamily: "Roboto",
-                      fontWeight: "800",
-                    }}
-                  >
-                    Understanding You
-                  </Text>
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      color: "#ffffff",
-                      fontSize: wp(4),
-                      fontFamily: "Roboto",
-                      fontWeight: "600",
-                      marginTop: hp(1.2),
-                      width: wp(43),
-                      height: hp(3),
-                      backgroundColor: "#01818c",
-                      borderRadius: wp(8),
-                      flexDirection: "row",
-                    }}
-                  >
-                    View mood insights
-                  </Text>
-                </View>
-              </View>
+              <Text style={styles.cardText}>What's {"\n"}New?</Text>
+              <NewIcon width={wp(20)} height={hp(5)} />
             </TouchableOpacity>
-          </>
-        )}
+          </View>
 
-        {category === "cwp" ? null : (
-          <>
-            {showsub ? (
+          {!mood ? (
+            <>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate("webview", sub);
+                  navigation.navigate("mood", data);
                 }}
-                style={[
-                  styles.cardContainer,
-                  { height: hp(15.8), marginTop: hp(3) },
-                ]}
               >
-                <Home1 width={"100%"} height={hp(17)} />
                 <View
-                  style={{
-                    position: "absolute",
-                    left: wp(13),
-                    top: hp(4),
-                    zIndex: 2,
-                  }}
+                  className="flex-col justify-between items-center"
+                  style={[
+                    styles.cardContainer,
+                    { height: hp(12.5), marginTop: hp(3) },
+                  ]}
                 >
                   <Text
                     style={{
-                      color: "#455A64",
-                      fontSize: wp(3.8),
-                      width: wp(60),
+                      color: "#043953",
+                      fontSize: wp(4),
                       fontFamily: "Roboto",
-                      lineHeight: wp(6),
-                      fontWeight: "800",
+                      fontWeight: "700",
                     }}
                   >
-                    Your Whole Hearted Subscription is Active
+                    How are you feeling today?
                   </Text>
-                  <TouchableOpacity
-                    activeOpacity={0.5}
-                    style={[styles.Btn, { marginTop: hp(0.8) }]}
-                    onPress={() => {
-                      // Handle details press
-                    }}
+                  <FeelBanner
+                    width={wp(85)}
+                    height={hp(9)}
+                    style={styles.feelBanner}
+                  />
+                  <View
+                    className="flex-row justify-between items-center"
+                    style={[
+                      {
+                        position: "absolute",
+                        bottom: 8,
+                        zIndex: 1,
+                        width: wp(78),
+                      },
+                    ]}
                   >
-                    <Text style={styles.btnText2}>See Details </Text>
-                  </TouchableOpacity>
+                    <Emoji1 width={wp(8)} height={wp(8)} />
+                    <Emoji2 width={wp(8)} height={wp(8)} />
+                    <Emoji3
+                      style={{ marginHorizontal: wp(1.5) }}
+                      width={wp(10)}
+                      height={wp(10)}
+                    />
+                    <Emoji4 width={wp(8)} height={wp(8)} />
+                    <Emoji5 width={wp(8)} height={wp(8)} />
+                  </View>
                 </View>
               </TouchableOpacity>
-            ) : (
+            </>
+          ) : (
+            <>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate("webview", packages);
+                  navigation.navigate("moodInsights", data);
                 }}
-                style={[
-                  styles.cardContainer,
-                  { height: hp(15.8), marginTop: hp(3) },
-                ]}
               >
-                <View style={styles.packageCard}>
-                  <View style={{ height: hp(9) }}>
-                    <Text style={styles.cardText}>Session Packages</Text>
-                    <TouchableOpacity
-                      style={styles.Btn}
-                      onPress={() => {
-                        // Handle explore packages press
+                <View
+                  className="flex-col justify-between items-center"
+                  style={[styles.cardContainer, { marginTop: hp(3) }]}
+                >
+                  <Home2 width={"100%"} height={hp(13)} />
+                  <View
+                    style={{
+                      position: "absolute",
+                      // left: wp(43),
+                      right: wp(11),
+                      top: hp(2.4),
+                      zIndex: 2,
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: "#455a64",
+                        fontSize: wp(4),
+                        fontFamily: "Roboto",
+                        fontWeight: "800",
                       }}
                     >
-                      <Text style={styles.btnText2}>Explore Packages</Text>
-                    </TouchableOpacity>
+                      Understanding You
+                    </Text>
+                    <Text
+                      style={{
+                        textAlign: "center",
+                        color: "#ffffff",
+                        fontSize: wp(4),
+                        fontFamily: "Roboto",
+                        fontWeight: "600",
+                        marginTop: hp(1.2),
+                        width: wp(43),
+                        height: hp(3),
+                        backgroundColor: "#01818c",
+                        borderRadius: wp(8),
+                        flexDirection: "row",
+                      }}
+                    >
+                      View mood insights
+                    </Text>
                   </View>
-                  <Gift width={wp(25)} height={hp(9)} />
                 </View>
               </TouchableOpacity>
-            )}
-          </>
-        )}
+            </>
+          )}
 
+          {category === "cwp" ? null : (
+            <>
+              {showsub ? (
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("webview", sub);
+                  }}
+                  style={[
+                    styles.cardContainer,
+                    { height: hp(15.8), marginTop: hp(3) },
+                  ]}
+                >
+                  <Home1 width={"100%"} height={hp(17)} />
+                  <View
+                    style={{
+                      position: "absolute",
+                      left: wp(13),
+                      top: hp(4),
+                      zIndex: 2,
+                    }}
+                  >
+                    <Text
+                      style={{
+                        color: "#455A64",
+                        fontSize: wp(3.8),
+                        width: wp(60),
+                        fontFamily: "Roboto",
+                        lineHeight: wp(6),
+                        fontWeight: "800",
+                      }}
+                    >
+                      Your Whole Hearted Subscription is Active
+                    </Text>
+                    <TouchableOpacity
+                      activeOpacity={0.5}
+                      style={[styles.Btn, { marginTop: hp(0.8) }]}
+                      onPress={() => {
+                        // Handle details press
+                      }}
+                    >
+                      <Text style={styles.btnText2}>See Details </Text>
+                    </TouchableOpacity>
+                  </View>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity
+                  onPress={() => {
+                    navigation.navigate("webview", packages);
+                  }}
+                  style={[
+                    styles.cardContainer,
+                    { height: hp(15.8), marginTop: hp(3) },
+                  ]}
+                >
+                  <View style={styles.packageCard}>
+                    <View style={{ height: hp(9) }}>
+                      <Text style={styles.cardText}>Session Packages</Text>
+                      <TouchableOpacity
+                        style={styles.Btn}
+                        onPress={() => {
+                          // Handle explore packages press
+                        }}
+                      >
+                        <Text style={styles.btnText2}>Explore Packages</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <Gift width={wp(25)} height={hp(9)} />
+                  </View>
+                </TouchableOpacity>
+              )}
+            </>
+          )}
 
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("webview", product);
-          }}
-          className="flex-col items-center"
-          style={[{ height: hp(15.8), marginTop: hp(4) }]}
-        >
-          {/* <View style={[styles.packageCard, { backgroundColor: "#EAF7FC" }]}>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("webview", product);
+            }}
+            className="flex-col items-center"
+            style={[{ height: hp(15.8), marginTop: hp(4) }]}
+          >
+            {/* <View style={[styles.packageCard, { backgroundColor: "#EAF7FC" }]}>
             <View
               className="flex-col justify-between items-start "
               style={{ height: hp(9) }}
@@ -835,22 +848,27 @@ export default function HomeScreen2(props) {
               style={{ width: wp(18), height: hp(14) }}
             />
           </View> */}
-          <Help width={wp(84)} height={wp(34.4)} />
-        </TouchableOpacity>
+            <Help width={wp(84)} height={wp(34.4)} />
+          </TouchableOpacity>
 
-        <View
-          className="flex-row items-center"
-          style={[
-            styles.cardContainer,
-            { height: hp(20), marginTop: hp(5), backgroundColor: "#EBEFF2CC" },
-          ]}
-        >
-          <BottomQuote width={wp(71)} height={hp(15)} />
-        </View>
+          <View
+            className="flex-row items-center"
+            style={[
+              styles.cardContainer,
+              {
+                height: hp(20),
+                marginTop: hp(5),
+                backgroundColor: "#EBEFF2CC",
+              },
+            ]}
+          >
+            <BottomQuote width={wp(71)} height={hp(15)} />
+          </View>
 
-        <View style={{ width: wp(100), height: hp(6), marginTop: hp(3) }} />
-      </PTRView>
-    </SafeAreaView>
+          <View style={{ width: wp(100), height: hp(6), marginTop: hp(3) }} />
+        </PTRView>
+      </SafeAreaView>
+    </CopilotProvider>
   );
 }
 

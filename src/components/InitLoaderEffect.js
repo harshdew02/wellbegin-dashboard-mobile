@@ -24,23 +24,25 @@ const showToast = (message) => {
 export default function InitLoaderEffect( {route}) {
   const navigation = useNavigation();
   const {connect, Diversion, setUser} = useAuth();
+  const [refresh, setRefresh] = React.useState(true);
   const backHandler = () => {
     BackHandler.exitApp();
     return true;
   };
 
   navigation.addListener("focus", () => {
+    setRefresh(true);
     BackHandler.addEventListener("hardwareBackPress", backHandler);
   });
 
   navigation.addListener("blur", () => {
+    setRefresh(false);
     BackHandler.removeEventListener("hardwareBackPress", backHandler);
   });
 
   const initializer = async ()=> {
     try {
       connect();
-      // const nav_data = route.params != (null || undefined) ? route.params.navigation : "main";
       if(route.params != null && route.params != undefined) Diversion(route.params.navigation);
       let token = await SInfo.getItem("token");
       if (token == null || token == undefined) navigation.navigate("LoginPage");
@@ -83,6 +85,7 @@ export default function InitLoaderEffect( {route}) {
             subs_no_of_days: "0",
             sub_onclick: "https://heartitout.in/",
             packages_onclick: "https://heartitout.in/",
+            welbeing_onclick: "https://mindbodybliss.in/",
 
             //This is banner section
             has_banner: "no",
@@ -149,6 +152,7 @@ export default function InitLoaderEffect( {route}) {
                 finalDetails.product_onclick = res.data.product_onclick != (null || undefined) ? res.data.product_onclick : "https://heartitout.in/";
                 finalDetails.sub_onclick = res.data.sub_onclick != (null || undefined) ? res.data.sub_onclick : "https://heartitout.in/";
                 finalDetails.packages_onclick = res.data.packages_onclick != (null || undefined) ? res.data.packages_onclick : "https://heartitout.in/";
+                finalDetails.welbeing_onclick = res.data.welbeing_onclick != (null || undefined) ? res.data.welbeing_onclick : "https://mindbodybliss.in/";
                 setUser({category:res.data.user_category, type: res.data.user_type})
               } else if (res.data.status === "10") {
                 (finalDetails.has_mood = res.data.mood_tacker != (null || undefined) ? res.data.mood_tacker : "no");
@@ -160,11 +164,11 @@ export default function InitLoaderEffect( {route}) {
                 finalDetails.product_onclick = res.data.product_onclick != (null || undefined) ? res.data.product_onclick : "https://heartitout.in/";
                 finalDetails.sub_onclick = res.data.sub_onclick != (null || undefined) ? res.data.sub_onclick : "https://heartitout.in/";
                 finalDetails.packages_onclick = res.data.packages_onclick != (null || undefined) ? res.data.packages_onclick : "https://heartitout.in/";
+                finalDetails.welbeing_onclick = res.data.welbeing_onclick != (null || undefined) ? res.data.welbeing_onclick : "https://mindbodybliss.in/";
                 setUser({category:res.data.user_category, type: res.data.user_type})
               } else {
                 throw new Error("User credentails expired");
               }
-              // console.log(res.data.show_sub)
             })
             .catch((err) => {
               console.log(err);
@@ -173,16 +177,20 @@ export default function InitLoaderEffect( {route}) {
         }
       }
     } catch (error) {
-      // SInfo.removeItem("token");
-      // showToast("User credentials expired, please login again.");
-      // navigation.navigate("LoginPage");
+      SInfo.removeItem("token");
+      showToast("User credentials expired, please login again.");
+      navigation.navigate("LoginPage");
       console.log(error);
     }
   }
 
   React.useEffect(() => {
-    initializer();
-  })
+    if(refresh)
+    {
+      console.log("Refreshing...")
+      initializer();
+    }
+  }, [refresh])
 
   return (
     <SafeAreaView className="bg-white" style={{ height: hp(100) }}>
