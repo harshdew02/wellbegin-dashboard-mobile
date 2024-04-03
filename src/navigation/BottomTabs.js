@@ -11,7 +11,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SVGComponent from "../components/SVGcom";
 import HomeIcon from "../components/HomeIcon.js";
 import ProfileIcon from "../components/Profile.js";
+import AboutMe from "../screens/AboutMe.js";
 import ProfileNavigator from "./ProfileNavigator.js";
+import  {Profilecontroller}  from "../screens/ProfileController.js";
 import { useNavigation } from "@react-navigation/native";
 import { request, PERMISSIONS, check, RESULTS } from "react-native-permissions";
 import { useAuth } from "../utils/auth.js";
@@ -59,7 +61,7 @@ export default function BottomTabs(props) {
   React.useEffect(() => {
     try {
       const payload = data.route.params;
-      console.log("It is from bottoms tabs: ",getDiversion());
+      // console.log("It is from bottoms tabs: ",getDiversion());
       switch (getDiversion()) {
         case "reminder":
           navigation.navigate("reminder", payload);
@@ -205,7 +207,7 @@ export default function BottomTabs(props) {
         />
         <Tab.Screen
           name="Profile_Tab"
-          component={ProfileNavigator}
+          component={Profilecontroller}
           options={{
             tabBarIcon: ({ focused }) => {
               return (

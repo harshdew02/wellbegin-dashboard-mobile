@@ -8,10 +8,12 @@ import {
 import SInfo from 'react-native-encrypted-storage';
 import BottomTabs from "./BottomTabs";
 import CustomDrawer from "../components/CustomDrawer";
+import { useAuth } from "../utils/auth";
 
 const Drawer = createDrawerNavigator();
 
 export default function RightDrawer({ navigation, route }) {
+  const {isAllowed} = useAuth();
   async function isFirstTime() {
     let token = await SInfo.getItem("token");
     let data = JSON.parse(token);
@@ -27,18 +29,17 @@ export default function RightDrawer({ navigation, route }) {
       insert_details: "true",
     };
     if (route.params.get_details === "true") {
-      navigation.navigate("aboutMe", userDet);
+      isAllowed(false)
     } else {
       data.usr_fullname =userDet.usr_fullname;
       data.user_email = userDet.user_email;
       SInfo.setItem('token',JSON.stringify(data));
+      isAllowed(true)
     }
   }
   React.useEffect(() => {
     isFirstTime();
   }, [])
-  
-
   return (
     <>
       <Drawer.Navigator

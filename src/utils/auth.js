@@ -35,23 +35,32 @@ export const AuthProvider = ({ children }) => {
 
   const getDiversion = () => {
     return divert;
-  }
+  };
 
   let new_user = {
     category: "regular",
-    type:"new"
+    type: "new",
   };
 
-  const setUser = (is_new)=>{
-    console.log("New system: ",is_new)
-    new_user.category = is_new.category;
-    new_user.type = is_new.type;
-  }
+  const setUser = (is_new) => {
+    new_user.category =
+      is_new.category != (null || undefined) ? is_new.category : "regular";
+    new_user.type = is_new.type != (null || undefined) ? is_new.type : "new";
+  };
 
-  const getUser = ()=>{
+  const getUser = () => {
     return new_user;
-  }
-  
+  };
+
+  let allow = false;
+
+  const isAllowed = (allowed) => {
+    allow = allowed;
+  };
+
+  const getAllowed = () => {
+    return allow;
+  };
 
   const connect = () => {
     let connect = true;
@@ -66,7 +75,19 @@ export const AuthProvider = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ pathing, path, setHomes, home, connect, Diversion, getDiversion, getUser, setUser }}
+      value={{
+        pathing,
+        path,
+        setHomes,
+        home,
+        connect,
+        Diversion,
+        getDiversion,
+        getUser,
+        setUser,
+        isAllowed,
+        getAllowed,
+      }}
     >
       {children}
     </AuthContext.Provider>

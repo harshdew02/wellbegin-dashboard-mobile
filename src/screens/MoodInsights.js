@@ -48,7 +48,7 @@ import PTRView from "react-native-pull-to-refresh";
 import { useAuth } from "../utils/auth";
 
 const Space = () => {
-  return <View style={{ width: wp(8), height: wp(8) }}></View>;
+  return <View style={{ width: wp(8), height: wp(8), borderWidth:wp(0.2), borderRadius:hp(2), backgroundColor:'#fefcf7', borderColor:theme.black }}></View>;
 };
 
 const habbitLogo = [H1, H2, H3, H4, H5, H6, H7, H8, H9];
@@ -701,7 +701,8 @@ const MoodInsights = (props) => {
                     width: wp(36),
                     display: "flex",
                     flexDirection: "row",
-                    justifyContent: "space-between",
+                    justifyContent: "flex-start",
+                    alignItems:"center"
                   }}
                 >
                   <Cup Home2 width={wp(3.6)} height={wp(4.2)} />
@@ -709,6 +710,7 @@ const MoodInsights = (props) => {
                     style={{
                       color: theme.black,
                       fontSize: wp(3.5),
+                      marginLeft:wp(2)
                     }}
                   >
                     Longest Chain : {longest}

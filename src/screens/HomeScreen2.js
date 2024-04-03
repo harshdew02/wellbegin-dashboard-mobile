@@ -131,7 +131,6 @@ const Bookbtn = (props) => {
 };
 
 export default function HomeScreen2(props) {
-  console.log("It is from home2")
   let data = props.props;
   const payload = props.props;
   const navigation = useNavigation();
@@ -158,7 +157,6 @@ export default function HomeScreen2(props) {
 
   const { setHomes, home, connect } = useAuth();
   useEffect(() => {
-    console.log(home);
     if (home === "webview" || home === "moodset") {
       setMoodCheck(true);
     }

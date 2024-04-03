@@ -94,7 +94,7 @@ const P4 = () => {
   }, []);
   return (
     <>
-      <View style={{ alignItems: 'center' }} >
+      <View style={{ alignItems: 'center', overflow:'hidden'}} >
         <P3 width={wp(100)} height={wp(133)} />
         <Animated.View
           style={{
@@ -105,7 +105,8 @@ const P4 = () => {
             // backgroundColor:'red',
             width: wp(80),
             marginTop: hp(12),
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
+            
           }}
         >
           {cardComponents.map((card, index) => (
