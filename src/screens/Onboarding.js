@@ -363,7 +363,7 @@ const styles = StyleSheet.create({
     color: theme.maincolor,
     fontSize: wp(6),
     fontWeight: "bold",
-    marginTop: 20,
+    marginTop: hp(0.5),
     textAlign: "center",
   },
 

@@ -8,6 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   BackHandler,
+  TextInput,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import {
@@ -15,7 +16,8 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import { useNavigation } from "@react-navigation/native";
-import TasksIcon from "../../assets/images/TasksIcon.svg";
+import TasksIcon2 from "../../assets/images/TasksIcon2.svg";
+import ProgressIcon2 from "../../assets/images/ProgressIcon2.svg";
 import NewIcon from "../../assets/images/NewIcon.svg";
 import BottomQuote from "../../assets/images/BottomQuote.svg";
 import Home1 from "../../assets/images/home1.svg";
@@ -25,10 +27,13 @@ import Emoji2 from "../../assets/images/emoji2.svg";
 import Emoji3 from "../../assets/images/emoji3.svg";
 import Emoji4 from "../../assets/images/emoji4.svg";
 import Emoji5 from "../../assets/images/emoji5.svg";
+import HomePing from "../../assets/images/homePing.svg";
+import NewHome from "../../assets/images/newHome.svg"
+import Help from "../../assets/images/Help.svg";
 import Home2 from "../../assets/images/home2.svg";
 import { theme } from "../theme";
 import TopBell from "../components/TopBell";
-import HomePageBanner from "../components/HomePageBanner";
+import HomePageBanner2 from "../../assets/images/newHomebg.svg";
 import Gift from "../../assets/images/Gift.svg";
 import axios from "axios";
 import PTRView from "react-native-pull-to-refresh";
@@ -56,7 +61,7 @@ const Btn = (props) => {
         navigation.navigate("webview", props.props);
       }}
     >
-      <Text style={styles.btnText}>Book a Session</Text>
+      <Text style={styles.btnText}>Explore Wellbeing Tests</Text>
     </TouchableOpacity>
   );
 };
@@ -438,6 +443,9 @@ export default function HomeScreen2(props) {
     setRefreshing(true);
     fetchData();
   };
+  const [Nickname, onChangeNickname] = React.useState("");
+
+  const [nameDone, setNameDone] = React.useState(false)
 
   return (
     <SafeAreaView>
@@ -463,10 +471,12 @@ export default function HomeScreen2(props) {
         }}
       />
 
+      
+
       <PTRView
         onRefresh={handleRefresh}
         scrollEventThrottle={1}
-        contentContainerStyle={{ flexGrow: 1 }}
+        contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }}
         style={{ backgroundColor: "#fff", height: hp(100) }}
       >
         {/* Banner */}
@@ -477,6 +487,7 @@ export default function HomeScreen2(props) {
               position: "absolute",
               zIndex: 2,
               top: 0,
+              // backgroundColor:'red'
             }}
             onPress={() => {
               navigation.navigate("webview", banner.cban_link);
@@ -494,8 +505,8 @@ export default function HomeScreen2(props) {
               style={{
                 width: wp(100),
                 height: wp(24.66),
-                position: "absolute",
-                zIndex: 5,
+                // position: "absolute",
+                // zIndex: 5,
               }}
               source={{
                 uri: banner.ban_link,
@@ -513,15 +524,13 @@ export default function HomeScreen2(props) {
               : { marginTop: hp(0) }
           }
         >
-          <HomePageBanner />
+          <HomePageBanner2 width={wp(100)} height={wp(78.9)} />
 
           <View style={styles.banner}>
             <View
-              className="flex-row justify-center items-center "
+              className="flex-row items-center "
               style={{
-                backgroundColor: theme.maincolor,
                 width: wp(84),
-                justifyContent: "center",
                 alignItems: "center",
                 flexDirection: "row",
               }}
@@ -529,12 +538,12 @@ export default function HomeScreen2(props) {
               <Text
                 style={{
                   color: "white",
-                  fontSize: wp(4),
+                  fontSize: wp(4.2),
                   fontFamily: "Roboto",
-                  fontWeight: "400",
+                  fontWeight: "700",
                 }}
               >
-                Welcome👋 {name.split(/\s+/).filter((word) => word !== "")[0]}
+                Welcome {name.split(/\s+/).filter((word) => word !== "")[0]}{" "}👋
               </Text>
 
               <TouchableOpacity
@@ -547,95 +556,34 @@ export default function HomeScreen2(props) {
                 <TopBell active={bell} />
               </TouchableOpacity>
             </View>
-
+            <Text
+              style={{
+                marginTop: hp(2.7),
+                color: "white",
+                fontSize: wp(4),
+                fontWeight: "500",
+              }}
+            >
+              Curious about your mental health?
+            </Text>
             <View
               className="flex-row justify-between items-center"
-              style={{ marginTop: hp(1) }}
+              style={{ width: wp(90.6) }}
             >
-              <View>
-                {isBooked ? (
-                  <>
-                    {is2hour ? (
-                      <>
-                        <Text
-                          style={{
-                            color: "white",
-                            fontSize: wp(4),
-                            fontFamily: "Roboto",
-                            fontWeight: "400",
-                            marginTop: wp(4),
-                            width: wp(53),
-                          }}
-                        >
-                          Your next Online session is on{" "}
-                          <Text
-                            style={{
-                              color: "white",
-                              fontSize: wp(4),
-                              fontFamily: "Roboto",
-                              fontWeight: "700",
-                            }}
-                          >
-                            {date}
-                          </Text>{" "}
-                          at{" "}
-                          <Text
-                            style={{
-                              color: "white",
-                              fontSize: wp(4),
-                              fontFamily: "Roboto",
-                              fontWeight: "700",
-                            }}
-                          >
-                            {time}
-                          </Text>
-                        </Text>
-                      </>
-                    ) : (
-                      <Text
-                        style={{
-                          color: "white",
-                          fontSize: wp(4),
-                          fontFamily: "Roboto",
-                          fontWeight: "700",
-                          marginTop: wp(4),
-                          width: wp(53),
-                        }}
-                      >
-                        Continue your well-begin journey.
-                      </Text>
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <Text
-                      style={{
-                        color: "white",
-                        fontSize: wp(4),
-                        fontFamily: "Roboto",
-                        fontWeight: "400",
-                      }}
-                    >
-                      Take care of yourself with
-                    </Text>
-
-                    <Text
-                      style={{
-                        color: "white",
-                        fontSize: wp(4),
-                        fontFamily: "Roboto",
-                        fontWeight: "700",
-                      }}
-                    >
-                      Psychological Counselling
-                    </Text>
-                  </>
-                )}
-              </View>
-              <Image
-                source={require("../../assets/images/homePageGIF.gif")}
-                style={{ height: wp(30), width: wp(30) }}
-              />
+              <Text
+                style={{
+                  color: "white",
+                  width: wp(61),
+                  fontSize: wp(3.8),
+                  fontFamily: "Roboto",
+                  fontWeight: "400",
+                  lineHeight: hp(3),
+                  marginTop: hp(1)
+                }}
+              >
+                Start your journey by exploring our range of quick diagnostic tests to gain insight into your symptoms
+              </Text>
+              <NewHome width={wp(29.6)} height={wp(25.6)} />
             </View>
             {isBooked ? (
               <Bookbtn props={{ is2hour, link, booking }} />
@@ -656,9 +604,9 @@ export default function HomeScreen2(props) {
             }}
             style={[styles.card, { backgroundColor: "#FEF8C8" }]}
           >
-            <Text style={styles.cardText}>My {"\n"}Tasks</Text>
+            <Text style={styles.cardText}>Start {"\n"}Therapy</Text>
 
-            <TasksIcon width={wp(11)} height={hp(6)} />
+            <TasksIcon2 width={wp(12.6)} height={wp(17.6)} />
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -667,19 +615,8 @@ export default function HomeScreen2(props) {
             }}
             style={[styles.card, { backgroundColor: "#EBF2F5" }]}
           >
-            <Text style={styles.cardText}>My {"\n"}Progress</Text>
-            <Image
-              source={require("../../assets/images/ProgressIcon.gif")}
-              style={{
-                width: wp(20),
-                height: hp(12),
-                position: "absolute",
-                zIndex: -1,
-                left: wp(2),
-                right: wp(2),
-                bottom: hp(1.6),
-              }}
-            />
+            <Text style={styles.cardText}>Wellness {"\n"}Blog</Text>
+            <ProgressIcon2 width={wp(16.5)} height={wp(18.9)} />
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -881,9 +818,9 @@ export default function HomeScreen2(props) {
             navigation.navigate("webview", product);
           }}
           className="flex-col items-center"
-          style={[styles.cardContainer, { height: hp(15.8), marginTop: hp(4) }]}
+          style={[{ height: hp(15.8), marginTop: hp(4) }]}
         >
-          <View style={[styles.packageCard, { backgroundColor: "#EAF7FC" }]}>
+          {/* <View style={[styles.packageCard, { backgroundColor: "#EAF7FC" }]}>
             <View
               className="flex-col justify-between items-start "
               style={{ height: hp(9) }}
@@ -897,7 +834,8 @@ export default function HomeScreen2(props) {
               source={require("../../assets/images/SelfCareIcon2.png")}
               style={{ width: wp(18), height: hp(14) }}
             />
-          </View>
+          </View> */}
+          <Help width={wp(84)} height={wp(34.4)} />
         </TouchableOpacity>
 
         <View
@@ -941,9 +879,8 @@ const styles = StyleSheet.create({
   btnText: {
     textAlign: "center",
     color: "#01818C",
-    fontSize: wp(4),
-    fontFamily: "Roboto",
-    fontWeight: "600",
+    fontSize: wp(4.2),
+    fontWeight: "500",
   },
 
   // Cards
@@ -960,7 +897,7 @@ const styles = StyleSheet.create({
     height: "100%",
     borderRadius: wp(4),
     paddingTop: hp(1),
-    paddingBottom: hp(1.5),
+    paddingBottom: hp(1),
     display: "flex",
     flexDirection: "col",
     alignItems: "center",
