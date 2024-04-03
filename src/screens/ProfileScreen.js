@@ -395,9 +395,7 @@ const SecondRoute = (props) => {
               <>
                 {/* <CardDetails props={data} /> */}
                 {data.map((item, index) => (
-                  <>
                   <CardDetails key={index} props={item} />
-                  </>
                 ))}
               </>
             ) : (
@@ -545,7 +543,8 @@ const Card = (props) => {
                 passDataToParent({ state: false, type: props.props.type });
                 console.log(true);
               }}
-              resizeMode="stretch"
+              // resizeMode="stretch"
+              resizeMode="contain"
               style={{ width: wp(84), height: hp(18), borderRadius: wp(2) }}
               source={{
                 uri: props.props.banLink,

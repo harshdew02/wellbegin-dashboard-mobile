@@ -23,6 +23,7 @@ import { useNavigation } from "@react-navigation/native";
 import { data, codes } from "../constants";
 import * as Sentry from "@sentry/react-native";
 import { useAuth } from "../utils/auth";
+import { useIsFocused } from '@react-navigation/native'
 
 Sentry.init({
   dsn: "https://e5adfef643df1d558d810f49f20e22a9@o4506911526813696.ingest.us.sentry.io/4506911552569344",
@@ -100,21 +101,28 @@ const Login = ({ route }) => {
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
   const [number, onChangeNumber] = React.useState("");
+  const [statusChange, setstatusChange] = React.useState(false);
   navigation.addListener("focus", () => {
     setLoading(false);
   });
 
   const welcome = async () => {
     const welcome = await SInfo.getItem("welcome");
-    if(welcome == null || welcome == undefined){
-      await SInfo.setItem("welcome","false");
+    if (welcome == null || welcome == undefined) {
+      await SInfo.setItem("welcome", "false");
     }
   }
 
   useEffect(() => {
+    setstatusChange(true);
     welcome();
   }, [])
-  
+  const isFocused = useIsFocused()
+  const [tmp , settmp] = useState(true);
+
+  useEffect(() => {
+    settmp(!tmp);
+  }, [isFocused])
 
   React.useEffect(() => {
     const isLogin = async () => {
@@ -150,6 +158,7 @@ const Login = ({ route }) => {
       <StatusBar
         backgroundColor={'#fff'}
         barStyle={"dark-content"}
+        translucent = {false}
         hidden={false}
       />
       {/* <TopBar /> */}
@@ -170,7 +179,7 @@ const Login = ({ route }) => {
 
         <Text style={styles.getinstant}>Sign up so we can personalise your journey</Text>
 
-        <ActivityIndicator style={{marginTop:hp(2)}} animating={loading} size="large" />
+        <ActivityIndicator style={{ marginTop: hp(2) }} animating={loading} size="large" />
 
         <View
           className="flex-row items-center"
