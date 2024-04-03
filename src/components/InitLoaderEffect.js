@@ -24,23 +24,25 @@ const showToast = (message) => {
 export default function InitLoaderEffect( {route}) {
   const navigation = useNavigation();
   const {connect, Diversion, setUser} = useAuth();
+  const [refresh, setRefresh] = React.useState(true);
   const backHandler = () => {
     BackHandler.exitApp();
     return true;
   };
 
   navigation.addListener("focus", () => {
+    setRefresh(true);
     BackHandler.addEventListener("hardwareBackPress", backHandler);
   });
 
   navigation.addListener("blur", () => {
+    setRefresh(false);
     BackHandler.removeEventListener("hardwareBackPress", backHandler);
   });
 
   const initializer = async ()=> {
     try {
       connect();
-      // const nav_data = route.params != (null || undefined) ? route.params.navigation : "main";
       if(route.params != null && route.params != undefined) Diversion(route.params.navigation);
       let token = await SInfo.getItem("token");
       if (token == null || token == undefined) navigation.navigate("LoginPage");
@@ -164,7 +166,6 @@ export default function InitLoaderEffect( {route}) {
               } else {
                 throw new Error("User credentails expired");
               }
-              // console.log(res.data.show_sub)
             })
             .catch((err) => {
               console.log(err);
@@ -173,16 +174,20 @@ export default function InitLoaderEffect( {route}) {
         }
       }
     } catch (error) {
-      // SInfo.removeItem("token");
-      // showToast("User credentials expired, please login again.");
-      // navigation.navigate("LoginPage");
+      SInfo.removeItem("token");
+      showToast("User credentials expired, please login again.");
+      navigation.navigate("LoginPage");
       console.log(error);
     }
   }
 
   React.useEffect(() => {
-    initializer();
-  })
+    if(refresh)
+    {
+      console.log("Refreshing...")
+      initializer();
+    }
+  }, [refresh])
 
   return (
     <SafeAreaView className="bg-white" style={{ height: hp(100) }}>

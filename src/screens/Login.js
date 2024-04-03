@@ -221,7 +221,6 @@ const Login = ({ route }) => {
             style={styles.input}
             onChangeText={onChangeNumber}
             value={number}
-            // placeholder="6266019364"
             keyboardType="numeric"
             placeholder="Enter your Phone Number"
             onSubmitEditing={() => {
