@@ -529,13 +529,13 @@ export default function HomeScreen2(props) {
                 : { marginTop: hp(0) }
             }
           >
-            <CopilotStep
+            {/* <CopilotStep
               text="This is a hello world example!"
               order={1}
               name="hello"
             >
               <CopilotText>Hello world!</CopilotText>
-            </CopilotStep>
+            </CopilotStep> */}
             <HomePageBanner2 width={wp(100)} height={wp(78.9)} />
 
             <View style={styles.banner}>

@@ -182,7 +182,7 @@ export default function AboutMe(props) {
               inputMode="text"
             />
             <TextInput
-              style={[styles.input, { backgroundColor: "#cde3e9" }]}
+              style={[styles.input, { backgroundColor: "#fff", color:'#989898' }]}
               value={`+${code}-${phone}`}
               inputMode="tel"
               editable={false}
@@ -227,7 +227,7 @@ export default function AboutMe(props) {
                 borderWidth: wp(0.3),
               }}
             >
-              <Text style={{ color: theme.black }}>Logout</Text>
+              <Text style={{ color: theme.black, fontSize: wp(4.2) }}>Cancel</Text>
               <Cross simple={true} />
             </TouchableOpacity>
             <TouchableOpacity
@@ -264,7 +264,7 @@ export default function AboutMe(props) {
           >
             <BottomQuote width={wp(71)} height={hp(15)} />
           </View>
-          <View style={{ width: wp(100), height: hp(6), marginTop: hp(3) }} />
+          {/* <View style={{ width: wp(100), height: hp(6), marginTop: hp(3) }} /> */}
         </ScrollView>
       </SafeAreaView>
     </GestureHandlerRootView>
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: wp(6),
     borderWidth: wp(0.3),
-    borderColor: "#455a64",
+    borderColor: theme.black,
     borderStyle: "solid",
     color: "#455A64",
     fontWeight: "500",
