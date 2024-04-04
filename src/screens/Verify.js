@@ -19,9 +19,9 @@ import {
 import axios from "axios";
 import { useAuth } from "../utils/auth";
 import { LogLevel, OneSignal } from "react-native-onesignal";
-import { useIsFocused } from '@react-navigation/native'
-import LoginNew from "../../assets/images/LoginNew.svg"
-import TurnBack from "../../assets/images/turnBack.svg"
+import { useIsFocused } from "@react-navigation/native";
+import LoginNew from "../../assets/images/LoginNew.svg";
+import TurnBack from "../../assets/images/turnBack.svg";
 import { theme } from "../theme";
 const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
@@ -36,11 +36,7 @@ const AppInitializer = (mobile) => {
   // OneSignal Initialization
   OneSignal.initialize("3a865120-5f7d-41a2-b5b3-5bb205884c50");
 
-  // requestPermission will show the native iOS or Android notification permission prompt.
-  // We recommend removing the following code and instead using an In-App Message to prompt for notification permission
-  OneSignal.Notifications.requestPermission(true);
-
-  OneSignal.login(mobile)
+  OneSignal.login(mobile);
   // Method for listening for notification clicks
   OneSignal.Notifications.addEventListener("click", (event) => {
     console.log("OneSignal: notification clicked:", event);
@@ -85,7 +81,7 @@ const verifyOTP = async (
               user_email: "",
             })
           );
-          AppInitializer(res.data.code+res.data.phone);
+          AppInitializer(res.data.code + res.data.phone);
           navigation.navigate("loader");
         } else {
           console.log("wrong otp received");
@@ -201,11 +197,11 @@ export default function Verify({ navigation, route }) {
 
   const [number, onChangeNumber] = React.useState("");
 
-  const isFocused = useIsFocused()
+  const isFocused = useIsFocused();
   useEffect(() => {
     if (isFocused) {
     }
-  }, [isFocused])
+  }, [isFocused]);
 
   return (
     <KeyboardAvoidingView
@@ -215,35 +211,41 @@ export default function Verify({ navigation, route }) {
     >
       {/* <TopBar /> */}
       <StatusBar
-        backgroundColor={'#fff'}
+        backgroundColor={"#fff"}
         barStyle={"dark-content"}
         hidden={false}
       />
 
-      <ScrollView contentContainerStyle={{
-        display: "flex-1",
-        flexDirection: "col",
-        alignItems: "center",
-      }}
-        style={{ width: wp(100), height: hp(50), }}
-        keyboardShouldPersistTaps='always'
+      <ScrollView
+        contentContainerStyle={{
+          display: "flex-1",
+          flexDirection: "col",
+          alignItems: "center",
+        }}
+        style={{ width: wp(100), height: hp(50) }}
+        keyboardShouldPersistTaps="always"
       >
         <LoginNew width={wp(100)} height={wp(81.6)} />
         {/* <View style={{ marginTop: hp(4) }} className="flex-col items-center"> */}
-        <Text style={styles.well}>It's time to take a leap towards a healthier mind</Text>
+        <Text style={styles.well}>
+          It's time to take a leap towards a healthier mind
+        </Text>
 
-        <Text style={styles.getinstant}>Sign up so we can personalise your journey</Text>
-        <Text style={{
-          color: '#01818C',
-          fontSize: wp(4),
-          fontFamily: "Roboto",
-          fontWeight: "700",
-          marginTop: hp(2),
-        }}>Enter OTP Sent to
-          +{route.params.code}
+        <Text style={styles.getinstant}>
+          Sign up so we can personalise your journey
+        </Text>
+        <Text
+          style={{
+            color: "#01818C",
+            fontSize: wp(4),
+            fontFamily: "Roboto",
+            fontWeight: "700",
+            marginTop: hp(2),
+          }}
+        >
+          Enter OTP Sent to +{route.params.code}
           {route.params.phone}
         </Text>
-        <ActivityIndicator animating={loading} size="large" style={{ position: 'absolute', zIndex: 2 }} />
         <TextInput
           className="rounded-lg"
           style={[styles.input, { fontSize: wp(5) }]}
@@ -252,7 +254,7 @@ export default function Verify({ navigation, route }) {
           placeholder="Enter OTP"
           keyboardType="numeric"
           onSubmitEditing={() => {
-            connect()
+            connect();
             setLoading(true);
             setShowErrorMessage(null);
             verifyOTP(
@@ -260,7 +262,7 @@ export default function Verify({ navigation, route }) {
               navigation,
               [loading, setLoading],
               [showErrorMessage, setShowErrorMessage]
-            )
+            );
           }}
         />
 
@@ -268,27 +270,63 @@ export default function Verify({ navigation, route }) {
           <Text style={styles.wrong}>{showErrorMessage}</Text>
         )}
 
-
-        <View style={{ width: wp(84), flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: hp(2.5)}} >
-          <TouchableOpacity onPress={() => { navigation.goBack() }} style={{ flexDirection: 'row', alignItems: 'center', height:hp(7.3), justifyContent:'center' }} >
+        <View
+          style={{
+            width: wp(84),
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginTop: hp(2.5),
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              height: hp(7.3),
+              justifyContent: "center",
+            }}
+          >
             <TurnBack />
-            <Text style={{ fontSize: wp(5.5), fontWeight: '500', color: '#455A64', marginLeft: wp(2) }}>Back</Text>
+            <Text
+              style={{
+                fontSize: wp(5.5),
+                fontWeight: "500",
+                color: "#455A64",
+                marginLeft: wp(2),
+              }}
+            >
+              Back
+            </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={styles.button}
+            style={[styles.button]}
             onPress={() => {
-              connect()
+              connect();
               setLoading(true);
               setShowErrorMessage(null);
               verifyOTP(
                 number,
                 navigation,
                 [loading, setLoading],
-                [showErrorMessage, setShowErrorMessage],
+                [showErrorMessage, setShowErrorMessage]
               );
             }}
           >
-            <Text style={styles.textStyle}>Verify OTP</Text>
+            <ActivityIndicator
+              animating={loading}
+              size="large"
+              style={{ position: "absolute", zIndex: 2 }}
+              color={"#fff"}
+            />
+            <Text
+              style={[styles.textStyle, { display: loading ? "none" : "flex" }]}
+            >
+              Verify OTP
+            </Text>
           </TouchableOpacity>
         </View>
         <View className="flex-row" style={styles.resend}>
@@ -339,7 +377,17 @@ export default function Verify({ navigation, route }) {
             </>
           )}
         </View>
-        <Text style={{ fontSize:wp(3), width:wp(60), textAlign:'center', marginTop:hp(6), color:'rgba(69, 90, 100, 0.5)'}} >🔒 Your information is 100% confidential and never shared with anyone</Text>
+        <Text
+          style={{
+            fontSize: wp(3),
+            width: wp(60),
+            textAlign: "center",
+            marginTop: hp(6),
+            color: "rgba(69, 90, 100, 0.5)",
+          }}
+        >
+          🔒 Your information is 100% confidential and never shared with anyone
+        </Text>
         {/* </View> */}
       </ScrollView>
     </KeyboardAvoidingView>
@@ -357,7 +405,7 @@ const styles = StyleSheet.create({
 
   well: {
     // Your Wellbeing Comes First!
-    textAlign: 'center',
+    textAlign: "center",
     color: "#01818C",
     width: wp(82),
     fontSize: wp(6.4),
@@ -395,7 +443,7 @@ const styles = StyleSheet.create({
     padding: wp(2.6),
     paddingLeft: wp(5),
     marginTop: hp(3),
-    borderColor: 'rgba(69, 90, 100, 0.6)'
+    borderColor: "rgba(69, 90, 100, 0.6)",
   },
 
   button: {
