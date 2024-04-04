@@ -199,11 +199,11 @@ export default function InitLoaderEffect({ route }) {
         // autoPlay
       /> */}
       <Image
-        source={require("../../assets/images/loader.gif")}
-        style={{ height: hp(26.84), width: wp(100), marginTop: hp(18) }}
+        source={require("../../assets/images/loader2.gif")}
+        style={{ height: wp(100), width: wp(100), marginTop: hp(18) }}
       />
-      <View style={{backgroundColor:'#CAEBFF', height:hp(34)}}>
-      </View>
+      {/* <View style={{backgroundColor:'#CAEBFF', height:hp(34)}}>
+      </View> */}
     </SafeAreaView>
   );
 }
