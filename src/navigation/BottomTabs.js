@@ -15,6 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { request, PERMISSIONS, check, RESULTS } from "react-native-permissions";
 import { useAuth } from "../utils/auth.js";
 import PingCard from "../components/PingCard.js";
+import SInfo from "react-native-encrypted-storage";
 
 const { width, height } = Dimensions.get("window");
 
@@ -53,16 +54,26 @@ export default function BottomTabs(props) {
   const navigation = useNavigation();
   const [nick, setNick] = React.useState(false);
   const data = props.route.params;
-
+  const data2 = props.route.params.route.params;
   const Tab = createBottomTabNavigator();
   const { getDiversion, getAllowed } = useAuth();
 
   function isFirstTime() {
-    if (data.get_details === "true") {
-      setNick(false)
+    console.log("It is undefined: ",data2.get_details)
+    if (data2.get_details === "true") {
+      SInfo.getItem("nick_name")
+      .then((res) => {
+        if (res != null && res != undefined)
+          setNick(true)
+        else
+          setNick(false)
+      })
+      .catch((error) => console.log(error));
     } else {
-      setNick(true)
+      setNick(true);
     }
+  
+    console.log("It is nick",nick)
   }
 
   React.useEffect(() => {
