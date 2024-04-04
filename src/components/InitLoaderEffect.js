@@ -21,9 +21,9 @@ const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
 };
 
-export default function InitLoaderEffect( {route}) {
+export default function InitLoaderEffect({ route }) {
   const navigation = useNavigation();
-  const {connect, Diversion, setUser} = useAuth();
+  const { connect, Diversion, setUser } = useAuth();
   const [refresh, setRefresh] = React.useState(true);
   const backHandler = () => {
     BackHandler.exitApp();
@@ -40,10 +40,10 @@ export default function InitLoaderEffect( {route}) {
     BackHandler.removeEventListener("hardwareBackPress", backHandler);
   });
 
-  const initializer = async ()=> {
+  const initializer = async () => {
     try {
       connect();
-      if(route.params != null && route.params != undefined) Diversion(route.params.navigation);
+      if (route.params != null && route.params != undefined) Diversion(route.params.navigation);
       let token = await SInfo.getItem("token");
       if (token == null || token == undefined) navigation.navigate("LoginPage");
       else {
@@ -153,7 +153,7 @@ export default function InitLoaderEffect( {route}) {
                 finalDetails.sub_onclick = res.data.sub_onclick != (null || undefined) ? res.data.sub_onclick : "https://heartitout.in/";
                 finalDetails.packages_onclick = res.data.packages_onclick != (null || undefined) ? res.data.packages_onclick : "https://heartitout.in/";
                 finalDetails.welbeing_onclick = res.data.welbeing_onclick != (null || undefined) ? res.data.welbeing_onclick : "https://mindbodybliss.in/";
-                setUser({category:res.data.user_category, type: res.data.user_type})
+                setUser({ category: res.data.user_category, type: res.data.user_type })
               } else if (res.data.status === "10") {
                 (finalDetails.has_mood = res.data.mood_tacker != (null || undefined) ? res.data.mood_tacker : "no");
                 finalDetails.show_sub = res.data.show_sub;
@@ -165,7 +165,7 @@ export default function InitLoaderEffect( {route}) {
                 finalDetails.sub_onclick = res.data.sub_onclick != (null || undefined) ? res.data.sub_onclick : "https://heartitout.in/";
                 finalDetails.packages_onclick = res.data.packages_onclick != (null || undefined) ? res.data.packages_onclick : "https://heartitout.in/";
                 finalDetails.welbeing_onclick = res.data.welbeing_onclick != (null || undefined) ? res.data.welbeing_onclick : "https://mindbodybliss.in/";
-                setUser({category:res.data.user_category, type: res.data.user_type})
+                setUser({ category: res.data.user_category, type: res.data.user_type })
               } else {
                 throw new Error("User credentails expired");
               }
@@ -173,7 +173,7 @@ export default function InitLoaderEffect( {route}) {
             .catch((err) => {
               console.log(err);
             });
-            navigation.navigate("main", finalDetails);
+          navigation.navigate("main", finalDetails);
         }
       }
     } catch (error) {
@@ -185,8 +185,7 @@ export default function InitLoaderEffect( {route}) {
   }
 
   React.useEffect(() => {
-    if(refresh)
-    {
+    if (refresh) {
       console.log("Refreshing...")
       initializer();
     }
@@ -201,15 +200,10 @@ export default function InitLoaderEffect( {route}) {
         // autoPlay
       /> */}
       <Image
-        className="mr-8"
-        source={require("../../assets/images/loader.gif")}
-        style={{ height: hp(28), width: wp(100), marginTop: hp(24) }}
+        source={require("../../assets/images/loader2.gif")}
+        style={{ height: wp(100), width: wp(100), marginTop: hp(18) }}
       />
-
-      <View className="flex-row justify-around">
-        <Text style={styles.text1}>
-          Relax while we setup your Personalised Wellbeing Dashboard
-        </Text>
+      <View style={{backgroundColor:'#CAEBFF', height:hp(34)}}>
       </View>
     </SafeAreaView>
   );

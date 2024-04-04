@@ -21,54 +21,68 @@ import P2 from "../../assets/images/page2.svg";
 import P3 from "../../assets/images/page3.svg";
 import Next from "../../assets/images/nextIcon.svg";
 import { theme } from "../theme";
-import C1 from "../../assets/images/c1.svg";
-import C2 from "../../assets/images/c2.svg";
-import C3 from "../../assets/images/c3.svg";
-import C4 from "../../assets/images/c4.svg";
-import C5 from "../../assets/images/c5.svg";
+// import C1 from "../../assets/images/c1.svg";
+// import C2 from "../../assets/images/c2.svg";
+// import C3 from "../../assets/images/c3.svg";
+// import C4 from "../../assets/images/c4.svg";
+// import C5 from "../../assets/images/c5.svg";
 import SInfo from "react-native-encrypted-storage";
-import C6 from "../../assets/images/c6.svg";
+// import C6 from "../../assets/images/c6.svg";
 import { useNavigation } from "@react-navigation/native";
 const COLORS = { primary: "#282534", white: "#fff" };
 const { width, height } = Dimensions.get("window");
 import AutoScrollingList from "../components/AutoRotatedScrollview";
 
-const com = [
-  {
-    id: "1",
-    C: <C1 width={wp(79)} height={hp(40)} />,
-  },
-  {
-    id: "2",
-    C: <C2 width={wp(79)} height={hp(40)} />,
-  },
-  {
-    id: "3",
-    C: <C3 width={wp(79)} height={hp(40)} />,
-  },
-  {
-    id: "4",
-    C: <C4 width={wp(79)} height={hp(40)} />,
-  },
-  {
-    id: "5",
-    C: <C5 width={wp(79)} height={hp(40)} />,
-  },
-  {
-    id: "6",
-    C: <C6 width={wp(79)} height={hp(40)} />,
-  },
-];
+const C1 = () => {
+  return (
+    <Image
+      resizeMode="contain"
+      style={{ width: wp(79), height: hp(42) }}
+      source={require('../../assets/images/cn1.png')} />
+  )
+}
+const C2 = () => {
+  return (
+    <Image
+      resizeMode="contain"
+      style={{ width: wp(79), height: hp(42) }}
+      source={require('../../assets/images/cn2.png')} />
+  )
+}
+const C3 = () => {
+  return (
+    <Image
+      resizeMode="contain"
+      style={{ width: wp(79), height: hp(42) }}
+      source={require('../../assets/images/cn3.png')} />
+  )
+}
+const C4 = () => {
+  return (
+    <Image
+      resizeMode="contain"
+      style={{ width: wp(79), height: hp(42) }}
+      source={require('../../assets/images/cn4.png')} />
+  )
+}
+const C5 = () => {
+  return (
+    <Image
+      resizeMode="contain"
+      style={{ width: wp(79), height: hp(42) }}
+      source={require('../../assets/images/cn5.png')} />
+  )
+}
 
 const P4 = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const translateX = new Animated.Value(-activeIndex * (Dimensions.get('window').width) / 1);
   const cardComponents = [
-    <C1 key={1} width={wp(79)} height={hp(40)} />,
-    <C2 key={2} width={wp(79)} height={hp(40)} />,
-    <C3 key={3} width={wp(79)} height={hp(40)} />,
-    <C4 key={4} width={wp(79)} height={hp(40)} />,
-    <C5 key={5} width={wp(79)} height={hp(40)} />,
+    <C1 key={1} />,
+    <C2 key={2} />,
+    <C3 key={3} />,
+    <C4 key={4} />,
+    <C5 key={5} />,
     // <C6 key={2} width={wp(79)} height={hp(40)} />,
   ];
 
@@ -94,7 +108,7 @@ const P4 = () => {
   }, []);
   return (
     <>
-      <View style={{ alignItems: 'center', overflow:'hidden'}} >
+      <View style={{ alignItems: 'center', overflow: 'hidden' }} >
         <P3 width={wp(100)} height={wp(133)} />
         <Animated.View
           style={{
@@ -106,7 +120,7 @@ const P4 = () => {
             width: wp(80),
             marginTop: hp(12),
             justifyContent: 'space-between',
-            
+
           }}
         >
           {cardComponents.map((card, index) => (
@@ -124,8 +138,8 @@ const P4 = () => {
 const Px = () => {
   return (
     <>
-    <Image style={{height: hp(7.8), width: wp(32.8), position:'absolute', zIndex:1, top:hp(6.8) }} source={require('../../assets/logo.png')}/>
-    <P1 width={wp(100)} height={wp(125)} />
+      <Image style={{ height: hp(7.8), width: wp(32.8), position: 'absolute', zIndex: 1, top: hp(6.8) }} source={require('../../assets/logo.png')} />
+      <P1 width={wp(100)} height={wp(125)} />
     </>
   )
 };
@@ -221,7 +235,7 @@ const Onboarding = ({ route }) => {
     if (route.params != null && route.params != undefined)
       Diversion(route.params.navigation);
     isLogin();
-  }, []);
+  });
 
   // const skip = () => {
   //     const lastSlideIndex = slides.length - 1;
@@ -330,7 +344,7 @@ const Onboarding = ({ route }) => {
     <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
       <StatusBar
         barStyle={"dark-content"}
-        translucent = {true}
+        translucent={true}
         backgroundColor="transparent"
       />
       <FlatList

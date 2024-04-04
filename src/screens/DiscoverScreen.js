@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
   cardText: {
     width: wp(35),
     textAlign: "center",
-    fontSize: wp(3.8),
+    fontSize: wp(3.5),
     fontFamily: "Roboto",
     fontWeight: "800",
     marginTop: hp(5)
