@@ -4,7 +4,7 @@ import {
   View,
   TouchableOpacity,
   ActivityIndicator,
-  BackHandler
+  BackHandler,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -59,11 +59,12 @@ const SphereOfLife = {
 };
 
 const MoodCard = (props) => {
-  console.log('fhome herer :' + props.props.emotion_3)
+  console.log("fhome herer :" + props.props.emotion_3);
   return (
     <View style={styles.CardStyle}>
       <Text style={{ width: wp(75), color: theme.black, fontSize: wp(3.2) }}>
-        {props.props.day_sub} {props.props.month_sub.replace(/\s+/g, '')} {props.props.year_sub}
+        {props.props.day_sub} {props.props.month_sub.replace(/\s+/g, "")}{" "}
+        {props.props.year_sub}
       </Text>
       <View
         style={{
@@ -73,7 +74,7 @@ const MoodCard = (props) => {
           height: hp(6),
           alignItems: "center",
           // backgroundColor: 'yellow'
-          marginTop: hp(1.4)
+          marginTop: hp(1.4),
         }}
       >
         {component[props.props.mood]}
@@ -118,7 +119,7 @@ const MoodCard = (props) => {
           fontSize: wp(3.7),
           fontWeight: "normal",
           textAlign: "left",
-          marginTop: hp(1.4)
+          marginTop: hp(1.4),
           // backgroundColor: 'red',
           // overflow: 'scroll',
           // height: hp(6),
@@ -131,25 +132,25 @@ const MoodCard = (props) => {
         style={{
           display: "flex",
           flexDirection: "row",
-          flexWrap: 'wrap',
-          justifyContent: 'left',
-          alignItems: 'center',
+          flexWrap: "wrap",
+          justifyContent: "left",
+          alignItems: "center",
           marginTop: hp(1.4),
           width: "100%",
         }}
       >
         <View
           style={{
-            marginRight:wp(2),
+            marginRight: wp(2),
             height: hp(2.5),
             paddingHorizontal: wp(1.6),
             backgroundColor: "#dbf2f2",
             flexDirection: "row",
-            flexWrap: 'wrap',
+            flexWrap: "wrap",
             alignItems: "center",
             justifyContent: "space-between",
             borderRadius: wp(2.6),
-            marginTop: hp(0.5)
+            marginTop: hp(0.5),
           }}
         >
           {/* <Work w={3.7} h={3.1} isClicked={true} /> */}
@@ -165,100 +166,117 @@ const MoodCard = (props) => {
             }}
           >
             {" "}
-            {props.props.sphere_of_life.charAt(0).toUpperCase() + props.props.sphere_of_life.slice(1)}
+            {props.props.sphere_of_life.charAt(0).toUpperCase() +
+              props.props.sphere_of_life.slice(1)}
           </Text>
         </View>
 
-        {props.props.emotion_1 != (null || undefined || "") ? (
-
+        {props.props.emotion_1 != (null && undefined) ? (
           <>
-            <View
-              style={{
-                height: hp(2.5),
-                paddingHorizontal: wp(1.6),
-                backgroundColor: "#fceecb",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                borderRadius: wp(2.6),
-                marginTop: hp(0.5),
-                marginRight:wp(2)
-              }}
-            >
-              <Text
+            {props.props.emotion_1 === "" ? (
+              <></>
+            ) : (
+              <View
                 style={{
-                  marginLeft: wp(0.2),
-                  color: theme.black,
-                  fontSize: wp(3.2),
-                  fontWeight: "normal",
-                  textAlign: "left",
+                  height: hp(2.5),
+                  paddingHorizontal: wp(1.6),
+                  backgroundColor: "#fceecb",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  borderRadius: wp(2.6),
+                  marginTop: hp(0.5),
+                  marginRight: wp(2),
                 }}
               >
-                {props.props.emotion_1.charAt(0).toUpperCase() + props.props.emotion_1.slice(1)}
-              </Text>
-            </View>
+                <Text
+                  style={{
+                    marginLeft: wp(0.2),
+                    color: theme.black,
+                    fontSize: wp(3.2),
+                    fontWeight: "normal",
+                    textAlign: "left",
+                  }}
+                >
+                  {props.props.emotion_1.charAt(0).toUpperCase() +
+                    props.props.emotion_1.slice(1)}
+                </Text>
+              </View>
+            )}
           </>
         ) : (
           <></>
         )}
 
-        {props.props.emotion_2 != (null || undefined || "") ? (
-          <View
-            style={{
-              height: hp(2.5),
-              paddingHorizontal: wp(1.6),
-              backgroundColor: "#fceecb",
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-              borderRadius: wp(2.6),
-              marginTop: hp(0.5),
-              marginRight:wp(2)
-            }}
-          >
-            <Text
-              style={{
-                marginLeft: wp(0.2),
-                color: theme.black,
-                fontSize: wp(3.2),
-                fontWeight: "normal",
-                textAlign: "left",
-              }}
-            >
-              {props.props.emotion_2.charAt(0).toUpperCase() + props.props.emotion_2.slice(1)}
-            </Text>
-          </View>
+        {props.props.emotion_2 != (null && undefined) ? (
+          <>
+            {props.props.emotion_2 === "" ? (
+              <></>
+            ) : (
+              <View
+                style={{
+                  height: hp(2.5),
+                  paddingHorizontal: wp(1.6),
+                  backgroundColor: "#fceecb",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  borderRadius: wp(2.6),
+                  marginTop: hp(0.5),
+                  marginRight: wp(2),
+                }}
+              >
+                <Text
+                  style={{
+                    marginLeft: wp(0.2),
+                    color: theme.black,
+                    fontSize: wp(3.2),
+                    fontWeight: "normal",
+                    textAlign: "left",
+                  }}
+                >
+                  {props.props.emotion_2.charAt(0).toUpperCase() +
+                    props.props.emotion_2.slice(1)}
+                </Text>
+              </View>
+            )}
+          </>
         ) : (
           <></>
         )}
 
-        {props.props.emotion_3 != (null || undefined || "") ? (
+        {props.props.emotion_3 != (null && undefined) ? (
           <>
-            <View
-              style={{
-                height: hp(2.5),
-                paddingHorizontal: wp(1.6),
-                backgroundColor: "#fceecb",
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                borderRadius: wp(2.6),
-                marginTop: hp(0.5),
-                marginRight:wp(2)
-              }}
-            >
-              <Text
+            {props.props.emotion_3 === "" ? (
+              <></>
+            ) : (
+              <View
                 style={{
-                  marginLeft: wp(0.2),
-                  color: theme.black,
-                  fontSize: wp(3.2),
-                  fontWeight: "normal",
-                  textAlign: "left",
+                  height: hp(2.5),
+                  paddingHorizontal: wp(1.6),
+                  backgroundColor: "#fceecb",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  borderRadius: wp(2.6),
+                  marginTop: hp(0.5),
+                  marginRight: wp(2),
                 }}
               >
-                {props.props.emotion_3.charAt(0).toUpperCase() + props.props.emotion_3.slice(1)}
-              </Text>
-            </View>
+                <Text
+                  style={{
+                    marginLeft: wp(0.2),
+                    color: theme.black,
+                    fontSize: wp(3.2),
+                    fontWeight: "normal",
+                    textAlign: "left",
+                  }}
+                >
+                  {props.props.emotion_3.charAt(0).toUpperCase() +
+                    props.props.emotion_3.slice(1)}
+                </Text>
+              </View>
+            )}
           </>
         ) : (
           <></>
@@ -273,11 +291,19 @@ const MoodLog = (props) => {
   const navigation = useNavigation();
   const [datas, setData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const {connect} = useAuth();
-  let payload = props.route.params;
+  const { connect } = useAuth();
+  // let payload = props.route.params;
+  let payload = {
+    token: "o1hTU9pb8xIwE3T/Ho6bxujmFtjKLJtxAlBcZYwCGPc=",
+    phone: "9330396039",
+    code: "91",
+    otp: "2953",
+    date: "2024-02-16",
+    week: "2",
+  };
 
   const backHandler = () => {
-    navigation.goBack()
+    navigation.goBack();
     return true;
   };
 
@@ -290,36 +316,36 @@ const MoodLog = (props) => {
   });
 
   useEffect(() => {
-    payload.week = payload.curr;
+    // payload.week = payload.curr;
     const url = "https://n8n.heartitout.in/webhook/api/mt-weekly-mood";
     const connection = connect();
-    if(!connection) {setLoading(false)}
-    else
-    {
-    if (loading) {
-      axios
-        .post(url, payload)
-        .then((res) => {
-          console.log(res.data);
-          if (res.data.has_res === "yes") {
-            if (res.data.data != (undefined || null))
-              setData(res.data.data);
-          }
-          // setData(res.data.data);
-        })
-        .catch((err) => {
-          console.log(err);
-        })
-        .finally(() => {
-          // console.log(mood_data);
-          setLoading(false);
-        });
-    }}
+    if (!connection) {
+      setLoading(false);
+    } else {
+      if (loading) {
+        axios
+          .post(url, payload)
+          .then((res) => {
+            console.log(res.data);
+            if (res.data.has_res === "yes") {
+              if (res.data.data != (undefined || null)) setData(res.data.data);
+            }
+            // setData(res.data.data);
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+          .finally(() => {
+            // console.log(mood_data);
+            setLoading(false);
+          });
+      }
+    }
   }, [loading]);
 
   const fetchData = () => {
     setTimeout(() => {
-      setLoading(true)
+      setLoading(true);
       setRefreshing(false);
     }, 50); // Simulating 2 seconds delay
   };
@@ -356,12 +382,23 @@ const MoodLog = (props) => {
         style={{ width: wp(100), marginTop: hp(1), height: hp(90) }}
       >
         {loading ? (
-          <View style={{ height: hp(30), width: '100%', justifyContent: 'center', alignItems: 'center' }} >
-            <ActivityIndicator color="#01818C" animating={loading} size={wp(10)} />
+          <View
+            style={{
+              height: hp(30),
+              width: "100%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <ActivityIndicator
+              color="#01818C"
+              animating={loading}
+              size={wp(10)}
+            />
           </View>
-        ) : (datas.map((item, index) => (
-          <MoodCard key={index} props={item} />
-        )))}
+        ) : (
+          datas.map((item, index) => <MoodCard key={index} props={item} />)
+        )}
         <Text
           style={{
             color: theme.black,
