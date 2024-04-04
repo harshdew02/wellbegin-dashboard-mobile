@@ -33,7 +33,6 @@ const showToast = (message) => {
 };
 
 const checker = (details, name, email) => {
-  console.log(details.usr_fullname, details.user_email, name, email);
   if (details.usr_fullname === name && details.user_email === email) return -1;
   else if (details.user_email === "" || details.usr_fullname === "") return 0;
   else return 1;
@@ -49,7 +48,6 @@ const fillDetails = (
   //This the first call from the flowchart
   const apiUrl = "https://n8n.heartitout.in/webhook/api/fetch-user-details";
   try {
-    console.log(checker(details, prevName, prevMail));
     if (checker(details, prevName, prevMail) == 0) {
       showToast("Name or email can't be empty");
       setLoading(false);

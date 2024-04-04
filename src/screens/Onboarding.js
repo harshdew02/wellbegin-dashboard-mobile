@@ -101,10 +101,6 @@ const P4 = () => {
       duration: 2000,
       useNativeDriver: true,
     }).start();
-
-    // Animated.timing().stop()
-
-    console.log(activeIndex)
   }, []);
   return (
     <>
@@ -212,14 +208,12 @@ const Onboarding = ({ route }) => {
   };
 
   React.useEffect(() => {
-    console.log("Running onboarding system");
     const isLogin = async () => {
       try {
         const storedToken = await SInfo.getItem("token");
         if (storedToken == null || storedToken === undefined) {
         } else {
           const data = JSON.parse(storedToken);
-          // console.log(data)
           if (data.status !== "true") {
           } else {
             navigation.navigate("loader");

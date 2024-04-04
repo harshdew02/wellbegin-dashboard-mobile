@@ -148,12 +148,12 @@ export default function HomeScreen(props) {
   const [sub, setSub] = useState("");
   const [packages, setPackage] = useState("");
   const [showsub, setShowsub] = useState(false);
-  const [moodcheck, setMoodCheck] = useState(false);
-  const [subsdet, setSubsdet] = useState(false);
+  const [subsdet, setSubsdet] = useState(false); 
   const [subdays, setSubdays] = useState(0);
   const [bell, setBell] = useState(true);
   const [loaded, setLoaded] = useState(false);
   const [category, setCategory] = useState("regular");
+  const [moodcheck, setMoodCheck] = useState(false); 
 
   const { setHomes, home, connect } = useAuth();
   useEffect(() => {
@@ -315,8 +315,10 @@ export default function HomeScreen(props) {
                 setProduct(realTimeData.product_onclick);
                 setBooking(realTimeData.booking_link);
                 setPackage(realTimeData.packages_onclick);
+                setSub(realTimeData.sub_onclick);
                 if (realTimeData.subs_det === "yes") setSubsdet(true);
                 else setSubsdet(false);
+                setSubdays(Number.parseInt(realTimeData.subs_no_of_days === "" ? "0" : realTimeData.subs_no_of_days));
               }
             }
             setMoodCheck(false);
@@ -347,14 +349,14 @@ export default function HomeScreen(props) {
     setBooking(data.booking_link);
     if (data.show_sub === "yes") {
       setShowsub(true);
-      setSub(data.sub_onclick);
     } else {
       setShowsub(false);
-      setPackage(data.packages_onclick);
     }
+    setPackage(data.packages_onclick);
+    setSub(data.sub_onclick);
     if (data.subs_det === "yes") setSubsdet(true);
     else setSubsdet(false);
-    setSubdays(Number.parseInt(data.subs_no_of_days));
+    setSubdays(Number.parseInt(data.subs_no_of_days === "" ? "0" : data.subs_no_of_days));
     if (appointment.has_appointment === "no") setBooked(false);
     else {
       const apiDate = appointment.appointment.app_session_date;
@@ -650,7 +652,7 @@ export default function HomeScreen(props) {
         >
           <TouchableOpacity
             onPress={() => {
-              // navigation.navigate("homework", data);
+              navigation.navigate("homework", data);
             }}
             style={[styles.card, { backgroundColor: "#FEF8C8" }]}
           >
@@ -802,7 +804,7 @@ export default function HomeScreen(props) {
 
         {category === "cwp" ? null : (
           <>
-            {showsub ? (
+            {subdays > 0 ? (
               <TouchableOpacity
                 onPress={() => {
                   navigation.navigate("webview", sub);
@@ -836,9 +838,7 @@ export default function HomeScreen(props) {
                   <TouchableOpacity
                     activeOpacity={0.5}
                     style={[styles.Btn, { marginTop: hp(0.8) }]}
-                    onPress={() => {
-                      // Handle details press
-                    }}
+                    disabled={true}
                   >
                     <Text style={styles.btnText2}>See Details </Text>
                   </TouchableOpacity>
@@ -858,10 +858,8 @@ export default function HomeScreen(props) {
                   <View style={{ height: hp(9) }}>
                     <Text style={styles.cardText}>Session Packages</Text>
                     <TouchableOpacity
-                      style={styles.Btn}
-                      onPress={() => {
-                        // Handle explore packages press
-                      }}
+                      style={[styles.Btn, {marginTop:hp(2)}]}
+                      disabled = {true}
                     >
                       <Text style={styles.btnText2}>Explore Packages</Text>
                     </TouchableOpacity>

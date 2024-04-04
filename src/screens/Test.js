@@ -160,7 +160,6 @@ const CardDetails = (props) => {
 };
 
 const FirstRoute = (props) => {
-  //   console.log(props.props);
   const [hasApp, sethasApp] = useState(false);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
@@ -179,7 +178,6 @@ const FirstRoute = (props) => {
         axios
           .post(url, props.props)
           .then((res) => {
-            console.log("It is from first route in discover: ", res.data);
             if (res.data.has_res === "yes") {
               sethasApp(true);
               setData(res.data.res_data);
@@ -215,11 +213,9 @@ const FirstRoute = (props) => {
 
   React.useEffect(() => {
     if (timer) {
-      console.log("Reset the timer");
       clearInterval(idleTimer);
     } else {
       clearInterval(idleTimer);
-      console.log("Performing logic every 1 minute...");
       setIdleTimer(
         setInterval(() => {
           setLoading(true);
@@ -235,7 +231,6 @@ const FirstRoute = (props) => {
       style={styles.scrollContainer}
       onTouchStart={() => {
         setTimer(true);
-        console.log("reset");
       }}
     >
       {loading ? (
@@ -329,8 +324,6 @@ const renderTabBar = (props) => (
 const GeneralCard = (props) => {
   const [colors, setColor] = useState(props.colors);
   const navigation = useNavigation();
-  // console.log("Is this refreshing")
-
   const containsWord = (sentence, word) => {
     return sentence.toLowerCase().includes(word.toLowerCase());
   };

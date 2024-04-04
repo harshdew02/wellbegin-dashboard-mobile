@@ -242,7 +242,6 @@ const MoodInsights = (props) => {
     axios
       .post(url, payload)
       .then((res) => {
-        console.log(res.data);
         temp_data = res.data.data;
       })
       .catch((err) => {

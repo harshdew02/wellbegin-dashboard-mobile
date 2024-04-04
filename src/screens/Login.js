@@ -63,7 +63,6 @@ const requestOTP = async (code, number, navigation, [, setLoading]) => {
         const dataString = JSON.stringify(jsonData);
         await SInfo.setItem("token", dataString)
           .then(() => {
-            console.log("Data stored securely");
           })
           .catch((error) => {
             console.log("Error: ", error);
@@ -77,7 +76,6 @@ const requestOTP = async (code, number, navigation, [, setLoading]) => {
         setLoading(false);
       });
   } catch (error) {
-    console.log("Error requesting OTP:", error.message);
     showToast("Error requesting OTP " + error.message);
     setLoading(false);
   }
@@ -132,7 +130,6 @@ const Login = ({ route }) => {
 
         } else {
           const data = JSON.parse(storedToken);
-          // console.log(data)
           if (data.status !== "true") { }
           else {
             navigation.navigate('loader')
@@ -212,7 +209,6 @@ const Login = ({ route }) => {
             value={value}
             onChange={(item) => {
               setValue(item.code);
-              console.log(item);
               customEvent();
             }}
           />

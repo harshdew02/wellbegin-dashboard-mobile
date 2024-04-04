@@ -7,6 +7,13 @@ const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
 };
 
+let allow = false;
+let new_user = {
+  category: "regular",
+  type: "new",
+};
+let divert = "main";
+
 export const AuthProvider = ({ children }) => {
   const [path, setPath] = useState("App");
   const pathing = (paths) => {
@@ -16,7 +23,6 @@ export const AuthProvider = ({ children }) => {
   const setHomes = (paths) => {
     setHome(paths);
   };
-  let divert = "main";
 
   const Diversion = (screen) => {
     if (
@@ -37,11 +43,6 @@ export const AuthProvider = ({ children }) => {
     return divert;
   };
 
-  let new_user = {
-    category: "regular",
-    type: "new",
-  };
-
   const setUser = (is_new) => {
     new_user.category =
       is_new.category != (null || undefined) ? is_new.category : "regular";
@@ -51,8 +52,6 @@ export const AuthProvider = ({ children }) => {
   const getUser = () => {
     return new_user;
   };
-
-  let allow = false;
 
   const isAllowed = (allowed) => {
     allow = allowed;

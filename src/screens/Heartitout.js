@@ -27,17 +27,13 @@ function containsOrder(sentence) {
   );
 }
 
-let current = 0;
-
 export default function Heartitout(props) {
-  console.log(props.route.params);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
   const { pathing, setHomes } = useAuth();
   const [timeout, setTime] = useState(null);
 
   const onNavigationStateChange = (navState) => {
-    console.log("It is from nav change:", canGoBack, navState.url);
     canGoBack = navState.canGoBack;
     if (containsOrder(navState.url) && loading == false) {
       showToast("Order, placed successfully");
@@ -53,10 +49,8 @@ export default function Heartitout(props) {
       console.log("Not hit yet");
     }
   };
-  //   const [goBack, setGoBack] = useState(false);
   const webViewRef = useRef(null);
   const backHandler = () => {
-    console.log("It is can go back", canGoBack);
     if (canGoBack) goBack();
     else navigation.goBack();
     return true;

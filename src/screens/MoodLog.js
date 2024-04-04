@@ -59,7 +59,6 @@ const SphereOfLife = {
 };
 
 const MoodCard = (props) => {
-  console.log("fhome herer :" + props.props.emotion_3);
   return (
     <View style={styles.CardStyle}>
       <Text style={{ width: wp(75), color: theme.black, fontSize: wp(3.2) }}>
@@ -326,17 +325,14 @@ const MoodLog = (props) => {
         axios
           .post(url, payload)
           .then((res) => {
-            console.log(res.data);
             if (res.data.has_res === "yes") {
               if (res.data.data != (undefined || null)) setData(res.data.data);
             }
-            // setData(res.data.data);
           })
           .catch((err) => {
             console.log(err);
           })
           .finally(() => {
-            // console.log(mood_data);
             setLoading(false);
           });
       }

@@ -83,19 +83,18 @@ const PingCard = () => {
           </Text>
           <TextInput
             style={{
+              paddingHorizontal: wp(4),
               width: wp(83.73),
               height: hp(7.2),
               borderWidth: wp(0.3),
               borderColor: "rgba(0,0,0,0.3)",
               borderRadius: wp(3.4),
               fontSize: wp(4.2),
-              textAlign: "center",
+              // textAlign: "center",
             }}
             onChangeText={onChangeNickname}
             value={Nickname}
-            // placeholder="6266019364"
             placeholder="Enter your name/nickname"
-            // onSubmitEditing={}
           />
           <TouchableOpacity
             activeOpacity={0.8}

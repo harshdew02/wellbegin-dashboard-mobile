@@ -36,7 +36,6 @@ const DateTimeComponent = (rdate) => {
 };
 
 const Card = (props) => {
-  // console.log(props.props.item);
   const data = props.props.data;
   data.id = props.props.item.id;
   const item = props.props.item;
@@ -55,7 +54,6 @@ const Card = (props) => {
     axios
       .post(url, data)
       .then((res) => {
-        console.log(res.data);
         if (res.data.status === "1") setUpdated(true);
         else if (res.data.status === "10") setUpdated(false);
       })
@@ -193,7 +191,6 @@ const HomeWork = (route) => {
         axios
           .post(url, data)
           .then((res) => {
-            console.log(res.data);
             setData(res.data);
           })
           .catch((err) => {

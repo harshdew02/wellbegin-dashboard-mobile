@@ -50,7 +50,6 @@ const Progress = (props) => {
     axios
       .post(url, props.route.params)
       .then((res) => {
-        console.log(res.data);
         if (res.data.status === "1") setProgress(res.data.progress_link);
       })
       .catch((err) => {
