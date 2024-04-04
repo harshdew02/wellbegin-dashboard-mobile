@@ -5,14 +5,11 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import DiscoverScreen from "../screens/DiscoverScreen";
-import HomeScreen from "../screens/HomeScreen";
 import { HomescreenControl } from "../screens/HomeScreenController.js";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import SVGComponent from "../components/SVGcom";
 import HomeIcon from "../components/HomeIcon.js";
 import ProfileIcon from "../components/Profile.js";
-import AboutMe from "../screens/AboutMe.js";
-import ProfileNavigator from "./ProfileNavigator.js";
 import  {Profilecontroller}  from "../screens/ProfileController.js";
 import { useNavigation } from "@react-navigation/native";
 import { request, PERMISSIONS, check, RESULTS } from "react-native-permissions";
