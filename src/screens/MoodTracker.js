@@ -276,6 +276,7 @@ const Moods = (props) => {
         paddingHorizontal: wp(2.5),
         paddingVertical: wp(2),
         marginVertical: hp(0.8),
+        marginHorizontal: wp(0.4)
       }}
     >
       <Text
