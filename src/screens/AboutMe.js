@@ -98,6 +98,14 @@ export default function AboutMe(props) {
   const [phone, setPhone] = useState(data.phone);
   const [loading, setLoading] = useState(false);
 
+  React.useEffect(() => {
+    SInfo.getItem("nick_name")
+      .then((res) => {
+        if (res != null && res != undefined) if (name === "") setName(res);
+      })
+      .catch((error) => console.log(error));
+  }, []);
+
   const backHandler = () => {
     navigation.goBack();
     return true;

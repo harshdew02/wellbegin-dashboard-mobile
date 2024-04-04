@@ -85,6 +85,7 @@ export default function InitLoaderEffect( {route}) {
             subs_no_of_days: "0",
             sub_onclick: "https://heartitout.in/",
             packages_onclick: "https://heartitout.in/",
+            welbeing_onclick: "https://mindbodybliss.in/",
 
             //This is banner section
             has_banner: "no",
@@ -151,6 +152,7 @@ export default function InitLoaderEffect( {route}) {
                 finalDetails.product_onclick = res.data.product_onclick != (null || undefined) ? res.data.product_onclick : "https://heartitout.in/";
                 finalDetails.sub_onclick = res.data.sub_onclick != (null || undefined) ? res.data.sub_onclick : "https://heartitout.in/";
                 finalDetails.packages_onclick = res.data.packages_onclick != (null || undefined) ? res.data.packages_onclick : "https://heartitout.in/";
+                finalDetails.welbeing_onclick = res.data.welbeing_onclick != (null || undefined) ? res.data.welbeing_onclick : "https://mindbodybliss.in/";
                 setUser({category:res.data.user_category, type: res.data.user_type})
               } else if (res.data.status === "10") {
                 (finalDetails.has_mood = res.data.mood_tacker != (null || undefined) ? res.data.mood_tacker : "no");
@@ -162,6 +164,7 @@ export default function InitLoaderEffect( {route}) {
                 finalDetails.product_onclick = res.data.product_onclick != (null || undefined) ? res.data.product_onclick : "https://heartitout.in/";
                 finalDetails.sub_onclick = res.data.sub_onclick != (null || undefined) ? res.data.sub_onclick : "https://heartitout.in/";
                 finalDetails.packages_onclick = res.data.packages_onclick != (null || undefined) ? res.data.packages_onclick : "https://heartitout.in/";
+                finalDetails.welbeing_onclick = res.data.welbeing_onclick != (null || undefined) ? res.data.welbeing_onclick : "https://mindbodybliss.in/";
                 setUser({category:res.data.user_category, type: res.data.user_type})
               } else {
                 throw new Error("User credentails expired");
