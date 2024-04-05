@@ -73,6 +73,22 @@ const C5 = () => {
       source={require('../../assets/images/cn5.png')} />
   )
 }
+const C6 = () => {
+  return (
+    <Image
+      resizeMode="contain"
+      style={{ width: wp(79), height: hp(42) }}
+      source={require('../../assets/images/cn6.png')} />
+  )
+}
+const C7 = () => {
+  return (
+    <Image
+      resizeMode="contain"
+      style={{ width: wp(79), height: hp(42) }}
+      source={require('../../assets/images/cn7.png')} />
+  )
+}
 
 const P4 = () => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -83,6 +99,8 @@ const P4 = () => {
     <C3 key={3} />,
     <C4 key={4} />,
     <C5 key={5} />,
+    <C6 key={6} />,
+    <C7 key={7} />,
     // <C6 key={2} width={wp(79)} height={hp(40)} />,
   ];
 
@@ -176,11 +194,11 @@ const Slide = ({ item }) => {
       style={{
         alignItems: "center",
         width: wp(100),
-        justifyContent: "space-between",
+        // justifyContent: "space-between",
       }}
     >
       {item.P}
-      <View style={{ alignItems: "center" }}>
+      <View style={{ alignItems: "center", marginTop:hp(1.5)}}>
         <Text style={styles.title}>{item?.title}</Text>
         <Text style={styles.subtitle}>{item?.subtitle}</Text>
       </View>
@@ -242,8 +260,7 @@ const Onboarding = ({ route }) => {
     return (
       <View
         style={{
-          height: hp(20),
-          // backgroundColor:'green',
+          height: hp(18),
           justifyContent: "space-between",
           paddingHorizontal: 20,
           alignItems: "center",
@@ -273,12 +290,12 @@ const Onboarding = ({ route }) => {
         </View>
 
         {/* Render buttons */}
-        <View style={{ marginBottom: 20 }}>
+        <View style={{ marginBottom: hp(2) }}>
           {currentSlideIndex == slides.length - 1 ? (
             <View
               style={{
                 height: 50,
-                marginBottom: hp(3.5),
+                marginBottom: hp(0),
                 display: "flex",
                 justifyContent: "flex-end",
                 flexDirection: "row",
@@ -302,7 +319,7 @@ const Onboarding = ({ route }) => {
             <View
               style={{
                 height: 50,
-                marginBottom: hp(3.5),
+                marginBottom: hp(0),
                 display: "flex",
                 justifyContent: "flex-end",
                 flexDirection: "row",
@@ -345,7 +362,7 @@ const Onboarding = ({ route }) => {
         nestedScrollEnabled={true}
         ref={ref}
         onMomentumScrollEnd={updateCurrentSlideIndex}
-        contentContainerStyle={{ height: hp(80) }}
+        contentContainerStyle={{ height: hp(100) }}
         showsHorizontalScrollIndicator={false}
         horizontal
         data={slides}
@@ -364,7 +381,7 @@ const styles = StyleSheet.create({
     color: theme.black,
     fontSize: wp(4),
     marginTop: 10,
-    maxWidth: "70%",
+    maxWidth: wp(84),
     textAlign: "center",
     lineHeight: 23,
   },

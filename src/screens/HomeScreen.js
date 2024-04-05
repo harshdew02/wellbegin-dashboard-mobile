@@ -145,15 +145,16 @@ export default function HomeScreen(props) {
   const [whatsnew, setWhatsnew] = useState("");
   const [product, setProduct] = useState("");
   const [booking, setBooking] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
   const [sub, setSub] = useState("");
   const [packages, setPackage] = useState("");
   const [showsub, setShowsub] = useState(false);
-  const [subsdet, setSubsdet] = useState(false); 
+  const [subsdet, setSubsdet] = useState(false);
   const [subdays, setSubdays] = useState(0);
   const [bell, setBell] = useState(true);
   const [loaded, setLoaded] = useState(false);
   const [category, setCategory] = useState("regular");
-  const [moodcheck, setMoodCheck] = useState(false); 
+  const [moodcheck, setMoodCheck] = useState(false);
 
   const { setHomes, home, connect } = useAuth();
   useEffect(() => {
@@ -194,8 +195,9 @@ export default function HomeScreen(props) {
 
   useEffect(() => {
     const isConnected = connect();
-    if (!isConnected) { setMoodCheck(false) }
-    else {
+    if (!isConnected) {
+      setMoodCheck(false);
+    } else {
       if (moodcheck) {
         const apiUrl2 =
           "https://n8n.heartitout.in/webhook/api/fetch-session-details";
@@ -282,7 +284,8 @@ export default function HomeScreen(props) {
           });
 
         let realTimeData = null;
-        const apiUrl3 = "https://n8n.heartitout.in/webhook/api/home-page-details";
+        const apiUrl3 =
+          "https://n8n.heartitout.in/webhook/api/home-page-details";
         axios
           .post(apiUrl3, payload)
           .then(async (res) => {
@@ -315,10 +318,17 @@ export default function HomeScreen(props) {
                 setProduct(realTimeData.product_onclick);
                 setBooking(realTimeData.booking_link);
                 setPackage(realTimeData.packages_onclick);
+                setWhatsapp(realTimeData.whatsapp_onclick);
                 setSub(realTimeData.sub_onclick);
                 if (realTimeData.subs_det === "yes") setSubsdet(true);
                 else setSubsdet(false);
-                setSubdays(Number.parseInt(realTimeData.subs_no_of_days === "" ? "0" : realTimeData.subs_no_of_days));
+                setSubdays(
+                  Number.parseInt(
+                    realTimeData.subs_no_of_days === ""
+                      ? "0"
+                      : realTimeData.subs_no_of_days
+                  )
+                );
               }
             }
             setMoodCheck(false);
@@ -346,6 +356,7 @@ export default function HomeScreen(props) {
     setCategory(data.category);
     setWhatsnew(data.whats_new_onclick);
     setProduct(data.product_onclick);
+    setWhatsapp(data.whatsapp_onclick);
     setBooking(data.booking_link);
     if (data.show_sub === "yes") {
       setShowsub(true);
@@ -356,7 +367,9 @@ export default function HomeScreen(props) {
     setSub(data.sub_onclick);
     if (data.subs_det === "yes") setSubsdet(true);
     else setSubsdet(false);
-    setSubdays(Number.parseInt(data.subs_no_of_days === "" ? "0" : data.subs_no_of_days));
+    setSubdays(
+      Number.parseInt(data.subs_no_of_days === "" ? "0" : data.subs_no_of_days)
+    );
     if (appointment.has_appointment === "no") setBooked(false);
     else {
       const apiDate = appointment.appointment.app_session_date;
@@ -804,46 +817,90 @@ export default function HomeScreen(props) {
 
         {category === "cwp" ? null : (
           <>
-            {subdays > 0 ? (
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("webview", sub);
-                }}
-                style={[
-                  styles.cardContainer,
-                  { height: hp(15.8), marginTop: hp(3) },
-                ]}
-              >
-                <Home1 width={"100%"} height={hp(17)} />
-                <View
-                  style={{
-                    position: "absolute",
-                    left: wp(13),
-                    top: hp(4),
-                    zIndex: 2,
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "#455A64",
-                      fontSize: wp(3.8),
-                      width: wp(60),
-                      fontFamily: "Roboto",
-                      lineHeight: wp(6),
-                      fontWeight: "800",
-                    }}
-                  >
-                    Your Whole Hearted Subscription is Active
-                  </Text>
+            {showsub ? (
+              <>
+                {subsdet && subdays > 0 ? (
                   <TouchableOpacity
-                    activeOpacity={0.5}
-                    style={[styles.Btn, { marginTop: hp(0.8) }]}
-                    disabled={true}
+                    onPress={() => {
+                      navigation.navigate("webview", sub);
+                    }}
+                    style={[
+                      styles.cardContainer,
+                      { height: hp(15.8), marginTop: hp(3) },
+                    ]}
                   >
-                    <Text style={styles.btnText2}>See Details </Text>
+                    <Home1 width={"100%"} height={hp(17)} />
+                    <View
+                      style={{
+                        position: "absolute",
+                        left: wp(13),
+                        top: hp(4),
+                        zIndex: 2,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: "#455A64",
+                          fontSize: wp(3.8),
+                          width: wp(60),
+                          fontFamily: "Roboto",
+                          lineHeight: wp(6),
+                          fontWeight: "800",
+                        }}
+                      >
+                        Your Whole Hearted Subscription is Active 
+                      </Text>
+                      <TouchableOpacity
+                        activeOpacity={0.5}
+                        style={[styles.Btn, { marginTop: hp(0.8) }]}
+                        disabled={true}
+                      >
+                        <Text style={styles.btnText2}> See Details </Text>
+                      </TouchableOpacity>
+                    </View>
                   </TouchableOpacity>
-                </View>
-              </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("webview", sub);
+                    }}
+                    style={[
+                      styles.cardContainer,
+                      { height: hp(15.8), marginTop: hp(3) },
+                    ]}
+                  >
+                    <Home1 width={"100%"} height={hp(17)} />
+                    <View
+                      style={{
+                        position: "absolute",
+                        left: wp(13),
+                        top: hp(4),
+                        zIndex: 2,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: "#455A64",
+                          fontSize: wp(3.8),
+                          width: wp(60),
+                          fontFamily: "Roboto",
+                          lineHeight: wp(6),
+                          fontWeight: "800",
+                        }}
+                      >
+                        Whole Hearted Subscription
+                      </Text>
+                      <TouchableOpacity
+                        activeOpacity={0.5}
+                        style={[styles.Btn, { marginTop: hp(2.5) }]}
+                        disabled={true}
+                      >
+                        <Text style={styles.btnText2}> See Plans </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </TouchableOpacity>
+                )}
+              </>
             ) : (
               <TouchableOpacity
                 onPress={() => {
@@ -858,8 +915,8 @@ export default function HomeScreen(props) {
                   <View style={{ height: hp(9) }}>
                     <Text style={styles.cardText}>Session Packages</Text>
                     <TouchableOpacity
-                      style={[styles.Btn, {marginTop:hp(2)}]}
-                      disabled = {true}
+                      style={[styles.Btn, { marginTop: hp(2) }]}
+                      disabled={true}
                     >
                       <Text style={styles.btnText2}>Explore Packages</Text>
                     </TouchableOpacity>

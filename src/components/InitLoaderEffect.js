@@ -86,6 +86,7 @@ export default function InitLoaderEffect({ route }) {
             sub_onclick: "https://heartitout.in/",
             packages_onclick: "https://heartitout.in/",
             welbeing_onclick: "https://mindbodybliss.in/",
+            whatsapp_onclick: "https://www.whatsapp.com",
 
             //This is banner section
             has_banner: "no",
@@ -153,6 +154,7 @@ export default function InitLoaderEffect({ route }) {
                 finalDetails.sub_onclick = res.data.sub_onclick != (null || undefined) ? res.data.sub_onclick : "https://heartitout.in/";
                 finalDetails.packages_onclick = res.data.packages_onclick != (null || undefined) ? res.data.packages_onclick : "https://heartitout.in/";
                 finalDetails.welbeing_onclick = res.data.welbeing_onclick != (null || undefined) ? res.data.welbeing_onclick : "https://mindbodybliss.in/";
+                finalDetails.whatsapp_onclick = res.data.whatsapp_onclick != (null || undefined) ? res.data.whatsapp_onclick : "https://www.whatsapp.com";
                 setUser({ category: res.data.user_category, type: res.data.user_type })
               } else if (res.data.status === "10") {
                 (finalDetails.has_mood = res.data.mood_tacker != (null || undefined) ? res.data.mood_tacker : "no");
@@ -165,6 +167,7 @@ export default function InitLoaderEffect({ route }) {
                 finalDetails.sub_onclick = res.data.sub_onclick != (null || undefined) ? res.data.sub_onclick : "https://heartitout.in/";
                 finalDetails.packages_onclick = res.data.packages_onclick != (null || undefined) ? res.data.packages_onclick : "https://heartitout.in/";
                 finalDetails.welbeing_onclick = res.data.welbeing_onclick != (null || undefined) ? res.data.welbeing_onclick : "https://mindbodybliss.in/";
+                finalDetails.whatsapp_onclick = res.data.whatsapp_onclick != (null || undefined) ? res.data.whatsapp_onclick : "https://www.whatsapp.com";
                 setUser({ category: res.data.user_category, type: res.data.user_type })
               } else {
                 throw new Error("User credentails expired");
