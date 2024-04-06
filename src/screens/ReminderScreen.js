@@ -20,9 +20,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useAuth } from "../utils/auth";
 
 const Card = (props) => {
-  // console.log(props)
   const data = props.props.item;
-  // console.log("It is from card: ", data)
   // Anuj ise props ke according set kar dena to fir ho jayega shyad
   const [isTick, setTick] = useState(false);
   const navigation = useNavigation();
@@ -74,7 +72,6 @@ const Card = (props) => {
 };
 
 export default function ReminderScreen({ navigation, route }) {
-  // console.log("It is from reminder screen: ", route.params)
   const [ifReminder, setIfReminder] = useState(false);
   const [datas, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -108,7 +105,6 @@ export default function ReminderScreen({ navigation, route }) {
         axios
           .post(url, route.params)
           .then((res) => {
-            console.log(res.data);
             if (res.data.has_notif === "yes") setIfReminder(true);
             else setIfReminder(false);
             setData(res.data.data);
@@ -142,11 +138,9 @@ export default function ReminderScreen({ navigation, route }) {
 
   React.useEffect(() => {
     if (timer) {
-      console.log("Reset the timer");
       clearInterval(idleTimer);
     } else {
       clearInterval(idleTimer);
-      console.log("Performing logic every 1 minute...");
       setIdleTimer(
         setInterval(() => {
           setLoading(true);
@@ -156,8 +150,6 @@ export default function ReminderScreen({ navigation, route }) {
 
     setTimer(false);
   }, [timer]);
-
-  console.log(datas);
 
   return (
     <SafeAreaView>
@@ -203,7 +195,6 @@ export default function ReminderScreen({ navigation, route }) {
         onRefresh={handleRefresh}
         onTouchStart={() => {
           setTimer(true);
-          console.log("reset");
         }}
       >
         {/* loading */}

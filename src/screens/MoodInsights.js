@@ -48,7 +48,18 @@ import PTRView from "react-native-pull-to-refresh";
 import { useAuth } from "../utils/auth";
 
 const Space = () => {
-  return <View style={{ width: wp(8), height: wp(8), borderWidth:wp(0.2), borderRadius:hp(2), backgroundColor:'#fefcf7', borderColor:theme.black }}></View>;
+  return (
+    <View
+      style={{
+        width: wp(8),
+        height: wp(8),
+        borderWidth: wp(0.2),
+        borderRadius: hp(2),
+        backgroundColor: "#fefcf7",
+        borderColor: theme.black,
+      }}
+    ></View>
+  );
 };
 
 const habbitLogo = [H1, H2, H3, H4, H5, H6, H7, H8, H9];
@@ -183,6 +194,12 @@ const MoodInsights = (props) => {
   const [day6, setDay6] = useState(-1);
   const [day7, setDay7] = useState(-1);
   const [select, setSelect] = useState(0);
+  const [select1, setSelect1] = useState(0);
+  const [select2, setSelect2] = useState(0);
+  const [select3, setSelect3] = useState(0);
+  const [select4, setSelect4] = useState(0);
+  const [select5, setSelect5] = useState(0);
+  const [select6, setSelect6] = useState(0);
   const [ind, setInd] = useState(1);
   const Logo = habbit[ind].logo;
   const [date, setDate] = useState(getCurrentDate());
@@ -233,6 +250,14 @@ const MoodInsights = (props) => {
   });
 
   let payload = props.route.params;
+  //   let payload = {
+  //   token: "o1hTU9pb8xIwE3T/Ho6bxujmFtjKLJtxAlBcZYwCGPc=",
+  //   phone: "9330396039",
+  //   code: "91",
+  //   otp: "2953",
+  //   date: "2024-02-16",
+  //   week: "0",
+  // };
   payload.curr = curr;
   useEffect(() => {
     connect();
@@ -242,7 +267,6 @@ const MoodInsights = (props) => {
     axios
       .post(url, payload)
       .then((res) => {
-        console.log(res.data);
         temp_data = res.data.data;
       })
       .catch((err) => {
@@ -359,26 +383,32 @@ const MoodInsights = (props) => {
             setp1(0.75 * mood_percent[i].percentage);
             show_mood.happy = mood_percent[i].percentage;
             mood_value[0] = mood_percent[i].percentage;
+            setSelect1(0)
           } else if (mood_percent[i].mood === "Surprised") {
             setp2(0.75 * mood_percent[i].percentage);
             show_mood.surprised = mood_percent[i].percentage;
             mood_value[1] = mood_percent[i].percentage;
+            setSelect2(0)
           } else if (mood_percent[i].mood === "Sad") {
             setp3(0.75 * mood_percent[i].percentage);
             show_mood.sad = mood_percent[i].percentage;
             mood_value[2] = mood_percent[i].percentage;
+            setSelect3(0)
           } else if (mood_percent[i].mood === "Disgust") {
             setp4(0.75 * mood_percent[i].percentage);
             show_mood.disgust = mood_percent[i].percentage;
             mood_value[3] = mood_percent[i].percentage;
+            setSelect4(0)
           } else if (mood_percent[i].mood === "Fear") {
             setp5(0.75 * mood_percent[i].percentage);
             show_mood.fear = mood_percent[i].percentage;
             mood_value[4] = mood_percent[i].percentage;
+            setSelect5(0)
           } else {
             setp6(0.75 * mood_percent[i].percentage);
             show_mood.angry = mood_percent[i].percentage;
             mood_value[5] = mood_percent[i].percentage;
+            setSelect6(0)
           }
           maxii = Math.max(maxii, mood_percent[i].percentage);
         }
@@ -387,6 +417,17 @@ const MoodInsights = (props) => {
           if (mood_value[i] == maxii && mood_value[i] != 0) {
             index = i + 1;
             break;
+          }
+        }
+        for (let i = 0; i < mood_value.length; i++) {
+          if (mood_value[i] != 0) {
+            if (i + 1 == 1) setSelect1(1);
+            else if ((i + 1) == 2) setSelect2(2);
+            else if ((i + 1) == 3) setSelect3(3);
+            else if ((i + 1) == 4) setSelect4(4);
+            else if (i + 1 == 5) setSelect5(5);
+            else if (i + 1 == 6) setSelect6(6);
+            console.log(i)
           }
         }
         setShowMood(show_mood);
@@ -702,7 +743,7 @@ const MoodInsights = (props) => {
                     display: "flex",
                     flexDirection: "row",
                     justifyContent: "flex-start",
-                    alignItems:"center"
+                    alignItems: "center",
                   }}
                 >
                   <Cup Home2 width={wp(3.6)} height={wp(4.2)} />
@@ -710,7 +751,7 @@ const MoodInsights = (props) => {
                     style={{
                       color: theme.black,
                       fontSize: wp(3.5),
-                      marginLeft:wp(2)
+                      marginLeft: wp(2),
                     }}
                   >
                     Longest Chain : {longest}
@@ -756,9 +797,9 @@ const MoodInsights = (props) => {
                   style={{
                     height: "100%",
                     backgroundColor:
-                      select == 1
+                      1 != 1
                         ? "rgba(255, 214, 79, 1)"
-                        : "rgba(255, 214, 79, 0.3)",
+                        : "rgba(255, 214, 79, 0.6)",
                     width: wp(p1),
                   }}
                 />
@@ -766,9 +807,9 @@ const MoodInsights = (props) => {
                   style={{
                     height: "100%",
                     backgroundColor:
-                      select == 2
+                      2 != 2
                         ? "rgba(174, 213, 232, 1)"
-                        : "rgba(174, 213, 232, 0.3)",
+                        : "rgba(174, 213, 232, 0.6)",
                     width: wp(p2),
                   }}
                 />
@@ -776,9 +817,9 @@ const MoodInsights = (props) => {
                   style={{
                     height: "100%",
                     backgroundColor:
-                      select == 3
+                      3 != 3
                         ? "rgba(15, 67, 92, 1)"
-                        : "rgba(15, 67, 92, 0.3)",
+                        : "rgba(15, 67, 92, 0.6)",
                     width: wp(p3),
                   }}
                 />
@@ -786,9 +827,9 @@ const MoodInsights = (props) => {
                   style={{
                     height: "100%",
                     backgroundColor:
-                      select == 4
+                      4 != 4
                         ? "rgba(114, 63, 45, 1)"
-                        : "rgba(114, 63, 45, 0.3)",
+                        : "rgba(114, 63, 45, 0.6)",
                     width: wp(p4),
                   }}
                 />
@@ -796,9 +837,9 @@ const MoodInsights = (props) => {
                   style={{
                     height: "100%",
                     backgroundColor:
-                      select == 5
+                      5 != 5
                         ? "rgba(1, 129, 140, 1)"
-                        : "rgba(1, 129, 140, 0.3)",
+                        : "rgba(1, 129, 140, 0.6)",
                     width: wp(p5),
                   }}
                 />
@@ -806,9 +847,9 @@ const MoodInsights = (props) => {
                   style={{
                     height: "100%",
                     backgroundColor:
-                      select == 6
+                      6 != 6
                         ? "rgba(187, 99, 69, 1)"
-                        : "rgba(187, 99, 69, 0.3)",
+                        : "rgba(187, 99, 69, 0.6)",
                     width: wp(p6),
                   }}
                 />
@@ -829,7 +870,7 @@ const MoodInsights = (props) => {
                       height: wp(7.4),
                       width: wp(7.4),
                       backgroundColor:
-                        select == 1
+                        select1 == 1
                           ? "rgba(255,255,255,0)"
                           : "rgba(255,255,255,0.7)",
                       position: "absolute",
@@ -837,7 +878,7 @@ const MoodInsights = (props) => {
                       borderRadius: wp(5),
                     }}
                   />
-                  <Happy h={7.4} w={7.4} isSelect={select == 1 ? 1 : 1} />
+                  <Happy h={7.4} w={7.4} isSelect={1} />
                   <Text
                     style={{
                       fontSize: wp(3),
@@ -854,7 +895,7 @@ const MoodInsights = (props) => {
                       height: wp(7.4),
                       width: wp(7.4),
                       backgroundColor:
-                        select == 2
+                        select2 == 2
                           ? "rgba(255,255,255,0)"
                           : "rgba(255,255,255,0.7)",
                       position: "absolute",
@@ -862,7 +903,7 @@ const MoodInsights = (props) => {
                       borderRadius: wp(5),
                     }}
                   />
-                  <Surprised h={7.4} w={7.4} isSelect={select == 2 ? 2 : 2} />
+                  <Surprised h={7.4} w={7.4} isSelect={2} />
                   <Text
                     style={{
                       fontSize: wp(3),
@@ -879,7 +920,7 @@ const MoodInsights = (props) => {
                       height: wp(7.4),
                       width: wp(7.4),
                       backgroundColor:
-                        select == 3
+                        select3 == 3
                           ? "rgba(255,255,255,0)"
                           : "rgba(255,255,255,0.7)",
                       position: "absolute",
@@ -887,7 +928,7 @@ const MoodInsights = (props) => {
                       borderRadius: wp(5),
                     }}
                   />
-                  <Sad h={7.4} w={7.4} isSelect={select == 3 ? 3 : 3} />
+                  <Sad h={7.4} w={7.4} isSelect={3} />
                   <Text
                     style={{
                       fontSize: wp(3),
@@ -904,7 +945,7 @@ const MoodInsights = (props) => {
                       height: wp(7.4),
                       width: wp(7.4),
                       backgroundColor:
-                        select == 4
+                        select4 == 4
                           ? "rgba(255,255,255,0)"
                           : "rgba(255,255,255,0.7)",
                       position: "absolute",
@@ -912,7 +953,7 @@ const MoodInsights = (props) => {
                       borderRadius: wp(5),
                     }}
                   />
-                  <Disgust h={7.4} w={7.4} isSelect={select == 4 ? 4 : 4} />
+                  <Disgust h={7.4} w={7.4} isSelect={4} />
 
                   <Text
                     style={{
@@ -930,7 +971,7 @@ const MoodInsights = (props) => {
                       height: wp(7.4),
                       width: wp(7.4),
                       backgroundColor:
-                        select == 5
+                        select5 == 5
                           ? "rgba(255,255,255,0)"
                           : "rgba(255,255,255,0.7)",
                       position: "absolute",
@@ -938,7 +979,7 @@ const MoodInsights = (props) => {
                       borderRadius: wp(5),
                     }}
                   />
-                  <Fear h={7.4} w={7.4} isSelect={select == 5 ? 5 : 5} />
+                  <Fear h={7.4} w={7.4} isSelect={5} />
 
                   <Text
                     style={{
@@ -956,7 +997,7 @@ const MoodInsights = (props) => {
                       height: wp(7.4),
                       width: wp(7.4),
                       backgroundColor:
-                        select == 6
+                        select6 == 6
                           ? "rgba(255,255,255,0)"
                           : "rgba(255,255,255,0.7)",
                       position: "absolute",
@@ -964,7 +1005,7 @@ const MoodInsights = (props) => {
                       borderRadius: wp(5),
                     }}
                   />
-                  <Angry h={7.4} w={7.4} isSelect={select == 6 ? 6 : 6} />
+                  <Angry h={7.4} w={7.4} isSelect={6} />
                   <Text
                     style={{
                       fontSize: wp(3),

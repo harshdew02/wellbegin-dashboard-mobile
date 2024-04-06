@@ -243,7 +243,6 @@ let mood_array = [];
 const Moods = (props) => {
   const [clicked, setclick] = useState(false);
   const [select, setSelect] = useState(props.props.select);
-  // console.log("It is from moods: ",props);
 
   if (props.props.select != select && clicked == true) {
     setclick(false);
@@ -293,7 +292,6 @@ const Moods = (props) => {
 };
 
 const MoodTracker = (props) => {
-  // console.log(props.route.params)
   const navigation = useNavigation();
   const payload = props.route.params;
   const [loading, setLoading] = useState(false);
@@ -316,7 +314,6 @@ const MoodTracker = (props) => {
     payload.notes = notes;
     payload.sphere = sphere;
 
-    console.log("It is from extraPayload: ", payload);
     if (mood_array.length == 0) showToast("Please select atleast one feeling.");
     else if (sphere == undefined || sphere == null) showToast("Please select your sphere of life.")
     else if (mood == undefined || mood == null) showToast("Please select mood.")
@@ -333,10 +330,9 @@ const MoodTracker = (props) => {
     axios
       .post(url, payload)
       .then((res) => {
-        console.log(res)
         if (res.data.status === "1") {
-          if (res.data.success === "true") showToast("Mood set");
-          else showToast("Mood already set for today");
+          if (res.data.success === "true") showToast("Mood Recorded");
+          else showToast("Mood already recorded");
           setHomes('moodset')
           navigation.navigate("main", { mood_set: true })
         } else {
@@ -561,7 +557,7 @@ const MoodTracker = (props) => {
                 marginTop: hp(1.5),
               }}
             >
-              Choose 3 Emotions You’re Feeling
+              Choose Upto 3 Emotions You’re feeling
             </Text>
 
             <View
@@ -573,7 +569,7 @@ const MoodTracker = (props) => {
                   display: "flex",
                   flexDirection: "row",
                   flexWrap: "wrap",
-                  justifyContent: "space-between",
+                  justifyContent: "space-evenly",
                 },
               ]}
             >
@@ -596,7 +592,7 @@ const MoodTracker = (props) => {
                 marginTop: hp(2),
               }}
             >
-              Spheres of Life
+              Sphere of Life
             </Text>
 
             <View

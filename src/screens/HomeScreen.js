@@ -25,6 +25,7 @@ import Emoji2 from "../../assets/images/emoji2.svg";
 import Emoji3 from "../../assets/images/emoji3.svg";
 import Emoji4 from "../../assets/images/emoji4.svg";
 import Emoji5 from "../../assets/images/emoji5.svg";
+import Help from "../../assets/images/Help.svg";
 import Home2 from "../../assets/images/home2.svg";
 import { theme } from "../theme";
 import TopBell from "../components/TopBell";
@@ -32,6 +33,7 @@ import HomePageBanner from "../components/HomePageBanner";
 import Gift from "../../assets/images/Gift.svg";
 import axios from "axios";
 import PTRView from "react-native-pull-to-refresh";
+import SInfo from "react-native-encrypted-storage";
 import { useAuth } from "../utils/auth";
 
 const gMeet = (link) => {
@@ -56,7 +58,7 @@ const Btn = (props) => {
         navigation.navigate("webview", props.props);
       }}
     >
-      <Text style={styles.btnText}>Book a Session</Text>
+      <Text style={styles.btnText}>Book Your Session</Text>
     </TouchableOpacity>
   );
 };
@@ -145,15 +147,16 @@ export default function HomeScreen(props) {
   const [whatsnew, setWhatsnew] = useState("");
   const [product, setProduct] = useState("");
   const [booking, setBooking] = useState("");
+  const [whatsapp, setWhatsapp] = useState("");
   const [sub, setSub] = useState("");
   const [packages, setPackage] = useState("");
   const [showsub, setShowsub] = useState(false);
-  const [moodcheck, setMoodCheck] = useState(false);
   const [subsdet, setSubsdet] = useState(false);
   const [subdays, setSubdays] = useState(0);
   const [bell, setBell] = useState(true);
   const [loaded, setLoaded] = useState(false);
   const [category, setCategory] = useState("regular");
+  const [moodcheck, setMoodCheck] = useState(false);
 
   const { setHomes, home, connect } = useAuth();
   useEffect(() => {
@@ -194,8 +197,9 @@ export default function HomeScreen(props) {
 
   useEffect(() => {
     const isConnected = connect();
-    if (!isConnected) { setMoodCheck(false) }
-    else {
+    if (!isConnected) {
+      setMoodCheck(false);
+    } else {
       if (moodcheck) {
         const apiUrl2 =
           "https://n8n.heartitout.in/webhook/api/fetch-session-details";
@@ -282,7 +286,8 @@ export default function HomeScreen(props) {
           });
 
         let realTimeData = null;
-        const apiUrl3 = "https://n8n.heartitout.in/webhook/api/home-page-details";
+        const apiUrl3 =
+          "https://n8n.heartitout.in/webhook/api/home-page-details";
         axios
           .post(apiUrl3, payload)
           .then(async (res) => {
@@ -315,8 +320,17 @@ export default function HomeScreen(props) {
                 setProduct(realTimeData.product_onclick);
                 setBooking(realTimeData.booking_link);
                 setPackage(realTimeData.packages_onclick);
+                setWhatsapp(realTimeData.whatsapp_onclick);
+                setSub(realTimeData.sub_onclick);
                 if (realTimeData.subs_det === "yes") setSubsdet(true);
                 else setSubsdet(false);
+                setSubdays(
+                  Number.parseInt(
+                    realTimeData.subs_no_of_days === ""
+                      ? "0"
+                      : realTimeData.subs_no_of_days
+                  )
+                );
               }
             }
             setMoodCheck(false);
@@ -326,7 +340,19 @@ export default function HomeScreen(props) {
   }, [moodcheck]);
 
   useEffect(() => {
-    setName(data.usr_fullname);
+    if(data.usr_fullname === "") {
+      SInfo.getItem("nick_name")
+      .then((res) => {
+        if (res != null && res != undefined) setName(res);
+      })
+      .catch((error) => console.log(error));
+    }
+    else
+      setName(data.usr_fullname);
+  }, [])
+  
+
+  useEffect(() => {
     data.has_mood == "no" ? setMood(false) : setMood(true);
     if (
       data.has_banner == "yes" &&
@@ -344,17 +370,20 @@ export default function HomeScreen(props) {
     setCategory(data.category);
     setWhatsnew(data.whats_new_onclick);
     setProduct(data.product_onclick);
+    setWhatsapp(data.whatsapp_onclick);
     setBooking(data.booking_link);
     if (data.show_sub === "yes") {
       setShowsub(true);
-      setSub(data.sub_onclick);
     } else {
       setShowsub(false);
-      setPackage(data.packages_onclick);
     }
+    setPackage(data.packages_onclick);
+    setSub(data.sub_onclick);
     if (data.subs_det === "yes") setSubsdet(true);
     else setSubsdet(false);
-    setSubdays(Number.parseInt(data.subs_no_of_days));
+    setSubdays(
+      Number.parseInt(data.subs_no_of_days === "" ? "0" : data.subs_no_of_days)
+    );
     if (appointment.has_appointment === "no") setBooked(false);
     else {
       const apiDate = appointment.appointment.app_session_date;
@@ -515,16 +544,16 @@ export default function HomeScreen(props) {
 
           <View style={styles.banner}>
             <View
-              className="flex-row justify-center items-center "
+              className="flex-row justify-center items-center"
               style={{
                 backgroundColor: theme.maincolor,
                 width: wp(84),
-                justifyContent: "center",
+                justifyContent: "space-between",
                 alignItems: "center",
                 flexDirection: "row",
               }}
             >
-              <Text
+              {/* <Text
                 style={{
                   color: "white",
                   fontSize: wp(4),
@@ -532,8 +561,20 @@ export default function HomeScreen(props) {
                   fontWeight: "400",
                 }}
               >
-                Welcome👋 {name.split(/\s+/).filter((word) => word !== "")[0]}
-              </Text>
+                Welcome {name.split(/\s+/).filter((word) => word !== "")[0]}{" "} 👋
+              </Text> */}
+
+              <Text
+                  style={{
+                    color: "white",
+                    fontSize: wp(4.2),
+                    fontFamily: "Roboto",
+                    fontWeight: "700",
+                  }}
+                >
+                  Welcome {name.split(/\s+/).filter((word) => word !== "")[0]}{" "}
+                  👋
+                </Text>
 
               <TouchableOpacity
                 onPress={() => {
@@ -600,7 +641,7 @@ export default function HomeScreen(props) {
                           width: wp(53),
                         }}
                       >
-                        Continue your well-begin journey.
+                        Continue your well-begin journey with your therapist.
                       </Text>
                     )}
                   </>
@@ -650,7 +691,7 @@ export default function HomeScreen(props) {
         >
           <TouchableOpacity
             onPress={() => {
-              // navigation.navigate("homework", data);
+              navigation.navigate("homework", data);
             }}
             style={[styles.card, { backgroundColor: "#FEF8C8" }]}
           >
@@ -803,47 +844,89 @@ export default function HomeScreen(props) {
         {category === "cwp" ? null : (
           <>
             {showsub ? (
-              <TouchableOpacity
-                onPress={() => {
-                  navigation.navigate("webview", sub);
-                }}
-                style={[
-                  styles.cardContainer,
-                  { height: hp(15.8), marginTop: hp(3) },
-                ]}
-              >
-                <Home1 width={"100%"} height={hp(17)} />
-                <View
-                  style={{
-                    position: "absolute",
-                    left: wp(13),
-                    top: hp(4),
-                    zIndex: 2,
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: "#455A64",
-                      fontSize: wp(3.8),
-                      width: wp(60),
-                      fontFamily: "Roboto",
-                      lineHeight: wp(6),
-                      fontWeight: "800",
-                    }}
-                  >
-                    Your Whole Hearted Subscription is Active
-                  </Text>
+              <>
+                {subsdet && subdays > 0 ? (
                   <TouchableOpacity
-                    activeOpacity={0.5}
-                    style={[styles.Btn, { marginTop: hp(0.8) }]}
                     onPress={() => {
-                      // Handle details press
+                      navigation.navigate("webview", sub);
                     }}
+                    style={[
+                      styles.cardContainer,
+                      { height: hp(15.8), marginTop: hp(3) },
+                    ]}
                   >
-                    <Text style={styles.btnText2}>See Details </Text>
+                    <Home1 width={"100%"} height={hp(17)} />
+                    <View
+                      style={{
+                        position: "absolute",
+                        left: wp(13),
+                        top: hp(4),
+                        zIndex: 2,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: "#455A64",
+                          fontSize: wp(3.8),
+                          width: wp(60),
+                          fontFamily: "Roboto",
+                          lineHeight: wp(6),
+                          fontWeight: "800",
+                        }}
+                      >
+                        Your Whole Hearted Subscription is Active
+                      </Text>
+                      <TouchableOpacity
+                        activeOpacity={0.5}
+                        style={[styles.Btn, { marginTop: hp(0.8) }]}
+                        disabled={true}
+                      >
+                        <Text style={styles.btnText2}> See Details </Text>
+                      </TouchableOpacity>
+                    </View>
                   </TouchableOpacity>
-                </View>
-              </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate("webview", sub);
+                    }}
+                    style={[
+                      styles.cardContainer,
+                      { height: hp(15.8), marginTop: hp(3) },
+                    ]}
+                  >
+                    <Home1 width={"100%"} height={hp(17)} />
+                    <View
+                      style={{
+                        position: "absolute",
+                        left: wp(13),
+                        top: hp(4),
+                        zIndex: 2,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: "#455A64",
+                          fontSize: wp(3.8),
+                          width: wp(60),
+                          fontFamily: "Roboto",
+                          lineHeight: wp(6),
+                          fontWeight: "800",
+                        }}
+                      >
+                        Whole Hearted Subscription
+                      </Text>
+                      <TouchableOpacity
+                        activeOpacity={0.5}
+                        style={[styles.Btn, { marginTop: hp(2.5) }]}
+                        disabled={true}
+                      >
+                        <Text style={styles.btnText2}> See Plans </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </TouchableOpacity>
+                )}
+              </>
             ) : (
               <TouchableOpacity
                 onPress={() => {
@@ -858,10 +941,8 @@ export default function HomeScreen(props) {
                   <View style={{ height: hp(9) }}>
                     <Text style={styles.cardText}>Session Packages</Text>
                     <TouchableOpacity
-                      style={styles.Btn}
-                      onPress={() => {
-                        // Handle explore packages press
-                      }}
+                      style={[styles.Btn, { marginTop: hp(2) }]}
+                      disabled={true}
                     >
                       <Text style={styles.btnText2}>Explore Packages</Text>
                     </TouchableOpacity>
@@ -896,6 +977,20 @@ export default function HomeScreen(props) {
             />
           </View>
         </TouchableOpacity>
+
+        <TouchableOpacity
+            onPress={() => {
+              Linking.openURL(whatsapp)
+                .then((responsive) => {
+                  console.log(responsive);
+                })
+                .catch((err) => console.log(err));
+            }}
+            className="flex-col items-center"
+            style={[{ height: hp(15.8), marginTop: hp(4) }]}
+          >
+            <Help width={wp(84)} height={wp(34.4)} />
+          </TouchableOpacity>
 
         <View
           className="flex-row items-center"
