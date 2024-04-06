@@ -215,7 +215,7 @@ const MoodInsights = (props) => {
     fear: 0,
     angry: 0,
   });
-  const { connect, userDetails } = useAuth();
+  const { connect, userDetails, trackM, exceptionReporting } = useAuth();
 
   const fetchData = () => {
     setTimeout(() => {
@@ -242,6 +242,7 @@ const MoodInsights = (props) => {
   };
 
   navigation.addListener("focus", () => {
+    trackM("Navigated - Moodinsights",{phone: userDetails().phone})
     BackHandler.addEventListener("hardwareBackPress", backHandler);
   });
 
@@ -262,6 +263,7 @@ const MoodInsights = (props) => {
         temp_data = res.data.data;
       })
       .catch((err) => {
+        exceptionReporting({err})
         console.log(err);
       })
       .finally(() => {
@@ -442,6 +444,7 @@ const MoodInsights = (props) => {
         }
       })
       .catch((err) => {
+        exceptionReporting({err})
         console.log(err);
       })
       .finally(() => {
@@ -464,6 +467,7 @@ const MoodInsights = (props) => {
         <View className="flex-row items-center">
           <TouchableOpacity
             onPress={() => {
+              trackM("Navigated - Homework",{phone: userDetails().phone, event: "Next Week"})
               if (connect()) {
                 setLoading(true);
                 setCurr(++curr);
@@ -479,6 +483,7 @@ const MoodInsights = (props) => {
           } ${date.year}`}</Text>
           <TouchableOpacity
             onPress={() => {
+              trackM("Navigated - Homework",{phone: userDetails().phone, event: "Previous Week"})
               if (connect()) {
                 setLoading(true);
                 setCurr(--curr);

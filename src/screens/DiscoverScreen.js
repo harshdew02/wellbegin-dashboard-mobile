@@ -21,17 +21,20 @@ import BottomQuote from "../../assets/images/BottomQuote.svg";
 import D1 from "../../assets/images/Dis1.svg"
 import D2 from "../../assets/images/Dis2.svg"
 import D3 from "../../assets/images/Dis3.svg"
+import { useAuth } from "../utils/auth";
 import ReferIcon from "../../assets/images/ReferIcon.svg"
 
 export default function DiscoverScreen(props) {
   const data = props.route.params.data.route.params;
   const navigation = useNavigation();
+  const {userDetails, trackM} = useAuth();
   const backHandler = () => {
     navigation.navigate('Home_Tab')
     return true;
   };
 
   navigation.addListener("focus", () => {
+    trackM("Navigated - Discover",{phone: userDetails().phone})
     BackHandler.addEventListener("hardwareBackPress", backHandler);
   });
 
@@ -81,6 +84,7 @@ export default function DiscoverScreen(props) {
                 { width: wp(39), overflow: 'hidden', borderRadius: wp(4) },
               ]}
               onPress={() => {
+                trackM("Navigated - Discover",{phone: userDetails().phone, event: "Mindful event"})
                 // Checking if the link is supported for links with custom URL scheme.
                 navigation.navigate('webview', data.mindfull)
               }}
@@ -94,7 +98,8 @@ export default function DiscoverScreen(props) {
             style={{ height: hp(25), marginTop: hp(3) }}
           >
             <TouchableOpacity
-              onPress={()=>{navigation.navigate('webview', data.holistic)}}
+              onPress={()=>{navigation.navigate('webview', data.holistic);
+              trackM("Navigated - Discover",{phone: userDetails().phone, event:"Holistic Services"})}}
               style={[
                 { width: wp(39), overflow: 'hidden', borderRadius: wp(4) },
               ]}
@@ -109,6 +114,7 @@ export default function DiscoverScreen(props) {
               ]}
               onPress={() => {
                 // Checking if the link is supported for links with custom URL scheme.
+                trackM("Navigated - Discover",{phone: userDetails().phone, event: "Selfcare tools"})
                 navigation.navigate('webview', data.selfcare)
               }}
             >

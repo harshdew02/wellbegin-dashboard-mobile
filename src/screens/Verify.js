@@ -172,7 +172,7 @@ export default function Verify({ navigation, route }) {
   const [otp, setOtp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState(null);
-  const { connect } = useAuth();
+  const { connect, trackM } = useAuth();
 
   navigation.addListener("focus", (ref) => {
     resendOTPT([, setTimer]);
@@ -258,6 +258,9 @@ export default function Verify({ navigation, route }) {
               [loading, setLoading],
               [showErrorMessage, setShowErrorMessage]
             );
+            trackM("Verification requested by: ", {
+              phone: number
+            })
           }}
         />
 
@@ -309,6 +312,9 @@ export default function Verify({ navigation, route }) {
                 [loading, setLoading],
                 [showErrorMessage, setShowErrorMessage]
               );
+              trackM("Verification requested by: ", {
+                phone: number
+              })
             }}
           >
             <ActivityIndicator

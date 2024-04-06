@@ -68,6 +68,7 @@ const DateTimeComponent = (rdate) => {
 const CardDetails = (props) => {
   const [sdate, setSDate] = useState(DateTimeComponent(props.props.ts_));
   const [edate, setEDate] = useState(DateTimeComponent(props.props.ts__));
+  const {userDetails, trackM} = useAuth();
   return (
     <View
       style={{
@@ -144,6 +145,7 @@ const CardDetails = (props) => {
             alignItems: "center",
           }}
           onPress={() => {
+            trackM("Navigated - Diagnostic",{phone: userDetails().phone, event:{Report: props.props.report_url}})
             downloadFile(
               props.props.report_url,
               props.props.phone_no,
@@ -164,7 +166,7 @@ const FirstRoute = (props) => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const { connect, userDetails } = useAuth();
+  const { connect, userDetails, trackM, exceptionReporting } = useAuth();
 
   const passDataToParent = (data) => {
     // Call the function passed from the parent component
@@ -187,6 +189,7 @@ const FirstRoute = (props) => {
             passDataToParent(res.data.rec_test);
           })
           .catch((err) => {
+            exceptionReporting({err})
             console.log("error is here:", err);
           })
           .finally(() => {
@@ -194,6 +197,7 @@ const FirstRoute = (props) => {
           });
       }
     } else setLoading(false);
+    trackM("Navigated - Diagnostic",{phone: userDetails().phone})
   }, [loading]);
 
   const fetchData = () => {
@@ -324,6 +328,7 @@ const renderTabBar = (props) => (
 const GeneralCard = (props) => {
   const [colors, setColor] = useState(props.colors);
   const navigation = useNavigation();
+  const {trackM, userDetails} = useAuth();
   const containsWord = (sentence, word) => {
     return sentence.toLowerCase().includes(word.toLowerCase());
   };
@@ -366,6 +371,7 @@ const GeneralCard = (props) => {
         <TouchableOpacity
           style={styles.btnStyle}
           onPress={() => {
+            trackM("Navigated - Diagnostic",{phone: userDetails().phone, event:props.props.test_name})
             navigation.navigate("webview", props.props.url);
           }}
         >

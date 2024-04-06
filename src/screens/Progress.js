@@ -24,7 +24,7 @@ import { useAuth } from "../utils/auth";
 import PTRView from "react-native-pull-to-refresh";
 
 const Progress = (props) => {
-  const {connect, userDetails} = useAuth()
+  const {connect, userDetails, exceptionReporting, trackM} = useAuth()
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState("");
@@ -54,11 +54,13 @@ const Progress = (props) => {
         if (res.data.status === "1") setProgress(res.data.progress_link);
       })
       .catch((err) => {
+        exceptionReporting({err})
         console.log("error is here:", err);
       })
       .finally(() => {
         setLoading(false);
       })}
+      trackM("Navigated - Progress",{phone: userDetails().phone})
   }, [loading]);
 
   const [refreshing, setRefreshing] = useState(false);

@@ -294,7 +294,7 @@ const Moods = (props) => {
 const MoodTracker = (props) => {
   const navigation = useNavigation();
   const [loading, setLoading] = useState(false);
-  const { setHomes, connect, userDetails} = useAuth();
+  const { setHomes, connect, userDetails, trackM, exceptionReporting} = useAuth();
 
   const payload = userDetails();
   const extraPayloadandLaunch = (
@@ -334,12 +334,14 @@ const MoodTracker = (props) => {
           if (res.data.success === "true") showToast("Mood Recorded");
           else showToast("Mood already recorded");
           setHomes('moodset')
+          trackM("Navigated - Moodtracker",{phone: userDetails().phone, event: "Mood record"})
           navigation.navigate("main", { mood_set: true })
         } else {
           showToast("Some error occurred.");
         }
       })
       .catch((err) => {
+        exceptionReporting({err})
         showToast("Some error occurred.");
         console.log(err);
       }).finally(()=>{
@@ -379,6 +381,7 @@ const MoodTracker = (props) => {
   });
 
   useEffect(() => {
+    trackM("Navigated - Mood tracker",{phone: userDetails().phone})
     mood_array = [];
   }, [select]);
 
