@@ -25,7 +25,7 @@ import { TabView, TabBar } from "react-native-tab-view";
 import axios from "axios";
 import PTRView from "react-native-pull-to-refresh";
 import { useAuth } from "../utils/auth";
-import { useIsFocused } from '@react-navigation/native'
+
 const gMeet = (link) => {
   if (link == "" || link == null || link == undefined)
     link = "https://meet.google.com";
@@ -79,7 +79,6 @@ const DateTimeComponent = (rtime, rdate) => {
   const formattedTime = date
     .toLocaleTimeString("en-US", timeOptions)
     .toLowerCase();
-  // console.log(formattedDate,formattedTime)
   return { formattedDate, formattedTime };
 };
 
@@ -90,8 +89,6 @@ const CardDetails = (props) => {
     let rtime = props.props.start_time;
     const jsonn = DateTimeComponent(rtime, rdate);
     setDateTime(jsonn);
-
-    // console.log(datetime);
   }, []);
 
   return (
@@ -187,7 +184,6 @@ const CardDetails = (props) => {
 
 // ddkdld
 const FirstRoute = (props) => {
-  // console.log("It is from first route: ", props)
   const [hasApp, sethasApp] = useState(false);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({});
@@ -231,10 +227,10 @@ const FirstRoute = (props) => {
           } else {
             sethasApp(false);
             parentData.has_ban = false;
-            parentData.btn_data["btn1-text"] =
-              res.data.btn_dat["btn1-text"] != (null || undefined)
-                ? res.data.btn_dat["btn1-text"]
-                : "Book Your Session";
+            parentData.btn_data["btn1-text"] = "Book Your Session"
+              // res.data.btn_dat["btn1-text"] != (null || undefined)
+              //   ? res.data.btn_dat["btn1-text"]
+              //   : "Book Your Session";
             parentData.btn_data["btn2-text"] =
               res.data.btn_dat["btn2-text"] != (null || undefined)
                 ? res.data.btn_dat["btn2-text"]
@@ -343,10 +339,10 @@ const SecondRoute = (props) => {
         } else {
           sethasApp(false);
           parentData.has_ban = false;
-          parentData.btn_data["btn1-text"] =
-            res.data.btn_dat["btn1-text"] != (null || undefined)
-              ? res.data.btn_dat["btn1-text"]
-              : "Book Your Session";
+          parentData.btn_data["btn1-text"] ="Book Your Session";
+            // res.data.btn_dat["btn1-text"] != (null || undefined)
+            //   ? res.data.btn_dat["btn1-text"]
+            //   : "Book Your Session";
           parentData.btn_data["btn2-text"] =
             res.data.btn_dat["btn2-text"] != (null || undefined)
               ? res.data.btn_dat["btn2-text"]
@@ -451,7 +447,6 @@ const renderTabBar = (props) => (
 );
 
 const Buttons = (props) => {
-  // console.log("It is from button in history: ", props);
   const navigation = useNavigation()
   return (
     <>
@@ -518,7 +513,6 @@ const Buttons = (props) => {
 };
 
 const Card = (props) => {
-  // console.log("It is from card in history: ", props);
   const [imageError, setImageError] = useState(false);
   const navigation = useNavigation();
   const passDataToParent = (data) => {
@@ -528,7 +522,7 @@ const Card = (props) => {
   return (
     <View
       className="flex-col justify-center items-center"
-      style={[styles.cardContainer, { marginTop: hp(4), height: hp(18) }]}
+      style={[styles.cardContainer, { marginTop: hp(4), height: hp(18)}]}
     >
       <TouchableOpacity
         onPress={() => {
@@ -541,10 +535,8 @@ const Card = (props) => {
               onError={() => {
                 setImageError(true);
                 passDataToParent({ state: false, type: props.props.type });
-                console.log(true);
               }}
-              // resizeMode="stretch"
-              resizeMode="contain"
+              resizeMode="stretch"
               style={{ width: wp(84), height: hp(18), borderRadius: wp(2) }}
               source={{
                 uri: props.props.banLink,
@@ -598,12 +590,10 @@ export default function ProfileScreen(props) {
   ]);
 
   useEffect(() => {
-    console.log("It is context API system in Profile Screen: ", path);
     if (path === "webview") {
       const connection = connect()
       if (connection)
         setRefresh(true);
-      console.log("Refreshing or not");
     }
     pathing("App");
   }, [path])

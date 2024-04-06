@@ -63,7 +63,6 @@ const requestOTP = async (code, number, navigation, [, setLoading]) => {
         const dataString = JSON.stringify(jsonData);
         await SInfo.setItem("token", dataString)
           .then(() => {
-            console.log("Data stored securely");
           })
           .catch((error) => {
             console.log("Error: ", error);
@@ -77,7 +76,6 @@ const requestOTP = async (code, number, navigation, [, setLoading]) => {
         setLoading(false);
       });
   } catch (error) {
-    console.log("Error requesting OTP:", error.message);
     showToast("Error requesting OTP " + error.message);
     setLoading(false);
   }
@@ -132,7 +130,6 @@ const Login = ({ route }) => {
 
         } else {
           const data = JSON.parse(storedToken);
-          // console.log(data)
           if (data.status !== "true") { }
           else {
             navigation.navigate('loader')
@@ -177,7 +174,7 @@ const Login = ({ route }) => {
         {/* <View className="flex-col items-center" style={{ marginTop: hp(3) }}> */}
         <Text style={styles.well}>It's time to take a leap towards a healthier mind</Text>
 
-        <Text style={styles.getinstant}>Sign up so we can personalise your journey</Text>
+        <Text style={styles.getinstant}>Enter your number to get started</Text>
 
         <ActivityIndicator style={{ marginTop: hp(2) }} animating={loading} size="large" />
 
@@ -212,7 +209,6 @@ const Login = ({ route }) => {
             value={value}
             onChange={(item) => {
               setValue(item.code);
-              console.log(item);
               customEvent();
             }}
           />

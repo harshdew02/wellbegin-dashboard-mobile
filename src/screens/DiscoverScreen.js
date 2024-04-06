@@ -82,7 +82,7 @@ export default function DiscoverScreen(props) {
               ]}
               onPress={() => {
                 // Checking if the link is supported for links with custom URL scheme.
-                navigation.navigate('webview', 'https://heartitout.in/events/')
+                navigation.navigate('webview', data.mindfull)
               }}
             >
               <D2 width={wp(39.4)} height={wp(53.3)} />
@@ -94,7 +94,7 @@ export default function DiscoverScreen(props) {
             style={{ height: hp(25), marginTop: hp(3) }}
           >
             <TouchableOpacity
-              onPress={()=>{navigation.navigate('webview', 'https://heartitout.in/therapists/')}}
+              onPress={()=>{navigation.navigate('webview', data.holistic)}}
               style={[
                 { width: wp(39), overflow: 'hidden', borderRadius: wp(4) },
               ]}
@@ -109,7 +109,7 @@ export default function DiscoverScreen(props) {
               ]}
               onPress={() => {
                 // Checking if the link is supported for links with custom URL scheme.
-                navigation.navigate('webview', 'https://heartitout.in/products/')
+                navigation.navigate('webview', data.selfcare)
               }}
             >
               <ProductsSvg width={wp(33)} height={hp(9)} />
@@ -117,7 +117,8 @@ export default function DiscoverScreen(props) {
                 style={[
                   styles.cardText,
                   { color: "#765A5A" },
-                  {fontWeight:800}
+                  {fontWeight:800},
+                  {fontSize:wp(4)}
                 ]}
               >
                 Self-care Tools For Effective Healing

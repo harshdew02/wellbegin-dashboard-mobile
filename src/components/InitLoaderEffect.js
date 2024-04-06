@@ -86,11 +86,17 @@ export default function InitLoaderEffect({ route }) {
             sub_onclick: "https://heartitout.in/",
             packages_onclick: "https://heartitout.in/",
             welbeing_onclick: "https://mindbodybliss.in/",
+            whatsapp_onclick: "https://www.whatsapp.com",
 
             //This is banner section
             has_banner: "no",
             banner_link: "",
             on_click: "",
+
+            //Discover links section
+            mindfull: "https://www.heartitout.in",
+            holistic:"https://www.heartitout.in",
+            selfcare:"https://www.heartitout.in"
           };
 
           //This the first call from the flowchart (and it is done)
@@ -153,6 +159,7 @@ export default function InitLoaderEffect({ route }) {
                 finalDetails.sub_onclick = res.data.sub_onclick != (null || undefined) ? res.data.sub_onclick : "https://heartitout.in/";
                 finalDetails.packages_onclick = res.data.packages_onclick != (null || undefined) ? res.data.packages_onclick : "https://heartitout.in/";
                 finalDetails.welbeing_onclick = res.data.welbeing_onclick != (null || undefined) ? res.data.welbeing_onclick : "https://mindbodybliss.in/";
+                finalDetails.whatsapp_onclick = res.data.whatsapp_onclick != (null || undefined) ? res.data.whatsapp_onclick : "https://www.whatsapp.com";
                 setUser({ category: res.data.user_category, type: res.data.user_type })
               } else if (res.data.status === "10") {
                 (finalDetails.has_mood = res.data.mood_tacker != (null || undefined) ? res.data.mood_tacker : "no");
@@ -165,10 +172,26 @@ export default function InitLoaderEffect({ route }) {
                 finalDetails.sub_onclick = res.data.sub_onclick != (null || undefined) ? res.data.sub_onclick : "https://heartitout.in/";
                 finalDetails.packages_onclick = res.data.packages_onclick != (null || undefined) ? res.data.packages_onclick : "https://heartitout.in/";
                 finalDetails.welbeing_onclick = res.data.welbeing_onclick != (null || undefined) ? res.data.welbeing_onclick : "https://mindbodybliss.in/";
+                finalDetails.whatsapp_onclick = res.data.whatsapp_onclick != (null || undefined) ? res.data.whatsapp_onclick : "https://www.whatsapp.com";
                 setUser({ category: res.data.user_category, type: res.data.user_type })
               } else {
                 throw new Error("User credentails expired");
               }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+
+            //This is the 4th api call from flowchart
+            const apiUrl4 =
+            "https://n8n.heartitout.in/webhook/api/discover_meta";
+          await axios
+            .post(apiUrl4, userDetails)
+            .then(async (res) => {
+              console.log("It is for discover: ", res.data)
+              finalDetails.mindfull = res.data.data[0] != (null || undefined) ? res.data.data[0].on_click : "https://www.heartitout.in"
+              finalDetails.holistic = res.data.data[1] != (null || undefined) ? res.data.data[1].on_click : "https://www.heartitout.in"
+              finalDetails.selfcare = res.data.data[2] != (null || undefined) ? res.data.data[2].on_click : "https://www.heartitout.in"
             })
             .catch((err) => {
               console.log(err);
@@ -186,7 +209,6 @@ export default function InitLoaderEffect({ route }) {
 
   React.useEffect(() => {
     if (refresh) {
-      console.log("Refreshing...")
       initializer();
     }
   }, [refresh])
@@ -203,8 +225,8 @@ export default function InitLoaderEffect({ route }) {
         source={require("../../assets/images/loader2.gif")}
         style={{ height: wp(100), width: wp(100), marginTop: hp(18) }}
       />
-      <View style={{backgroundColor:'#CAEBFF', height:hp(34)}}>
-      </View>
+      {/* <View style={{backgroundColor:'#CAEBFF', height:hp(34)}}>
+      </View> */}
     </SafeAreaView>
   );
 }

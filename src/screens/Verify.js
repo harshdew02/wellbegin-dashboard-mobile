@@ -64,8 +64,6 @@ const verifyOTP = async (
     axios
       .post(apiUrl, requestData)
       .then(async (res) => {
-        console.log(res.data);
-
         if (res.data.status == "true") {
           await SInfo.setItem(
             "token",
@@ -139,10 +137,8 @@ const requestOTP = async (
           date: res.data.date,
         };
         const dataString = JSON.stringify(jsonData);
-        // console.log(dataString);
         await SInfo.setItem("token", dataString)
           .then(() => {
-            console.log("Data stored securely");
           })
           .catch((error) => {
             console.log("Error: ", error);
@@ -178,7 +174,6 @@ export default function Verify({ navigation, route }) {
   const [showErrorMessage, setShowErrorMessage] = useState(null);
   const { connect } = useAuth();
 
-  // console.log(diversion)
   navigation.addListener("focus", (ref) => {
     resendOTPT([, setTimer]);
     setLoading(false);
@@ -248,7 +243,7 @@ export default function Verify({ navigation, route }) {
         </Text>
         <TextInput
           className="rounded-lg"
-          style={[styles.input, { fontSize: wp(5) }]}
+          style={[styles.input, { fontSize: wp(5) }, {textAlign:"center"}, {paddingHorizontal:wp(5)}]}
           onChangeText={onChangeNumber}
           value={number}
           placeholder="Enter OTP"

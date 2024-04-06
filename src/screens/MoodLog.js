@@ -39,12 +39,12 @@ import PTRView from "react-native-pull-to-refresh";
 import { useAuth } from "../utils/auth";
 
 const component = {
-  Happy: <Happy />,
-  Sad: <Sad />,
-  Fear: <Fear />,
-  Anger: <Angry />,
-  Surprised: <Surprised />,
-  Disgust: <Disgust />,
+  Happy: <Happy isSelect={1} />,
+  Sad: <Sad isSelect={3} />,
+  Fear: <Fear isSelect={5} />,
+  Anger: <Angry isSelect={6} />,
+  Surprised: <Surprised isSelect={2} />,
+  Disgust: <Disgust isSelect={4} />,
 };
 
 const SphereOfLife = {
@@ -59,7 +59,6 @@ const SphereOfLife = {
 };
 
 const MoodCard = (props) => {
-  console.log("fhome herer :" + props.props.emotion_3);
   return (
     <View style={styles.CardStyle}>
       <Text style={{ width: wp(75), color: theme.black, fontSize: wp(3.2) }}>
@@ -299,7 +298,7 @@ const MoodLog = (props) => {
   //   code: "91",
   //   otp: "2953",
   //   date: "2024-02-16",
-  //   week: "2",
+  //   week: "0",
   // };
 
   const backHandler = () => {
@@ -326,17 +325,14 @@ const MoodLog = (props) => {
         axios
           .post(url, payload)
           .then((res) => {
-            console.log(res.data);
             if (res.data.has_res === "yes") {
               if (res.data.data != (undefined || null)) setData(res.data.data);
             }
-            // setData(res.data.data);
           })
           .catch((err) => {
             console.log(err);
           })
           .finally(() => {
-            // console.log(mood_data);
             setLoading(false);
           });
       }
