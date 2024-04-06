@@ -36,7 +36,7 @@ const gMeet = (link) => {
     .catch((err) => console.log(err));
 };
 
-const NoSessions = () => {
+const NoSessionsU = () => {
   return (
     <Text
       style={{
@@ -48,7 +48,27 @@ const NoSessions = () => {
         fontFamily: "Roboto",
         fontWeight: "normal",
       }}
-    >Oops! It looks like there are no sessions scheduled for you at the moment.</Text>
+    >
+      Oops! It looks like there are no sessions scheduled for you at the moment.
+    </Text>
+  );
+};
+
+const NoSessionsH = () => {
+  return (
+    <Text
+      style={{
+        width: "100%",
+        textAlign: "center",
+        marginVertical: hp(3.6),
+        color: "#455a64",
+        fontSize: wp(4),
+        fontFamily: "Roboto",
+        fontWeight: "normal",
+      }}
+    >
+      No information available. Book your first session to get started.
+    </Text>
   );
 };
 
@@ -187,6 +207,7 @@ const FirstRoute = (props) => {
   const [hasApp, sethasApp] = useState(false);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({});
+  const { userDetails } = useAuth();
 
   const parentData = {
     has_ban: false,
@@ -212,7 +233,7 @@ const FirstRoute = (props) => {
 
   useEffect(() => {
     const url = "https://n8n.heartitout.in/webhook/api/fetch-session-history";
-    const payload = props.data;
+    const payload = userDetails();
     payload.data = "upcoming";
     if (loading) {
       axios
@@ -227,10 +248,10 @@ const FirstRoute = (props) => {
           } else {
             sethasApp(false);
             parentData.has_ban = false;
-            parentData.btn_data["btn1-text"] = "Book Your Session"
-              // res.data.btn_dat["btn1-text"] != (null || undefined)
-              //   ? res.data.btn_dat["btn1-text"]
-              //   : "Book Your Session";
+            parentData.btn_data["btn1-text"] = "Book Your Session";
+            // res.data.btn_dat["btn1-text"] != (null || undefined)
+            //   ? res.data.btn_dat["btn1-text"]
+            //   : "Book Your Session";
             parentData.btn_data["btn2-text"] =
               res.data.btn_dat["btn2-text"] != (null || undefined)
                 ? res.data.btn_dat["btn2-text"]
@@ -258,7 +279,7 @@ const FirstRoute = (props) => {
   return (
     <View style={styles.scrollContainer}>
       <ScrollView
-        style={{ width: "100%", paddingLeft: wp(3.5),  marginTop:hp(1.5) }}
+        style={{ width: "100%", paddingLeft: wp(3.5), marginTop: hp(1.5) }}
       >
         {loading ? (
           <View
@@ -285,7 +306,7 @@ const FirstRoute = (props) => {
               </>
             ) : (
               <>
-                <NoSessions />
+                <NoSessionsU />
               </>
             )}
           </>
@@ -298,7 +319,7 @@ const FirstRoute = (props) => {
 const SecondRoute = (props) => {
   const [hasApp, sethasApp] = useState(false);
   const [loading, setLoading] = useState(true);
-
+  const { userDetails } = useAuth();
   const [data, setData] = useState({});
 
   const parentData = {
@@ -325,7 +346,7 @@ const SecondRoute = (props) => {
 
   useEffect(() => {
     const url = "https://n8n.heartitout.in/webhook/api/fetch-session-history";
-    const payload = props.data;
+    const payload = userDetails();
     payload.data = "history";
     axios
       .post(url, payload)
@@ -339,10 +360,10 @@ const SecondRoute = (props) => {
         } else {
           sethasApp(false);
           parentData.has_ban = false;
-          parentData.btn_data["btn1-text"] ="Book Your Session";
-            // res.data.btn_dat["btn1-text"] != (null || undefined)
-            //   ? res.data.btn_dat["btn1-text"]
-            //   : "Book Your Session";
+          parentData.btn_data["btn1-text"] = "Book Your Session";
+          // res.data.btn_dat["btn1-text"] != (null || undefined)
+          //   ? res.data.btn_dat["btn1-text"]
+          //   : "Book Your Session";
           parentData.btn_data["btn2-text"] =
             res.data.btn_dat["btn2-text"] != (null || undefined)
               ? res.data.btn_dat["btn2-text"]
@@ -369,7 +390,9 @@ const SecondRoute = (props) => {
 
   return (
     <View className="flex-col items-center " style={styles.scrollContainer}>
-      <ScrollView style={{ width: "100%", paddingLeft: wp(3.5), marginTop:hp(1.5) }}>
+      <ScrollView
+        style={{ width: "100%", paddingLeft: wp(3.5), marginTop: hp(1.5) }}
+      >
         {loading ? (
           <View
             style={{
@@ -396,7 +419,7 @@ const SecondRoute = (props) => {
               </>
             ) : (
               <>
-                <NoSessions />
+                <NoSessionsH />
               </>
             )}
           </>
@@ -447,10 +470,9 @@ const renderTabBar = (props) => (
 );
 
 const Buttons = (props) => {
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   return (
     <>
-
       <View
         className="flex-col items-center"
         style={[styles.cardContainer, { marginTop: hp(3) }]}
@@ -463,12 +485,14 @@ const Buttons = (props) => {
             fontSize: wp(4),
             fontWeight: "500",
           }}
-        >Let's find the perfect slot for you</Text>
+        >
+          Let's find the perfect slot for you
+        </Text>
         <TouchableOpacity
           activeOpacity={0.8}
           style={styles.BookBtn2}
           onPress={() => {
-            navigation.navigate('webview', props.props.but1URL)
+            navigation.navigate("webview", props.props.but1URL);
           }}
         >
           <Text style={styles.btnText2}>{props.props.but1}</Text>
@@ -522,11 +546,11 @@ const Card = (props) => {
   return (
     <View
       className="flex-col justify-center items-center"
-      style={[styles.cardContainer, { marginTop: hp(4), height: hp(18)}]}
+      style={[styles.cardContainer, { marginTop: hp(4), height: hp(18) }]}
     >
       <TouchableOpacity
         onPress={() => {
-          navigation.navigate('webview', props.props.banClick)
+          navigation.navigate("webview", props.props.banClick);
         }}
       >
         {!imageError ? (
@@ -541,7 +565,7 @@ const Card = (props) => {
               source={{
                 uri: props.props.banLink,
               }}
-            // alt={''}
+              // alt={''}
             />
           </>
         ) : (
@@ -591,12 +615,11 @@ export default function ProfileScreen(props) {
 
   useEffect(() => {
     if (path === "webview") {
-      const connection = connect()
-      if (connection)
-        setRefresh(true);
+      const connection = connect();
+      if (connection) setRefresh(true);
     }
     pathing("App");
-  }, [path])
+  }, [path]);
 
   useEffect(() => {
     setDet(data);
@@ -654,23 +677,27 @@ export default function ProfileScreen(props) {
   };
 
   const renderScene = ({ route }) => {
-    setRefresh(false)
+    setRefresh(false);
     switch (route.key) {
       case "first":
         return (
-          !refresh && <FirstRoute
-            data={data}
-            onDataReceived={handleDataFromChild}
-            onRender={handleChild1Render}
-          />
+          !refresh && (
+            <FirstRoute
+              data={data}
+              onDataReceived={handleDataFromChild}
+              onRender={handleChild1Render}
+            />
+          )
         );
       case "second":
         return (
-          !refresh && <SecondRoute
-            data={data}
-            onDataReceived={handleDataFromChild2}
-            onRender={handleChild2Render}
-          />
+          !refresh && (
+            <SecondRoute
+              data={data}
+              onDataReceived={handleDataFromChild2}
+              onRender={handleChild2Render}
+            />
+          )
         );
       default:
         return null;
@@ -688,16 +715,15 @@ export default function ProfileScreen(props) {
   const [refreshing, setRefreshing] = useState(false);
   const fetchData = () => {
     setTimeout(() => {
-      setRefresh(false)
+      setRefresh(false);
       setRefreshing(false);
     }, 50); // Simulating 2 seconds delay
   };
 
   const handleRefresh = () => {
     setRefreshing(true);
-    const connection = connect()
-    if (connection)
-      setRefresh(true);
+    const connection = connect();
+    if (connection) setRefresh(true);
     fetchData();
   };
 
@@ -710,9 +736,8 @@ export default function ProfileScreen(props) {
       clearInterval(idleTimer);
       setIdleTimer(
         setInterval(() => {
-          const connection = connect()
-          if (connection)
-            setRefresh(true);
+          const connection = connect();
+          if (connection) setRefresh(true);
         }, 360000)
       );
     }
@@ -720,7 +745,6 @@ export default function ProfileScreen(props) {
   }, [timer]);
 
   const { connect } = useAuth();
-
 
   return (
     <SafeAreaView>
@@ -734,8 +758,11 @@ export default function ProfileScreen(props) {
           zIndex: 4,
         }}
       ></View>
-      <PTRView onRefresh={handleRefresh} style={{ backgroundColor: "#fff", height: hp(100) }}>
-        <View style={{}} >
+      <PTRView
+        onRefresh={handleRefresh}
+        style={{ backgroundColor: "#fff", height: hp(100) }}
+      >
+        <View style={{}}>
           <ProfileBg width={wp(100)} height={wp(58.4)} />
           <View style={styles.banner}>
             <Text
@@ -801,7 +828,7 @@ export default function ProfileScreen(props) {
             </View>
           </View>
         </View>
-        <View style={[styles.cardContainer, { marginTop: hp(3) }]} >
+        <View style={[styles.cardContainer, { marginTop: hp(3) }]}>
           <TabView
             navigationState={{ index, routes }}
             renderScene={renderScene}
@@ -818,13 +845,12 @@ export default function ProfileScreen(props) {
                     ? hp(40)
                     : hp(22)
                   : isSessionH
-                    ? hp(40)
-                    : hp(22),
+                  ? hp(40)
+                  : hp(22),
             }}
             renderTabBar={renderTabBar}
             initialParams={{ det }}
           ></TabView>
-
         </View>
 
         {index == 0 ? (
@@ -833,10 +859,10 @@ export default function ProfileScreen(props) {
               <>
                 {isSession ? (
                   <>
-                  <Card
-                    props={{ banner, banLink, banClick, type: "U" }}
-                    handleCard={handleCard}
-                  />
+                    <Card
+                      props={{ banner, banLink, banClick, type: "U" }}
+                      handleCard={handleCard}
+                    />
                   </>
                 ) : (
                   <Buttons props={{ but1, but1URL, but2, but2URL }} />
@@ -872,12 +898,17 @@ export default function ProfileScreen(props) {
             )}
           </>
         )}
-        <View style={{ marginTop: hp(5) }} >
-          <View style={{
-            height: hp(7.2), width: wp(100), backgroundColor: 'rgba(247,207,106,0.25)',
-            paddingVertical: hp(1),
-            justifyContent: 'space-between', alignItems: 'center'
-          }} >
+        <View style={{ marginTop: hp(5) }}>
+          <View
+            style={{
+              height: hp(7.2),
+              width: wp(100),
+              backgroundColor: "rgba(247,207,106,0.25)",
+              paddingVertical: hp(1),
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
             <Text
               style={{
                 width: "100%",
@@ -886,7 +917,9 @@ export default function ProfileScreen(props) {
                 fontSize: wp(3.3),
                 fontWeight: "500",
               }}
-            >Can't find your booked session on the calendar?</Text>
+            >
+              Can't find your booked session on the calendar?
+            </Text>
             <Text
               style={{
                 width: "100%",
@@ -894,7 +927,9 @@ export default function ProfileScreen(props) {
                 color: "#455a64",
                 fontSize: wp(3.5),
               }}
-            >Simply pull down to refresh your therapy calendar 🔄</Text>
+            >
+              Simply pull down to refresh your therapy calendar 🔄
+            </Text>
           </View>
           <View
             className="flex-row items-center"
@@ -977,7 +1012,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     flexDirection: "row",
-    marginTop: hp(1.5)
+    marginTop: hp(1.5),
   },
 
   btnText2: {

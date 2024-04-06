@@ -23,7 +23,7 @@ const showToast = (message) => {
 
 export default function InitLoaderEffect({ route }) {
   const navigation = useNavigation();
-  const { connect, Diversion, setUser } = useAuth();
+  const { connect, Diversion, setUser, payloadInitials } = useAuth();
   const [refresh, setRefresh] = React.useState(true);
   const backHandler = () => {
     BackHandler.exitApp();
@@ -60,6 +60,14 @@ export default function InitLoaderEffect({ route }) {
             user_email: data.user_email,
             insert_details: "false",
           };
+
+          payloadInitials({
+            phone: data.phone,
+            code: data.code,
+            token: data.new_token,
+            otp: data.otp,
+            date: data.date,
+          })
 
           let finalDetails = {
             phone: data.phone,

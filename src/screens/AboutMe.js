@@ -86,7 +86,8 @@ const fillDetails = (
 
 export default function AboutMe(props) {
   const navigation = useNavigation();
-  const { connect } = useAuth();
+  const { connect, userDetails } = useAuth();
+  let datas = userDetails();
   let data = props.route.params;
   const prevName = data.usr_fullname;
   const prevMail = data.user_email;
@@ -180,7 +181,10 @@ export default function AboutMe(props) {
               inputMode="text"
             />
             <TextInput
-              style={[styles.input, { backgroundColor: "#fff", color:'#989898' }]}
+              style={[
+                styles.input,
+                { backgroundColor: "#fff", color: "#989898" },
+              ]}
               value={`+${code}-${phone}`}
               inputMode="tel"
               editable={false}
@@ -226,19 +230,21 @@ export default function AboutMe(props) {
                 borderWidth: wp(0.3),
               }}
             >
-              <Text style={{ color: theme.black, fontSize: wp(4.2) }}>Cancel</Text>
+              <Text style={{ color: theme.black, fontSize: wp(4.2) }}>
+                Cancel
+              </Text>
               <Cross simple={true} />
             </TouchableOpacity>
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={() => {
                 connect();
-                data.usr_fullname = name;
-                data.user_email = mail;
-                data.insert_details = "true";
+                datas.usr_fullname = name;
+                datas.user_email = mail;
+                datas.insert_details = "true";
                 setLoading(true);
                 fillDetails(
-                  data,
+                  datas,
                   prevName,
                   prevMail,
                   [loading, setLoading],

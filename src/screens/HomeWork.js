@@ -161,7 +161,7 @@ const HomeWork = (route) => {
   const [loading, setLoading] = useState(true);
   const data = route.route.params;
   const [datas, setData] = useState({});
-  const { connect } = useAuth();
+  const { connect, userDetails } = useAuth();
 
   const backHandler = () => {
     navigation.goBack();
@@ -189,7 +189,7 @@ const HomeWork = (route) => {
     {
       if (loading) {
         axios
-          .post(url, data)
+          .post(url, userDetails())
           .then((res) => {
             setData(res.data);
           })
