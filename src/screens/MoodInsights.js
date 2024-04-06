@@ -215,7 +215,7 @@ const MoodInsights = (props) => {
     fear: 0,
     angry: 0,
   });
-  const { connect } = useAuth();
+  const { connect, userDetails } = useAuth();
 
   const fetchData = () => {
     setTimeout(() => {
@@ -249,16 +249,8 @@ const MoodInsights = (props) => {
     BackHandler.removeEventListener("hardwareBackPress", backHandler);
   });
 
-  let payload = props.route.params;
-  //   let payload = {
-  //   token: "o1hTU9pb8xIwE3T/Ho6bxujmFtjKLJtxAlBcZYwCGPc=",
-  //   phone: "9330396039",
-  //   code: "91",
-  //   otp: "2953",
-  //   date: "2024-02-16",
-  //   week: "0",
-  // };
-  payload.curr = curr;
+  let payload = userDetails();
+  payload.week = curr;
   useEffect(() => {
     connect();
     let ahead = false;
