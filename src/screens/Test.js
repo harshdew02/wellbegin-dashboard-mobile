@@ -164,7 +164,7 @@ const FirstRoute = (props) => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const { connect } = useAuth();
+  const { connect, userDetails } = useAuth();
 
   const passDataToParent = (data) => {
     // Call the function passed from the parent component
@@ -176,7 +176,7 @@ const FirstRoute = (props) => {
       if (loading) {
         const url = "https://n8n.heartitout.in/webhook/api/fetch-diag-res";
         axios
-          .post(url, props.props)
+          .post(url, userDetails())
           .then((res) => {
             if (res.data.has_res === "yes") {
               sethasApp(true);

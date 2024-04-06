@@ -24,10 +24,11 @@ import { useAuth } from "../utils/auth";
 import PTRView from "react-native-pull-to-refresh";
 
 const Progress = (props) => {
-  const {connect} = useAuth()
+  const {connect, userDetails} = useAuth()
   const navigation = useNavigation();
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState("");
+  console.log(userDetails())
 
   const backHandler = () => {
     navigation.goBack();
@@ -48,7 +49,7 @@ const Progress = (props) => {
     else{
     const url = "https://n8n.heartitout.in/webhook/api/get-my-progress";
     axios
-      .post(url, props.route.params)
+      .post(url, userDetails())
       .then((res) => {
         if (res.data.status === "1") setProgress(res.data.progress_link);
       })

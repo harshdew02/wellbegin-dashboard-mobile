@@ -75,7 +75,7 @@ export default function ReminderScreen({ navigation, route }) {
   const [ifReminder, setIfReminder] = useState(false);
   const [datas, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { connect } = useAuth();
+  const { connect, userDetails } = useAuth();
   const backHandler = () => {
     navigation.goBack();
     return true;
@@ -103,7 +103,7 @@ export default function ReminderScreen({ navigation, route }) {
     {
       if (loading) {
         axios
-          .post(url, route.params)
+          .post(url, userDetails())
           .then((res) => {
             if (res.data.has_notif === "yes") setIfReminder(true);
             else setIfReminder(false);

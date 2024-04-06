@@ -290,17 +290,8 @@ const MoodLog = (props) => {
   const navigation = useNavigation();
   const [datas, setData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const { connect } = useAuth();
-  let payload = props.route.params;
-  // let payload = {
-  //   token: "o1hTU9pb8xIwE3T/Ho6bxujmFtjKLJtxAlBcZYwCGPc=",
-  //   phone: "9330396039",
-  //   code: "91",
-  //   otp: "2953",
-  //   date: "2024-02-16",
-  //   week: "0",
-  // };
-
+  const { connect, userDetails } = useAuth();
+  let payload = userDetails();
   const backHandler = () => {
     navigation.goBack();
     return true;
@@ -315,7 +306,6 @@ const MoodLog = (props) => {
   });
 
   useEffect(() => {
-    payload.week = payload.curr;
     const url = "https://n8n.heartitout.in/webhook/api/mt-weekly-mood";
     const connection = connect();
     if (!connection) {

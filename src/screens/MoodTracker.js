@@ -293,10 +293,10 @@ const Moods = (props) => {
 
 const MoodTracker = (props) => {
   const navigation = useNavigation();
-  const payload = props.route.params;
   const [loading, setLoading] = useState(false);
-  const { setHomes, connect } = useAuth();
-  
+  const { setHomes, connect, userDetails} = useAuth();
+
+  const payload = userDetails();
   const extraPayloadandLaunch = (
     mood,
     emotion1,

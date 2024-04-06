@@ -99,7 +99,7 @@ const Bookbtn = (props) => {
             <Text
               style={[styles.btnText, { fontSize: wp(3.5), color: "#ffffff" }]}
             >
-              Book another Session
+              Book Your Next Session
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -131,7 +131,7 @@ const Bookbtn = (props) => {
             navigation.navigate("webview", props.props.booking);
           }}
         >
-          <Text style={[styles.btnText]}>Book another Session</Text>
+          <Text style={[styles.btnText]}>Book Your Next Session</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -166,7 +166,7 @@ export default function HomeScreen2(props) {
   const [category, setCategory] = useState("regular");
   const CopilotText = walkthroughable(Text);
 
-  const { setHomes, home, connect } = useAuth();
+  const { setHomes, home, connect, userDetails } = useAuth();
   useEffect(() => {
     if (home === "webview" || home === "moodset") {
       setMoodCheck(true);
@@ -224,7 +224,7 @@ export default function HomeScreen2(props) {
         const apiUrl2 =
           "https://n8n.heartitout.in/webhook/api/fetch-session-details";
         axios
-          .post(apiUrl2, payload)
+          .post(apiUrl2, userDetails())
           .then(async (res) => {
             if (res.data.status === "0") {
               // userInvalid();
@@ -309,7 +309,7 @@ export default function HomeScreen2(props) {
         const apiUrl3 =
           "https://n8n.heartitout.in/webhook/api/home-page-details";
         axios
-          .post(apiUrl3, payload)
+          .post(apiUrl3, userDetails())
           .then(async (res) => {
             realTimeData = await res.data;
             if (realTimeData != null) {

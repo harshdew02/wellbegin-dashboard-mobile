@@ -14,6 +14,8 @@ let new_user = {
 };
 let divert = "main";
 
+let userDetail = {};
+
 export const AuthProvider = ({ children }) => {
   const [path, setPath] = useState("App");
   const pathing = (paths) => {
@@ -23,6 +25,12 @@ export const AuthProvider = ({ children }) => {
   const setHomes = (paths) => {
     setHome(paths);
   };
+  const payloadInitials = (payload) =>{
+    userDetail = payload;
+  }
+  const userDetails = () => {
+    return userDetail;
+  }
 
   const Diversion = (screen) => {
     if (
@@ -86,6 +94,8 @@ export const AuthProvider = ({ children }) => {
         setUser,
         isAllowed,
         getAllowed,
+        userDetails,
+        payloadInitials,
       }}
     >
       {children}
