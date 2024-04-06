@@ -38,6 +38,7 @@ import Gift from "../../assets/images/Gift.svg";
 import axios from "axios";
 import PTRView from "react-native-pull-to-refresh";
 import { useAuth } from "../utils/auth";
+import SInfo from "react-native-encrypted-storage";
 import {
   CopilotProvider,
   CopilotStep,
@@ -201,6 +202,18 @@ export default function HomeScreen2(props) {
     //   app_session_link: "https://meet.google.com/pgx-mwxa-jdj",
     // },
   };
+
+  useEffect(() => {
+    if(data.usr_fullname === "") {
+      SInfo.getItem("nick_name")
+      .then((res) => {
+        if (res != null && res != undefined) setName(res);
+      })
+      .catch((error) => console.log(error));
+    }
+    else
+      setName(data.usr_fullname);
+  }, [])
 
   useEffect(() => {
     const isConnected = connect();
@@ -880,21 +893,6 @@ export default function HomeScreen2(props) {
             className="flex-col items-center"
             style={[{ height: hp(15.8), marginTop: hp(4) }]}
           >
-            {/* <View style={[styles.packageCard, { backgroundColor: "#EAF7FC" }]}>
-            <View
-              className="flex-col justify-between items-start "
-              style={{ height: hp(9) }}
-            >
-              <Text style={styles.cardText}>Self-care Tools for you</Text>
-              <View style={styles.Btn}>
-                <Text style={styles.btnText2}>Discover Now</Text>
-              </View>
-            </View>
-            <Image
-              source={require("../../assets/images/SelfCareIcon2.png")}
-              style={{ width: wp(18), height: hp(14) }}
-            />
-          </View> */}
             <Help width={wp(84)} height={wp(34.4)} />
           </TouchableOpacity>
 

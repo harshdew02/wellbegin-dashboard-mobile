@@ -92,6 +92,11 @@ export default function InitLoaderEffect({ route }) {
             has_banner: "no",
             banner_link: "",
             on_click: "",
+
+            //Discover links section
+            mindfull: "https://www.heartitout.in",
+            holistic:"https://www.heartitout.in",
+            selfcare:"https://www.heartitout.in"
           };
 
           //This the first call from the flowchart (and it is done)
@@ -172,6 +177,21 @@ export default function InitLoaderEffect({ route }) {
               } else {
                 throw new Error("User credentails expired");
               }
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+
+            //This is the 4th api call from flowchart
+            const apiUrl4 =
+            "https://n8n.heartitout.in/webhook/api/discover_meta";
+          await axios
+            .post(apiUrl4, userDetails)
+            .then(async (res) => {
+              console.log("It is for discover: ", res.data)
+              finalDetails.mindfull = res.data.data[0] != (null || undefined) ? res.data.data[0].on_click : "https://www.heartitout.in"
+              finalDetails.holistic = res.data.data[1] != (null || undefined) ? res.data.data[1].on_click : "https://www.heartitout.in"
+              finalDetails.selfcare = res.data.data[2] != (null || undefined) ? res.data.data[2].on_click : "https://www.heartitout.in"
             })
             .catch((err) => {
               console.log(err);

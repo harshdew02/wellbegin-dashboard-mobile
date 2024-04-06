@@ -205,15 +205,16 @@ export default function AboutMe(props) {
           >
             <TouchableOpacity
               onPress={() => {
-                SInfo.removeItem("token")
-                  .then(() => {
-                    navigation.navigate("LoginPage");
-                    showToast("User logout successfully.");
-                  })
-                  .catch((err) => {
-                    showToast("Something went wrong.");
-                    console.log("Error from logout system: ", err);
-                  });
+                // SInfo.removeItem("token")
+                //   .then(() => {
+                //     navigation.navigate("LoginPage");
+                //     showToast("User logout successfully.");
+                //   })
+                //   .catch((err) => {
+                //     showToast("Something went wrong.");
+                //     console.log("Error from logout system: ", err);
+                //   });
+                navigation.goBack();
               }}
               style={{
                 width: wp(40),

@@ -227,10 +227,10 @@ const FirstRoute = (props) => {
           } else {
             sethasApp(false);
             parentData.has_ban = false;
-            parentData.btn_data["btn1-text"] =
-              res.data.btn_dat["btn1-text"] != (null || undefined)
-                ? res.data.btn_dat["btn1-text"]
-                : "Book Your Session";
+            parentData.btn_data["btn1-text"] = "Book Your Session"
+              // res.data.btn_dat["btn1-text"] != (null || undefined)
+              //   ? res.data.btn_dat["btn1-text"]
+              //   : "Book Your Session";
             parentData.btn_data["btn2-text"] =
               res.data.btn_dat["btn2-text"] != (null || undefined)
                 ? res.data.btn_dat["btn2-text"]
@@ -339,10 +339,10 @@ const SecondRoute = (props) => {
         } else {
           sethasApp(false);
           parentData.has_ban = false;
-          parentData.btn_data["btn1-text"] =
-            res.data.btn_dat["btn1-text"] != (null || undefined)
-              ? res.data.btn_dat["btn1-text"]
-              : "Book Your Session";
+          parentData.btn_data["btn1-text"] ="Book Your Session";
+            // res.data.btn_dat["btn1-text"] != (null || undefined)
+            //   ? res.data.btn_dat["btn1-text"]
+            //   : "Book Your Session";
           parentData.btn_data["btn2-text"] =
             res.data.btn_dat["btn2-text"] != (null || undefined)
               ? res.data.btn_dat["btn2-text"]

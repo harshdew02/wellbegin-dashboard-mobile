@@ -243,7 +243,7 @@ export default function Verify({ navigation, route }) {
         </Text>
         <TextInput
           className="rounded-lg"
-          style={[styles.input, { fontSize: wp(5) }]}
+          style={[styles.input, { fontSize: wp(5) }, {textAlign:"center"}, {paddingHorizontal:wp(5)}]}
           onChangeText={onChangeNumber}
           value={number}
           placeholder="Enter OTP"

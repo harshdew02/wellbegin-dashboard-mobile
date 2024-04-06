@@ -331,8 +331,8 @@ const MoodTracker = (props) => {
       .post(url, payload)
       .then((res) => {
         if (res.data.status === "1") {
-          if (res.data.success === "true") showToast("Mood set");
-          else showToast("Mood already set for today");
+          if (res.data.success === "true") showToast("Mood Recorded");
+          else showToast("Mood already recorded");
           setHomes('moodset')
           navigation.navigate("main", { mood_set: true })
         } else {
@@ -557,7 +557,7 @@ const MoodTracker = (props) => {
                 marginTop: hp(1.5),
               }}
             >
-              Choose 3 Emotions You’re Feeling
+              Choose Upto 3 Emotions You’re feeling
             </Text>
 
             <View
@@ -592,7 +592,7 @@ const MoodTracker = (props) => {
                 marginTop: hp(2),
               }}
             >
-              Spheres of Life
+              Sphere of Life
             </Text>
 
             <View

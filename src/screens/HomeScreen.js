@@ -25,6 +25,7 @@ import Emoji2 from "../../assets/images/emoji2.svg";
 import Emoji3 from "../../assets/images/emoji3.svg";
 import Emoji4 from "../../assets/images/emoji4.svg";
 import Emoji5 from "../../assets/images/emoji5.svg";
+import Help from "../../assets/images/Help.svg";
 import Home2 from "../../assets/images/home2.svg";
 import { theme } from "../theme";
 import TopBell from "../components/TopBell";
@@ -32,6 +33,7 @@ import HomePageBanner from "../components/HomePageBanner";
 import Gift from "../../assets/images/Gift.svg";
 import axios from "axios";
 import PTRView from "react-native-pull-to-refresh";
+import SInfo from "react-native-encrypted-storage";
 import { useAuth } from "../utils/auth";
 
 const gMeet = (link) => {
@@ -56,7 +58,7 @@ const Btn = (props) => {
         navigation.navigate("webview", props.props);
       }}
     >
-      <Text style={styles.btnText}>Book a Session</Text>
+      <Text style={styles.btnText}>Book Your Session</Text>
     </TouchableOpacity>
   );
 };
@@ -338,7 +340,19 @@ export default function HomeScreen(props) {
   }, [moodcheck]);
 
   useEffect(() => {
-    setName(data.usr_fullname);
+    if(data.usr_fullname === "") {
+      SInfo.getItem("nick_name")
+      .then((res) => {
+        if (res != null && res != undefined) setName(res);
+      })
+      .catch((error) => console.log(error));
+    }
+    else
+      setName(data.usr_fullname);
+  }, [])
+  
+
+  useEffect(() => {
     data.has_mood == "no" ? setMood(false) : setMood(true);
     if (
       data.has_banner == "yes" &&
@@ -530,16 +544,16 @@ export default function HomeScreen(props) {
 
           <View style={styles.banner}>
             <View
-              className="flex-row justify-center items-center "
+              className="flex-row justify-center items-center"
               style={{
                 backgroundColor: theme.maincolor,
                 width: wp(84),
-                justifyContent: "center",
+                justifyContent: "space-between",
                 alignItems: "center",
                 flexDirection: "row",
               }}
             >
-              <Text
+              {/* <Text
                 style={{
                   color: "white",
                   fontSize: wp(4),
@@ -547,8 +561,20 @@ export default function HomeScreen(props) {
                   fontWeight: "400",
                 }}
               >
-                Welcome👋 {name.split(/\s+/).filter((word) => word !== "")[0]}
-              </Text>
+                Welcome {name.split(/\s+/).filter((word) => word !== "")[0]}{" "} 👋
+              </Text> */}
+
+              <Text
+                  style={{
+                    color: "white",
+                    fontSize: wp(4.2),
+                    fontFamily: "Roboto",
+                    fontWeight: "700",
+                  }}
+                >
+                  Welcome {name.split(/\s+/).filter((word) => word !== "")[0]}{" "}
+                  👋
+                </Text>
 
               <TouchableOpacity
                 onPress={() => {
@@ -615,7 +641,7 @@ export default function HomeScreen(props) {
                           width: wp(53),
                         }}
                       >
-                        Continue your well-begin journey.
+                        Continue your well-begin journey with your therapist.
                       </Text>
                     )}
                   </>
@@ -848,7 +874,7 @@ export default function HomeScreen(props) {
                           fontWeight: "800",
                         }}
                       >
-                        Your Whole Hearted Subscription is Active 
+                        Your Whole Hearted Subscription is Active
                       </Text>
                       <TouchableOpacity
                         activeOpacity={0.5}
@@ -951,6 +977,20 @@ export default function HomeScreen(props) {
             />
           </View>
         </TouchableOpacity>
+
+        <TouchableOpacity
+            onPress={() => {
+              Linking.openURL(whatsapp)
+                .then((responsive) => {
+                  console.log(responsive);
+                })
+                .catch((err) => console.log(err));
+            }}
+            className="flex-col items-center"
+            style={[{ height: hp(15.8), marginTop: hp(4) }]}
+          >
+            <Help width={wp(84)} height={wp(34.4)} />
+          </TouchableOpacity>
 
         <View
           className="flex-row items-center"

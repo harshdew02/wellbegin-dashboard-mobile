@@ -174,7 +174,7 @@ const Login = ({ route }) => {
         {/* <View className="flex-col items-center" style={{ marginTop: hp(3) }}> */}
         <Text style={styles.well}>It's time to take a leap towards a healthier mind</Text>
 
-        <Text style={styles.getinstant}>Sign up so we can personalise your journey</Text>
+        <Text style={styles.getinstant}>Enter your number to get started</Text>
 
         <ActivityIndicator style={{ marginTop: hp(2) }} animating={loading} size="large" />
 

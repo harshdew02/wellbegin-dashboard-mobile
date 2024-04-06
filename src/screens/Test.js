@@ -32,7 +32,7 @@ import RNFetchBlob from "rn-fetch-blob";
 import FileViewer from "react-native-file-viewer";
 import PTRView from "react-native-pull-to-refresh";
 import { useAuth } from "../utils/auth";
-import BottomQuote from "../components/BottomQuote"
+import BottomQuote from "../components/BottomQuote";
 
 const NoSessions = () => {
   return (
@@ -517,7 +517,8 @@ const Test = (props) => {
             textAlign: "center",
           }}
         >
-          Take the test recommended for you today. Get insights to boost your mental health journey!
+          Take the test recommended for you today. Get insights to boost your
+          mental health journey!
         </Text>
 
         <View style={[styles.cardContainer, { marginTop: hp(3) }]}>
@@ -550,7 +551,8 @@ const Test = (props) => {
           Recommended Diagnostics For You
         </Text>
 
-        <ScrollView nestedScrollEnabled={true}
+        <ScrollView
+          nestedScrollEnabled={true}
           showsHorizontalScrollIndicator={false}
           horizontal={true}
           contentContainerStyle={{
@@ -595,7 +597,7 @@ const Test = (props) => {
               style={[styles.btnStyle2]}
               onPress={() => {
                 ShareMessage(
-                  "Hey, Check out this cool app that helped me understand my symptoms better. It might give you some clarity and get you the support you need. Give it a shot! Here's the link: https://heartitout.in/diagnostic"
+                  "Hey, Check out this amazing mental health app that helped me understand myself better. It will help you get more clarity about your mental health and get access to all the support you need. Here's the link: https://heartitout.in/diagnostic/?referral=app"
                 );
               }}
             >

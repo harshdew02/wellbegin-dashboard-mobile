@@ -19,6 +19,7 @@ import {
 import P1 from "../../assets/images/page1.svg";
 import P2 from "../../assets/images/page2.svg";
 import P3 from "../../assets/images/page3.svg";
+import P8 from "../../assets/images/google.svg";
 import Next from "../../assets/images/nextIcon.svg";
 import { theme } from "../theme";
 // import C1 from "../../assets/images/c1.svg";
@@ -31,6 +32,7 @@ import SInfo from "react-native-encrypted-storage";
 import { useNavigation } from "@react-navigation/native";
 const COLORS = { primary: "#282534", white: "#fff" };
 const { width, height } = Dimensions.get("window");
+import { useAuth } from "../utils/auth";
 import AutoScrollingList from "../components/AutoRotatedScrollview";
 
 const C1 = () => {
@@ -123,7 +125,8 @@ const P4 = () => {
   return (
     <>
       <View style={{ alignItems: 'center', overflow: 'hidden' }} >
-        <P3 width={wp(100)} height={wp(133)} />
+        <P3 width={wp(100)} height={wp(120.53)} />
+        <P8 width={wp(67)} height={wp(12)} />
         <Animated.View
           style={{
             flexDirection: 'row',
@@ -153,7 +156,7 @@ const Px = () => {
   return (
     <>
       <Image style={{ height: hp(7.8), width: wp(32.8), position: 'absolute', zIndex: 1, top: hp(6.8) }} source={require('../../assets/logo.png')} />
-      <P1 width={wp(100)} height={wp(125)} />
+      <P1 width={wp(100)} height={wp(127)} />
     </>
   )
 };
@@ -164,11 +167,11 @@ const slides = [
     P: <Px />,
     title: "Understanding Your Needs",
     subtitle:
-      "Get clarity with scientifically backed tests covering depression, anxiety, relationships, ADHD, and more!",
+      "Get clarity with scientifically backed tests covering Depression, Anxiety, Relationships, ADHD, and more!",
   },
   {
     id: "2",
-    P: <P2 width={wp(100)} height={wp(121)} />,
+    P: <P2 width={wp(100)} height={wp(122)} />,
     title: "Meet Your Perfect Match",
     subtitle:
       "Connect with skilled therapists who understand your needs, offering tailored care plans and regular check-ins to guide your progress",
@@ -194,11 +197,14 @@ const Slide = ({ item }) => {
       style={{
         alignItems: "center",
         width: wp(100),
-        // justifyContent: "space-between",
+        justifyContent: "space-between",
       }}
     >
       {item.P}
-      <View style={{ alignItems: "center", marginTop:hp(1.5)}}>
+      <View style={{ alignItems: "center",
+      //  marginTop:hp(1.5)
+      // justifyContent:'space-between'
+       }}>
         <Text style={styles.title}>{item?.title}</Text>
         <Text style={styles.subtitle}>{item?.subtitle}</Text>
       </View>
@@ -209,6 +215,7 @@ const Slide = ({ item }) => {
 const Onboarding = ({ route }) => {
   const navigation = useNavigation();
   const [currentSlideIndex, setCurrentSlideIndex] = React.useState(0);
+  const {Diversion} = useAuth();
   const ref = React.useRef();
   const updateCurrentSlideIndex = (e) => {
     const contentOffsetX = e.nativeEvent.contentOffset.x;
@@ -260,10 +267,14 @@ const Onboarding = ({ route }) => {
     return (
       <View
         style={{
-          height: hp(18),
+          height: hp(10),
           justifyContent: "space-between",
           paddingHorizontal: 20,
           alignItems: "center",
+          // marginBottom: hp(6),
+          // backgroundColor:'red'
+          position:'absolute',
+          bottom: hp(6)
         }}
       >
         {/* Indicator container */}
@@ -271,7 +282,6 @@ const Onboarding = ({ route }) => {
           style={{
             flexDirection: "row",
             justifyContent: "center",
-            marginTop: 20,
           }}
         >
           {/* Render indicator */}
@@ -290,12 +300,12 @@ const Onboarding = ({ route }) => {
         </View>
 
         {/* Render buttons */}
-        <View style={{ marginBottom: hp(2) }}>
+        <View style={{  }}>
           {currentSlideIndex == slides.length - 1 ? (
             <View
               style={{
                 height: 50,
-                marginBottom: hp(0),
+                // marginBottom: hp(0),
                 display: "flex",
                 justifyContent: "flex-end",
                 flexDirection: "row",
@@ -362,7 +372,7 @@ const Onboarding = ({ route }) => {
         nestedScrollEnabled={true}
         ref={ref}
         onMomentumScrollEnd={updateCurrentSlideIndex}
-        contentContainerStyle={{ height: hp(100) }}
+        contentContainerStyle={{ height: hp(86), }}
         showsHorizontalScrollIndicator={false}
         horizontal
         data={slides}
@@ -381,7 +391,7 @@ const styles = StyleSheet.create({
     color: theme.black,
     fontSize: wp(4),
     marginTop: 10,
-    maxWidth: wp(84),
+    maxWidth: wp(90),
     textAlign: "center",
     lineHeight: 23,
   },
@@ -389,7 +399,7 @@ const styles = StyleSheet.create({
     color: theme.maincolor,
     fontSize: wp(6),
     fontWeight: "bold",
-    marginTop: hp(0.5),
+    marginTop: hp(8),
     textAlign: "center",
   },
 

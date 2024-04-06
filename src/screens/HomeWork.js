@@ -135,7 +135,7 @@ const Card = (props) => {
             <TouchableOpacity
               onPress={() => {
                 homework();
-                navigation.navigate("webview", item.stage);
+                navigation.navigate("webview", item.on_click);
               }}
             >
               <Text

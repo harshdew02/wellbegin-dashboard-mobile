@@ -39,12 +39,12 @@ import PTRView from "react-native-pull-to-refresh";
 import { useAuth } from "../utils/auth";
 
 const component = {
-  Happy: <Happy />,
-  Sad: <Sad />,
-  Fear: <Fear />,
-  Anger: <Angry />,
-  Surprised: <Surprised />,
-  Disgust: <Disgust />,
+  Happy: <Happy isSelect={1} />,
+  Sad: <Sad isSelect={3} />,
+  Fear: <Fear isSelect={5} />,
+  Anger: <Angry isSelect={6} />,
+  Surprised: <Surprised isSelect={2} />,
+  Disgust: <Disgust isSelect={4} />,
 };
 
 const SphereOfLife = {
@@ -298,7 +298,7 @@ const MoodLog = (props) => {
   //   code: "91",
   //   otp: "2953",
   //   date: "2024-02-16",
-  //   week: "2",
+  //   week: "0",
   // };
 
   const backHandler = () => {
