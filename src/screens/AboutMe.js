@@ -198,13 +198,14 @@ export default function AboutMe(props) {
             />
           </View>
 
-          <ActivityIndicator animating={loading} size="small" />
+          {/* <ActivityIndicator animating={loading} size="small" /> */}
 
           <View
             style={{
               width: wp(87),
               flexDirection: "row",
               justifyContent: "space-between",
+              marginTop: hp(6.2)
             }}
           >
             <TouchableOpacity
@@ -253,7 +254,12 @@ export default function AboutMe(props) {
               }}
               style={[styles.BookBtn3, { marginBottom: hp(4) }]}
             >
-              <Text style={styles.btnText3}>Save My Details</Text>
+              {loading ? (<ActivityIndicator
+                animating={loading}
+                size="large"
+                style={{ position: "absolute", zIndex: 2 }}
+                color={"#fff"}
+              />) : <Text style={styles.btnText3}>Save My Details</Text>}
             </TouchableOpacity>
           </View>
           <View

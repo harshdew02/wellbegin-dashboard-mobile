@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   BackHandler,
+  Image
 } from "react-native";
 import React from "react";
 import { ScrollView } from "react-native-gesture-handler";
@@ -21,6 +22,7 @@ import BottomQuote from "../../assets/images/BottomQuote.svg";
 import D1 from "../../assets/images/Dis1.svg"
 import D2 from "../../assets/images/Dis2.svg"
 import D3 from "../../assets/images/Dis3.svg"
+import D4 from "../../assets/images/Dis4.svg"
 import ReferIcon from "../../assets/images/ReferIcon.svg"
 
 export default function DiscoverScreen(props) {
@@ -68,7 +70,7 @@ export default function DiscoverScreen(props) {
             style={{ height: hp(25) }}
           >
             <TouchableOpacity
-            onPress={() => { navigation.navigate('test', data) }}
+              onPress={() => { navigation.navigate('test', data) }}
               style={[
                 { width: wp(39), overflow: 'hidden', borderRadius: wp(4) },
               ]}
@@ -94,7 +96,7 @@ export default function DiscoverScreen(props) {
             style={{ height: hp(25), marginTop: hp(3) }}
           >
             <TouchableOpacity
-              onPress={()=>{navigation.navigate('webview', data.holistic)}}
+              onPress={() => { navigation.navigate('webview', data.holistic) }}
               style={[
                 { width: wp(39), overflow: 'hidden', borderRadius: wp(4) },
               ]}
@@ -104,16 +106,18 @@ export default function DiscoverScreen(props) {
 
             <TouchableOpacity
               style={[
-                styles.packageCard,
-                { width: wp(39), backgroundColor: "rgba(247, 207, 106, 0.20)" },
+                // styles.packageCard,
+                { alignItems:'center' },
               ]}
               onPress={() => {
                 // Checking if the link is supported for links with custom URL scheme.
                 navigation.navigate('webview', data.selfcare)
               }}
             >
-              <ProductsSvg width={wp(33)} height={hp(9)} />
-              <Text
+              {/* <ProductsSvg width={wp(33)} height={hp(9)} /> */}
+              <Image style={{position:'absolute', width:wp(33), height:wp(19.41), marginTop:hp(5)}} source={require("../../assets/images/disimg.png")} />
+              <D4 width={wp(39.4)} height={wp(53.3)} />
+              {/* <Text
                 style={[
                   styles.cardText,
                   { color: "#765A5A" },
@@ -122,7 +126,7 @@ export default function DiscoverScreen(props) {
                 ]}
               >
                 Self-care Tools For Effective Healing
-              </Text>
+              </Text> */}
             </TouchableOpacity>
           </View>
         </View>
