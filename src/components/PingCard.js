@@ -24,7 +24,7 @@ const PingCard = () => {
     <>
       {!state ? (<View
         onTouchStart={() => {
-          { setState(true)}
+          if(nameDone) { setState(true)}
         }}
         style={{
           width: wp(100),

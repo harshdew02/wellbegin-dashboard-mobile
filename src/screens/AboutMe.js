@@ -168,8 +168,10 @@ export default function AboutMe(props) {
               onPress={() => {
                 SInfo.removeItem("token")
                   .then(() => {
-                    navigation.navigate("LoginPage");
-                    showToast("User logout successfully.");
+                    SInfo.removeItem("nick_name").then(() => {
+                      navigation.navigate("LoginPage");
+                      showToast("User logout successfully.");
+                    })
                   })
                   .catch((err) => {
                     showToast("Something went wrong.");
@@ -241,7 +243,15 @@ export default function AboutMe(props) {
                 //     showToast("Something went wrong.");
                 //     console.log("Error from logout system: ", err);
                 //   });
-                navigation.goBack();
+                // 
+
+                // navigation.navigate('main', { screen: 'BottomBar'});
+                // navigation.navigate('loader');
+                navigation.navigate('main', {
+                  screen: 'BottomBar', params: {
+                    screen: 'Home_Tab'
+                  }
+                });
               }}
               style={{
                 width: wp(40),

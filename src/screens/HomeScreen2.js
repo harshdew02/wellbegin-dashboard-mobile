@@ -166,7 +166,7 @@ export default function HomeScreen2(props) {
   const [loaded, setLoaded] = useState(false);
   const [category, setCategory] = useState("regular");
 
-  const { setHomes, home, connect, userDetails, trackM, exceptionReporting } = useAuth();
+  const { setHomes, home, connect, userDetails, trackM, exceptionReporting, names } = useAuth();
   useEffect(() => {
     if (home === "webview" || home === "moodset") {
       setMoodCheck(true);
@@ -214,7 +214,7 @@ export default function HomeScreen2(props) {
     }
     else
       setName(data.usr_fullname);
-  }, [])
+  }, [names])
 
   useEffect(() => {
     const isConnected = connect();

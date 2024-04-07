@@ -41,6 +41,10 @@ export const AuthProvider = ({ children }) => {
   const setHomes = (paths) => {
     setHome(paths);
   };
+  const [names, setName] = useState(false);
+  const setNames = ()=>{
+    setName(true);
+  }
   const payloadInitials = (payload) => {
     userDetail = payload;
   };
@@ -113,7 +117,9 @@ export const AuthProvider = ({ children }) => {
         userDetails,
         payloadInitials,
         trackM,
-        exceptionReporting
+        exceptionReporting,
+        names,
+        setNames
       }}
     >
       {children}

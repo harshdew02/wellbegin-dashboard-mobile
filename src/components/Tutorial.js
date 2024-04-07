@@ -13,6 +13,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import { useAuth } from "../utils/auth";
 // const { width, height } = Dimensions.get("window");
 
 const Slide = ({ item }) => {
@@ -23,6 +24,7 @@ const ScreenWidth = Dimensions.get("screen").width / 2;
 const Tutorial = () => {
   let [current, setCurrent] = useState(1);
   const [hide, setHide] = useState(false);
+  const {setNames} = useAuth();
   useEffect(() => {
     if (current < 1) {
       setCurrent(1);
@@ -34,6 +36,7 @@ const Tutorial = () => {
   const increment = () => {
     if (current == 9) {
       setHide(true);
+      setNames(true)
     }
     setCurrent((prevValue) => (prevValue < 9 ? prevValue + 1 : prevValue));
   };
@@ -60,11 +63,11 @@ const Tutorial = () => {
         >
           <View
             onTouchStart={(event) => {
-              if (event.nativeEvent.locationX < ScreenWidth) {
-                decrement();
-              } else {
+              // if (event.nativeEvent.locationX < ScreenWidth) {
+              //   decrement();
+              // } else {
                 increment();
-              }
+              // }
             }}
           >
             <Image
