@@ -290,7 +290,7 @@ const MoodLog = (props) => {
   const navigation = useNavigation();
   const [datas, setData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-  const { connect, userDetails } = useAuth();
+  const { connect, userDetails, trackM, exceptionReporting } = useAuth();
   let payload = userDetails();
   const backHandler = () => {
     navigation.goBack();
@@ -298,6 +298,7 @@ const MoodLog = (props) => {
   };
 
   navigation.addListener("focus", () => {
+    trackM("Navigated - Moodlog",{phone: userDetails().phone})
     BackHandler.addEventListener("hardwareBackPress", backHandler);
   });
 
@@ -320,6 +321,7 @@ const MoodLog = (props) => {
             }
           })
           .catch((err) => {
+            exceptionReporting({err})
             console.log(err);
           })
           .finally(() => {

@@ -49,13 +49,15 @@ const gMeet = (link) => {
 const Btn = (props) => {
   // console.log("It is from btn: ",props)
   const navigation = useNavigation();
+  const {trackM, userDetails} = useAuth();
   return (
     <TouchableOpacity
       activeOpacity={0.8}
       style={styles.BookBtn}
       onPress={() => {
         // Checking if the link is supported for links with custom URL scheme.
-        navigation.navigate("webview", props.props);
+        trackM("Navigated - Home",{phone: userDetails().phone, event:"Book Your Session"})
+        navigation.navigate("webview", props.props.booking);
       }}
     >
       <Text style={styles.btnText}>Book Your Session</Text>
@@ -66,6 +68,7 @@ const Btn = (props) => {
 const Bookbtn = (props) => {
   // console.log("It is from bookbtn: ",props)
   const navigation = useNavigation();
+  const {trackM, userDetails} = useAuth();
   const ishour = props.props.is2hour;
   return (
     // <></>
@@ -87,6 +90,7 @@ const Bookbtn = (props) => {
             }}
             onPress={() => {
               // Checking if the link is supported for links with custom URL scheme.
+              trackM("Navigated - Home",{phone: userDetails().phone, event:"Book Your Next Session"})
               navigation.navigate("webview", props.props.booking);
             }}
           >
@@ -110,6 +114,7 @@ const Bookbtn = (props) => {
             }}
             onPress={() => {
               // Checking if the link is supported for links with custom URL scheme.
+              trackM("Navigated - Home",{phone: userDetails().phone, event:"Joined the session"})
               gMeet(props.props.link);
             }}
           >
@@ -122,6 +127,7 @@ const Bookbtn = (props) => {
           style={[styles.BookBtn]}
           onPress={() => {
             // Checking if the link is supported for links with custom URL scheme.
+            trackM("Navigated - Home",{phone: userDetails().phone, event:"Book Your Next Session"})
             navigation.navigate("webview", props.props.booking);
           }}
         >
@@ -158,7 +164,7 @@ export default function HomeScreen(props) {
   const [category, setCategory] = useState("regular");
   const [moodcheck, setMoodCheck] = useState(false);
 
-  const { setHomes, home, connect, userDetails } = useAuth();
+  const { setHomes, home, connect, userDetails, trackM, exceptionReporting } = useAuth();
   useEffect(() => {
     if (home === "webview" || home === "moodset") {
       setMoodCheck(true);
@@ -172,6 +178,7 @@ export default function HomeScreen(props) {
   };
 
   navigation.addListener("focus", () => {
+    trackM("Navigated - Home",{phone: userDetails().phone})
     BackHandler.addEventListener("hardwareBackPress", backHandler);
   });
 
@@ -279,6 +286,7 @@ export default function HomeScreen(props) {
             }
           })
           .catch((err) => {
+            exceptionReporting({err})
             console.log(err);
           })
           .finally(() => {
@@ -299,6 +307,7 @@ export default function HomeScreen(props) {
             }
           })
           .catch((err) => {
+            exceptionReporting({err})
             console.log(err);
           })
           .finally(() => {
@@ -345,7 +354,7 @@ export default function HomeScreen(props) {
       .then((res) => {
         if (res != null && res != undefined) setName(res);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {console.log(error);exceptionReporting({error})});
     }
     else
       setName(data.usr_fullname);
@@ -506,6 +515,7 @@ export default function HomeScreen(props) {
               top: 0,
             }}
             onPress={() => {
+              trackM("Navigated - Home",{phone: userDetails().phone, event:"Banner"})
               navigation.navigate("webview", banner.cban_link);
             }}
           >
@@ -578,6 +588,7 @@ export default function HomeScreen(props) {
 
               <TouchableOpacity
                 onPress={() => {
+                  trackM("Navigated - Home",{phone: userDetails().phone, event:"Reminder"})
                   setBell(false);
                   navigation.navigate("reminder", data);
                 }}
@@ -677,9 +688,9 @@ export default function HomeScreen(props) {
               />
             </View>
             {isBooked ? (
-              <Bookbtn props={{ is2hour, link, booking }} />
+              <Bookbtn props={{ is2hour, link, booking, trackM, userDetails }} />
             ) : (
-              <Btn props={booking} />
+              <Btn props={{booking, trackM, userDetails}} />
             )}
           </View>
         </View>
@@ -691,6 +702,7 @@ export default function HomeScreen(props) {
         >
           <TouchableOpacity
             onPress={() => {
+              trackM("Navigated - Home",{phone: userDetails().phone, event:"My Tasks"})
               navigation.navigate("homework", data);
             }}
             style={[styles.card, { backgroundColor: "#FEF8C8" }]}
@@ -702,6 +714,7 @@ export default function HomeScreen(props) {
 
           <TouchableOpacity
             onPress={() => {
+              trackM("Navigated - Home",{phone: userDetails().phone, event:"My Progress"})
               navigation.navigate("progress", data);
             }}
             style={[styles.card, { backgroundColor: "#EBF2F5" }]}
@@ -724,6 +737,7 @@ export default function HomeScreen(props) {
           <TouchableOpacity
             style={[styles.card, { backgroundColor: "#EAF7FC" }]}
             onPress={() => {
+              trackM("Navigated - Home",{phone: userDetails().phone, event:"What's new"})
               navigation.navigate("webview", whatsnew);
             }}
           >
@@ -736,6 +750,7 @@ export default function HomeScreen(props) {
           <>
             <TouchableOpacity
               onPress={() => {
+                trackM("Navigated - Home",{phone: userDetails().phone, event:"Mood Tracker"})
                 navigation.navigate("mood", data);
               }}
             >
@@ -789,6 +804,7 @@ export default function HomeScreen(props) {
           <>
             <TouchableOpacity
               onPress={() => {
+                trackM("Navigated - Home",{phone: userDetails().phone, event:"Mood Insights"})
                 navigation.navigate("moodInsights", data);
               }}
             >
@@ -848,6 +864,7 @@ export default function HomeScreen(props) {
                 {subsdet && subdays > 0 ? (
                   <TouchableOpacity
                     onPress={() => {
+                      trackM("Navigated - Home",{phone: userDetails().phone, event:"See details"})
                       navigation.navigate("webview", sub);
                     }}
                     style={[
@@ -888,6 +905,7 @@ export default function HomeScreen(props) {
                 ) : (
                   <TouchableOpacity
                     onPress={() => {
+                      trackM("Navigated - Home",{phone: userDetails().phone, event:"See plans"})
                       navigation.navigate("webview", sub);
                     }}
                     style={[
@@ -930,6 +948,7 @@ export default function HomeScreen(props) {
             ) : (
               <TouchableOpacity
                 onPress={() => {
+                  trackM("Navigated - Home",{phone: userDetails().phone, event:"See packages"})
                   navigation.navigate("webview", packages);
                 }}
                 style={[
@@ -956,6 +975,7 @@ export default function HomeScreen(props) {
 
         <TouchableOpacity
           onPress={() => {
+            trackM("Navigated - Home",{phone: userDetails().phone, event:"Discover Now"})
             navigation.navigate("webview", product);
           }}
           className="flex-col items-center"
@@ -980,11 +1000,12 @@ export default function HomeScreen(props) {
 
         <TouchableOpacity
             onPress={() => {
+              trackM("Navigated - Home",{phone: userDetails().phone, event:"Message Us"})
               Linking.openURL(whatsapp)
                 .then((responsive) => {
                   console.log(responsive);
                 })
-                .catch((err) => console.log(err));
+                .catch((err) => {console.log(err);exceptionReporting({error})});
             }}
             className="flex-col items-center"
             style={[{ height: hp(15.8), marginTop: hp(4) }]}

@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState } from "react";
 import { ToastAndroid } from "react-native";
 import NetInfo from "@react-native-community/netinfo";
+import { Mixpanel } from "mixpanel-react-native";
+import * as Sentry from "@sentry/react-native";
 export const AuthContext = createContext();
 
 const showToast = (message) => {
@@ -16,6 +18,20 @@ let divert = "main";
 
 let userDetail = {};
 
+console.log("Mixpanel started...");
+const trackAutomaticEvents = true;
+
+const mixpanel = new Mixpanel(
+  "f0f7cc32e3642946a8622275a4ec22c8",
+  trackAutomaticEvents
+);
+
+mixpanel.init();
+
+Sentry.init({
+  dsn: "https://e5adfef643df1d558d810f49f20e22a9@o4506911526813696.ingest.us.sentry.io/4506911552569344",
+});
+
 export const AuthProvider = ({ children }) => {
   const [path, setPath] = useState("App");
   const pathing = (paths) => {
@@ -25,26 +41,26 @@ export const AuthProvider = ({ children }) => {
   const setHomes = (paths) => {
     setHome(paths);
   };
-  const payloadInitials = (payload) =>{
+  const payloadInitials = (payload) => {
     userDetail = payload;
-  }
+  };
   const userDetails = () => {
     return userDetail;
-  }
+  };
+
+  const exceptionReporting = (error) => {
+    let report = JSON.stringify(error)
+    Sentry.captureException(
+      new Error(report)
+    );
+  };
+
+  const trackM = (title, payload) => {
+    mixpanel.track(title, payload);
+  };
 
   const Diversion = (screen) => {
-    if (
-      screen === "moodinsights" ||
-      screen === "todaymood" ||
-      screen === "diagnostic" ||
-      screen === "profile" ||
-      screen === "aboutme" ||
-      screen === "discover" ||
-      screen === "homework" ||
-      screen === "myprogress" ||
-      screen === "reminder"
-    )
-      divert = screen;
+    divert = screen;
   };
 
   const getDiversion = () => {
@@ -96,6 +112,8 @@ export const AuthProvider = ({ children }) => {
         getAllowed,
         userDetails,
         payloadInitials,
+        trackM,
+        exceptionReporting
       }}
     >
       {children}

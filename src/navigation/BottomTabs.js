@@ -56,7 +56,7 @@ export default function BottomTabs(props) {
   const data = props.route.params;
   const data2 = props.route.params.route.params;
   const Tab = createBottomTabNavigator();
-  const { getDiversion, getAllowed } = useAuth();
+  const { getDiversion, getAllowed, trackM, userDetails } = useAuth();
 
   function isFirstTime() {
     console.log("It is undefined: ",data2.get_details)
@@ -81,6 +81,7 @@ export default function BottomTabs(props) {
   }, [])
   React.useEffect(() => {
     try {
+      trackM("Deeplinks event:",{phone: userDetails().phone, event:"https://heartitout.in/"+getDiversion()});
       const payload = data.route.params;
       switch (getDiversion()) {
         case "reminder":
@@ -110,8 +111,11 @@ export default function BottomTabs(props) {
         case "discover":
           navigation.navigate("Discover_Tab", payload);
           break;
+        case "main":
+          navigation.navigate("Home_Tab",payload);
+          break;
         default:
-          navigation.navigate("Home_Tab", payload);
+          navigation.navigate("webview", "https://heartitout.in/"+getDiversion());
           break;
       }
     } catch (error) {
@@ -141,7 +145,6 @@ export default function BottomTabs(props) {
 
   React.useEffect(() => {
     requestPermission();
-    console.log("It is from bottoms tabs: ",getAllowed())
   }, []);
 
   return (

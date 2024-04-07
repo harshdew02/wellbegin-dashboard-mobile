@@ -86,7 +86,7 @@ const fillDetails = (
 
 export default function AboutMe(props) {
   const navigation = useNavigation();
-  const { connect, userDetails } = useAuth();
+  const { connect, userDetails, trackM, exceptionReporting } = useAuth();
   let datas = userDetails();
   let data = props.route.params;
   const prevName = data.usr_fullname;
@@ -102,7 +102,7 @@ export default function AboutMe(props) {
       .then((res) => {
         if (res != null && res != undefined) if (name === "") setName(res);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {console.log(error); exceptionReporting({error})});
   }, []);
 
   const backHandler = () => {
@@ -111,6 +111,7 @@ export default function AboutMe(props) {
   };
 
   navigation.addListener("focus", () => {
+    trackM("Navigated - About me",{phone: userDetails().phone})
     BackHandler.addEventListener("hardwareBackPress", backHandler);
   });
 
@@ -250,6 +251,7 @@ export default function AboutMe(props) {
                   [loading, setLoading],
                   navigation
                 );
+                trackM("Navigated - About me",{phone: userDetails().phone, event: "Details update"})
               }}
               style={[styles.BookBtn3, { marginBottom: hp(4) }]}
             >
