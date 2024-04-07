@@ -207,7 +207,7 @@ const FirstRoute = (props) => {
   const [hasApp, sethasApp] = useState(false);
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({});
-  const { userDetails } = useAuth();
+  const { userDetails, exceptionReporting } = useAuth();
 
   const parentData = {
     has_ban: false,
@@ -269,6 +269,7 @@ const FirstRoute = (props) => {
           renderSecondElement();
         })
         .catch((err) => {
+          exceptionReporting({err})
           console.log("error is here:", err);
         })
         .finally(() => {
@@ -319,7 +320,7 @@ const FirstRoute = (props) => {
 const SecondRoute = (props) => {
   const [hasApp, sethasApp] = useState(false);
   const [loading, setLoading] = useState(true);
-  const { userDetails } = useAuth();
+  const { userDetails, exceptionReporting} = useAuth();
   const [data, setData] = useState({});
 
   const parentData = {
@@ -381,6 +382,7 @@ const SecondRoute = (props) => {
         renderSecondElement();
       })
       .catch((err) => {
+        exceptionReporting({err})
         console.log(err);
       })
       .finally(() => {
@@ -606,7 +608,7 @@ export default function ProfileScreen(props) {
   const [banLinkH, setBanLinkH] = useState("");
   const [banClickH, setBanClickH] = useState("");
   const [statusColor, setStatusColor] = useState("green");
-  const { pathing, path } = useAuth();
+  const { pathing, path, trackM, userDetails } = useAuth();
 
   const [routes] = React.useState([
     { key: "first", title: "Upcoming" },
@@ -630,6 +632,7 @@ export default function ProfileScreen(props) {
   }, [name]);
 
   navigation.addListener("focus", () => {
+    trackM("Navigated - Profile Screen",{phone: userDetails().phone})
     setStatusColor("green");
   });
 

@@ -23,10 +23,12 @@ const Card = (props) => {
   const data = props.props.item;
   // Anuj ise props ke according set kar dena to fir ho jayega shyad
   const [isTick, setTick] = useState(false);
+  const {userDetails, trackM} = useAuth()
   const navigation = useNavigation();
   return (
     <TouchableOpacity
       onPress={() => {
+        trackM("Navigated - Reminder",{phone: userDetails().phone, event:data.notification})
         navigation.navigate("webview", data.on_click);
       }}
       className="flex-row justify-between items-center"
@@ -75,7 +77,7 @@ export default function ReminderScreen({ navigation, route }) {
   const [ifReminder, setIfReminder] = useState(false);
   const [datas, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { connect, userDetails } = useAuth();
+  const { connect, userDetails, trackM, exceptionReporting } = useAuth();
   const backHandler = () => {
     navigation.goBack();
     return true;
@@ -110,6 +112,7 @@ export default function ReminderScreen({ navigation, route }) {
             setData(res.data.data);
           })
           .catch((err) => {
+            exceptionReporting({err})
             console.log("error is here:", err);
           })
           .finally(() => {
@@ -117,6 +120,7 @@ export default function ReminderScreen({ navigation, route }) {
           });
       }
     }
+    trackM("Navigated - Reminder",{phone: userDetails().phone})
   }, [loading]);
 
   const [refreshing, setRefreshing] = useState(false);

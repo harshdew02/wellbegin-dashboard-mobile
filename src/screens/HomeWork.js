@@ -43,6 +43,7 @@ const Card = (props) => {
   const [date, setDate] = useState(DateTimeComponent(item.due));
   const [updated, setUpdated] = useState(false);
   const navigation = useNavigation();
+  const {trackM, userDetails} = useAuth();
 
   React.useEffect(() => {
     if (item.homework_done_or_not === "Yes" || updated == true) setValue(true);
@@ -135,6 +136,7 @@ const Card = (props) => {
             <TouchableOpacity
               onPress={() => {
                 homework();
+                trackM("Navigated - Homework",{phone: userDetails().phone, event:item.homework})
                 navigation.navigate("webview", item.on_click);
               }}
             >
@@ -161,7 +163,7 @@ const HomeWork = (route) => {
   const [loading, setLoading] = useState(true);
   const data = route.route.params;
   const [datas, setData] = useState({});
-  const { connect, userDetails } = useAuth();
+  const { connect, userDetails, trackM } = useAuth();
 
   const backHandler = () => {
     navigation.goBack();
@@ -169,6 +171,7 @@ const HomeWork = (route) => {
   };
 
   navigation.addListener("focus", () => {
+    trackM("Navigated - Homework",{phone: userDetails().phone})
     BackHandler.addEventListener("hardwareBackPress", backHandler);
   });
 
@@ -194,6 +197,7 @@ const HomeWork = (route) => {
             setData(res.data);
           })
           .catch((err) => {
+            exceptionReporting({err})
             console.log("error is here:", err);
           })
           .finally(() => {

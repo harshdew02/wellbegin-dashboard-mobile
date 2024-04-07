@@ -18,16 +18,10 @@ import {
 } from "react-native-responsive-screen";
 import { Dropdown } from "react-native-element-dropdown";
 import axios from "axios";
-import { Mixpanel } from "mixpanel-react-native";
 import { useNavigation } from "@react-navigation/native";
 import { data, codes } from "../constants";
-import * as Sentry from "@sentry/react-native";
 import { useAuth } from "../utils/auth";
 import { useIsFocused } from '@react-navigation/native'
-
-Sentry.init({
-  dsn: "https://e5adfef643df1d558d810f49f20e22a9@o4506911526813696.ingest.us.sentry.io/4506911552569344",
-});
 
 const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
@@ -85,16 +79,7 @@ import Loginbg from "../components/Loginbg";
 import LoginNew from "../../assets/images/LoginNew.svg"
 
 const Login = ({ route }) => {
-  const { connect, Diversion } = useAuth();
-  // const [nav_data, setNavData] = useState(route.params != (null || undefined) ? route.params.navigation : "main")
-
-  const trackAutomaticEvents = true;
-  const mixpanel = new Mixpanel(
-    "f0f7cc32e3642946a8622275a4ec22c8",
-    trackAutomaticEvents
-  );
-  mixpanel.init();
-
+  const { connect, Diversion, trackM } = useAuth();
   const [value, setValue] = useState("IN");
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
@@ -226,9 +211,9 @@ const Login = ({ route }) => {
                 loading,
                 setLoading,
               ]);
-              mixpanel.track("OTP Request done by", {
+              trackM("OTP Request done by: ", {
                 "Phone ": codes[value] + number,
-              });
+              })
             }}
           />
         </View>
@@ -244,10 +229,9 @@ const Login = ({ route }) => {
               loading,
               setLoading,
             ]);
-            // predefinedEvent();
-            mixpanel.track("OTP Request done by", {
+            trackM("OTP Request done by: ", {
               "Phone ": codes[value] + number,
-            });
+            })
           }}
         >
           <Text style={styles.textStyle}>Get OTP</Text>

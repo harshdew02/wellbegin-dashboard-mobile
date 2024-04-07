@@ -215,7 +215,7 @@ const Slide = ({ item }) => {
 const Onboarding = ({ route }) => {
   const navigation = useNavigation();
   const [currentSlideIndex, setCurrentSlideIndex] = React.useState(0);
-  const {Diversion} = useAuth();
+  const {Diversion, trackM} = useAuth();
   const ref = React.useRef();
   const updateCurrentSlideIndex = (e) => {
     const contentOffsetX = e.nativeEvent.contentOffset.x;
@@ -316,6 +316,7 @@ const Onboarding = ({ route }) => {
                 style={styles.btn}
                 onPress={() => {
                   navigation.navigate("LoginPage");
+                  trackM("Onboarding screen: ", {event: "Passed to Login"});
                 }}
               >
                 <Text

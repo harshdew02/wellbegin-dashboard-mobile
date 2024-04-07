@@ -39,11 +39,6 @@ import axios from "axios";
 import PTRView from "react-native-pull-to-refresh";
 import { useAuth } from "../utils/auth";
 import SInfo from "react-native-encrypted-storage";
-import {
-  CopilotProvider,
-  CopilotStep,
-  walkthroughable,
-} from "react-native-copilot";
 
 const gMeet = (link) => {
   if (link == "" || link == null || link == undefined)
@@ -57,12 +52,14 @@ const gMeet = (link) => {
 
 const Btn = (props) => {
   const navigation = useNavigation();
+  const {trackM, userDetails} = useAuth();
   return (
     <TouchableOpacity
       activeOpacity={0.8}
       style={styles.BookBtn}
       onPress={() => {
-        navigation.navigate("test", props.props);
+        trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Navigated to Diagnostic"})
+        navigation.navigate("test", props.props.booking);
       }}
     >
       <Text style={styles.btnText}>Explore Wellbeing Tests</Text>
@@ -74,6 +71,7 @@ const Bookbtn = (props) => {
   // console.log("It is from bookbtn: ",props)
   const navigation = useNavigation();
   const ishour = props.props.is2hour;
+  const {trackM, userDetails} = useAuth();
   return (
     <View className="flex-row justify-between">
       {ishour ? (
@@ -93,6 +91,7 @@ const Bookbtn = (props) => {
             }}
             onPress={() => {
               // Checking if the link is supported for links with custom URL scheme.
+              trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Book Your Next Session"})
               navigation.navigate("webview", props.props.booking);
             }}
           >
@@ -116,6 +115,7 @@ const Bookbtn = (props) => {
             }}
             onPress={() => {
               // Checking if the link is supported for links with custom URL scheme.
+              trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Joined the session"})
               gMeet(props.props.link);
             }}
           >
@@ -128,6 +128,7 @@ const Bookbtn = (props) => {
           style={[styles.BookBtn]}
           onPress={() => {
             // Checking if the link is supported for links with custom URL scheme.
+            trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Book Your Next Session"})
             navigation.navigate("webview", props.props.booking);
           }}
         >
@@ -164,9 +165,8 @@ export default function HomeScreen2(props) {
   const [bell, setBell] = useState(true);
   const [loaded, setLoaded] = useState(false);
   const [category, setCategory] = useState("regular");
-  const CopilotText = walkthroughable(Text);
 
-  const { setHomes, home, connect, userDetails } = useAuth();
+  const { setHomes, home, connect, userDetails, trackM, exceptionReporting } = useAuth();
   useEffect(() => {
     if (home === "webview" || home === "moodset") {
       setMoodCheck(true);
@@ -180,6 +180,7 @@ export default function HomeScreen2(props) {
   };
 
   navigation.addListener("focus", () => {
+    trackM("Navigated - Home(New)",{phone: userDetails().phone})
     BackHandler.addEventListener("hardwareBackPress", backHandler);
   });
 
@@ -299,6 +300,7 @@ export default function HomeScreen2(props) {
             }
           })
           .catch((err) => {
+            exceptionReporting({err})
             console.log(err);
           })
           .finally(() => {
@@ -320,6 +322,7 @@ export default function HomeScreen2(props) {
           })
           .catch((err) => {
             console.log(err);
+            exceptionReporting({err})
           })
           .finally(() => {
             if (realTimeData != null) {
@@ -470,7 +473,6 @@ export default function HomeScreen2(props) {
   const [nameDone, setNameDone] = React.useState(false);
 
   return (
-    <CopilotProvider>
       <SafeAreaView>
         <StatusBar
           backgroundColor={theme.maincolor}
@@ -511,6 +513,7 @@ export default function HomeScreen2(props) {
                 // backgroundColor:'red'
               }}
               onPress={() => {
+                trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Banner"})
                 navigation.navigate("webview", banner.cban_link);
               }}
             >
@@ -545,13 +548,6 @@ export default function HomeScreen2(props) {
                 : { marginTop: hp(0) }
             }
           >
-            {/* <CopilotStep
-              text="This is a hello world example!"
-              order={1}
-              name="hello"
-            >
-              <CopilotText>Hello world!</CopilotText>
-            </CopilotStep> */}
             <HomePageBanner2 width={wp(100)} height={wp(78.9)} />
 
             <View style={styles.banner}>
@@ -577,6 +573,7 @@ export default function HomeScreen2(props) {
 
                 <TouchableOpacity
                   onPress={() => {
+                    trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Reminder"})
                     setBell(false);
                     navigation.navigate("reminder", data);
                   }}
@@ -616,9 +613,9 @@ export default function HomeScreen2(props) {
                 <NewHome width={wp(29.6)} height={wp(25.6)} />
               </View>
               {isBooked ? (
-                <Bookbtn props={{ is2hour, link, booking }} />
+                <Bookbtn props={{ is2hour, link, booking, trackM, getDetails }} />
               ) : (
-                <Btn props={payload} />
+                <Btn props={{payload, trackM, getDetails}} />
               )}
             </View>
           </View>
@@ -630,6 +627,7 @@ export default function HomeScreen2(props) {
           >
             <TouchableOpacity
               onPress={() => {
+                trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Start Therapy"})
                 navigation.navigate("webview", booking);
               }}
               style={[styles.card, { backgroundColor: "#FEF8C8" }]}
@@ -641,6 +639,7 @@ export default function HomeScreen2(props) {
 
             <TouchableOpacity
               onPress={() => {
+                trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Wellness Blogs"})
                 navigation.navigate("webview", wellbeing);
               }}
               style={[styles.card, { backgroundColor: "#EBF2F5" }]}
@@ -652,6 +651,7 @@ export default function HomeScreen2(props) {
             <TouchableOpacity
               style={[styles.card, { backgroundColor: "#EAF7FC" }]}
               onPress={() => {
+                trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"What's New"})
                 navigation.navigate("webview", whatsnew);
               }}
             >
@@ -664,6 +664,7 @@ export default function HomeScreen2(props) {
             <>
               <TouchableOpacity
                 onPress={() => {
+                  trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Mood tracker"})
                   navigation.navigate("mood", data);
                 }}
               >
@@ -717,6 +718,7 @@ export default function HomeScreen2(props) {
             <>
               <TouchableOpacity
                 onPress={() => {
+                  trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Mood Insights"})
                   navigation.navigate("moodInsights", data);
                 }}
               >
@@ -776,6 +778,7 @@ export default function HomeScreen2(props) {
                   {subsdet && subdays > 0 ? (
                     <TouchableOpacity
                       onPress={() => {
+                        trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"See details"})
                         navigation.navigate("webview", sub);
                       }}
                       style={[
@@ -816,6 +819,7 @@ export default function HomeScreen2(props) {
                   ) : (
                     <TouchableOpacity
                       onPress={() => {
+                        trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"See plans"})
                         navigation.navigate("webview", sub);
                       }}
                       style={[
@@ -858,6 +862,7 @@ export default function HomeScreen2(props) {
               ) : (
                 <TouchableOpacity
                   onPress={() => {
+                    trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Explore Packages"})
                     navigation.navigate("webview", packages);
                   }}
                   style={[
@@ -884,6 +889,7 @@ export default function HomeScreen2(props) {
 
           <TouchableOpacity
             onPress={() => {
+              trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Message Us"})
               Linking.openURL(whatsapp)
                 .then((responsive) => {
                   console.log(responsive);
@@ -913,7 +919,6 @@ export default function HomeScreen2(props) {
           <View style={{ width: wp(100), height: hp(6), marginTop: hp(3) }} />
         </PTRView>
       </SafeAreaView>
-    </CopilotProvider>
   );
 }
 
