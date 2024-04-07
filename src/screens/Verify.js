@@ -34,7 +34,7 @@ const AppInitializer = (mobile) => {
   OneSignal.Debug.setLogLevel(LogLevel.Verbose);
 
   // OneSignal Initialization
-  OneSignal.initialize("3a865120-5f7d-41a2-b5b3-5bb205884c50");
+  OneSignal.initialize("2c97b476-4167-4113-b0d4-beba705c4cb9");
 
   OneSignal.login(mobile);
   // Method for listening for notification clicks

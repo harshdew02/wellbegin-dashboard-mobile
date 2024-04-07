@@ -13,7 +13,7 @@ import messaging from "@react-native-firebase/messaging";
 import { AuthProvider } from "./src/utils/auth";
 
 Sentry.init({
-  dsn: "https://e5adfef643df1d558d810f49f20e22a9@o4506911526813696.ingest.us.sentry.io/4506911552569344",
+  dsn: "https://ec1b21c2b930c93a3877302c172b5d15@o4507044218732544.ingest.us.sentry.io/4507044491427840",
 });
 
 export default function App() {

@@ -9,7 +9,7 @@ export const HomescreenControl = (props) => {
     data.category = getUser().category;
     return (
         <>
-            {getUser().type === "old" ? <HomeScreen2 props={data} /> : <HomeScreen props={data} />}
+            {getUser().type === "new" ? <HomeScreen2 props={data} /> : <HomeScreen props={data} />}
         </>
     )
 }
