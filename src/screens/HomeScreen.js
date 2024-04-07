@@ -1008,7 +1008,7 @@ export default function HomeScreen(props) {
                 .catch((err) => {console.log(err);exceptionReporting({error})});
             }}
             className="flex-col items-center"
-            style={[{ height: hp(15.8), marginTop: hp(4) }]}
+            style={[{ height: hp(15.8), marginTop: hp(3) }]}
           >
             <Help width={wp(84)} height={wp(34.4)} />
           </TouchableOpacity>
