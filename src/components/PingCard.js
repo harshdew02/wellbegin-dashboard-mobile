@@ -24,7 +24,7 @@ const PingCard = () => {
     <>
       {!state ? (<View
         onTouchStart={() => {
-          if(nameDone) { setState(true)}
+          { setState(true)}
         }}
         style={{
           width: wp(100),
@@ -163,6 +163,16 @@ const PingCard = () => {
               }}
             >
               {Nickname}!
+            </Text>
+            <Text
+              style={{
+                fontSize: wp(4.2),
+                // fontWeight: "500",
+                textAlign: "center",
+                color: theme.black,
+              }}
+            >
+              Please tap to continue...
             </Text>
           </View>
         )}

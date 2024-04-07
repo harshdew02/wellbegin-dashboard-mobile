@@ -225,17 +225,13 @@ export default function Verify({ navigation, route }) {
         <Text style={styles.well}>
           It's time to take a leap towards a healthier mind
         </Text>
-
-        <Text style={styles.getinstant}>
-          Sign up so we can personalise your journey
-        </Text>
         <Text
           style={{
             color: "#01818C",
             fontSize: wp(4),
             fontFamily: "Roboto",
             fontWeight: "700",
-            marginTop: hp(2),
+            marginTop: hp(10),
           }}
         >
           Enter OTP Sent to +{route.params.code}
@@ -443,7 +439,7 @@ const styles = StyleSheet.create({
     borderWidth: wp(0.3),
     padding: wp(2.6),
     paddingLeft: wp(5),
-    marginTop: hp(3),
+    marginTop: hp(2),
     borderColor: "rgba(69, 90, 100, 0.6)",
   },
 

@@ -57,7 +57,7 @@ const Btn = (props) => {
       onPress={() => {
         // Checking if the link is supported for links with custom URL scheme.
         trackM("Navigated - Home",{phone: userDetails().phone, event:"Book Your Session"})
-        navigation.navigate("webview", props.props.booking);
+        navigation.navigate("webview", props.booking);
       }}
     >
       <Text style={styles.btnText}>Book Your Session</Text>
@@ -159,7 +159,7 @@ export default function HomeScreen(props) {
   const [showsub, setShowsub] = useState(false);
   const [subsdet, setSubsdet] = useState(false);
   const [subdays, setSubdays] = useState(0);
-  const [bell, setBell] = useState(true);
+  const [bell, setBell] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [category, setCategory] = useState("regular");
   const [moodcheck, setMoodCheck] = useState(false);
@@ -589,7 +589,7 @@ export default function HomeScreen(props) {
               <TouchableOpacity
                 onPress={() => {
                   trackM("Navigated - Home",{phone: userDetails().phone, event:"Reminder"})
-                  setBell(false);
+                  // setBell(false);
                   navigation.navigate("reminder", data);
                 }}
                 style={{ position: "absolute", right: wp(0) }}
@@ -666,7 +666,7 @@ export default function HomeScreen(props) {
                         fontWeight: "400",
                       }}
                     >
-                      Take care of yourself with
+                      Take the next step on your
                     </Text>
 
                     <Text
@@ -677,7 +677,7 @@ export default function HomeScreen(props) {
                         fontWeight: "700",
                       }}
                     >
-                      Psychological Counselling
+                      wellbeing journey
                     </Text>
                   </>
                 )}
@@ -688,9 +688,9 @@ export default function HomeScreen(props) {
               />
             </View>
             {isBooked ? (
-              <Bookbtn props={{ is2hour, link, booking, trackM, userDetails }} />
+              <Bookbtn props={{ is2hour, link, booking }} />
             ) : (
-              <Btn props={{booking, trackM, userDetails}} />
+              <Btn props={booking} />
             )}
           </View>
         </View>

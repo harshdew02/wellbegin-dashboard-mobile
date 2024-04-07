@@ -36,7 +36,7 @@ export default function Heartitout(props) {
   const onNavigationStateChange = (navState) => {
     canGoBack = navState.canGoBack;
     if (containsOrder(navState.url) && loading == false) {
-      showToast("Order, placed successfully");
+      showToast("Order Received");
       setCross(true);
       setTime(
         setTimeout(() => {

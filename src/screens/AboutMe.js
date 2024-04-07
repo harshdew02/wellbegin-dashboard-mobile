@@ -27,6 +27,7 @@ import SInfo from "react-native-encrypted-storage";
 import { theme } from "../theme";
 import { useAuth } from "../utils/auth";
 import AboutBg from "../../assets/images/aboutBg.svg";
+import Logout from "../../assets/images/logout.svg";
 import Cross from "../components/moods/Cross";
 const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
@@ -102,7 +103,10 @@ export default function AboutMe(props) {
       .then((res) => {
         if (res != null && res != undefined) if (name === "") setName(res);
       })
-      .catch((error) => {console.log(error); exceptionReporting({error})});
+      .catch((error) => {
+        console.log(error);
+        exceptionReporting({ error });
+      });
   }, []);
 
   const backHandler = () => {
@@ -111,7 +115,7 @@ export default function AboutMe(props) {
   };
 
   navigation.addListener("focus", () => {
-    trackM("Navigated - About me",{phone: userDetails().phone})
+    trackM("Navigated - About me", { phone: userDetails().phone });
     BackHandler.addEventListener("hardwareBackPress", backHandler);
   });
 
@@ -160,6 +164,23 @@ export default function AboutMe(props) {
             >
               About Me
             </Text>
+            <TouchableOpacity
+              onPress={() => {
+                SInfo.removeItem("token")
+                  .then(() => {
+                    navigation.navigate("LoginPage");
+                    showToast("User logout successfully.");
+                  })
+                  .catch((err) => {
+                    showToast("Something went wrong.");
+                    console.log("Error from logout system: ", err);
+                  });
+                // navigation.goBack();
+              }}
+              style={{ position: "absolute", right: wp(8) }}
+            >
+              <Logout width={wp(6.6)} height={wp(6.37)} />
+            </TouchableOpacity>
           </View>
 
           <Text
@@ -170,7 +191,7 @@ export default function AboutMe(props) {
               marginTop: hp(3),
             }}
           >
-            Edit Profile
+            Update Profile
           </Text>
 
           <View style={{ height: hp(25), justifyContent: "space-between" }}>
@@ -206,7 +227,7 @@ export default function AboutMe(props) {
               width: wp(87),
               flexDirection: "row",
               justifyContent: "space-between",
-              marginTop: hp(6.2)
+              marginTop: hp(6.2),
             }}
           >
             <TouchableOpacity
@@ -252,16 +273,23 @@ export default function AboutMe(props) {
                   [loading, setLoading],
                   navigation
                 );
-                trackM("Navigated - About me",{phone: userDetails().phone, event: "Details update"})
+                trackM("Navigated - About me", {
+                  phone: userDetails().phone,
+                  event: "Details update",
+                });
               }}
               style={[styles.BookBtn3, { marginBottom: hp(4) }]}
             >
-              {loading ? (<ActivityIndicator
-                animating={loading}
-                size="large"
-                style={{ position: "absolute", zIndex: 2 }}
-                color={"#fff"}
-              />) : <Text style={styles.btnText3}>Save My Details</Text>}
+              {loading ? (
+                <ActivityIndicator
+                  animating={loading}
+                  size="large"
+                  style={{ position: "absolute", zIndex: 2 }}
+                  color={"#fff"}
+                />
+              ) : (
+                <Text style={styles.btnText3}>Save Changes</Text>
+              )}
             </TouchableOpacity>
           </View>
           <View
@@ -368,9 +396,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     backgroundColor: theme.maincolor,
-    borderStyle: "solid",
-    borderWidth: 1,
-    borderColor: "#455a64",
   },
 
   btnText3: {

@@ -70,7 +70,7 @@ export default function BottomTabs(props) {
       })
       .catch((error) => console.log(error));
     } else {
-      setNick(true);
+      setNick(false);
     }
   
     console.log("It is nick",nick)

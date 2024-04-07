@@ -59,7 +59,7 @@ const Btn = (props) => {
       style={styles.BookBtn}
       onPress={() => {
         trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Navigated to Diagnostic"})
-        navigation.navigate("test", props.props.booking);
+        navigation.navigate("test", props.booking);
       }}
     >
       <Text style={styles.btnText}>Explore Wellbeing Tests</Text>
@@ -162,7 +162,7 @@ export default function HomeScreen2(props) {
   const [subsdet, setSubsdet] = useState(false);
   const [subdays, setSubdays] = useState(0);
   const [wellbeing, setWellbeing] = useState("");
-  const [bell, setBell] = useState(true);
+  const [bell, setBell] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [category, setCategory] = useState("regular");
 
@@ -574,7 +574,7 @@ export default function HomeScreen2(props) {
                 <TouchableOpacity
                   onPress={() => {
                     trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Reminder"})
-                    setBell(false);
+                    // setBell(false);
                     navigation.navigate("reminder", data);
                   }}
                   style={{ position: "absolute", right: wp(0) }}
@@ -613,9 +613,9 @@ export default function HomeScreen2(props) {
                 <NewHome width={wp(29.6)} height={wp(25.6)} />
               </View>
               {isBooked ? (
-                <Bookbtn props={{ is2hour, link, booking, trackM, getDetails }} />
+                <Bookbtn props={{ is2hour, link, booking }} />
               ) : (
-                <Btn props={{payload, trackM, getDetails}} />
+                <Btn props={payload} />
               )}
             </View>
           </View>
@@ -644,7 +644,7 @@ export default function HomeScreen2(props) {
               }}
               style={[styles.card, { backgroundColor: "#EBF2F5" }]}
             >
-              <Text style={styles.cardText}>Wellness {"\n"}Blog</Text>
+              <Text style={styles.cardText}>Wellness {"\n"}Blogs</Text>
               <ProgressIcon2 width={wp(16.5)} height={wp(18.9)} />
             </TouchableOpacity>
 

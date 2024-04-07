@@ -387,7 +387,7 @@ const showToast = (message) => {
 };
 
 const downloadFile = (url, user, date, type) => {
-  showToast("Report download starts.");
+  showToast("Downloading Report");
 
   function previewFile(filePath) {
     FileViewer.open(filePath)
@@ -596,14 +596,13 @@ const Test = (props) => {
                 color: "#fff",
               }}
             >
-              Help your loved one understand their symptoms better so they can
-              get the help they deserve!
+             1 in 6 people in India live with an undiagnosed mental health condition.
             </Text>
             <TouchableOpacity
               style={[styles.btnStyle2]}
               onPress={() => {
                 ShareMessage(
-                  "Hey, Check out this amazing mental health app that helped me understand myself better. It will help you get more clarity about your mental health and get access to all the support you need. Here's the link: https://heartitout.in/diagnostic/?referral=app"
+                  "Check this mental health app by Heart It Out that offers self-assessments and expert support for relationships, stress, anxiety, depression, and more. Here's the link: https://heartitout.in/diagnostic/?referral=app"
                 );
               }}
             >
@@ -614,7 +613,7 @@ const Test = (props) => {
                   fontWeight: "500",
                 }}
               >
-                Share Quiz
+               Share & Care
               </Text>
             </TouchableOpacity>
           </View>
