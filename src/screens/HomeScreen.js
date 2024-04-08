@@ -57,12 +57,14 @@ const Btn = (props) => {
       style={styles.BookBtn}
       onPress={() => {
         // Checking if the link is supported for links with custom URL scheme.
-        trackM("Navigated - Home", { phone: userDetails().phone, event: "Book Your Session" })
+        trackM("Navigated - Home", {
+          phone: userDetails().phone,
+          event: "Book Your Session",
+        });
 
         navigation.navigate("webview", props.props);
       }}
     >
-
       <Text style={styles.btnText}>Book Your Session</Text>
     </TouchableOpacity>
   );
@@ -93,7 +95,10 @@ const Bookbtn = (props) => {
             }}
             onPress={() => {
               // Checking if the link is supported for links with custom URL scheme.
-              trackM("Navigated - Home", { phone: userDetails().phone, event: "Book Your Next Session" })
+              trackM("Navigated - Home", {
+                phone: userDetails().phone,
+                event: "Book Your Next Session",
+              });
               navigation.navigate("webview", props.props.booking);
             }}
           >
@@ -117,7 +122,10 @@ const Bookbtn = (props) => {
             }}
             onPress={() => {
               // Checking if the link is supported for links with custom URL scheme.
-              trackM("Navigated - Home", { phone: userDetails().phone, event: "Joined the session" })
+              trackM("Navigated - Home", {
+                phone: userDetails().phone,
+                event: "Joined the session",
+              });
               gMeet(props.props.link);
             }}
           >
@@ -130,7 +138,10 @@ const Bookbtn = (props) => {
           style={[styles.BookBtn]}
           onPress={() => {
             // Checking if the link is supported for links with custom URL scheme.
-            trackM("Navigated - Home", { phone: userDetails().phone, event: "Book Your Next Session" })
+            trackM("Navigated - Home", {
+              phone: userDetails().phone,
+              event: "Book Your Next Session",
+            });
             navigation.navigate("webview", props.props.booking);
           }}
         >
@@ -167,7 +178,8 @@ export default function HomeScreen(props) {
   const [category, setCategory] = useState("regular");
   const [moodcheck, setMoodCheck] = useState(false);
 
-  const { setHomes, home, connect, userDetails, trackM, exceptionReporting } = useAuth();
+  const { setHomes, home, connect, userDetails, trackM, exceptionReporting } =
+    useAuth();
   useEffect(() => {
     if (home === "webview" || home === "moodset") {
       setMoodCheck(true);
@@ -181,7 +193,7 @@ export default function HomeScreen(props) {
   };
 
   navigation.addListener("focus", () => {
-    trackM("Navigated - Home", { phone: userDetails().phone })
+    trackM("Navigated - Home", { phone: userDetails().phone });
     BackHandler.addEventListener("hardwareBackPress", backHandler);
   });
 
@@ -221,7 +233,12 @@ export default function HomeScreen(props) {
             } else {
               if (res.data.has_appointment === "no") setBooked(false);
               else {
-                if (res.data.app_det.app_session_date != null && res.data.app_det.app_session_date != undefined && res.data.app_det.app_session_time != null && res.data.app_det.app_session_time != undefined) {
+                if (
+                  res.data.app_det.app_session_date != null &&
+                  res.data.app_det.app_session_date != undefined &&
+                  res.data.app_det.app_session_time != null &&
+                  res.data.app_det.app_session_time != undefined
+                ) {
                   const apiDate = res.data.app_det.app_session_date;
                   const apiTime = res.data.app_det.app_session_time;
                   let timestamp = new Date(apiDate);
@@ -285,13 +302,13 @@ export default function HomeScreen(props) {
                     setDate(showDate);
                   }
                 } else {
-                  showToast("Network Error!...")
+                  showToast("Network Error!...");
                 }
               }
             }
           })
           .catch((err) => {
-            exceptionReporting({ err })
+            exceptionReporting({ err });
             console.log(err);
           })
           .finally(() => {
@@ -313,7 +330,7 @@ export default function HomeScreen(props) {
             console.log("Here is real time data", realTimeData);
           })
           .catch((err) => {
-            exceptionReporting({ err })
+            exceptionReporting({ err });
             console.log(err);
           })
           .finally(() => {
@@ -349,7 +366,7 @@ export default function HomeScreen(props) {
                 console.log("Here is real time data", booking);
               }
             }
-            
+
             setMoodCheck(false);
           });
       }
@@ -362,12 +379,12 @@ export default function HomeScreen(props) {
         .then((res) => {
           if (res != null && res != undefined) setName(res);
         })
-        .catch((error) => { console.log(error); exceptionReporting({ error }) });
-    }
-    else
-      setName(data.usr_fullname);
-  }, [])
-
+        .catch((error) => {
+          console.log(error);
+          exceptionReporting({ error });
+        });
+    } else setName(data.usr_fullname);
+  }, []);
 
   useEffect(() => {
     data.has_mood == "no" ? setMood(false) : setMood(true);
@@ -403,9 +420,12 @@ export default function HomeScreen(props) {
     );
     if (appointment.has_appointment === "no") setBooked(false);
     else {
-
-      if (appointment.appointment.app_session_date != null && appointment.appointment.app_session_date != undefined && appointment.appointment.app_session_time != null && appointment.appointment.app_session_time != undefined) {
-
+      if (
+        appointment.appointment.app_session_date != null &&
+        appointment.appointment.app_session_date != undefined &&
+        appointment.appointment.app_session_time != null &&
+        appointment.appointment.app_session_time != undefined
+      ) {
         const apiDate = appointment.appointment.app_session_date;
         const apiTime = appointment.appointment.app_session_time;
         // Extracting date components from api
@@ -468,7 +488,7 @@ export default function HomeScreen(props) {
           setTime(showTime);
           setDate(showDate);
         }
-      }else{
+      } else {
         showToast("Network Error!...");
       }
     }
@@ -528,7 +548,10 @@ export default function HomeScreen(props) {
               top: 0,
             }}
             onPress={() => {
-              trackM("Navigated - Home", { phone: userDetails().phone, event: "Banner" })
+              trackM("Navigated - Home", {
+                phone: userDetails().phone,
+                event: "Banner",
+              });
               navigation.navigate("webview", banner.cban_link);
             }}
           >
@@ -576,7 +599,7 @@ export default function HomeScreen(props) {
                 flexDirection: "row",
               }}
             >
-              {/* <Text
+              <Text
                 style={{
                   color: "white",
                   fontSize: wp(4),
@@ -584,24 +607,19 @@ export default function HomeScreen(props) {
                   fontWeight: "400",
                 }}
               >
-                Welcome {name.split(/\s+/).filter((word) => word !== "")[0]}{" "} 👋
-              </Text> */}
-
-              <Text
-                style={{
-                  color: "white",
-                  fontSize: wp(4.2),
-                  fontFamily: "Roboto",
-                  fontWeight: "700",
-                }}
-              >
-                Welcome {name.split(/\s+/).filter((word) => word !== "")[0]}{" "}
-                👋
+                {name != null && name != undefined
+                  ? `Welcome ${
+                      name.split(/\s+/).filter((word) => word !== "")[0]
+                    } 👋`
+                  : `Welcome 👋`}{" "}
               </Text>
 
               <TouchableOpacity
                 onPress={() => {
-                  trackM("Navigated - Home", { phone: userDetails().phone, event: "Reminder" })
+                  trackM("Navigated - Home", {
+                    phone: userDetails().phone,
+                    event: "Reminder",
+                  });
                   // setBell(false);
                   navigation.navigate("reminder", data);
                 }}
@@ -715,7 +733,10 @@ export default function HomeScreen(props) {
         >
           <TouchableOpacity
             onPress={() => {
-              trackM("Navigated - Home", { phone: userDetails().phone, event: "My Tasks" })
+              trackM("Navigated - Home", {
+                phone: userDetails().phone,
+                event: "My Tasks",
+              });
               navigation.navigate("homework", data);
             }}
             style={[styles.card, { backgroundColor: "#FEF8C8" }]}
@@ -727,7 +748,10 @@ export default function HomeScreen(props) {
 
           <TouchableOpacity
             onPress={() => {
-              trackM("Navigated - Home", { phone: userDetails().phone, event: "My Progress" })
+              trackM("Navigated - Home", {
+                phone: userDetails().phone,
+                event: "My Progress",
+              });
               navigation.navigate("progress", data);
             }}
             style={[styles.card, { backgroundColor: "#EBF2F5" }]}
@@ -750,7 +774,10 @@ export default function HomeScreen(props) {
           <TouchableOpacity
             style={[styles.card, { backgroundColor: "#EAF7FC" }]}
             onPress={() => {
-              trackM("Navigated - Home", { phone: userDetails().phone, event: "What's new" })
+              trackM("Navigated - Home", {
+                phone: userDetails().phone,
+                event: "What's new",
+              });
               navigation.navigate("webview", whatsnew);
             }}
           >
@@ -763,7 +790,10 @@ export default function HomeScreen(props) {
           <>
             <TouchableOpacity
               onPress={() => {
-                trackM("Navigated - Home", { phone: userDetails().phone, event: "Mood Tracker" })
+                trackM("Navigated - Home", {
+                  phone: userDetails().phone,
+                  event: "Mood Tracker",
+                });
                 navigation.navigate("mood", data);
               }}
             >
@@ -817,7 +847,10 @@ export default function HomeScreen(props) {
           <>
             <TouchableOpacity
               onPress={() => {
-                trackM("Navigated - Home", { phone: userDetails().phone, event: "Mood Insights" })
+                trackM("Navigated - Home", {
+                  phone: userDetails().phone,
+                  event: "Mood Insights",
+                });
                 navigation.navigate("moodInsights", data);
               }}
             >
@@ -877,7 +910,10 @@ export default function HomeScreen(props) {
                 {subsdet && subdays > 0 ? (
                   <TouchableOpacity
                     onPress={() => {
-                      trackM("Navigated - Home", { phone: userDetails().phone, event: "See details" })
+                      trackM("Navigated - Home", {
+                        phone: userDetails().phone,
+                        event: "See details",
+                      });
                       navigation.navigate("webview", sub);
                     }}
                     style={[
@@ -918,7 +954,10 @@ export default function HomeScreen(props) {
                 ) : (
                   <TouchableOpacity
                     onPress={() => {
-                      trackM("Navigated - Home", { phone: userDetails().phone, event: "See plans" })
+                      trackM("Navigated - Home", {
+                        phone: userDetails().phone,
+                        event: "See plans",
+                      });
                       navigation.navigate("webview", sub);
                     }}
                     style={[
@@ -961,7 +1000,10 @@ export default function HomeScreen(props) {
             ) : (
               <TouchableOpacity
                 onPress={() => {
-                  trackM("Navigated - Home", { phone: userDetails().phone, event: "See packages" })
+                  trackM("Navigated - Home", {
+                    phone: userDetails().phone,
+                    event: "See packages",
+                  });
                   navigation.navigate("webview", packages);
                 }}
                 style={[
@@ -988,7 +1030,10 @@ export default function HomeScreen(props) {
 
         <TouchableOpacity
           onPress={() => {
-            trackM("Navigated - Home", { phone: userDetails().phone, event: "Discover Now" })
+            trackM("Navigated - Home", {
+              phone: userDetails().phone,
+              event: "Discover Now",
+            });
             navigation.navigate("webview", product);
           }}
           className="flex-col items-center"
@@ -1013,12 +1058,18 @@ export default function HomeScreen(props) {
 
         <TouchableOpacity
           onPress={() => {
-            trackM("Navigated - Home", { phone: userDetails().phone, event: "Message Us" })
+            trackM("Navigated - Home", {
+              phone: userDetails().phone,
+              event: "Message Us",
+            });
             Linking.openURL(whatsapp)
               .then((responsive) => {
                 console.log(responsive);
               })
-              .catch((err) => { console.log(err); exceptionReporting({ error }) });
+              .catch((err) => {
+                console.log(err);
+                exceptionReporting({ error });
+              });
           }}
           className="flex-col items-center"
           style={[{ height: hp(15.8), marginTop: hp(3) }]}

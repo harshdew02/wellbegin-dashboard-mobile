@@ -68,7 +68,7 @@ const DateTimeComponent = (rdate) => {
 const CardDetails = (props) => {
   const [sdate, setSDate] = useState(DateTimeComponent(props.props.ts_));
   const [edate, setEDate] = useState(DateTimeComponent(props.props.ts__));
-  const {userDetails, trackM} = useAuth();
+  const { userDetails, trackM } = useAuth();
   return (
     <View
       style={{
@@ -145,7 +145,10 @@ const CardDetails = (props) => {
             alignItems: "center",
           }}
           onPress={() => {
-            trackM("Navigated - Diagnostic",{phone: userDetails().phone, event:{Report: props.props.report_url}})
+            trackM("Navigated - Diagnostic", {
+              phone: userDetails().phone,
+              event: { Report: props.props.report_url },
+            });
             downloadFile(
               props.props.report_url,
               props.props.phone_no,
@@ -189,7 +192,7 @@ const FirstRoute = (props) => {
             passDataToParent(res.data.rec_test);
           })
           .catch((err) => {
-            exceptionReporting({err})
+            exceptionReporting({ err });
             console.log("error is here:", err);
           })
           .finally(() => {
@@ -197,7 +200,7 @@ const FirstRoute = (props) => {
           });
       }
     } else setLoading(false);
-    trackM("Navigated - Diagnostic",{phone: userDetails().phone})
+    trackM("Navigated - Diagnostic", { phone: userDetails().phone });
   }, [loading]);
 
   const fetchData = () => {
@@ -265,19 +268,25 @@ const FirstRoute = (props) => {
         >
           {hasApp ? (
             <>
-              <View
-                style={{
-                  height: "100%",
-                  width: wp(1),
-                  backgroundColor: "#455A64",
-                  position: "absolute",
-                  left: wp(10),
-                  zIndex: -2,
-                }}
-              />
-              {data.map((item, index) => (
-                <CardDetails key={index} props={item} />
-              ))}
+              {data ? (
+                <>
+                  <View
+                    style={{
+                      height: "100%",
+                      width: wp(1),
+                      backgroundColor: "#455A64",
+                      position: "absolute",
+                      left: wp(10),
+                      zIndex: -2,
+                    }}
+                  />
+                  {data.map((item, index) => (
+                    <CardDetails key={index} props={item} />
+                  ))}
+                </>
+              ) : (
+                <NoSessions />
+              )}
             </>
           ) : (
             <>
@@ -328,7 +337,7 @@ const renderTabBar = (props) => (
 const GeneralCard = (props) => {
   const [colors, setColor] = useState(props.colors);
   const navigation = useNavigation();
-  const {trackM, userDetails} = useAuth();
+  const { trackM, userDetails } = useAuth();
   const containsWord = (sentence, word) => {
     return sentence.toLowerCase().includes(word.toLowerCase());
   };
@@ -371,7 +380,10 @@ const GeneralCard = (props) => {
         <TouchableOpacity
           style={styles.btnStyle}
           onPress={() => {
-            trackM("Navigated - Diagnostic",{phone: userDetails().phone, event:props.props.test_name})
+            trackM("Navigated - Diagnostic", {
+              phone: userDetails().phone,
+              event: props.props.test_name,
+            });
             navigation.navigate("webview", props.props.url);
           }}
         >
@@ -568,9 +580,15 @@ const Test = (props) => {
           }}
           style={{ width: wp(86), height: hp(12.8), marginTop: hp(2) }}
         >
-          {test.map((item, index) => (
-            <GeneralCard key={index} props={item} colors={index % 2} />
-          ))}
+          {test != null && test != undefined ? (
+            <>
+              {test.map((item, index) => (
+                <GeneralCard key={index} props={item} colors={index % 2} />
+              ))}
+            </>
+          ) : (
+            <></>
+          )}
           {/* <DepressionTest />
           <AttachmentTest /> */}
           {/* <GeneralCard /> */}
@@ -596,7 +614,8 @@ const Test = (props) => {
                 color: "#fff",
               }}
             >
-             1 in 6 people in India live with an undiagnosed mental health condition.
+              1 in 6 people in India live with an undiagnosed mental health
+              condition.
             </Text>
             <TouchableOpacity
               style={[styles.btnStyle2]}
@@ -613,7 +632,7 @@ const Test = (props) => {
                   fontWeight: "500",
                 }}
               >
-               Share & Care
+                Share & Care
               </Text>
             </TouchableOpacity>
           </View>

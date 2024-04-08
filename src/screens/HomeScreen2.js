@@ -58,7 +58,10 @@ const Btn = (props) => {
       activeOpacity={0.8}
       style={styles.BookBtn}
       onPress={() => {
-        trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "Navigated to Diagnostic" })
+        trackM("Navigated - Home(New)", {
+          phone: userDetails().phone,
+          event: "Navigated to Diagnostic",
+        });
         navigation.navigate("test", props.props);
       }}
     >
@@ -91,7 +94,10 @@ const Bookbtn = (props) => {
             }}
             onPress={() => {
               // Checking if the link is supported for links with custom URL scheme.
-              trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "Book Your Next Session" })
+              trackM("Navigated - Home(New)", {
+                phone: userDetails().phone,
+                event: "Book Your Next Session",
+              });
               navigation.navigate("webview", props.props.booking);
             }}
           >
@@ -115,7 +121,10 @@ const Bookbtn = (props) => {
             }}
             onPress={() => {
               // Checking if the link is supported for links with custom URL scheme.
-              trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "Joined the session" })
+              trackM("Navigated - Home(New)", {
+                phone: userDetails().phone,
+                event: "Joined the session",
+              });
               gMeet(props.props.link);
             }}
           >
@@ -128,7 +137,10 @@ const Bookbtn = (props) => {
           style={[styles.BookBtn]}
           onPress={() => {
             // Checking if the link is supported for links with custom URL scheme.
-            trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "Book Your Next Session" })
+            trackM("Navigated - Home(New)", {
+              phone: userDetails().phone,
+              event: "Book Your Next Session",
+            });
             navigation.navigate("webview", props.props.booking);
           }}
         >
@@ -166,7 +178,16 @@ export default function HomeScreen2(props) {
   const [loaded, setLoaded] = useState(false);
   const [category, setCategory] = useState("regular");
 
-  const { setHomes, home, connect, userDetails, trackM, exceptionReporting, names, showToast } = useAuth();
+  const {
+    setHomes,
+    home,
+    connect,
+    userDetails,
+    trackM,
+    exceptionReporting,
+    names,
+    showToast,
+  } = useAuth();
   useEffect(() => {
     if (home === "webview" || home === "moodset") {
       setMoodCheck(true);
@@ -180,7 +201,7 @@ export default function HomeScreen2(props) {
   };
 
   navigation.addListener("focus", () => {
-    trackM("Navigated - Home(New)", { phone: userDetails().phone })
+    trackM("Navigated - Home(New)", { phone: userDetails().phone });
     BackHandler.addEventListener("hardwareBackPress", backHandler);
   });
 
@@ -211,10 +232,8 @@ export default function HomeScreen2(props) {
           if (res != null && res != undefined) setName(res);
         })
         .catch((error) => console.log(error));
-    }
-    else
-      setName(data.usr_fullname);
-  }, [names])
+    } else setName(data.usr_fullname);
+  }, [names]);
 
   useEffect(() => {
     const isConnected = connect();
@@ -232,7 +251,12 @@ export default function HomeScreen2(props) {
             } else {
               if (res.data.has_appointment === "no") setBooked(false);
               else {
-                if (res.data.app_det.app_session_date != null && res.data.app_det.app_session_date != undefined && res.data.app_det.app_session_time != null && res.data.app_det.app_session_time != undefined) {
+                if (
+                  res.data.app_det.app_session_date != null &&
+                  res.data.app_det.app_session_date != undefined &&
+                  res.data.app_det.app_session_time != null &&
+                  res.data.app_det.app_session_time != undefined
+                ) {
                   const apiDate = res.data.app_det.app_session_date;
                   const apiTime = res.data.app_det.app_session_time;
                   let timestamp = new Date(apiDate);
@@ -296,14 +320,14 @@ export default function HomeScreen2(props) {
                     setDate(showDate);
                   }
                 } else {
-                  showToast("Network Error!...")
+                  showToast("Network Error!...");
                 }
                 // Extracting date components from api
               }
             }
           })
           .catch((err) => {
-            exceptionReporting({ err })
+            exceptionReporting({ err });
             console.log(err);
           })
           .finally(() => {
@@ -325,7 +349,7 @@ export default function HomeScreen2(props) {
           })
           .catch((err) => {
             console.log(err);
-            exceptionReporting({ err })
+            exceptionReporting({ err });
           })
           .finally(() => {
             if (realTimeData != null) {
@@ -392,9 +416,12 @@ export default function HomeScreen2(props) {
     setSubdays(Number.parseInt(data.subs_no_of_days));
     if (appointment.has_appointment === "no") setBooked(false);
     else {
-
-      if (appointment.appointment.app_session_date != null && appointment.appointment.app_session_date != undefined && appointment.appointment.app_session_time != null && appointment.appointment.app_session_time != undefined) {
-
+      if (
+        appointment.appointment.app_session_date != null &&
+        appointment.appointment.app_session_date != undefined &&
+        appointment.appointment.app_session_time != null &&
+        appointment.appointment.app_session_time != undefined
+      ) {
         const apiDate = appointment.appointment.app_session_date;
         const apiTime = appointment.appointment.app_session_time;
 
@@ -459,7 +486,7 @@ export default function HomeScreen2(props) {
           setDate(showDate);
         }
       } else {
-        showToast("Network Error!...")
+        showToast("Network Error!...");
       }
     }
   }, []);
@@ -522,7 +549,10 @@ export default function HomeScreen2(props) {
               // backgroundColor:'red'
             }}
             onPress={() => {
-              trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "Banner" })
+              trackM("Navigated - Home(New)", {
+                phone: userDetails().phone,
+                event: "Banner",
+              });
               navigation.navigate("webview", banner.cban_link);
             }}
           >
@@ -576,13 +606,19 @@ export default function HomeScreen2(props) {
                   fontWeight: "700",
                 }}
               >
-                Welcome {name.split(/\s+/).filter((word) => word !== "")[0]}{" "}
-                👋
+                {name != null && name != undefined
+                  ? `Welcome ${
+                      name.split(/\s+/).filter((word) => word !== "")[0]
+                    } 👋`
+                  : `Welcome 👋`}
               </Text>
 
               <TouchableOpacity
                 onPress={() => {
-                  trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "Reminder" })
+                  trackM("Navigated - Home(New)", {
+                    phone: userDetails().phone,
+                    event: "Reminder",
+                  });
                   // setBell(false);
                   navigation.navigate("reminder", data);
                 }}
@@ -636,7 +672,10 @@ export default function HomeScreen2(props) {
         >
           <TouchableOpacity
             onPress={() => {
-              trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "Start Therapy" })
+              trackM("Navigated - Home(New)", {
+                phone: userDetails().phone,
+                event: "Start Therapy",
+              });
               navigation.navigate("webview", booking);
             }}
             style={[styles.card, { backgroundColor: "#FEF8C8" }]}
@@ -648,7 +687,10 @@ export default function HomeScreen2(props) {
 
           <TouchableOpacity
             onPress={() => {
-              trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "Wellness Blogs" })
+              trackM("Navigated - Home(New)", {
+                phone: userDetails().phone,
+                event: "Wellness Blogs",
+              });
               navigation.navigate("webview", wellbeing);
             }}
             style={[styles.card, { backgroundColor: "#EBF2F5" }]}
@@ -660,7 +702,10 @@ export default function HomeScreen2(props) {
           <TouchableOpacity
             style={[styles.card, { backgroundColor: "#EAF7FC" }]}
             onPress={() => {
-              trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "What's New" })
+              trackM("Navigated - Home(New)", {
+                phone: userDetails().phone,
+                event: "What's New",
+              });
               navigation.navigate("webview", whatsnew);
             }}
           >
@@ -673,7 +718,10 @@ export default function HomeScreen2(props) {
           <>
             <TouchableOpacity
               onPress={() => {
-                trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "Mood tracker" })
+                trackM("Navigated - Home(New)", {
+                  phone: userDetails().phone,
+                  event: "Mood tracker",
+                });
                 navigation.navigate("mood", data);
               }}
             >
@@ -727,7 +775,10 @@ export default function HomeScreen2(props) {
           <>
             <TouchableOpacity
               onPress={() => {
-                trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "Mood Insights" })
+                trackM("Navigated - Home(New)", {
+                  phone: userDetails().phone,
+                  event: "Mood Insights",
+                });
                 navigation.navigate("moodInsights", data);
               }}
             >
@@ -787,7 +838,10 @@ export default function HomeScreen2(props) {
                 {subsdet && subdays > 0 ? (
                   <TouchableOpacity
                     onPress={() => {
-                      trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "See details" })
+                      trackM("Navigated - Home(New)", {
+                        phone: userDetails().phone,
+                        event: "See details",
+                      });
                       navigation.navigate("webview", sub);
                     }}
                     style={[
@@ -828,7 +882,10 @@ export default function HomeScreen2(props) {
                 ) : (
                   <TouchableOpacity
                     onPress={() => {
-                      trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "See plans" })
+                      trackM("Navigated - Home(New)", {
+                        phone: userDetails().phone,
+                        event: "See plans",
+                      });
                       navigation.navigate("webview", sub);
                     }}
                     style={[
@@ -871,7 +928,10 @@ export default function HomeScreen2(props) {
             ) : (
               <TouchableOpacity
                 onPress={() => {
-                  trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "Explore Packages" })
+                  trackM("Navigated - Home(New)", {
+                    phone: userDetails().phone,
+                    event: "Explore Packages",
+                  });
                   navigation.navigate("webview", packages);
                 }}
                 style={[
@@ -898,7 +958,10 @@ export default function HomeScreen2(props) {
 
         <TouchableOpacity
           onPress={() => {
-            trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "Message Us" })
+            trackM("Navigated - Home(New)", {
+              phone: userDetails().phone,
+              event: "Message Us",
+            });
             Linking.openURL(whatsapp)
               .then((responsive) => {
                 console.log(responsive);

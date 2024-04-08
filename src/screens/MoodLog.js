@@ -298,7 +298,7 @@ const MoodLog = (props) => {
   };
 
   navigation.addListener("focus", () => {
-    trackM("Navigated - Moodlog",{phone: userDetails().phone})
+    trackM("Navigated - Moodlog", { phone: userDetails().phone });
     BackHandler.addEventListener("hardwareBackPress", backHandler);
   });
 
@@ -321,7 +321,7 @@ const MoodLog = (props) => {
             }
           })
           .catch((err) => {
-            exceptionReporting({err})
+            exceptionReporting({ err });
             console.log(err);
           })
           .finally(() => {
@@ -385,7 +385,17 @@ const MoodLog = (props) => {
             />
           </View>
         ) : (
-          datas.map((item, index) => <MoodCard key={index} props={item} />)
+          <>
+            {datas != null && datas != undefined ? (
+              <>
+                {datas.map((item, index) => (
+                  <MoodCard key={index} props={item} />
+                ))}
+              </>
+            ) : (
+              <></>
+            )}
+          </>
         )}
         <Text
           style={{

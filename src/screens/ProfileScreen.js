@@ -269,7 +269,7 @@ const FirstRoute = (props) => {
           renderSecondElement();
         })
         .catch((err) => {
-          exceptionReporting({err})
+          exceptionReporting({ err });
           console.log("error is here:", err);
         })
         .finally(() => {
@@ -301,9 +301,17 @@ const FirstRoute = (props) => {
           <>
             {hasApp ? (
               <>
-                {data.map((item, index) => (
-                  <CardDetails key={index} props={item} />
-                ))}
+                {data != null && data != undefined ? (
+                  <>
+                    {data.map((item, index) => (
+                      <CardDetails key={index} props={item} />
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    <NoSessionsU />
+                  </>
+                )}
               </>
             ) : (
               <>
@@ -320,7 +328,7 @@ const FirstRoute = (props) => {
 const SecondRoute = (props) => {
   const [hasApp, sethasApp] = useState(false);
   const [loading, setLoading] = useState(true);
-  const { userDetails, exceptionReporting} = useAuth();
+  const {userDetails, exceptionReporting } = useAuth();
   const [data, setData] = useState({});
 
   const parentData = {
@@ -382,7 +390,7 @@ const SecondRoute = (props) => {
         renderSecondElement();
       })
       .catch((err) => {
-        exceptionReporting({err})
+        exceptionReporting({ err });
         console.log(err);
       })
       .finally(() => {
@@ -415,9 +423,17 @@ const SecondRoute = (props) => {
             {hasApp ? (
               <>
                 {/* <CardDetails props={data} /> */}
-                {data.map((item, index) => (
-                  <CardDetails key={index} props={item} />
-                ))}
+                {data != null && data != undefined ? (
+                  <>
+                    {data.map((item, index) => (
+                      <CardDetails key={index} props={item} />
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    <NoSessionsH />
+                  </>
+                )}
               </>
             ) : (
               <>
@@ -632,7 +648,7 @@ export default function ProfileScreen(props) {
   }, [name]);
 
   navigation.addListener("focus", () => {
-    trackM("Navigated - Profile Screen",{phone: userDetails().phone})
+    trackM("Navigated - Profile Screen", { phone: userDetails().phone });
     setStatusColor("green");
   });
 
