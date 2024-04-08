@@ -43,11 +43,17 @@ import SInfo from "react-native-encrypted-storage";
 const gMeet = (link) => {
   if (link == "" || link == null || link == undefined)
     link = "https://meet.google.com";
-  Linking.openURL(link)
-    .then((responsive) => {
-      console.log(responsive);
-    })
-    .catch((err) => console.log(err));
+  Linking.canOpenURL(link).then((supported) => {
+    if (supported) {
+      Linking.openURL(link)
+        .then((responsive) => {
+          console.log(responsive);
+        })
+        .catch((err) => console.log(err));
+    } else {
+      console.log("Cannot open Google Meet link: " + link);
+    }
+  });
 };
 
 const Btn = (props) => {
