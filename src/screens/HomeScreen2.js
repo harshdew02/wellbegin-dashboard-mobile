@@ -52,14 +52,14 @@ const gMeet = (link) => {
 
 const Btn = (props) => {
   const navigation = useNavigation();
-  const {trackM, userDetails} = useAuth();
+  const { trackM, userDetails } = useAuth();
   return (
     <TouchableOpacity
       activeOpacity={0.8}
       style={styles.BookBtn}
       onPress={() => {
-        trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Navigated to Diagnostic"})
-        navigation.navigate("test", props.booking);
+        trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "Navigated to Diagnostic" })
+        navigation.navigate("test", props.props);
       }}
     >
       <Text style={styles.btnText}>Explore Wellbeing Tests</Text>
@@ -71,7 +71,7 @@ const Bookbtn = (props) => {
   // console.log("It is from bookbtn: ",props)
   const navigation = useNavigation();
   const ishour = props.props.is2hour;
-  const {trackM, userDetails} = useAuth();
+  const { trackM, userDetails } = useAuth();
   return (
     <View className="flex-row justify-between">
       {ishour ? (
@@ -91,7 +91,7 @@ const Bookbtn = (props) => {
             }}
             onPress={() => {
               // Checking if the link is supported for links with custom URL scheme.
-              trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Book Your Next Session"})
+              trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "Book Your Next Session" })
               navigation.navigate("webview", props.props.booking);
             }}
           >
@@ -115,7 +115,7 @@ const Bookbtn = (props) => {
             }}
             onPress={() => {
               // Checking if the link is supported for links with custom URL scheme.
-              trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Joined the session"})
+              trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "Joined the session" })
               gMeet(props.props.link);
             }}
           >
@@ -128,7 +128,7 @@ const Bookbtn = (props) => {
           style={[styles.BookBtn]}
           onPress={() => {
             // Checking if the link is supported for links with custom URL scheme.
-            trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Book Your Next Session"})
+            trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "Book Your Next Session" })
             navigation.navigate("webview", props.props.booking);
           }}
         >
@@ -166,7 +166,7 @@ export default function HomeScreen2(props) {
   const [loaded, setLoaded] = useState(false);
   const [category, setCategory] = useState("regular");
 
-  const { setHomes, home, connect, userDetails, trackM, exceptionReporting, names } = useAuth();
+  const { setHomes, home, connect, userDetails, trackM, exceptionReporting, names, showToast } = useAuth();
   useEffect(() => {
     if (home === "webview" || home === "moodset") {
       setMoodCheck(true);
@@ -180,7 +180,7 @@ export default function HomeScreen2(props) {
   };
 
   navigation.addListener("focus", () => {
-    trackM("Navigated - Home(New)",{phone: userDetails().phone})
+    trackM("Navigated - Home(New)", { phone: userDetails().phone })
     BackHandler.addEventListener("hardwareBackPress", backHandler);
   });
 
@@ -205,12 +205,12 @@ export default function HomeScreen2(props) {
   };
 
   useEffect(() => {
-    if(data.usr_fullname === "") {
+    if (data.usr_fullname === "") {
       SInfo.getItem("nick_name")
-      .then((res) => {
-        if (res != null && res != undefined) setName(res);
-      })
-      .catch((error) => console.log(error));
+        .then((res) => {
+          if (res != null && res != undefined) setName(res);
+        })
+        .catch((error) => console.log(error));
     }
     else
       setName(data.usr_fullname);
@@ -232,75 +232,78 @@ export default function HomeScreen2(props) {
             } else {
               if (res.data.has_appointment === "no") setBooked(false);
               else {
-                const apiDate = res.data.app_det.app_session_date;
-                const apiTime = res.data.app_det.app_session_time;
+                if (res.data.app_det.app_session_date != null && res.data.app_det.app_session_date != undefined && res.data.app_det.app_session_time != null && res.data.app_det.app_session_time != undefined) {
+                  const apiDate = res.data.app_det.app_session_date;
+                  const apiTime = res.data.app_det.app_session_time;
+                  let timestamp = new Date(apiDate);
+                  let year = timestamp.getFullYear();
+                  let month = String(timestamp.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
+                  let date = String(timestamp.getDate()).padStart(2, "0");
+                  let [part1, part2, part3] = apiTime.split(":");
+                  let hours = part1;
+                  let minutes = part2;
+                  let seconds = part3;
+                  let period = "AM";
+                  if (hours >= 12) {
+                    hours -= 12;
+                    period = "PM";
+                  }
+                  if (hours === 0) {
+                    hours = 12;
+                  }
+                  let showTime = `${hours}:${minutes} ${period}`;
+                  let showDate = `${date}/${month}/${year}`;
+                  let finalAPITime = `${year}-${month}-${date}T${apiTime}Z`;
 
+                  // Extracting date components from system
+                  timestamp = new Date();
+                  year = timestamp.getFullYear();
+                  month = String(timestamp.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
+                  date = String(timestamp.getDate()).padStart(2, "0");
+                  hours = String(timestamp.getHours()).padStart(2, "0");
+                  minutes = String(timestamp.getMinutes()).padStart(2, "0");
+                  seconds = String(timestamp.getSeconds()).padStart(2, "0");
+                  let finalSystemTime = `${year}-${month}-${date}T${hours}:${minutes}:${seconds}Z`;
+                  setLink(res.data.app_det.app_session_link);
+
+                  // Parse the API datetime string
+                  const apiDateTime = new Date(finalAPITime);
+
+                  // Parse the system datetime string
+                  const systemDateTime = new Date(finalSystemTime);
+
+                  // Calculate the time difference in milliseconds
+                  const timeDifference = apiDateTime - systemDateTime;
+
+                  // Convert milliseconds to hours
+                  const timeDifferenceHours = Math.abs(
+                    timeDifference / (1000 * 60 * 60)
+                  );
+
+                  // Define a threshold for 2 hours
+                  const twoHours = 2;
+
+                  // Compare the time difference with the threshold and whether it's negative
+                  if (timeDifference < 0) {
+                    setBooked(false);
+                  } else if (timeDifferenceHours >= twoHours) {
+                    setBooked(true);
+                    setIs2hour(false);
+                  } else if (timeDifferenceHours < twoHours) {
+                    setBooked(true);
+                    setIs2hour(true);
+                    setTime(showTime);
+                    setDate(showDate);
+                  }
+                } else {
+                  showToast("Network Error!...")
+                }
                 // Extracting date components from api
-                let timestamp = new Date(apiDate);
-                let year = timestamp.getFullYear();
-                let month = String(timestamp.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
-                let date = String(timestamp.getDate()).padStart(2, "0");
-                let [part1, part2, part3] = apiTime.split(":");
-                let hours = part1;
-                let minutes = part2;
-                let seconds = part3;
-                let period = "AM";
-                if (hours >= 12) {
-                  hours -= 12;
-                  period = "PM";
-                }
-                if (hours === 0) {
-                  hours = 12;
-                }
-                let showTime = `${hours}:${minutes} ${period}`;
-                let showDate = `${date}/${month}/${year}`;
-                let finalAPITime = `${year}-${month}-${date}T${apiTime}Z`;
-
-                // Extracting date components from system
-                timestamp = new Date();
-                year = timestamp.getFullYear();
-                month = String(timestamp.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
-                date = String(timestamp.getDate()).padStart(2, "0");
-                hours = String(timestamp.getHours()).padStart(2, "0");
-                minutes = String(timestamp.getMinutes()).padStart(2, "0");
-                seconds = String(timestamp.getSeconds()).padStart(2, "0");
-                let finalSystemTime = `${year}-${month}-${date}T${hours}:${minutes}:${seconds}Z`;
-                setLink(res.data.app_det.app_session_link);
-
-                // Parse the API datetime string
-                const apiDateTime = new Date(finalAPITime);
-
-                // Parse the system datetime string
-                const systemDateTime = new Date(finalSystemTime);
-
-                // Calculate the time difference in milliseconds
-                const timeDifference = apiDateTime - systemDateTime;
-
-                // Convert milliseconds to hours
-                const timeDifferenceHours = Math.abs(
-                  timeDifference / (1000 * 60 * 60)
-                );
-
-                // Define a threshold for 2 hours
-                const twoHours = 2;
-
-                // Compare the time difference with the threshold and whether it's negative
-                if (timeDifference < 0) {
-                  setBooked(false);
-                } else if (timeDifferenceHours >= twoHours) {
-                  setBooked(true);
-                  setIs2hour(false);
-                } else if (timeDifferenceHours < twoHours) {
-                  setBooked(true);
-                  setIs2hour(true);
-                  setTime(showTime);
-                  setDate(showDate);
-                }
               }
             }
           })
           .catch((err) => {
-            exceptionReporting({err})
+            exceptionReporting({ err })
             console.log(err);
           })
           .finally(() => {
@@ -322,7 +325,7 @@ export default function HomeScreen2(props) {
           })
           .catch((err) => {
             console.log(err);
-            exceptionReporting({err})
+            exceptionReporting({ err })
           })
           .finally(() => {
             if (realTimeData != null) {
@@ -389,68 +392,74 @@ export default function HomeScreen2(props) {
     setSubdays(Number.parseInt(data.subs_no_of_days));
     if (appointment.has_appointment === "no") setBooked(false);
     else {
-      const apiDate = appointment.appointment.app_session_date;
-      const apiTime = appointment.appointment.app_session_time;
 
-      // Extracting date components from api
-      let timestamp = new Date(apiDate);
-      let year = timestamp.getFullYear();
-      let month = String(timestamp.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
-      let date = String(timestamp.getDate()).padStart(2, "0");
-      let [part1, part2, part3] = apiTime.split(":");
-      let hours = part1;
-      let minutes = part2;
-      let seconds = part3;
-      let period = "AM";
-      if (hours >= 12) {
-        hours -= 12;
-        period = "PM";
-      }
-      if (hours === 0) {
-        hours = 12;
-      }
-      // let showTime = `${}/${}/${} at `
-      let showTime = `${hours}:${minutes} ${period}`;
-      let showDate = `${date}/${month}/${year}`;
-      let finalAPITime = `${year}-${month}-${date}T${apiTime}Z`;
+      if (appointment.appointment.app_session_date != null && appointment.appointment.app_session_date != undefined && appointment.appointment.app_session_time != null && appointment.appointment.app_session_time != undefined) {
 
-      // Extracting date components from system
-      timestamp = new Date();
-      year = timestamp.getFullYear();
-      month = String(timestamp.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
-      date = String(timestamp.getDate()).padStart(2, "0");
-      hours = String(timestamp.getHours()).padStart(2, "0");
-      minutes = String(timestamp.getMinutes()).padStart(2, "0");
-      seconds = String(timestamp.getSeconds()).padStart(2, "0");
-      let finalSystemTime = `${year}-${month}-${date}T${hours}:${minutes}:${seconds}Z`;
-      setLink(appointment.appointment.app_session_link);
+        const apiDate = appointment.appointment.app_session_date;
+        const apiTime = appointment.appointment.app_session_time;
 
-      // Parse the API datetime string
-      const apiDateTime = new Date(finalAPITime);
+        // Extracting date components from api
+        let timestamp = new Date(apiDate);
+        let year = timestamp.getFullYear();
+        let month = String(timestamp.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
+        let date = String(timestamp.getDate()).padStart(2, "0");
+        let [part1, part2, part3] = apiTime.split(":");
+        let hours = part1;
+        let minutes = part2;
+        let seconds = part3;
+        let period = "AM";
+        if (hours >= 12) {
+          hours -= 12;
+          period = "PM";
+        }
+        if (hours === 0) {
+          hours = 12;
+        }
+        // let showTime = `${}/${}/${} at `
+        let showTime = `${hours}:${minutes} ${period}`;
+        let showDate = `${date}/${month}/${year}`;
+        let finalAPITime = `${year}-${month}-${date}T${apiTime}Z`;
 
-      // Parse the system datetime string
-      const systemDateTime = new Date(finalSystemTime);
+        // Extracting date components from system
+        timestamp = new Date();
+        year = timestamp.getFullYear();
+        month = String(timestamp.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
+        date = String(timestamp.getDate()).padStart(2, "0");
+        hours = String(timestamp.getHours()).padStart(2, "0");
+        minutes = String(timestamp.getMinutes()).padStart(2, "0");
+        seconds = String(timestamp.getSeconds()).padStart(2, "0");
+        let finalSystemTime = `${year}-${month}-${date}T${hours}:${minutes}:${seconds}Z`;
+        setLink(appointment.appointment.app_session_link);
 
-      // Calculate the time difference in milliseconds
-      const timeDifference = apiDateTime - systemDateTime;
+        // Parse the API datetime string
+        const apiDateTime = new Date(finalAPITime);
 
-      // Convert milliseconds to hours
-      const timeDifferenceHours = Math.abs(timeDifference / (1000 * 60 * 60));
+        // Parse the system datetime string
+        const systemDateTime = new Date(finalSystemTime);
 
-      // Define a threshold for 2 hours
-      const twoHours = 2;
+        // Calculate the time difference in milliseconds
+        const timeDifference = apiDateTime - systemDateTime;
 
-      // Compare the time difference with the threshold and whether it's negative
-      if (timeDifference < 0) {
-        setBooked(false);
-      } else if (timeDifferenceHours >= twoHours) {
-        setBooked(true);
-        setIs2hour(false);
-      } else if (timeDifferenceHours < twoHours) {
-        setBooked(true);
-        setIs2hour(true);
-        setTime(showTime);
-        setDate(showDate);
+        // Convert milliseconds to hours
+        const timeDifferenceHours = Math.abs(timeDifference / (1000 * 60 * 60));
+
+        // Define a threshold for 2 hours
+        const twoHours = 2;
+
+        // Compare the time difference with the threshold and whether it's negative
+        if (timeDifference < 0) {
+          setBooked(false);
+        } else if (timeDifferenceHours >= twoHours) {
+          setBooked(true);
+          setIs2hour(false);
+        } else if (timeDifferenceHours < twoHours) {
+          setBooked(true);
+          setIs2hour(true);
+          setTime(showTime);
+          setDate(showDate);
+        }
+      } else {
+        showToast("Network Error!...")
       }
     }
   }, []);
@@ -473,452 +482,452 @@ export default function HomeScreen2(props) {
   const [nameDone, setNameDone] = React.useState(false);
 
   return (
-      <SafeAreaView>
-        <StatusBar
-          backgroundColor={theme.maincolor}
-          barStyle={"light-content"}
-          hidden={false}
-          translucent={false}
-        />
-        {/* {banner.avail ? (
+    <SafeAreaView>
+      <StatusBar
+        backgroundColor={theme.maincolor}
+        barStyle={"light-content"}
+        hidden={false}
+        translucent={false}
+      />
+      {/* {banner.avail ? (
           
         ) : (
           <></>
         )} */}
-        <View
-          style={{
-            backgroundColor: theme.maincolor,
-            width: wp(100),
-            height: hp(0.8),
-            position: "absolute",
-            top: 0,
-            zIndex: 4,
-          }}
-        />
+      <View
+        style={{
+          backgroundColor: theme.maincolor,
+          width: wp(100),
+          height: hp(0.8),
+          position: "absolute",
+          top: 0,
+          zIndex: 4,
+        }}
+      />
 
-        <PTRView
-          onRefresh={handleRefresh}
-          scrollEventThrottle={1}
-          contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
-          style={{ backgroundColor: "#fff", height: hp(100) }}
-        >
-          {/* Banner */}
-          {banner.avail ? (
-            <TouchableOpacity
-              activeOpacity={1}
-              style={{
-                position: "absolute",
-                zIndex: 2,
-                top: 0,
-                // backgroundColor:'red'
+      <PTRView
+        onRefresh={handleRefresh}
+        scrollEventThrottle={1}
+        contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}
+        style={{ backgroundColor: "#fff", height: hp(100) }}
+      >
+        {/* Banner */}
+        {banner.avail ? (
+          <TouchableOpacity
+            activeOpacity={1}
+            style={{
+              position: "absolute",
+              zIndex: 2,
+              top: 0,
+              // backgroundColor:'red'
+            }}
+            onPress={() => {
+              trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "Banner" })
+              navigation.navigate("webview", banner.cban_link);
+            }}
+          >
+            <Image
+              onLoad={() => {
+                setLoaded(true);
               }}
-              onPress={() => {
-                trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Banner"})
-                navigation.navigate("webview", banner.cban_link);
+              onError={() => {
+                setLoaded(false);
+                console.log("failed");
+              }}
+              resizeMode="stretch"
+              style={{
+                width: wp(100),
+                height: wp(24.66),
+                // position: "absolute",
+                // zIndex: 5,
+              }}
+              source={{
+                uri: banner.ban_link,
+              }}
+            />
+          </TouchableOpacity>
+        ) : (
+          <></>
+        )}
+
+        <View
+          style={
+            banner.avail
+              ? { marginTop: loaded ? wp(22.66) : hp(-0.05) }
+              : { marginTop: hp(0) }
+          }
+        >
+          <HomePageBanner2 width={wp(100)} height={wp(78.9)} />
+
+          <View style={styles.banner}>
+            <View
+              className="flex-row items-center "
+              style={{
+                width: wp(84),
+                alignItems: "center",
+                flexDirection: "row",
               }}
             >
-              <Image
-                onLoad={() => {
-                  setLoaded(true);
-                }}
-                onError={() => {
-                  setLoaded(false);
-                  console.log("failed");
-                }}
-                resizeMode="stretch"
+              <Text
                 style={{
-                  width: wp(100),
-                  height: wp(24.66),
-                  // position: "absolute",
-                  // zIndex: 5,
+                  color: "white",
+                  fontSize: wp(4.2),
+                  fontFamily: "Roboto",
+                  fontWeight: "700",
                 }}
-                source={{
-                  uri: banner.ban_link,
-                }}
-              />
-            </TouchableOpacity>
-          ) : (
-            <></>
-          )}
+              >
+                Welcome {name.split(/\s+/).filter((word) => word !== "")[0]}{" "}
+                👋
+              </Text>
 
-          <View
-            style={
-              banner.avail
-                ? { marginTop: loaded ? wp(22.66) : hp(-0.05) }
-                : { marginTop: hp(0) }
-            }
+              <TouchableOpacity
+                onPress={() => {
+                  trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "Reminder" })
+                  // setBell(false);
+                  navigation.navigate("reminder", data);
+                }}
+                style={{ position: "absolute", right: wp(0) }}
+              >
+                <TopBell active={bell} />
+              </TouchableOpacity>
+            </View>
+            <Text
+              style={{
+                marginTop: hp(2.7),
+                color: "white",
+                fontSize: wp(4),
+                fontWeight: "500",
+              }}
+            >
+              Curious about your mental health?
+            </Text>
+            <View
+              className="flex-row justify-between items-center"
+              style={{ width: wp(90.6) }}
+            >
+              <Text
+                style={{
+                  color: "white",
+                  width: wp(61),
+                  fontSize: wp(3.8),
+                  fontFamily: "Roboto",
+                  fontWeight: "400",
+                  lineHeight: hp(3),
+                  marginTop: hp(1),
+                }}
+              >
+                Start your journey by exploring our range of quick diagnostic
+                tests to gain insight into your symptoms
+              </Text>
+              <NewHome width={wp(29.6)} height={wp(25.6)} />
+            </View>
+            {isBooked ? (
+              <Bookbtn props={{ is2hour, link, booking }} />
+            ) : (
+              <Btn props={payload} />
+            )}
+          </View>
+        </View>
+
+        {/* Content */}
+        <View
+          className="flex-row justify-between"
+          style={[styles.cardContainer, { height: hp(15.8) }]}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "Start Therapy" })
+              navigation.navigate("webview", booking);
+            }}
+            style={[styles.card, { backgroundColor: "#FEF8C8" }]}
           >
-            <HomePageBanner2 width={wp(100)} height={wp(78.9)} />
+            <Text style={styles.cardText}>Start {"\n"}Therapy</Text>
 
-            <View style={styles.banner}>
+            <TasksIcon2 width={wp(12.6)} height={wp(17.6)} />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => {
+              trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "Wellness Blogs" })
+              navigation.navigate("webview", wellbeing);
+            }}
+            style={[styles.card, { backgroundColor: "#EBF2F5" }]}
+          >
+            <Text style={styles.cardText}>Wellness {"\n"}Blogs</Text>
+            <ProgressIcon2 width={wp(16.5)} height={wp(18.9)} />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={[styles.card, { backgroundColor: "#EAF7FC" }]}
+            onPress={() => {
+              trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "What's New" })
+              navigation.navigate("webview", whatsnew);
+            }}
+          >
+            <Text style={styles.cardText}>What's {"\n"}New?</Text>
+            <NewIcon width={wp(20)} height={hp(5)} />
+          </TouchableOpacity>
+        </View>
+
+        {!mood ? (
+          <>
+            <TouchableOpacity
+              onPress={() => {
+                trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "Mood tracker" })
+                navigation.navigate("mood", data);
+              }}
+            >
               <View
-                className="flex-row items-center "
-                style={{
-                  width: wp(84),
-                  alignItems: "center",
-                  flexDirection: "row",
-                }}
+                className="flex-col justify-between items-center"
+                style={[
+                  styles.cardContainer,
+                  { height: hp(12.5), marginTop: hp(3) },
+                ]}
               >
                 <Text
                   style={{
-                    color: "white",
-                    fontSize: wp(4.2),
+                    color: "#043953",
+                    fontSize: wp(4),
                     fontFamily: "Roboto",
                     fontWeight: "700",
                   }}
                 >
-                  Welcome {name.split(/\s+/).filter((word) => word !== "")[0]}{" "}
-                  👋
+                  How are you feeling today?
                 </Text>
-
-                <TouchableOpacity
-                  onPress={() => {
-                    trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Reminder"})
-                    // setBell(false);
-                    navigation.navigate("reminder", data);
-                  }}
-                  style={{ position: "absolute", right: wp(0) }}
-                >
-                  <TopBell active={bell} />
-                </TouchableOpacity>
-              </View>
-              <Text
-                style={{
-                  marginTop: hp(2.7),
-                  color: "white",
-                  fontSize: wp(4),
-                  fontWeight: "500",
-                }}
-              >
-                Curious about your mental health?
-              </Text>
-              <View
-                className="flex-row justify-between items-center"
-                style={{ width: wp(90.6) }}
-              >
-                <Text
-                  style={{
-                    color: "white",
-                    width: wp(61),
-                    fontSize: wp(3.8),
-                    fontFamily: "Roboto",
-                    fontWeight: "400",
-                    lineHeight: hp(3),
-                    marginTop: hp(1),
-                  }}
-                >
-                  Start your journey by exploring our range of quick diagnostic
-                  tests to gain insight into your symptoms
-                </Text>
-                <NewHome width={wp(29.6)} height={wp(25.6)} />
-              </View>
-              {isBooked ? (
-                <Bookbtn props={{ is2hour, link, booking }} />
-              ) : (
-                <Btn props={payload} />
-              )}
-            </View>
-          </View>
-
-          {/* Content */}
-          <View
-            className="flex-row justify-between"
-            style={[styles.cardContainer, { height: hp(15.8) }]}
-          >
-            <TouchableOpacity
-              onPress={() => {
-                trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Start Therapy"})
-                navigation.navigate("webview", booking);
-              }}
-              style={[styles.card, { backgroundColor: "#FEF8C8" }]}
-            >
-              <Text style={styles.cardText}>Start {"\n"}Therapy</Text>
-
-              <TasksIcon2 width={wp(12.6)} height={wp(17.6)} />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => {
-                trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Wellness Blogs"})
-                navigation.navigate("webview", wellbeing);
-              }}
-              style={[styles.card, { backgroundColor: "#EBF2F5" }]}
-            >
-              <Text style={styles.cardText}>Wellness {"\n"}Blogs</Text>
-              <ProgressIcon2 width={wp(16.5)} height={wp(18.9)} />
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.card, { backgroundColor: "#EAF7FC" }]}
-              onPress={() => {
-                trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"What's New"})
-                navigation.navigate("webview", whatsnew);
-              }}
-            >
-              <Text style={styles.cardText}>What's {"\n"}New?</Text>
-              <NewIcon width={wp(20)} height={hp(5)} />
-            </TouchableOpacity>
-          </View>
-
-          {!mood ? (
-            <>
-              <TouchableOpacity
-                onPress={() => {
-                  trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Mood tracker"})
-                  navigation.navigate("mood", data);
-                }}
-              >
+                <FeelBanner
+                  width={wp(85)}
+                  height={hp(9)}
+                  style={styles.feelBanner}
+                />
                 <View
-                  className="flex-col justify-between items-center"
+                  className="flex-row justify-between items-center"
                   style={[
-                    styles.cardContainer,
-                    { height: hp(12.5), marginTop: hp(3) },
+                    {
+                      position: "absolute",
+                      bottom: 8,
+                      zIndex: 1,
+                      width: wp(78),
+                    },
                   ]}
+                >
+                  <Emoji1 width={wp(8)} height={wp(8)} />
+                  <Emoji2 width={wp(8)} height={wp(8)} />
+                  <Emoji3
+                    style={{ marginHorizontal: wp(1.5) }}
+                    width={wp(10)}
+                    height={wp(10)}
+                  />
+                  <Emoji4 width={wp(8)} height={wp(8)} />
+                  <Emoji5 width={wp(8)} height={wp(8)} />
+                </View>
+              </View>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <>
+            <TouchableOpacity
+              onPress={() => {
+                trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "Mood Insights" })
+                navigation.navigate("moodInsights", data);
+              }}
+            >
+              <View
+                className="flex-col justify-between items-center"
+                style={[styles.cardContainer, { marginTop: hp(3) }]}
+              >
+                <Home2 width={"100%"} height={hp(13)} />
+                <View
+                  style={{
+                    position: "absolute",
+                    // left: wp(43),
+                    right: wp(11),
+                    top: hp(2.4),
+                    zIndex: 2,
+                    display: "flex",
+                    alignItems: "center",
+                  }}
                 >
                   <Text
                     style={{
-                      color: "#043953",
+                      color: "#455a64",
                       fontSize: wp(4),
                       fontFamily: "Roboto",
-                      fontWeight: "700",
+                      fontWeight: "800",
                     }}
                   >
-                    How are you feeling today?
+                    Understanding You
                   </Text>
-                  <FeelBanner
-                    width={wp(85)}
-                    height={hp(9)}
-                    style={styles.feelBanner}
-                  />
-                  <View
-                    className="flex-row justify-between items-center"
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: "#ffffff",
+                      fontSize: wp(4),
+                      fontFamily: "Roboto",
+                      fontWeight: "600",
+                      marginTop: hp(1.2),
+                      width: wp(43),
+                      height: hp(3),
+                      backgroundColor: "#01818c",
+                      borderRadius: wp(8),
+                      flexDirection: "row",
+                    }}
+                  >
+                    View mood insights
+                  </Text>
+                </View>
+              </View>
+            </TouchableOpacity>
+          </>
+        )}
+
+        {category === "cwp" ? null : (
+          <>
+            {showsub ? (
+              <>
+                {subsdet && subdays > 0 ? (
+                  <TouchableOpacity
+                    onPress={() => {
+                      trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "See details" })
+                      navigation.navigate("webview", sub);
+                    }}
                     style={[
-                      {
-                        position: "absolute",
-                        bottom: 8,
-                        zIndex: 1,
-                        width: wp(78),
-                      },
+                      styles.cardContainer,
+                      { height: hp(15.8), marginTop: hp(3) },
                     ]}
                   >
-                    <Emoji1 width={wp(8)} height={wp(8)} />
-                    <Emoji2 width={wp(8)} height={wp(8)} />
-                    <Emoji3
-                      style={{ marginHorizontal: wp(1.5) }}
-                      width={wp(10)}
-                      height={wp(10)}
-                    />
-                    <Emoji4 width={wp(8)} height={wp(8)} />
-                    <Emoji5 width={wp(8)} height={wp(8)} />
-                  </View>
-                </View>
-              </TouchableOpacity>
-            </>
-          ) : (
-            <>
-              <TouchableOpacity
-                onPress={() => {
-                  trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Mood Insights"})
-                  navigation.navigate("moodInsights", data);
-                }}
-              >
-                <View
-                  className="flex-col justify-between items-center"
-                  style={[styles.cardContainer, { marginTop: hp(3) }]}
-                >
-                  <Home2 width={"100%"} height={hp(13)} />
-                  <View
-                    style={{
-                      position: "absolute",
-                      // left: wp(43),
-                      right: wp(11),
-                      top: hp(2.4),
-                      zIndex: 2,
-                      display: "flex",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text
+                    <Home1 width={"100%"} height={hp(17)} />
+                    <View
                       style={{
-                        color: "#455a64",
-                        fontSize: wp(4),
-                        fontFamily: "Roboto",
-                        fontWeight: "800",
+                        position: "absolute",
+                        left: wp(13),
+                        top: hp(4),
+                        zIndex: 2,
                       }}
                     >
-                      Understanding You
-                    </Text>
-                    <Text
-                      style={{
-                        textAlign: "center",
-                        color: "#ffffff",
-                        fontSize: wp(4),
-                        fontFamily: "Roboto",
-                        fontWeight: "600",
-                        marginTop: hp(1.2),
-                        width: wp(43),
-                        height: hp(3),
-                        backgroundColor: "#01818c",
-                        borderRadius: wp(8),
-                        flexDirection: "row",
-                      }}
-                    >
-                      View mood insights
-                    </Text>
-                  </View>
-                </View>
-              </TouchableOpacity>
-            </>
-          )}
-
-          {category === "cwp" ? null : (
-            <>
-              {showsub ? (
-                <>
-                  {subsdet && subdays > 0 ? (
-                    <TouchableOpacity
-                      onPress={() => {
-                        trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"See details"})
-                        navigation.navigate("webview", sub);
-                      }}
-                      style={[
-                        styles.cardContainer,
-                        { height: hp(15.8), marginTop: hp(3) },
-                      ]}
-                    >
-                      <Home1 width={"100%"} height={hp(17)} />
-                      <View
+                      <Text
                         style={{
-                          position: "absolute",
-                          left: wp(13),
-                          top: hp(4),
-                          zIndex: 2,
+                          color: "#455A64",
+                          fontSize: wp(3.8),
+                          width: wp(60),
+                          fontFamily: "Roboto",
+                          lineHeight: wp(6),
+                          fontWeight: "800",
                         }}
                       >
-                        <Text
-                          style={{
-                            color: "#455A64",
-                            fontSize: wp(3.8),
-                            width: wp(60),
-                            fontFamily: "Roboto",
-                            lineHeight: wp(6),
-                            fontWeight: "800",
-                          }}
-                        >
-                          Your Whole Hearted Subscription is Active
-                        </Text>
-                        <TouchableOpacity
-                          activeOpacity={0.5}
-                          style={[styles.Btn, { marginTop: hp(0.8) }]}
-                          disabled={true}
-                        >
-                          <Text style={styles.btnText2}> See Details </Text>
-                        </TouchableOpacity>
-                      </View>
-                    </TouchableOpacity>
-                  ) : (
-                    <TouchableOpacity
-                      onPress={() => {
-                        trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"See plans"})
-                        navigation.navigate("webview", sub);
-                      }}
-                      style={[
-                        styles.cardContainer,
-                        { height: hp(15.8), marginTop: hp(3) },
-                      ]}
-                    >
-                      <Home1 width={"100%"} height={hp(17)} />
-                      <View
-                        style={{
-                          position: "absolute",
-                          left: wp(13),
-                          top: hp(4),
-                          zIndex: 2,
-                        }}
-                      >
-                        <Text
-                          style={{
-                            color: "#455A64",
-                            fontSize: wp(3.8),
-                            width: wp(60),
-                            fontFamily: "Roboto",
-                            lineHeight: wp(6),
-                            fontWeight: "800",
-                          }}
-                        >
-                          Whole Hearted Subscription
-                        </Text>
-                        <TouchableOpacity
-                          activeOpacity={0.5}
-                          style={[styles.Btn, { marginTop: hp(2.5) }]}
-                          disabled={true}
-                        >
-                          <Text style={styles.btnText2}> See Plans </Text>
-                        </TouchableOpacity>
-                      </View>
-                    </TouchableOpacity>
-                  )}
-                </>
-              ) : (
-                <TouchableOpacity
-                  onPress={() => {
-                    trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Explore Packages"})
-                    navigation.navigate("webview", packages);
-                  }}
-                  style={[
-                    styles.cardContainer,
-                    { height: hp(15.8), marginTop: hp(3) },
-                  ]}
-                >
-                  <View style={styles.packageCard}>
-                    <View style={{ height: hp(9) }}>
-                      <Text style={styles.cardText}>Session Packages</Text>
+                        Your Whole Hearted Subscription is Active
+                      </Text>
                       <TouchableOpacity
-                        style={[styles.Btn, { marginTop: hp(2) }]}
+                        activeOpacity={0.5}
+                        style={[styles.Btn, { marginTop: hp(0.8) }]}
                         disabled={true}
                       >
-                        <Text style={styles.btnText2}>Explore Packages</Text>
+                        <Text style={styles.btnText2}> See Details </Text>
                       </TouchableOpacity>
                     </View>
-                    <Gift width={wp(25)} height={hp(9)} />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    onPress={() => {
+                      trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "See plans" })
+                      navigation.navigate("webview", sub);
+                    }}
+                    style={[
+                      styles.cardContainer,
+                      { height: hp(15.8), marginTop: hp(3) },
+                    ]}
+                  >
+                    <Home1 width={"100%"} height={hp(17)} />
+                    <View
+                      style={{
+                        position: "absolute",
+                        left: wp(13),
+                        top: hp(4),
+                        zIndex: 2,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: "#455A64",
+                          fontSize: wp(3.8),
+                          width: wp(60),
+                          fontFamily: "Roboto",
+                          lineHeight: wp(6),
+                          fontWeight: "800",
+                        }}
+                      >
+                        Whole Hearted Subscription
+                      </Text>
+                      <TouchableOpacity
+                        activeOpacity={0.5}
+                        style={[styles.Btn, { marginTop: hp(2.5) }]}
+                        disabled={true}
+                      >
+                        <Text style={styles.btnText2}> See Plans </Text>
+                      </TouchableOpacity>
+                    </View>
+                  </TouchableOpacity>
+                )}
+              </>
+            ) : (
+              <TouchableOpacity
+                onPress={() => {
+                  trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "Explore Packages" })
+                  navigation.navigate("webview", packages);
+                }}
+                style={[
+                  styles.cardContainer,
+                  { height: hp(15.8), marginTop: hp(3) },
+                ]}
+              >
+                <View style={styles.packageCard}>
+                  <View style={{ height: hp(9) }}>
+                    <Text style={styles.cardText}>Session Packages</Text>
+                    <TouchableOpacity
+                      style={[styles.Btn, { marginTop: hp(2) }]}
+                      disabled={true}
+                    >
+                      <Text style={styles.btnText2}>Explore Packages</Text>
+                    </TouchableOpacity>
                   </View>
-                </TouchableOpacity>
-              )}
-            </>
-          )}
+                  <Gift width={wp(25)} height={hp(9)} />
+                </View>
+              </TouchableOpacity>
+            )}
+          </>
+        )}
 
-          <TouchableOpacity
-            onPress={() => {
-              trackM("Navigated - Home(New)",{phone: userDetails().phone, event:"Message Us"})
-              Linking.openURL(whatsapp)
-                .then((responsive) => {
-                  console.log(responsive);
-                })
-                .catch((err) => console.log(err));
-            }}
-            className="flex-col items-center"
-            style={[{ height: hp(15.8), marginTop: hp(4) }]}
-          >
-            <Help width={wp(84)} height={wp(34.4)} />
-          </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            trackM("Navigated - Home(New)", { phone: userDetails().phone, event: "Message Us" })
+            Linking.openURL(whatsapp)
+              .then((responsive) => {
+                console.log(responsive);
+              })
+              .catch((err) => console.log(err));
+          }}
+          className="flex-col items-center"
+          style={[{ height: hp(15.8), marginTop: hp(4) }]}
+        >
+          <Help width={wp(84)} height={wp(34.4)} />
+        </TouchableOpacity>
 
-          <View
-            className="flex-row items-center"
-            style={[
-              styles.cardContainer,
-              {
-                height: hp(20),
-                marginTop: hp(5),
-                backgroundColor: "#EBEFF2CC",
-              },
-            ]}
-          >
-            <BottomQuote width={wp(71)} height={hp(15)} />
-          </View>
+        <View
+          className="flex-row items-center"
+          style={[
+            styles.cardContainer,
+            {
+              height: hp(20),
+              marginTop: hp(5),
+              backgroundColor: "#EBEFF2CC",
+            },
+          ]}
+        >
+          <BottomQuote width={wp(71)} height={hp(15)} />
+        </View>
 
-          <View style={{ width: wp(100), height: hp(6), marginTop: hp(3) }} />
-        </PTRView>
-      </SafeAreaView>
+        <View style={{ width: wp(100), height: hp(6), marginTop: hp(3) }} />
+      </PTRView>
+    </SafeAreaView>
   );
 }
 
