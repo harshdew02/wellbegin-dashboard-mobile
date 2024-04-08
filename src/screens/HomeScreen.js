@@ -693,8 +693,7 @@ export default function HomeScreen(props) {
                       style={{
                         color: "white",
                         fontSize: wp(4),
-                        fontFamily: "Roboto",
-                        fontWeight: "400",
+                        fontWeight: "500",
                       }}
                     >
                       Take the next step on your
@@ -704,8 +703,7 @@ export default function HomeScreen(props) {
                       style={{
                         color: "white",
                         fontSize: wp(4),
-                        fontFamily: "Roboto",
-                        fontWeight: "700",
+                        fontWeight: "500",
                       }}
                     >
                       wellbeing journey
