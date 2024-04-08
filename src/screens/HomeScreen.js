@@ -48,18 +48,21 @@ const gMeet = (link) => {
 
 const Btn = (props) => {
   // console.log("It is from btn: ",props)
+  console.log("here is booking start ", props);
   const navigation = useNavigation();
-  const {trackM, userDetails} = useAuth();
+  const { trackM, userDetails } = useAuth();
   return (
     <TouchableOpacity
       activeOpacity={0.8}
       style={styles.BookBtn}
       onPress={() => {
         // Checking if the link is supported for links with custom URL scheme.
-        trackM("Navigated - Home",{phone: userDetails().phone, event:"Book Your Session"})
-        navigation.navigate("webview", props.props.booking);
+        trackM("Navigated - Home", { phone: userDetails().phone, event: "Book Your Session" })
+
+        navigation.navigate("webview", props.props);
       }}
     >
+
       <Text style={styles.btnText}>Book Your Session</Text>
     </TouchableOpacity>
   );
@@ -68,7 +71,7 @@ const Btn = (props) => {
 const Bookbtn = (props) => {
   // console.log("It is from bookbtn: ",props)
   const navigation = useNavigation();
-  const {trackM, userDetails} = useAuth();
+  const { trackM, userDetails } = useAuth();
   const ishour = props.props.is2hour;
   return (
     // <></>
@@ -90,7 +93,7 @@ const Bookbtn = (props) => {
             }}
             onPress={() => {
               // Checking if the link is supported for links with custom URL scheme.
-              trackM("Navigated - Home",{phone: userDetails().phone, event:"Book Your Next Session"})
+              trackM("Navigated - Home", { phone: userDetails().phone, event: "Book Your Next Session" })
               navigation.navigate("webview", props.props.booking);
             }}
           >
@@ -114,7 +117,7 @@ const Bookbtn = (props) => {
             }}
             onPress={() => {
               // Checking if the link is supported for links with custom URL scheme.
-              trackM("Navigated - Home",{phone: userDetails().phone, event:"Joined the session"})
+              trackM("Navigated - Home", { phone: userDetails().phone, event: "Joined the session" })
               gMeet(props.props.link);
             }}
           >
@@ -127,7 +130,7 @@ const Bookbtn = (props) => {
           style={[styles.BookBtn]}
           onPress={() => {
             // Checking if the link is supported for links with custom URL scheme.
-            trackM("Navigated - Home",{phone: userDetails().phone, event:"Book Your Next Session"})
+            trackM("Navigated - Home", { phone: userDetails().phone, event: "Book Your Next Session" })
             navigation.navigate("webview", props.props.booking);
           }}
         >
@@ -159,7 +162,7 @@ export default function HomeScreen(props) {
   const [showsub, setShowsub] = useState(false);
   const [subsdet, setSubsdet] = useState(false);
   const [subdays, setSubdays] = useState(0);
-  const [bell, setBell] = useState(true);
+  const [bell, setBell] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [category, setCategory] = useState("regular");
   const [moodcheck, setMoodCheck] = useState(false);
@@ -178,7 +181,7 @@ export default function HomeScreen(props) {
   };
 
   navigation.addListener("focus", () => {
-    trackM("Navigated - Home",{phone: userDetails().phone})
+    trackM("Navigated - Home", { phone: userDetails().phone })
     BackHandler.addEventListener("hardwareBackPress", backHandler);
   });
 
@@ -218,75 +221,77 @@ export default function HomeScreen(props) {
             } else {
               if (res.data.has_appointment === "no") setBooked(false);
               else {
-                const apiDate = res.data.app_det.app_session_date;
-                const apiTime = res.data.app_det.app_session_time;
+                if (res.data.app_det.app_session_date != null && res.data.app_det.app_session_date != undefined && res.data.app_det.app_session_time != null && res.data.app_det.app_session_time != undefined) {
+                  const apiDate = res.data.app_det.app_session_date;
+                  const apiTime = res.data.app_det.app_session_time;
+                  let timestamp = new Date(apiDate);
+                  let year = timestamp.getFullYear();
+                  let month = String(timestamp.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
+                  let date = String(timestamp.getDate()).padStart(2, "0");
+                  let [part1, part2, part3] = apiTime.split(":");
+                  let hours = part1;
+                  let minutes = part2;
+                  let seconds = part3;
+                  let period = "AM";
+                  if (hours >= 12) {
+                    hours -= 12;
+                    period = "PM";
+                  }
+                  if (hours === 0) {
+                    hours = 12;
+                  }
+                  let showTime = `${hours}:${minutes} ${period}`;
+                  let showDate = `${date}/${month}/${year}`;
+                  let finalAPITime = `${year}-${month}-${date}T${apiTime}Z`;
 
-                // Extracting date components from api
-                let timestamp = new Date(apiDate);
-                let year = timestamp.getFullYear();
-                let month = String(timestamp.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
-                let date = String(timestamp.getDate()).padStart(2, "0");
-                let [part1, part2, part3] = apiTime.split(":");
-                let hours = part1;
-                let minutes = part2;
-                let seconds = part3;
-                let period = "AM";
-                if (hours >= 12) {
-                  hours -= 12;
-                  period = "PM";
-                }
-                if (hours === 0) {
-                  hours = 12;
-                }
-                let showTime = `${hours}:${minutes} ${period}`;
-                let showDate = `${date}/${month}/${year}`;
-                let finalAPITime = `${year}-${month}-${date}T${apiTime}Z`;
+                  // Extracting date components from system
+                  timestamp = new Date();
+                  year = timestamp.getFullYear();
+                  month = String(timestamp.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
+                  date = String(timestamp.getDate()).padStart(2, "0");
+                  hours = String(timestamp.getHours()).padStart(2, "0");
+                  minutes = String(timestamp.getMinutes()).padStart(2, "0");
+                  seconds = String(timestamp.getSeconds()).padStart(2, "0");
+                  let finalSystemTime = `${year}-${month}-${date}T${hours}:${minutes}:${seconds}Z`;
+                  setLink(res.data.app_det.app_session_link);
 
-                // Extracting date components from system
-                timestamp = new Date();
-                year = timestamp.getFullYear();
-                month = String(timestamp.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
-                date = String(timestamp.getDate()).padStart(2, "0");
-                hours = String(timestamp.getHours()).padStart(2, "0");
-                minutes = String(timestamp.getMinutes()).padStart(2, "0");
-                seconds = String(timestamp.getSeconds()).padStart(2, "0");
-                let finalSystemTime = `${year}-${month}-${date}T${hours}:${minutes}:${seconds}Z`;
-                setLink(res.data.app_det.app_session_link);
+                  // Parse the API datetime string
+                  const apiDateTime = new Date(finalAPITime);
 
-                // Parse the API datetime string
-                const apiDateTime = new Date(finalAPITime);
+                  // Parse the system datetime string
+                  const systemDateTime = new Date(finalSystemTime);
 
-                // Parse the system datetime string
-                const systemDateTime = new Date(finalSystemTime);
+                  // Calculate the time difference in milliseconds
+                  const timeDifference = apiDateTime - systemDateTime;
 
-                // Calculate the time difference in milliseconds
-                const timeDifference = apiDateTime - systemDateTime;
+                  // Convert milliseconds to hours
+                  const timeDifferenceHours = Math.abs(
+                    timeDifference / (1000 * 60 * 60)
+                  );
 
-                // Convert milliseconds to hours
-                const timeDifferenceHours = Math.abs(
-                  timeDifference / (1000 * 60 * 60)
-                );
+                  // Define a threshold for 2 hours
+                  const twoHours = 2;
 
-                // Define a threshold for 2 hours
-                const twoHours = 2;
-
-                // Compare the time difference with the threshold and whether it's negative
-                if (timeDifference < 0) {
-                  setBooked(false);
-                } else if (timeDifferenceHours >= twoHours) {
-                  setBooked(true);
-                  setIs2hour(false);
-                } else if (timeDifferenceHours < twoHours) {
-                  setBooked(true);
-                  setIs2hour(true);
-                  setTime(showTime);
-                  setDate(showDate);
+                  // Compare the time difference with the threshold and whether it's negative
+                  if (timeDifference < 0) {
+                    setBooked(false);
+                  } else if (timeDifferenceHours >= twoHours) {
+                    setBooked(true);
+                    setIs2hour(false);
+                  } else if (timeDifferenceHours < twoHours) {
+                    setBooked(true);
+                    setIs2hour(true);
+                    setTime(showTime);
+                    setDate(showDate);
+                  }
+                } else {
+                  showToast("Network Error!...")
                 }
               }
             }
           })
           .catch((err) => {
-            exceptionReporting({err})
+            exceptionReporting({ err })
             console.log(err);
           })
           .finally(() => {
@@ -305,9 +310,10 @@ export default function HomeScreen(props) {
                 // userInvalid();
               }
             }
+            console.log("Here is real time data", realTimeData);
           })
           .catch((err) => {
-            exceptionReporting({err})
+            exceptionReporting({ err })
             console.log(err);
           })
           .finally(() => {
@@ -340,8 +346,10 @@ export default function HomeScreen(props) {
                       : realTimeData.subs_no_of_days
                   )
                 );
+                console.log("Here is real time data", booking);
               }
             }
+            
             setMoodCheck(false);
           });
       }
@@ -349,17 +357,17 @@ export default function HomeScreen(props) {
   }, [moodcheck]);
 
   useEffect(() => {
-    if(data.usr_fullname === "") {
+    if (data.usr_fullname === "") {
       SInfo.getItem("nick_name")
-      .then((res) => {
-        if (res != null && res != undefined) setName(res);
-      })
-      .catch((error) => {console.log(error);exceptionReporting({error})});
+        .then((res) => {
+          if (res != null && res != undefined) setName(res);
+        })
+        .catch((error) => { console.log(error); exceptionReporting({ error }) });
     }
     else
       setName(data.usr_fullname);
   }, [])
-  
+
 
   useEffect(() => {
     data.has_mood == "no" ? setMood(false) : setMood(true);
@@ -395,68 +403,73 @@ export default function HomeScreen(props) {
     );
     if (appointment.has_appointment === "no") setBooked(false);
     else {
-      const apiDate = appointment.appointment.app_session_date;
-      const apiTime = appointment.appointment.app_session_time;
 
-      // Extracting date components from api
-      let timestamp = new Date(apiDate);
-      let year = timestamp.getFullYear();
-      let month = String(timestamp.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
-      let date = String(timestamp.getDate()).padStart(2, "0");
-      let [part1, part2, part3] = apiTime.split(":");
-      let hours = part1;
-      let minutes = part2;
-      let seconds = part3;
-      let period = "AM";
-      if (hours >= 12) {
-        hours -= 12;
-        period = "PM";
-      }
-      if (hours === 0) {
-        hours = 12;
-      }
-      // let showTime = `${}/${}/${} at `
-      let showTime = `${hours}:${minutes} ${period}`;
-      let showDate = `${date}/${month}/${year}`;
-      let finalAPITime = `${year}-${month}-${date}T${apiTime}Z`;
+      if (appointment.appointment.app_session_date != null && appointment.appointment.app_session_date != undefined && appointment.appointment.app_session_time != null && appointment.appointment.app_session_time != undefined) {
 
-      // Extracting date components from system
-      timestamp = new Date();
-      year = timestamp.getFullYear();
-      month = String(timestamp.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
-      date = String(timestamp.getDate()).padStart(2, "0");
-      hours = String(timestamp.getHours()).padStart(2, "0");
-      minutes = String(timestamp.getMinutes()).padStart(2, "0");
-      seconds = String(timestamp.getSeconds()).padStart(2, "0");
-      let finalSystemTime = `${year}-${month}-${date}T${hours}:${minutes}:${seconds}Z`;
-      setLink(appointment.appointment.app_session_link);
+        const apiDate = appointment.appointment.app_session_date;
+        const apiTime = appointment.appointment.app_session_time;
+        // Extracting date components from api
+        let timestamp = new Date(apiDate);
+        let year = timestamp.getFullYear();
+        let month = String(timestamp.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
+        let date = String(timestamp.getDate()).padStart(2, "0");
+        let [part1, part2, part3] = apiTime.split(":");
+        let hours = part1;
+        let minutes = part2;
+        let seconds = part3;
+        let period = "AM";
+        if (hours >= 12) {
+          hours -= 12;
+          period = "PM";
+        }
+        if (hours === 0) {
+          hours = 12;
+        }
+        // let showTime = `${}/${}/${} at `
+        let showTime = `${hours}:${minutes} ${period}`;
+        let showDate = `${date}/${month}/${year}`;
+        let finalAPITime = `${year}-${month}-${date}T${apiTime}Z`;
 
-      // Parse the API datetime string
-      const apiDateTime = new Date(finalAPITime);
+        // Extracting date components from system
+        timestamp = new Date();
+        year = timestamp.getFullYear();
+        month = String(timestamp.getMonth() + 1).padStart(2, "0"); // Month is zero-based, so we add 1
+        date = String(timestamp.getDate()).padStart(2, "0");
+        hours = String(timestamp.getHours()).padStart(2, "0");
+        minutes = String(timestamp.getMinutes()).padStart(2, "0");
+        seconds = String(timestamp.getSeconds()).padStart(2, "0");
+        let finalSystemTime = `${year}-${month}-${date}T${hours}:${minutes}:${seconds}Z`;
+        setLink(appointment.appointment.app_session_link);
 
-      // Parse the system datetime string
-      const systemDateTime = new Date(finalSystemTime);
+        // Parse the API datetime string
+        const apiDateTime = new Date(finalAPITime);
 
-      // Calculate the time difference in milliseconds
-      const timeDifference = apiDateTime - systemDateTime;
+        // Parse the system datetime string
+        const systemDateTime = new Date(finalSystemTime);
 
-      // Convert milliseconds to hours
-      const timeDifferenceHours = Math.abs(timeDifference / (1000 * 60 * 60));
+        // Calculate the time difference in milliseconds
+        const timeDifference = apiDateTime - systemDateTime;
 
-      // Define a threshold for 2 hours
-      const twoHours = 2;
+        // Convert milliseconds to hours
+        const timeDifferenceHours = Math.abs(timeDifference / (1000 * 60 * 60));
 
-      // Compare the time difference with the threshold and whether it's negative
-      if (timeDifference < 0) {
-        setBooked(false);
-      } else if (timeDifferenceHours >= twoHours) {
-        setBooked(true);
-        setIs2hour(false);
-      } else if (timeDifferenceHours < twoHours) {
-        setBooked(true);
-        setIs2hour(true);
-        setTime(showTime);
-        setDate(showDate);
+        // Define a threshold for 2 hours
+        const twoHours = 2;
+
+        // Compare the time difference with the threshold and whether it's negative
+        if (timeDifference < 0) {
+          setBooked(false);
+        } else if (timeDifferenceHours >= twoHours) {
+          setBooked(true);
+          setIs2hour(false);
+        } else if (timeDifferenceHours < twoHours) {
+          setBooked(true);
+          setIs2hour(true);
+          setTime(showTime);
+          setDate(showDate);
+        }
+      }else{
+        showToast("Network Error!...");
       }
     }
   }, []);
@@ -515,7 +528,7 @@ export default function HomeScreen(props) {
               top: 0,
             }}
             onPress={() => {
-              trackM("Navigated - Home",{phone: userDetails().phone, event:"Banner"})
+              trackM("Navigated - Home", { phone: userDetails().phone, event: "Banner" })
               navigation.navigate("webview", banner.cban_link);
             }}
           >
@@ -575,21 +588,21 @@ export default function HomeScreen(props) {
               </Text> */}
 
               <Text
-                  style={{
-                    color: "white",
-                    fontSize: wp(4.2),
-                    fontFamily: "Roboto",
-                    fontWeight: "700",
-                  }}
-                >
-                  Welcome {name.split(/\s+/).filter((word) => word !== "")[0]}{" "}
-                  👋
-                </Text>
+                style={{
+                  color: "white",
+                  fontSize: wp(4.2),
+                  fontFamily: "Roboto",
+                  fontWeight: "700",
+                }}
+              >
+                Welcome {name.split(/\s+/).filter((word) => word !== "")[0]}{" "}
+                👋
+              </Text>
 
               <TouchableOpacity
                 onPress={() => {
-                  trackM("Navigated - Home",{phone: userDetails().phone, event:"Reminder"})
-                  setBell(false);
+                  trackM("Navigated - Home", { phone: userDetails().phone, event: "Reminder" })
+                  // setBell(false);
                   navigation.navigate("reminder", data);
                 }}
                 style={{ position: "absolute", right: wp(0) }}
@@ -666,7 +679,7 @@ export default function HomeScreen(props) {
                         fontWeight: "400",
                       }}
                     >
-                      Take care of yourself with
+                      Take the next step on your
                     </Text>
 
                     <Text
@@ -677,7 +690,7 @@ export default function HomeScreen(props) {
                         fontWeight: "700",
                       }}
                     >
-                      Psychological Counselling
+                      wellbeing journey
                     </Text>
                   </>
                 )}
@@ -688,9 +701,9 @@ export default function HomeScreen(props) {
               />
             </View>
             {isBooked ? (
-              <Bookbtn props={{ is2hour, link, booking, trackM, userDetails }} />
+              <Bookbtn props={{ is2hour, link, booking }} />
             ) : (
-              <Btn props={{booking, trackM, userDetails}} />
+              <Btn props={booking} />
             )}
           </View>
         </View>
@@ -702,7 +715,7 @@ export default function HomeScreen(props) {
         >
           <TouchableOpacity
             onPress={() => {
-              trackM("Navigated - Home",{phone: userDetails().phone, event:"My Tasks"})
+              trackM("Navigated - Home", { phone: userDetails().phone, event: "My Tasks" })
               navigation.navigate("homework", data);
             }}
             style={[styles.card, { backgroundColor: "#FEF8C8" }]}
@@ -714,7 +727,7 @@ export default function HomeScreen(props) {
 
           <TouchableOpacity
             onPress={() => {
-              trackM("Navigated - Home",{phone: userDetails().phone, event:"My Progress"})
+              trackM("Navigated - Home", { phone: userDetails().phone, event: "My Progress" })
               navigation.navigate("progress", data);
             }}
             style={[styles.card, { backgroundColor: "#EBF2F5" }]}
@@ -737,7 +750,7 @@ export default function HomeScreen(props) {
           <TouchableOpacity
             style={[styles.card, { backgroundColor: "#EAF7FC" }]}
             onPress={() => {
-              trackM("Navigated - Home",{phone: userDetails().phone, event:"What's new"})
+              trackM("Navigated - Home", { phone: userDetails().phone, event: "What's new" })
               navigation.navigate("webview", whatsnew);
             }}
           >
@@ -750,7 +763,7 @@ export default function HomeScreen(props) {
           <>
             <TouchableOpacity
               onPress={() => {
-                trackM("Navigated - Home",{phone: userDetails().phone, event:"Mood Tracker"})
+                trackM("Navigated - Home", { phone: userDetails().phone, event: "Mood Tracker" })
                 navigation.navigate("mood", data);
               }}
             >
@@ -804,7 +817,7 @@ export default function HomeScreen(props) {
           <>
             <TouchableOpacity
               onPress={() => {
-                trackM("Navigated - Home",{phone: userDetails().phone, event:"Mood Insights"})
+                trackM("Navigated - Home", { phone: userDetails().phone, event: "Mood Insights" })
                 navigation.navigate("moodInsights", data);
               }}
             >
@@ -864,7 +877,7 @@ export default function HomeScreen(props) {
                 {subsdet && subdays > 0 ? (
                   <TouchableOpacity
                     onPress={() => {
-                      trackM("Navigated - Home",{phone: userDetails().phone, event:"See details"})
+                      trackM("Navigated - Home", { phone: userDetails().phone, event: "See details" })
                       navigation.navigate("webview", sub);
                     }}
                     style={[
@@ -905,7 +918,7 @@ export default function HomeScreen(props) {
                 ) : (
                   <TouchableOpacity
                     onPress={() => {
-                      trackM("Navigated - Home",{phone: userDetails().phone, event:"See plans"})
+                      trackM("Navigated - Home", { phone: userDetails().phone, event: "See plans" })
                       navigation.navigate("webview", sub);
                     }}
                     style={[
@@ -948,7 +961,7 @@ export default function HomeScreen(props) {
             ) : (
               <TouchableOpacity
                 onPress={() => {
-                  trackM("Navigated - Home",{phone: userDetails().phone, event:"See packages"})
+                  trackM("Navigated - Home", { phone: userDetails().phone, event: "See packages" })
                   navigation.navigate("webview", packages);
                 }}
                 style={[
@@ -975,7 +988,7 @@ export default function HomeScreen(props) {
 
         <TouchableOpacity
           onPress={() => {
-            trackM("Navigated - Home",{phone: userDetails().phone, event:"Discover Now"})
+            trackM("Navigated - Home", { phone: userDetails().phone, event: "Discover Now" })
             navigation.navigate("webview", product);
           }}
           className="flex-col items-center"
@@ -999,19 +1012,19 @@ export default function HomeScreen(props) {
         </TouchableOpacity>
 
         <TouchableOpacity
-            onPress={() => {
-              trackM("Navigated - Home",{phone: userDetails().phone, event:"Message Us"})
-              Linking.openURL(whatsapp)
-                .then((responsive) => {
-                  console.log(responsive);
-                })
-                .catch((err) => {console.log(err);exceptionReporting({error})});
-            }}
-            className="flex-col items-center"
-            style={[{ height: hp(15.8), marginTop: hp(3) }]}
-          >
-            <Help width={wp(84)} height={wp(34.4)} />
-          </TouchableOpacity>
+          onPress={() => {
+            trackM("Navigated - Home", { phone: userDetails().phone, event: "Message Us" })
+            Linking.openURL(whatsapp)
+              .then((responsive) => {
+                console.log(responsive);
+              })
+              .catch((err) => { console.log(err); exceptionReporting({ error }) });
+          }}
+          className="flex-col items-center"
+          style={[{ height: hp(15.8), marginTop: hp(3) }]}
+        >
+          <Help width={wp(84)} height={wp(34.4)} />
+        </TouchableOpacity>
 
         <View
           className="flex-row items-center"

@@ -34,7 +34,7 @@ const AppInitializer = (mobile) => {
   OneSignal.Debug.setLogLevel(LogLevel.Verbose);
 
   // OneSignal Initialization
-  OneSignal.initialize("3a865120-5f7d-41a2-b5b3-5bb205884c50");
+  OneSignal.initialize("2c97b476-4167-4113-b0d4-beba705c4cb9");
 
   OneSignal.login(mobile);
   // Method for listening for notification clicks
@@ -225,17 +225,13 @@ export default function Verify({ navigation, route }) {
         <Text style={styles.well}>
           It's time to take a leap towards a healthier mind
         </Text>
-
-        <Text style={styles.getinstant}>
-          Sign up so we can personalise your journey
-        </Text>
         <Text
           style={{
             color: "#01818C",
             fontSize: wp(4),
             fontFamily: "Roboto",
             fontWeight: "700",
-            marginTop: hp(2),
+            marginTop: hp(10),
           }}
         >
           Enter OTP Sent to +{route.params.code}
@@ -443,7 +439,7 @@ const styles = StyleSheet.create({
     borderWidth: wp(0.3),
     padding: wp(2.6),
     paddingLeft: wp(5),
-    marginTop: hp(3),
+    marginTop: hp(2),
     borderColor: "rgba(69, 90, 100, 0.6)",
   },
 

@@ -23,7 +23,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.as828.hio"
+      "package": "com.heartitout"
     },
     "plugins": ["@react-native-firebase/app"],
     "web": {
