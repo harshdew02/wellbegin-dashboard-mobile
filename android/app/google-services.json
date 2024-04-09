@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "259530425894",
-    "project_id": "wellbeing-dashboard",
-    "storage_bucket": "wellbeing-dashboard.appspot.com"
+    "project_number": "620843244372",
+    "project_id": "heart-it-out-android-app",
+    "storage_bucket": "heart-it-out-android-app.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:259530425894:android:47608bf5b511eb3b36c8e7",
+        "mobilesdk_app_id": "1:620843244372:android:2af12737a4a846137606c1",
         "android_client_info": {
-          "package_name": "com.as828.hio"
+          "package_name": "com.heartitout"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDJgvWZ85SafKrx1L4Vs94ACE1JA1jQGZc"
+          "current_key": "AIzaSyA26kzonrpgsY6Dx25KzI7-94NFwsEscgk"
         }
       ],
       "services": {

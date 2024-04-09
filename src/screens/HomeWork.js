@@ -43,7 +43,7 @@ const Card = (props) => {
   const [date, setDate] = useState(DateTimeComponent(item.due));
   const [updated, setUpdated] = useState(false);
   const navigation = useNavigation();
-  const {trackM, userDetails} = useAuth();
+  const { trackM, userDetails } = useAuth();
 
   React.useEffect(() => {
     if (item.homework_done_or_not === "Yes" || updated == true) setValue(true);
@@ -136,7 +136,7 @@ const Card = (props) => {
             <TouchableOpacity
               onPress={() => {
                 homework();
-                trackM("Navigated - Homework",{phone: userDetails().phone, event:item.homework})
+                trackM("Navigated - Homework", { phone: userDetails().phone, event: item.homework })
                 navigation.navigate("webview", item.on_click);
               }}
             >
@@ -171,7 +171,7 @@ const HomeWork = (route) => {
   };
 
   navigation.addListener("focus", () => {
-    trackM("Navigated - Homework",{phone: userDetails().phone})
+    trackM("Navigated - Homework", { phone: userDetails().phone })
     BackHandler.addEventListener("hardwareBackPress", backHandler);
   });
 
@@ -188,8 +188,7 @@ const HomeWork = (route) => {
     if (!connection) {
       setLoading(false);
     }
-    else
-    {
+    else {
       if (loading) {
         axios
           .post(url, userDetails())
@@ -197,7 +196,7 @@ const HomeWork = (route) => {
             setData(res.data);
           })
           .catch((err) => {
-            exceptionReporting({err})
+            exceptionReporting({ err })
             console.log("error is here:", err);
           })
           .finally(() => {
@@ -299,11 +298,12 @@ const HomeWork = (route) => {
           </View>
         ) : (
           <>
-            {datas.has_hw === "yes" ? (
+            {(datas.has_hw === "yes" && datas.hw_data) ? (
               <>
                 {datas.hw_data.map((item, index) => (
                   <Card props={{ item, data }} key={index} />
-                ))}
+                ))
+                }
               </>
             ) : (
               <>

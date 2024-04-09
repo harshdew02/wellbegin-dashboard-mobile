@@ -694,7 +694,7 @@ const MoodTracker = (props) => {
                   );
                 }}
               >
-                <Text style={styles.btnText}>Next</Text>
+                <Text style={styles.btnText}>Record Mood</Text>
                 <ArrowRightIcon size={wp(6.5)} color="#fff" />
               </TouchableOpacity>
             </View>

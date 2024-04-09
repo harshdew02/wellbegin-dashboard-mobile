@@ -109,7 +109,7 @@ const P4 = () => {
   useEffect(() => {
     const intervalId = setInterval(() => {
       setActiveIndex((prevIndex) => (prevIndex + 1) % cardComponents.length);
-    }, 3000);
+    }, 4500);
 
     // Clean up the interval when component unmounts or re-renders
     return () => clearInterval(intervalId);
@@ -124,9 +124,9 @@ const P4 = () => {
   }, []);
   return (
     <>
-      <View style={{ alignItems: 'center', overflow: 'hidden' }} >
+      <View style={{ alignItems: 'center', overflow: 'hidden', height:wp(127)  }} >
         <P3 width={wp(100)} height={wp(120.53)} />
-        <P8 width={wp(67)} height={wp(12)} />
+        <P8 width={wp(67)} height={wp(12)} style={{position:'absolute', zIndex:150, top:wp(110)}} />
         <Animated.View
           style={{
             flexDirection: 'row',
@@ -135,7 +135,7 @@ const P4 = () => {
             transform: [{ translateX }],
             // backgroundColor:'red',
             width: wp(80),
-            marginTop: hp(12),
+            marginTop: hp(8),
             justifyContent: 'space-between',
 
           }}
@@ -174,14 +174,14 @@ const slides = [
     P: <P2 width={wp(100)} height={wp(122)} />,
     title: "Meet Your Perfect Match",
     subtitle:
-      "Connect with skilled therapists who understand your needs, offering tailored care plans and regular check-ins to guide your progress",
+      "Connect with a therapist that understands your unique needs and get your personalized care plan",
   },
   {
     id: "3",
     P: <P4 />,
     title: "Join Our Thriving Community",
     subtitle:
-      "Join 3L+ users that have benefitted and improved their mental health with our support from our team of experts",
+      "Join 3 lakh+ users that have benefitted with Heart It Out's expert care and wellbeing support.",
   },
   // {
   //     id: '4',
@@ -267,14 +267,14 @@ const Onboarding = ({ route }) => {
     return (
       <View
         style={{
-          height: hp(10),
+          height: hp(14),
           justifyContent: "space-between",
           paddingHorizontal: 20,
           alignItems: "center",
-          // marginBottom: hp(6),
-          // backgroundColor:'red'
-          position:'absolute',
-          bottom: hp(6)
+          marginBottom: hp(6),
+          // backgroundColor:'green',
+          // position:'absolute',
+          // bottom: hp(4)
         }}
       >
         {/* Indicator container */}
@@ -322,7 +322,7 @@ const Onboarding = ({ route }) => {
                 <Text
                   style={{ fontWeight: "bold", fontSize: 15, color: "#fff" }}
                 >
-                  You’re All Set!
+                  Let's Go!
                 </Text>
               </TouchableOpacity>
             </View>
@@ -363,7 +363,7 @@ const Onboarding = ({ route }) => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#fff", alignItems:'center' }}>
       <StatusBar
         barStyle={"dark-content"}
         translucent={true}
@@ -373,7 +373,7 @@ const Onboarding = ({ route }) => {
         nestedScrollEnabled={true}
         ref={ref}
         onMomentumScrollEnd={updateCurrentSlideIndex}
-        contentContainerStyle={{ height: hp(86), }}
+        contentContainerStyle={{ height: hp(75), }}
         showsHorizontalScrollIndicator={false}
         horizontal
         data={slides}
@@ -391,8 +391,8 @@ const styles = StyleSheet.create({
   subtitle: {
     color: theme.black,
     fontSize: wp(4),
-    marginTop: 10,
-    maxWidth: wp(90),
+    marginTop: hp(1),
+    maxWidth: wp(92),
     textAlign: "center",
     lineHeight: 23,
   },
@@ -400,7 +400,7 @@ const styles = StyleSheet.create({
     color: theme.maincolor,
     fontSize: wp(6),
     fontWeight: "bold",
-    marginTop: hp(8),
+    // marginTop: hp(8),
     textAlign: "center",
   },
 
