@@ -70,6 +70,12 @@ export default function Heartitout(props) {
     }
   };
 
+  React.useEffect(() => {
+    if(props.route.params == null || props.route.params == undefined)
+      showToast("The link is broken, please reload the app.")
+  }, [])
+  
+
   const [cross, setCross] = useState(false);
 
   return (
