@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
   ScrollView,
   ToastAndroid,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import SInfo from "react-native-encrypted-storage";
@@ -21,7 +21,7 @@ import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import { data, codes } from "../constants";
 import { useAuth } from "../utils/auth";
-import { useIsFocused } from '@react-navigation/native'
+import { useIsFocused } from "@react-navigation/native";
 
 const showToast = (message) => {
   ToastAndroid.show(message, ToastAndroid.SHORT);
@@ -56,8 +56,7 @@ const requestOTP = async (code, number, navigation, [, setLoading]) => {
         };
         const dataString = JSON.stringify(jsonData);
         await SInfo.setItem("token", dataString)
-          .then(() => {
-          })
+          .then(() => {})
           .catch((error) => {
             console.log("Error: ", error);
             // showToast("Mobile number is too short")
@@ -76,7 +75,7 @@ const requestOTP = async (code, number, navigation, [, setLoading]) => {
 };
 
 import Loginbg from "../components/Loginbg";
-import LoginNew from "../../assets/images/LoginNew.svg"
+import LoginNew from "../../assets/images/LoginNew.svg";
 
 const Login = ({ route }) => {
   const { connect, Diversion, trackM } = useAuth();
@@ -94,30 +93,29 @@ const Login = ({ route }) => {
     if (welcome == null || welcome == undefined) {
       await SInfo.setItem("welcome", "false");
     }
-  }
+  };
 
   useEffect(() => {
     setstatusChange(true);
     welcome();
-  }, [])
-  const isFocused = useIsFocused()
-  const [tmp , settmp] = useState(true);
+  }, []);
+  const isFocused = useIsFocused();
+  const [tmp, settmp] = useState(true);
 
   useEffect(() => {
     settmp(!tmp);
-  }, [isFocused])
+  }, [isFocused]);
 
   React.useEffect(() => {
     const isLogin = async () => {
       try {
         const storedToken = await SInfo.getItem("token");
         if (storedToken == null || storedToken === undefined) {
-
         } else {
           const data = JSON.parse(storedToken);
-          if (data.status !== "true") { }
-          else {
-            navigation.navigate('loader')
+          if (data.status !== "true") {
+          } else {
+            navigation.navigate("loader");
           }
         }
       } catch (error) {
@@ -127,7 +125,8 @@ const Login = ({ route }) => {
       }
     };
 
-    if (route.params != null && route.params != undefined) Diversion(route.params.navigation);
+    if (route.params != null && route.params != undefined)
+      Diversion(route.params.navigation);
     isLogin();
   });
 
@@ -138,9 +137,9 @@ const Login = ({ route }) => {
       style={{ flex: 1 }}
     >
       <StatusBar
-        backgroundColor={'#fff'}
+        backgroundColor={"#fff"}
         barStyle={"dark-content"}
-        translucent = {false}
+        translucent={false}
         hidden={false}
       />
       {/* <TopBar /> */}
@@ -151,18 +150,34 @@ const Login = ({ route }) => {
           alignItems: "center",
         }}
         style={{ width: wp(100), height: hp(92) }}
-        keyboardShouldPersistTaps='always'
+        keyboardShouldPersistTaps="always"
       >
-
         <LoginNew width={wp(100)} height={wp(81.6)} />
 
         {/* <View className="flex-col items-center" style={{ marginTop: hp(3) }}> */}
-        <Text style={styles.well}>It's time to take a leap towards a healthier mind</Text>
+        <Text style={styles.well}>
+          It's time to take a leap towards a healthier mind
+        </Text>
 
-        <Text style={styles.getinstant}>Enter your number to get started</Text>
+        {/* <Text style={styles.getinstant}>Enter your number to get started</Text> */}
 
-        <ActivityIndicator style={{ marginTop: hp(2) }} animating={loading} size="large" />
+        {/* <ActivityIndicator
+          style={{ marginTop: hp(2) }}
+          animating={loading}
+          size="large"
+        /> */}
 
+        <Text
+          style={{
+            color: "#01818C",
+            fontSize: wp(4.2),
+            fontFamily: "Roboto",
+            fontWeight: "700",
+            marginTop: hp(10),
+          }}
+        >
+          Enter Your Mobile Number
+        </Text>
         <View
           className="flex-row items-center"
           style={{ width: wp(82), marginTop: hp(2) }}
@@ -205,7 +220,28 @@ const Login = ({ route }) => {
             keyboardType="numeric"
             placeholder="Enter your Phone Number"
             onSubmitEditing={() => {
-              connect()
+              if (!loading) {
+                connect();
+                setLoading(true);
+                requestOTP(codes[value], number, navigation, [
+                  loading,
+                  setLoading,
+                ]);
+                trackM("OTP Request done by: ", {
+                  "Phone ": codes[value] + number,
+                });
+              } else {
+                console.log("Wait a minute");
+              }
+            }}
+          />
+        </View>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => {
+            if (!loading) {
+              connect();
               setLoading(true);
               requestOTP(codes[value], number, navigation, [
                 loading,
@@ -213,28 +249,19 @@ const Login = ({ route }) => {
               ]);
               trackM("OTP Request done by: ", {
                 "Phone ": codes[value] + number,
-              })
-            }}
-          />
-        </View>
-
-
-
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => {
-            connect()
-            setLoading(true);
-            requestOTP(codes[value], number, navigation, [
-              loading,
-              setLoading,
-            ]);
-            trackM("OTP Request done by: ", {
-              "Phone ": codes[value] + number,
-            })
+              });
+            } else {
+              console.log("Wait a minute");
+            }
           }}
         >
-          <Text style={styles.textStyle}>Get OTP</Text>
+          <ActivityIndicator
+            animating={loading}
+            size="large"
+            style={{ position: "absolute", zIndex: 2 }}
+            color={"#fff"}
+          />
+          <Text style={[styles.textStyle, { display: loading ? "none" : "flex" }]}>Get OTP</Text>
         </TouchableOpacity>
         {/* </View> */}
       </ScrollView>
@@ -247,7 +274,7 @@ export default Login;
 const styles = StyleSheet.create({
   well: {
     // Your Wellbeing Comes First!
-    textAlign: 'center',
+    textAlign: "center",
     color: "#01818C",
     width: wp(82),
     fontSize: wp(6.4),

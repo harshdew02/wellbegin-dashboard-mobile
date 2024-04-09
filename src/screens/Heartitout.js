@@ -36,7 +36,7 @@ export default function Heartitout(props) {
   const onNavigationStateChange = (navState) => {
     canGoBack = navState.canGoBack;
     if (containsOrder(navState.url) && loading == false) {
-      showToast("Order, placed successfully");
+      showToast("Order Received");
       setCross(true);
       setTime(
         setTimeout(() => {
@@ -69,6 +69,12 @@ export default function Heartitout(props) {
       webViewRef.current.goBack();
     }
   };
+
+  React.useEffect(() => {
+    if(props.route.params == null || props.route.params == undefined)
+      showToast("The link is broken, please reload the app.")
+  }, [])
+  
 
   const [cross, setCross] = useState(false);
 

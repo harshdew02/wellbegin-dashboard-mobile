@@ -23,7 +23,7 @@
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
-        <data android:scheme="com.as828.hio"/>
+        <data android:scheme="com.heartitout"/>
       </intent-filter>
 
       <intent-filter android:autoVerify="true">

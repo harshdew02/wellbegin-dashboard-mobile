@@ -23,12 +23,15 @@ const Card = (props) => {
   const data = props.props.item;
   // Anuj ise props ke according set kar dena to fir ho jayega shyad
   const [isTick, setTick] = useState(false);
-  const {userDetails, trackM} = useAuth()
+  const { userDetails, trackM } = useAuth();
   const navigation = useNavigation();
   return (
     <TouchableOpacity
       onPress={() => {
-        trackM("Navigated - Reminder",{phone: userDetails().phone, event:data.notification})
+        trackM("Navigated - Reminder", {
+          phone: userDetails().phone,
+          event: data.notification,
+        });
         navigation.navigate("webview", data.on_click);
       }}
       className="flex-row justify-between items-center"
@@ -100,9 +103,7 @@ export default function ReminderScreen({ navigation, route }) {
     const connection = connect();
     if (!connection) {
       setLoading(false);
-    }
-    else
-    {
+    } else {
       if (loading) {
         axios
           .post(url, userDetails())
@@ -112,7 +113,7 @@ export default function ReminderScreen({ navigation, route }) {
             setData(res.data.data);
           })
           .catch((err) => {
-            exceptionReporting({err})
+            exceptionReporting({ err });
             console.log("error is here:", err);
           })
           .finally(() => {
@@ -120,7 +121,7 @@ export default function ReminderScreen({ navigation, route }) {
           });
       }
     }
-    trackM("Navigated - Reminder",{phone: userDetails().phone})
+    trackM("Navigated - Reminder", { phone: userDetails().phone });
   }, [loading]);
 
   const [refreshing, setRefreshing] = useState(false);
@@ -226,9 +227,35 @@ export default function ReminderScreen({ navigation, route }) {
             > */}
             {ifReminder ? (
               <>
-                {datas.map((item, index) => (
-                  <Card props={{ item }} key={index} />
-                ))}
+                {datas != null && datas != undefined ? (
+                  <>
+                    {datas.map((item, index) => (
+                      <Card props={{ item }} key={index} />
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    <Image
+                      // className="mr-8"
+                      source={require("../../assets/images/noReminders.gif")}
+                      style={{
+                        height: hp(28),
+                        width: wp(100),
+                        marginTop: hp(24),
+                      }}
+                    />
+                    <Text
+                      style={{
+                        color: "#043953",
+                        fontSize: wp(5.5),
+                        fontFamily: "Roboto",
+                        fontWeight: "600",
+                      }}
+                    >
+                      You have no reminders.
+                    </Text>
+                  </>
+                )}
               </>
             ) : (
               // <View className="flex-col items-center">

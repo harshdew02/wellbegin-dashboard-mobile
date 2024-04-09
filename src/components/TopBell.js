@@ -5,8 +5,8 @@ import { widthPercentageToDP as wp, heightPercentageToDP as hp } from 'react-nat
 
 const TopBell = ({active}) => (
   <Svg
-    width={wp(8)}
-    height={wp(8)}
+    width={wp(7)}
+    height={wp(7)}
     viewBox="0 0 22 26"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"

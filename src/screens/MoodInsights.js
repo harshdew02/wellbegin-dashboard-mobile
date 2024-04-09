@@ -751,7 +751,7 @@ const MoodInsights = (props) => {
                       marginLeft: wp(2),
                     }}
                   >
-                    Longest Chain : {longest}
+                    Weekly Streak : {longest}
                   </Text>
                 </View>
               </View>
