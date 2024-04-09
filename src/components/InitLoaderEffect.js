@@ -322,7 +322,11 @@ export default function InitLoaderEffect({ route }) {
       <Image
         source={require("../../assets/images/loader2.gif")}
         resizeMode="contain"
-        style={{ height: hp(100), width: wp(100), marginTop: hp(18) }}
+        style={{ height: hp(70.44), width: wp(100), 
+          // marginTop: hp(18) 
+          position:'absolute',
+          bottom:0,
+        }}
       />
       {/* <View style={{backgroundColor:'#CAEBFF', height:hp(34)}}>
       </View> */}
