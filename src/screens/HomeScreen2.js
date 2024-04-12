@@ -383,7 +383,6 @@ export default function HomeScreen2(props) {
   }, [moodcheck]);
 
   useEffect(() => {
-    setName(data.usr_fullname);
     data.has_mood == "no" ? setMood(false) : setMood(true);
     if (
       data.has_banner == "yes" &&
