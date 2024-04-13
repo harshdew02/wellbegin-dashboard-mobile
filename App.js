@@ -1,8 +1,8 @@
 // import { StatusBar } from "expo-status-bar";
 import * as React from "react";
-import AppNavigation from "./src/navigation";
-import AppNavigation2 from "./src/navigation/index2";
-import AppNavigation3 from "./src/navigation/index3";
+import AppNavigation from "./src/navigation/Entrypoints/index";
+import AppNavigation2 from "./src/navigation/Entrypoints/index_login";
+import AppNavigation3 from "./src/navigation/Entrypoints/index_welcome";
 import SInfo from "react-native-encrypted-storage";
 import * as Sentry from "@sentry/react-native";
 import { AuthProvider } from "./src/utils/auth";
