@@ -209,7 +209,6 @@ const Login = ({ route }) => {
             value={value}
             onChange={(item) => {
               setValue(item.code);
-              customEvent();
             }}
           />
 
