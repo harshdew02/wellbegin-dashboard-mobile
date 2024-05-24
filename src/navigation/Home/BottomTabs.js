@@ -133,12 +133,30 @@ export default function BottomTabs(props) {
     return result;
   };
 
+  const requestStoragePermission = async () => {
+    const result = await request(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE);
+    return result;
+  };
+
+  const checkStoragePermission = async () => {
+    const result = await check(PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE);
+    return result;
+  };
+
   const requestPermission = async () => {
     const checkPermission = await checkNotificationPermission();
     if (checkPermission !== RESULTS.GRANTED) {
       const request = await requestNotificationPermission();
       if (request !== RESULTS.GRANTED) {
         console.log("Permission denied");
+      }
+    }
+
+    const checkStorage = await checkStoragePermission();
+    if (checkStorage !== RESULTS.GRANTED) {
+      const request = await requestStoragePermission();
+      if (request !== RESULTS.GRANTED) {
+        console.log("Storage permission denied");
       }
     }
   };
