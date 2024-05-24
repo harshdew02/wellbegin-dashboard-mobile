@@ -117,9 +117,17 @@ export default function InitLoaderEffect({ route }) {
             .then(async (res) => {
               if (res.data.success == 10) {
                 finalDetails["get_details"] = "true";
+                setUser({
+                  category: res.data.user_cat,
+                  type: res.data.user_type,
+                });
               } else {
                 finalDetails["usr_fullname"] = res.data.user_name;
                 finalDetails["user_email"] = res.data.user_email;
+                setUser({
+                  category: res.data.user_cat,
+                  type: res.data.user_type,
+                });
               }
             })
             .catch((err) => {

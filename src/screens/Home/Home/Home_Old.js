@@ -1066,7 +1066,6 @@ export default function HomeScreen(props) {
               })
               .catch((err) => {
                 console.log(err);
-                exceptionReporting({ error });
               });
           }}
           className="flex-col items-center"
