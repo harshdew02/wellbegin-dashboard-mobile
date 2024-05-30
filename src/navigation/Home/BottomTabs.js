@@ -152,13 +152,13 @@ export default function BottomTabs(props) {
       }
     }
 
-    const checkStorage = await checkStoragePermission();
-    if (checkStorage !== RESULTS.GRANTED) {
-      const request = await requestStoragePermission();
-      if (request !== RESULTS.GRANTED) {
-        console.log("Storage permission denied");
-      }
-    }
+    // const checkStorage = await checkStoragePermission();
+    // if (checkStorage !== RESULTS.GRANTED) {
+    //   const request = await requestStoragePermission();
+    //   if (request !== RESULTS.GRANTED) {
+    //     console.log("Storage permission denied");
+    //   }
+    // }
   };
 
   React.useEffect(() => {
