@@ -1,15 +1,10 @@
 // import { StatusBar } from "expo-status-bar";
 import * as React from "react";
-import AppNavigation from "./src/navigation";
-import AppNavigation2 from "./src/navigation/index2";
-import AppNavigation3 from "./src/navigation/index3";
+import AppNavigation from "./src/navigation/Entrypoints/index";
+import AppNavigation2 from "./src/navigation/Entrypoints/index_login";
+import AppNavigation3 from "./src/navigation/Entrypoints/index_welcome";
 import SInfo from "react-native-encrypted-storage";
 import * as Sentry from "@sentry/react-native";
-import {
-  requestUserPermission,
-  NotificationListner,
-} from "./src/utils/pushnotification_helper";
-import messaging from "@react-native-firebase/messaging";
 import { AuthProvider } from "./src/utils/auth";
 
 Sentry.init({
@@ -20,19 +15,6 @@ export default function App() {
   const [token, setToken] = React.useState(false);
   const [welcome, setWelcome] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
-
-  React.useEffect(() => {
-    requestUserPermission();
-    NotificationListner();
-  });
-
-  React.useEffect(() => {
-    const unsubscribe = messaging().onMessage(async (remoteMessage) => {
-      console.log("A new FCM message arrived!", JSON.stringify(remoteMessage));
-    });
-
-    return unsubscribe;
-  }, []);
 
   React.useEffect(() => {
     const isLogin = async () => {
